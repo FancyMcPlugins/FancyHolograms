@@ -1,5 +1,6 @@
 package de.oliver;
 
+import de.oliver.commands.HologramCMD;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
@@ -41,6 +42,9 @@ public class FancyHolograms extends JavaPlugin {
             getLogger().warning("might not work correctly.");
             getLogger().warning("--------------------------------------------------");
         }
+
+        // register commands
+        getCommand("hologram").setExecutor(new HologramCMD());
     }
 
     public static FancyHolograms getInstance() {

@@ -9,7 +9,5 @@ commands:
     permission: FancyHolograms.admin
     description: Main command for the FancyHolograms plugin
     aliases:
-      - FancyHolograms
-      - FancyHologram
-      - Holograms
-      - Holo
+      - holograms
+      - holo
