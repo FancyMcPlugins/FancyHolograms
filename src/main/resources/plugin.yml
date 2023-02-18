@@ -1,0 +1,15 @@
+name: FancyHolograms
+main: de.oliver.FancyHolograms
+author: OliverHD
+version: 1.0.0
+api-version: 1.19
+load: POSTWORLD
+commands:
+  Hologram:
+    permission: FancyHolograms.admin
+    description: Main command for the FancyHolograms plugin
+    aliases:
+      - FancyHolograms
+      - FancyHologram
+      - Holograms
+      - Holo
