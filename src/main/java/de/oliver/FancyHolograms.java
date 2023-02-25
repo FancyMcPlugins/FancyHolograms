@@ -13,8 +13,11 @@ public class FancyHolograms extends JavaPlugin {
 
     private static FancyHolograms instance;
 
+    private final HologramManager hologramManager;
+
     public FancyHolograms() {
         instance = this;
+        hologramManager = new HologramManager();
     }
 
     @Override
@@ -45,6 +48,10 @@ public class FancyHolograms extends JavaPlugin {
 
         // register commands
         getCommand("hologram").setExecutor(new HologramCMD());
+    }
+
+    public HologramManager getHologramManager() {
+        return hologramManager;
     }
 
     public static FancyHolograms getInstance() {

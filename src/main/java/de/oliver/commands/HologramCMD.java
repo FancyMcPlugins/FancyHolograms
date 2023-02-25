@@ -1,11 +1,8 @@
 package de.oliver.commands;
 
-import io.papermc.paper.adventure.PaperAdventure;
+import de.oliver.Hologram;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class HologramCMD implements CommandExecutor, TabExecutor {
@@ -35,18 +33,9 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         CraftPlayer craftPlayer = (CraftPlayer) p;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
-        ArmorStand textDisplay = new ArmorStand(serverPlayer.getLevel(), serverPlayer.position().x(), serverPlayer.position().y() - 2f, serverPlayer.position().z());
-
-
-        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(textDisplay);
-        serverPlayer.connection.send(addEntityPacket);
-
-        textDisplay.setCustomNameVisible(true);
-        textDisplay.setCustomName(PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize("<rainbow>test 123 123123</rainbow>")));
-        textDisplay.setInvisible(true);
-
-        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(textDisplay.getId(), textDisplay.getEntityData().packDirty());
-        serverPlayer.connection.send(setEntityDataPacket);
+        Hologram hologram = new Hologram("pog", p.getLocation(), Arrays.asList("Hello", "World"));
+        hologram.create();
+        hologram.spawn(serverPlayer);
 
         return false;
     }
