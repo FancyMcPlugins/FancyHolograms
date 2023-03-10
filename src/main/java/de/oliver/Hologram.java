@@ -32,6 +32,11 @@ public class Hologram {
         FancyHolograms.getInstance().getHologramManager().addHologram(this);
     }
 
+    public void delete(){
+        FancyHolograms.getInstance().getHologramManager().removeHologram(this);
+        entity = null;
+    }
+
     public void spawn(ServerPlayer serverPlayer){
         if(entity == null){
             create();
@@ -43,12 +48,9 @@ public class Hologram {
         updateText(serverPlayer);
     }
 
-    public void remove(ServerPlayer serverPlayer){
-        entity = null;
+    public void remove(ServerPlayer serverPlayer) {
         ClientboundRemoveEntitiesPacket removeEntitiesPacket = new ClientboundRemoveEntitiesPacket(entity.getId());
         serverPlayer.connection.send(removeEntitiesPacket);
-
-        FancyHolograms.getInstance().getHologramManager().removeHologram(this);
     }
 
     public void updateText(ServerPlayer serverPlayer){
