@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,9 +27,11 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length == 1){
             return Arrays.asList("help", "create", "remove", "edit");
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Arrays.asList("position");
+            return Arrays.asList("position", "setLine", "addLine", "removeLine");
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).toList();
+        } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
+            return Arrays.asList("1", "2", "3");
         }
 
         return null;
@@ -88,6 +91,74 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 String editAction = args[2];
 
                 switch (editAction.toLowerCase()){
+                    case "setline" -> {
+                        if(args.length < 5){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        int line;
+                        try{
+                            line = Integer.parseInt(args[3]);
+                        }catch (NumberFormatException e){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse input to number</red>"));
+                            return false;
+                        }
+
+                        String text = "";
+
+                        for (int i = 4; i < args.length; i++) {
+                            text += args[i] + " ";
+                        }
+
+                        text = text.substring(0, text.length() - 1);
+
+                        boolean success = editSetLine(p, playerList, hologram, line - 1, text);
+                        if(!success){
+                            return false;
+                        }
+                    }
+
+                    case "addline" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        String text = "";
+
+                        for (int i = 3; i < args.length; i++) {
+                            text += args[i] + " ";
+                        }
+
+                        text = text.substring(0, text.length() - 1);
+
+                        boolean success = editSetLine(p, playerList, hologram, Integer.MAX_VALUE, text);
+                        if(!success){
+                            return false;
+                        }
+                    }
+
+                    case "removeline" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        int line;
+                        try{
+                            line = Integer.parseInt(args[3]);
+                        }catch (NumberFormatException e){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse input to number</red>"));
+                            return false;
+                        }
+
+                        boolean success = editSetLine(p, playerList, hologram, line - 1, "");
+                        if(!success){
+                            return false;
+                        }
+                    }
+
                     case "position" -> {
                         boolean success = editPosition(p, playerList, hologram, p.getLocation());
                         if(!success){
@@ -103,7 +174,10 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean create(Player p, PlayerList playerList, String name){
-        Hologram hologram = new Hologram(name, p.getLocation(), Arrays.asList("Edit this line with /hologram edit " + name));
+        List<String> lines = new ArrayList<>();
+        lines.add("Edit this line with /hologram edit " + name);
+
+        Hologram hologram = new Hologram(name, p.getLocation(), lines);
         hologram.create();
         for (ServerPlayer player : playerList.players) {
             hologram.spawn(player);
@@ -121,6 +195,33 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         hologram.delete();
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Removed the hologram</color>"));
+        return true;
+    }
+
+    private boolean editSetLine(Player p, PlayerList playerList, Hologram hologram, int line, String text){
+        if(line < 0){
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid line index</red>"));
+            return false;
+        }
+
+        List<String> lines = hologram.getLines();
+        if(line >= lines.size()){
+            lines.add(text);
+        } else {
+            if(text.equals("")){
+                lines.remove(line);
+            } else {
+                lines.set(line, text);
+            }
+        }
+
+        hologram.setLines(lines);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateText(player);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed text for line " + line + "</color>"));
         return true;
     }
 
