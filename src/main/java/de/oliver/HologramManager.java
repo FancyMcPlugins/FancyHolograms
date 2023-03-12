@@ -1,5 +1,6 @@
 package de.oliver;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,10 @@ public class HologramManager {
 
     public void loadHolograms(){
 
+    }
+
+    public Collection<Hologram> getAllHolograms(){
+        return holograms.values();
     }
 
     public void addHologram(Hologram hologram){
