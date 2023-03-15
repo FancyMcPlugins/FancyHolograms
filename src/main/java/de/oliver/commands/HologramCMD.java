@@ -226,7 +226,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean editPosition(Player p, PlayerList playerList, Hologram hologram, Location pos){
-        hologram.setLocation(pos.subtract(0, 2, 0));
+        hologram.setLocation(pos);
 
         for (ServerPlayer player : playerList.players) {
             hologram.updateLocation(player);
