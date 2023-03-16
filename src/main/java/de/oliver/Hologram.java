@@ -21,12 +21,14 @@ public class Hologram {
     private final String name;
     private Location location;
     private List<String> lines;
+    private Display.BillboardConstraints billboard;
     private Display.TextDisplay entity;
 
-    public Hologram(String name, Location location, List<String> lines) {
+    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard) {
         this.name = name;
         this.location = location;
         this.lines = lines;
+        this.billboard = billboard;
     }
 
     public void create(){
@@ -34,7 +36,7 @@ public class Hologram {
         entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY, level);
         entity.setPosRaw(location.x(), location.y(), location.z());
         entity.setYRot(location.getYaw());
-        entity.setBillboardConstraints(Display.BillboardConstraints.CENTER);
+        entity.setBillboardConstraints(billboard);
 
         FancyHolograms.getInstance().getHologramManager().addHologram(this);
     }
@@ -76,6 +78,13 @@ public class Hologram {
         serverPlayer.connection.send(teleportEntityPacket);
     }
 
+    public void updateBillboard(ServerPlayer serverPlayer){
+        entity.setBillboardConstraints(billboard);
+
+        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entity.getEntityData().packDirty());
+        serverPlayer.connection.send(setEntityDataPacket);
+    }
+
     private Component getText(){
         String t = String.join("\n", lines);
         return PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(t));
@@ -99,6 +108,14 @@ public class Hologram {
 
     public void setLines(List<String> lines) {
         this.lines = lines;
+    }
+
+    public Display.BillboardConstraints getBillboard() {
+        return billboard;
+    }
+
+    public void setBillboard(Display.BillboardConstraints billboard) {
+        this.billboard = billboard;
     }
 
     public Display.TextDisplay getEntity() {

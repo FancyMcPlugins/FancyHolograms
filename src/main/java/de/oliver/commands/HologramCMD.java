@@ -5,6 +5,7 @@ import de.oliver.Hologram;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
+import net.minecraft.world.entity.Display;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -27,11 +28,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length == 1){
             return Arrays.asList("help", "create", "remove", "edit");
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Arrays.asList("position", "setLine", "addLine", "removeLine");
+            return Arrays.asList("position", "setLine", "addLine", "removeLine", "billboard");
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
             return Arrays.asList("1", "2", "3");
+        } else if(args.length == 4 && args[2].equalsIgnoreCase("billboard")){
+            return Arrays.stream(Display.BillboardConstraints.values()).map(Display.BillboardConstraints::getSerializedName).toList();
         }
 
         return null;
@@ -165,6 +168,35 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             return false;
                         }
                     }
+
+                    case "billboard" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        Display.BillboardConstraints billboard = null;
+                        for (Display.BillboardConstraints b : Display.BillboardConstraints.values()) {
+                            if(b.getSerializedName().equalsIgnoreCase(args[3])){
+                                billboard = b;
+                            }
+                        }
+
+                        if(billboard == null){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse billboard</red>"));
+                            return false;
+                        }
+
+                        if(hologram.getBillboard() == billboard){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<yellow>This billboard is already set</yellow>"));
+                            return false;
+                        }
+
+                        boolean success = editBillboard(p, playerList, hologram, billboard);
+                        if(!success){
+                            return false;
+                        }
+                    }
                 }
 
             }
@@ -177,7 +209,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
-        Hologram hologram = new Hologram(name, p.getLocation(), lines);
+        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER);
         hologram.create();
         for (ServerPlayer player : playerList.players) {
             hologram.spawn(player);
@@ -206,6 +238,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
         List<String> lines = hologram.getLines();
         if(line >= lines.size()){
+            line = lines.size();
             lines.add(text);
         } else {
             if(text.equals("")){
@@ -233,6 +266,17 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Moved the hologram to you</color>"));
+        return true;
+    }
+
+    private boolean editBillboard(Player p, PlayerList playerList, Hologram hologram, Display.BillboardConstraints billboard){
+        hologram.setBillboard(billboard);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateBillboard(player);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed the billboard to " + billboard.getSerializedName() + "</color>"));
         return true;
     }
 }
