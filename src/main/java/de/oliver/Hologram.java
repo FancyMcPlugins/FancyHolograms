@@ -1,5 +1,6 @@
 package de.oliver;
 
+import com.mojang.math.Transformation;
 import io.papermc.paper.adventure.PaperAdventure;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.network.chat.Component;
@@ -13,6 +14,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -22,13 +25,16 @@ public class Hologram {
     private Location location;
     private List<String> lines;
     private Display.BillboardConstraints billboard;
+    private float scale;
+
     private Display.TextDisplay entity;
 
-    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard) {
+    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale) {
         this.name = name;
         this.location = location;
         this.lines = lines;
         this.billboard = billboard;
+        this.scale = scale;
     }
 
     public void create(){
@@ -37,6 +43,14 @@ public class Hologram {
         entity.setPosRaw(location.x(), location.y(), location.z());
         entity.setYRot(location.getYaw());
         entity.setBillboardConstraints(billboard);
+
+        Transformation transformation = new Transformation(
+                new Vector3f(),
+                new Quaternionf(),
+                new Vector3f(scale, scale, scale),
+                new Quaternionf()
+        );
+        entity.setTransformation(transformation);
 
         FancyHolograms.getInstance().getHologramManager().addHologram(this);
     }
@@ -85,6 +99,19 @@ public class Hologram {
         serverPlayer.connection.send(setEntityDataPacket);
     }
 
+    public void updateScale(ServerPlayer serverPlayer){
+        Transformation transformation = new Transformation(
+                new Vector3f(),
+                new Quaternionf(),
+                new Vector3f(scale, scale, scale),
+                new Quaternionf()
+        );
+        entity.setTransformation(transformation);
+
+        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entity.getEntityData().packDirty());
+        serverPlayer.connection.send(setEntityDataPacket);
+    }
+
     private Component getText(){
         String t = String.join("\n", lines);
         return PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(t));
@@ -116,6 +143,14 @@ public class Hologram {
 
     public void setBillboard(Display.BillboardConstraints billboard) {
         this.billboard = billboard;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public void setScale(float scale) {
+        this.scale = scale;
     }
 
     public Display.TextDisplay getEntity() {

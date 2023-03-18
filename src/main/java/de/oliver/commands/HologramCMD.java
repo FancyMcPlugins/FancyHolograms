@@ -28,7 +28,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length == 1){
             return Arrays.asList("help", "create", "remove", "edit");
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Arrays.asList("position", "setLine", "addLine", "removeLine", "billboard");
+            return Arrays.asList("position", "setLine", "addLine", "removeLine", "billboard", "scale");
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
@@ -197,6 +197,26 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             return false;
                         }
                     }
+
+                    case "scale" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        float scale;
+                        try{
+                            scale = Float.parseFloat(args[3]);
+                        }catch (NumberFormatException e){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse scale</red>"));
+                            return false;
+                        }
+
+                        boolean success = editScale(p, playerList, hologram, scale);
+                        if(!success){
+                            return false;
+                        }
+                    }
                 }
 
             }
@@ -209,7 +229,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
-        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER);
+        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f);
         hologram.create();
         for (ServerPlayer player : playerList.players) {
             hologram.spawn(player);
@@ -277,6 +297,17 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed the billboard to " + billboard.getSerializedName() + "</color>"));
+        return true;
+    }
+
+    private boolean editScale(Player p, PlayerList playerList, Hologram hologram, float scale){
+        hologram.setScale(scale);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateScale(player);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed scale to " + scale +"</color>"));
         return true;
     }
 }
