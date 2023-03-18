@@ -2,8 +2,11 @@ package de.oliver;
 
 import de.oliver.commands.HologramCMD;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -48,6 +51,25 @@ public class FancyHolograms extends JavaPlugin {
 
         // register commands
         getCommand("hologram").setExecutor(new HologramCMD());
+
+        Bukkit.getScheduler().runTaskLater(instance, () -> {
+            hologramManager.loadHolograms();
+
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                CraftPlayer craftPlayer = (CraftPlayer) onlinePlayer;
+                ServerPlayer serverPlayer = craftPlayer.getHandle();
+
+                for (Hologram hologram : hologramManager.getAllHolograms()) {
+                    hologram.spawn(serverPlayer);
+                }
+            }
+
+        }, 20L * 5);
+    }
+
+    @Override
+    public void onDisable() {
+        hologramManager.saveHolograms();
     }
 
     public HologramManager getHologramManager() {
