@@ -19,15 +19,15 @@ You can download the latest versions at the following places:
 ## Commands
 /hologram help<br>
 /hologram version<br>
-/hologram create <name><br>
-/hologram remove <hologram name><br>
-/hologram edit <hologram name> addLine <text ...><br>
-/hologram edit <hologram name> removeLine <text ...><br>
-/hologram edit <hologram name> setLine <line number> <text ...><br>
-/hologram edit <hologram name> position<br>
-/hologram edit <hologram name> scale <factor><br>
-/hologram edit <hologram name> billboard <center|fixed|horizontal|vertical><br>
-/hologram edit <hologram name> background <br>
+/hologram create (name)<br>
+/hologram remove (hologram name)<br>
+/hologram edit (hologram name) addLine (text ...)<br>
+/hologram edit (hologram name) removeLine (text ...)<br>
+/hologram edit (hologram name) setLine (line number) (text ...)<br>
+/hologram edit (hologram name) position<br>
+/hologram edit (hologram name) scale (factor)<br>
+/hologram edit (hologram name) billboard (center|fixed|horizontal|vertical)<br>
+/hologram edit (hologram name) background
 
 
 ## Permissions
