@@ -2,6 +2,7 @@ package de.oliver;
 
 import de.oliver.commands.HologramCMD;
 import de.oliver.listeners.PlayerJoinListener;
+import de.oliver.utils.Metrics;
 import de.oliver.utils.VersionFetcher;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,6 +70,9 @@ public class FancyHolograms extends JavaPlugin {
             getLogger().warning("might not work correctly.");
             getLogger().warning("--------------------------------------------------");
         }
+
+        // register bStats
+        Metrics metrics = new Metrics(this, 17990);
 
         // register commands
         getCommand("hologram").setExecutor(new HologramCMD());

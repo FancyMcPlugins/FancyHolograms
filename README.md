@@ -1,3 +1,5 @@
+[![Generic badge](https://img.shields.io/badge/version-1.0.0-orange.svg)](https://shields.io/)
+
 # Fancy holograms
 Create fancy looking holograms with the new 1.19.4 text display entities.<br>
 It is lightweight and fast (using [packets](https://wiki.vg/Protocol)).
