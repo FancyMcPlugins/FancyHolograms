@@ -25,7 +25,7 @@ public class VersionFetcher {
         try {
             jsonString = getDataFromUrl(url);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return new ComparableVersion("0.0.0");
         }
 
         // Parse the JSON data into a Map

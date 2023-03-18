@@ -269,7 +269,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
-        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, ChatFormatting.getByHexValue(Display.TextDisplay.INITIAL_BACKGROUND));
+        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null);
         hologram.create();
         for (ServerPlayer player : playerList.players) {
             hologram.spawn(player);

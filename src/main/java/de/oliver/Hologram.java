@@ -7,9 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
@@ -64,8 +62,10 @@ public class Hologram {
         updateLocation(serverPlayer);
         updateText(serverPlayer);
         updateBillboard(serverPlayer);
-        updateBackground(serverPlayer);
         updateScale(serverPlayer);
+        if(background != null){
+            updateBackground(serverPlayer);
+        }
     }
 
     public void remove(ServerPlayer serverPlayer) {
@@ -76,10 +76,8 @@ public class Hologram {
     public void updateText(ServerPlayer serverPlayer){
         entity.setText(getText());
 
-        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().getNonDefaultValues();
-        if(serverPlayer != null && dataValues != null) {
-            ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
-            serverPlayer.connection.send(setEntityDataPacket);
+        if(serverPlayer != null) {
+            entity.getEntityData().refresh(serverPlayer);
         }
     }
 
@@ -95,10 +93,9 @@ public class Hologram {
     public void updateBillboard(ServerPlayer serverPlayer){
         entity.setBillboardConstraints(billboard);
 
-        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().getNonDefaultValues();
-        if(serverPlayer != null && dataValues != null) {
-            ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
-            serverPlayer.connection.send(setEntityDataPacket);
+
+        if(serverPlayer != null) {
+            entity.getEntityData().refresh(serverPlayer);
         }
     }
 
@@ -112,20 +109,16 @@ public class Hologram {
         entity.setTransformation(transformation);
 
 
-        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().getNonDefaultValues();
-        if(serverPlayer != null && dataValues != null) {
-            ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
-            serverPlayer.connection.send(setEntityDataPacket);
+        if(serverPlayer != null) {
+            entity.getEntityData().refresh(serverPlayer);
         }
     }
 
     public void updateBackground(ServerPlayer serverPlayer){
         entity.setBackgroundColor(background.getColor() | 0xC8000000);
 
-        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().getNonDefaultValues();
-        if(serverPlayer != null && dataValues != null) {
-            ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
-            serverPlayer.connection.send(setEntityDataPacket);
+        if(serverPlayer != null) {
+            entity.getEntityData().refresh(serverPlayer);
         }
     }
 
