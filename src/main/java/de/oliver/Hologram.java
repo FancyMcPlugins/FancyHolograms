@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
@@ -43,17 +44,6 @@ public class Hologram {
     public void create(){
         Level level = ((CraftWorld) location.getWorld()).getHandle();
         entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY, level);
-        entity.setPosRaw(location.x(), location.y(), location.z());
-        entity.setYRot(location.getYaw());
-        entity.setBillboardConstraints(billboard);
-
-        Transformation transformation = new Transformation(
-                new Vector3f(),
-                new Quaternionf(),
-                new Vector3f(scale, scale, scale),
-                new Quaternionf()
-        );
-        entity.setTransformation(transformation);
 
         FancyHolograms.getInstance().getHologramManager().addHologram(this);
     }
@@ -71,7 +61,11 @@ public class Hologram {
         ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(entity);
         serverPlayer.connection.send(addEntityPacket);
 
+        updateLocation(serverPlayer);
         updateText(serverPlayer);
+        updateBillboard(serverPlayer);
+        updateBackground(serverPlayer);
+        updateScale(serverPlayer);
     }
 
     public void remove(ServerPlayer serverPlayer) {
@@ -82,8 +76,11 @@ public class Hologram {
     public void updateText(ServerPlayer serverPlayer){
         entity.setText(getText());
 
-        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entity.getEntityData().packDirty());
-        serverPlayer.connection.send(setEntityDataPacket);
+        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().packDirty();
+        if(serverPlayer != null && dataValues != null) {
+            ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
+            serverPlayer.connection.send(setEntityDataPacket);
+        }
     }
 
     public void updateLocation(ServerPlayer serverPlayer){
@@ -98,8 +95,11 @@ public class Hologram {
     public void updateBillboard(ServerPlayer serverPlayer){
         entity.setBillboardConstraints(billboard);
 
-        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entity.getEntityData().packDirty());
-        serverPlayer.connection.send(setEntityDataPacket);
+        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().packDirty();
+        if(serverPlayer != null && dataValues != null) {
+            ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
+            serverPlayer.connection.send(setEntityDataPacket);
+        }
     }
 
     public void updateScale(ServerPlayer serverPlayer){
@@ -112,15 +112,21 @@ public class Hologram {
         entity.setTransformation(transformation);
 
 
-        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entity.getEntityData().packDirty());
-        serverPlayer.connection.send(setEntityDataPacket);
+        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().packDirty();
+        if(serverPlayer != null && dataValues != null) {
+            ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
+            serverPlayer.connection.send(setEntityDataPacket);
+        }
     }
 
     public void updateBackground(ServerPlayer serverPlayer){
         entity.setBackgroundColor(background.getColor() | 0xC8000000);
 
-        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entity.getEntityData().packDirty());
-        serverPlayer.connection.send(setEntityDataPacket);
+        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().packDirty();
+        if(serverPlayer != null && dataValues != null) {
+            ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
+            serverPlayer.connection.send(setEntityDataPacket);
+        }
     }
 
     private Component getText(){
