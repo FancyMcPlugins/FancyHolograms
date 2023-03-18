@@ -3,6 +3,7 @@ package de.oliver.commands;
 import de.oliver.FancyHolograms;
 import de.oliver.Hologram;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Display;
@@ -28,13 +29,15 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length == 1){
             return Arrays.asList("help", "create", "remove", "edit");
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Arrays.asList("position", "setLine", "addLine", "removeLine", "billboard", "scale");
+            return Arrays.asList("position", "setLine", "addLine", "removeLine", "billboard", "scale", "background");
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
             return Arrays.asList("1", "2", "3");
         } else if(args.length == 4 && args[2].equalsIgnoreCase("billboard")){
             return Arrays.stream(Display.BillboardConstraints.values()).map(Display.BillboardConstraints::getSerializedName).toList();
+        } else if(args.length == 4 && args[2].equalsIgnoreCase("background")){
+            return Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getName).toList();
         }
 
         return null;
@@ -217,6 +220,25 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             return false;
                         }
                     }
+
+                    case "background" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        ChatFormatting background = ChatFormatting.getByName(args[3]);
+
+                        if(background == null || !background.isColor()){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse background color</red>"));
+                            return false;
+                        }
+
+                        boolean success = editBackground(p, playerList, hologram, background);
+                        if(!success){
+                            return false;
+                        }
+                    }
                 }
 
             }
@@ -229,7 +251,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
-        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f);
+        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, ChatFormatting.getByHexValue(Display.TextDisplay.INITIAL_BACKGROUND));
         hologram.create();
         for (ServerPlayer player : playerList.players) {
             hologram.spawn(player);
@@ -308,6 +330,19 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed scale to " + scale +"</color>"));
+        return true;
+    }
+
+    private boolean editBackground(Player p, PlayerList playerList, Hologram hologram, ChatFormatting background){
+        hologram.setBackground(background);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateBackground(player);
+        }
+
+
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed background color</color>"));
         return true;
     }
 }

@@ -3,6 +3,7 @@ package de.oliver;
 import com.mojang.math.Transformation;
 import io.papermc.paper.adventure.PaperAdventure;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
@@ -26,15 +27,17 @@ public class Hologram {
     private List<String> lines;
     private Display.BillboardConstraints billboard;
     private float scale;
+    private ChatFormatting background;
 
     private Display.TextDisplay entity;
 
-    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale) {
+    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background) {
         this.name = name;
         this.location = location;
         this.lines = lines;
         this.billboard = billboard;
         this.scale = scale;
+        this.background = background;
     }
 
     public void create(){
@@ -108,6 +111,14 @@ public class Hologram {
         );
         entity.setTransformation(transformation);
 
+
+        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entity.getEntityData().packDirty());
+        serverPlayer.connection.send(setEntityDataPacket);
+    }
+
+    public void updateBackground(ServerPlayer serverPlayer){
+        entity.setBackgroundColor(background.getColor() | 0xC8000000);
+
         ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entity.getEntityData().packDirty());
         serverPlayer.connection.send(setEntityDataPacket);
     }
@@ -151,6 +162,14 @@ public class Hologram {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public ChatFormatting getBackground() {
+        return background;
+    }
+
+    public void setBackground(ChatFormatting background) {
+        this.background = background;
     }
 
     public Display.TextDisplay getEntity() {
