@@ -2,8 +2,10 @@ package de.oliver;
 
 import de.oliver.commands.HologramCMD;
 import de.oliver.listeners.PlayerJoinListener;
+import de.oliver.utils.VersionFetcher;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
@@ -14,10 +16,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class FancyHolograms extends JavaPlugin {
 
     public static final String SUPPORTED_VERSION = "1.19.4";
-
     private static FancyHolograms instance;
 
     private final HologramManager hologramManager;
+    private boolean muteVersionNotification;
 
     public FancyHolograms() {
         instance = this;
@@ -26,7 +28,25 @@ public class FancyHolograms extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if(!getConfig().isBoolean("mute_version_notification")){
+            getConfig().set("mute_version_notification", false);
+            saveConfig();
+        }
+        muteVersionNotification = getConfig().getBoolean("mute_version_notification");
+
         PluginManager pluginManager = Bukkit.getPluginManager();
+
+        new Thread(() -> {
+            ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+            ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
+            if (newestVersion.compareTo(currentVersion) > 0) {
+                getLogger().warning("-------------------------------------------------------");
+                getLogger().warning("You are not using the latest version the FancyHolograms plugin.");
+                getLogger().warning("Please update to the newest version (" + newestVersion + ").");
+                getLogger().warning(VersionFetcher.DOWNLOAD_URL);
+                getLogger().warning("-------------------------------------------------------");
+            }
+        }).start();
 
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 
@@ -78,6 +98,10 @@ public class FancyHolograms extends JavaPlugin {
 
     public HologramManager getHologramManager() {
         return hologramManager;
+    }
+
+    public boolean isMuteVersionNotification() {
+        return muteVersionNotification;
     }
 
     public static FancyHolograms getInstance() {

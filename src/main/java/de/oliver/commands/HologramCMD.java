@@ -2,11 +2,13 @@ package de.oliver.commands;
 
 import de.oliver.FancyHolograms;
 import de.oliver.Hologram;
+import de.oliver.utils.VersionFetcher;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Display;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -27,7 +29,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1){
-            return Arrays.asList("help", "create", "remove", "edit");
+            return Arrays.asList("help", "version", "create", "remove", "edit");
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
             return Arrays.asList("position", "setLine", "addLine", "removeLine", "billboard", "scale", "background");
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
@@ -49,6 +51,22 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(!(sender instanceof Player p)){
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Only players can execute this command</red>"));
             return false;
+        }
+
+        if(args.length >= 1 && args[0].equalsIgnoreCase("version")){
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790><i>Checking version, please wait...</i></color>"));
+            new Thread(() -> {
+                ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+                ComparableVersion currentVersion = new ComparableVersion(FancyHolograms.getInstance().getDescription().getVersion());
+                if(newestVersion.compareTo(currentVersion) > 0){
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyHolograms plugin.</color>"));
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>.</color>"));
+                } else {
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790>You are using the latest version of the FancyHolograms plugin (" + currentVersion + ").</color>"));
+                }
+            }).start();
+
+            return true;
         }
 
         if(args.length < 2){
