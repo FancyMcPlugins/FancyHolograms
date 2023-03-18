@@ -1,6 +1,7 @@
 package de.oliver;
 
 import de.oliver.commands.HologramCMD;
+import de.oliver.listeners.PlayerJoinListener;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
@@ -51,6 +52,9 @@ public class FancyHolograms extends JavaPlugin {
 
         // register commands
         getCommand("hologram").setExecutor(new HologramCMD());
+
+        // register listeners
+        pluginManager.registerEvents(new PlayerJoinListener(), instance);
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             hologramManager.loadHolograms();

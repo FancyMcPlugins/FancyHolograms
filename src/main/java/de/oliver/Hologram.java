@@ -76,7 +76,7 @@ public class Hologram {
     public void updateText(ServerPlayer serverPlayer){
         entity.setText(getText());
 
-        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().packDirty();
+        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().getNonDefaultValues();
         if(serverPlayer != null && dataValues != null) {
             ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
             serverPlayer.connection.send(setEntityDataPacket);
@@ -95,7 +95,7 @@ public class Hologram {
     public void updateBillboard(ServerPlayer serverPlayer){
         entity.setBillboardConstraints(billboard);
 
-        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().packDirty();
+        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().getNonDefaultValues();
         if(serverPlayer != null && dataValues != null) {
             ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
             serverPlayer.connection.send(setEntityDataPacket);
@@ -112,7 +112,7 @@ public class Hologram {
         entity.setTransformation(transformation);
 
 
-        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().packDirty();
+        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().getNonDefaultValues();
         if(serverPlayer != null && dataValues != null) {
             ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
             serverPlayer.connection.send(setEntityDataPacket);
@@ -122,7 +122,7 @@ public class Hologram {
     public void updateBackground(ServerPlayer serverPlayer){
         entity.setBackgroundColor(background.getColor() | 0xC8000000);
 
-        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().packDirty();
+        List<SynchedEntityData.DataValue<?>> dataValues = entity.getEntityData().getNonDefaultValues();
         if(serverPlayer != null && dataValues != null) {
             ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), dataValues);
             serverPlayer.connection.send(setEntityDataPacket);
