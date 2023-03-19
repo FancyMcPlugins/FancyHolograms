@@ -266,6 +266,11 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean create(Player p, PlayerList playerList, String name){
+        if (FancyHolograms.getInstance().getHologramManager().getHologram(name) != null) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>There already exists a hologram with this name</red>"));
+            return false;
+        }
+
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
