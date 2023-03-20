@@ -11,7 +11,7 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 ## Get the plugin
 You can download the latest versions at the following places:
 
-- TODO spigotmc
+- https://www.spigotmc.org/resources/fancyholograms.108694/
 - https://modrinth.com/plugin/fancyholograms
 - https://github.com/OliverSchlueter/FancyHologramsPlugin/releases
 - Build from source (``gradlew reobfJar``)
