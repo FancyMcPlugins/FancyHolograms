@@ -70,6 +70,23 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return false;
         }
 
+        if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>NPC Plugin help:"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram help <dark_gray>- <white>Shows all (sub)commands"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram version <dark_gray>- <white>Shows the plugin version"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram create <name> <dark_gray>- <white>Creates a new hologram"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram remove <name> <dark_gray>- <white>Removes a hologram"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> addLine <text ...> <dark_gray>- <white>Adds a line at the bottom"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> removeLine <dark_gray>- <white>Removes a line at the bottom"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> position <dark_gray>- <white>Teleports the hologram to you"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> moveTo <x> <y> <z> [yaw] <dark_gray>- <white>Teleports the hologram to the coordinates"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram"));
+            return true;
+        }
+
         if(args.length >= 1 && args[0].equalsIgnoreCase("version")){
             p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790><i>Checking version, please wait...</i></color>"));
             new Thread(() -> {
