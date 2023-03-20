@@ -41,7 +41,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return Arrays.stream(Display.BillboardConstraints.values()).map(Display.BillboardConstraints::getSerializedName).toList();
         } else if(args.length == 4 && args[2].equalsIgnoreCase("background")){
             return Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getName).toList();
-        } else if(args[2].equalsIgnoreCase("moveTo")){
+        } else if(args.length >= 4 && args[2].equalsIgnoreCase("moveTo")){
             if(!(sender instanceof Player p)){
                 return null;
             }
