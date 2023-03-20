@@ -11,6 +11,7 @@ import net.minecraft.world.entity.Display;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,7 +32,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length == 1){
             return Arrays.asList("help", "version", "create", "remove", "edit");
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Arrays.asList("position", "setLine", "addLine", "removeLine", "billboard", "scale", "background");
+            return Arrays.asList("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background");
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
@@ -40,6 +41,22 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return Arrays.stream(Display.BillboardConstraints.values()).map(Display.BillboardConstraints::getSerializedName).toList();
         } else if(args.length == 4 && args[2].equalsIgnoreCase("background")){
             return Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getName).toList();
+        } else if(args[2].equalsIgnoreCase("moveTo")){
+            if(!(sender instanceof Player p)){
+                return null;
+            }
+
+            Block target = p.getTargetBlockExact(10);
+
+            if(target == null){
+                return null;
+            }
+
+            switch (args.length) {
+                case 4 -> { return Arrays.asList(String.valueOf(target.getX())); }
+                case 5 -> { return Arrays.asList(String.valueOf(target.getY())); }
+                case 6 -> { return Arrays.asList(String.valueOf(target.getZ())); }
+            }
         }
 
         return null;
@@ -185,6 +202,38 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "position" -> {
                         boolean success = editPosition(p, playerList, hologram, p.getLocation());
+                        if(!success){
+                            return false;
+                        }
+                    }
+
+                    case "moveto" -> {
+                        if(args.length < 6){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        double x, y, z;
+                        Float yaw = null;
+
+                        try{
+                            x = Double.parseDouble(args[3]);
+                            y = Double.parseDouble(args[4]);
+                            z = Double.parseDouble(args[5]);
+                            if(args.length >= 7){
+                                yaw = Float.parseFloat(args[6]);
+                            }
+                        } catch (NumberFormatException e){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse position</red>"));
+                            return false;
+                        }
+
+                        Location pos = new Location(p.getWorld(), x, y, z);
+                        if(yaw != null){
+                            pos.setYaw(yaw);
+                        }
+
+                        boolean success = editPosition(p, playerList, hologram, pos);
                         if(!success){
                             return false;
                         }
