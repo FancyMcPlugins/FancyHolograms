@@ -22,15 +22,17 @@ public class HologramManager {
         FileConfiguration config = FancyHolograms.getInstance().getConfig();
 
         for (Hologram hologram : holograms.values()) {
-            if(!force || !hologram.isDirty()){
+            if(!hologram.isDirty() && !force){
                 continue;
             }
 
             config.set("holograms." + hologram.getName() + ".location", hologram.getLocation());
             config.set("holograms." + hologram.getName() + ".billboard", hologram.getBillboard().getSerializedName());
-            config.set("holograms." + hologram.getName() + ".background", hologram.getBackground().getSerializedName());
             config.set("holograms." + hologram.getName() + ".scale", hologram.getScale());
             config.set("holograms." + hologram.getName() + ".text", hologram.getLines());
+            if(hologram.getBackground() != null){
+                config.set("holograms." + hologram.getName() + ".background", hologram.getBackground().getSerializedName());
+            }
 
             hologram.setDirty(false);
         }
@@ -49,7 +51,7 @@ public class HologramManager {
 
         for (String name : config.getConfigurationSection("holograms").getKeys(false)) {
             Location location = config.getLocation("holograms." + name + ".location");
-            ChatFormatting background = ChatFormatting.getByName(config.getString("holograms." + name + ".background"));
+            ChatFormatting background = config.isString("holograms." + name + ".background") ? ChatFormatting.getByName(config.getString("holograms." + name + ".background")) : null;
             float scale = (float) config.getDouble("holograms." + name + ".scale");
             List<String> text = config.getStringList("holograms." + name + ".text");
 
