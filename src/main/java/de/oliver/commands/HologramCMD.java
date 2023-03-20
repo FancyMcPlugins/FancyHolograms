@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -396,7 +397,9 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateLocation(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Moved the hologram to you</color>"));
+        DecimalFormat df = new DecimalFormat("#########.##");
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Moved the hologram to " + df.format(pos.x()) + "/" + df.format(pos.y()) + "/" + df.format(pos.z()) + "</color>"));
         return true;
     }
 
