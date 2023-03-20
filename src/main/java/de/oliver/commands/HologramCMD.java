@@ -301,7 +301,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return false;
         }
 
-        List<String> lines = hologram.getLines();
+        List<String> lines = new ArrayList<>(hologram.getLines());
         if(line >= lines.size()){
             line = lines.size();
             lines.add(text);

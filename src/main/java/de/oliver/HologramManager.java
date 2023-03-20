@@ -18,15 +18,21 @@ public class HologramManager {
         this.holograms = new HashMap<>();
     }
 
-    public void saveHolograms(){
+    public void saveHolograms(boolean force){
         FileConfiguration config = FancyHolograms.getInstance().getConfig();
 
         for (Hologram hologram : holograms.values()) {
+            if(!force || !hologram.isDirty()){
+                continue;
+            }
+
             config.set("holograms." + hologram.getName() + ".location", hologram.getLocation());
             config.set("holograms." + hologram.getName() + ".billboard", hologram.getBillboard().getSerializedName());
             config.set("holograms." + hologram.getName() + ".background", hologram.getBackground().getSerializedName());
             config.set("holograms." + hologram.getName() + ".scale", hologram.getScale());
             config.set("holograms." + hologram.getName() + ".text", hologram.getLines());
+
+            hologram.setDirty(false);
         }
 
         FancyHolograms.getInstance().saveConfig();

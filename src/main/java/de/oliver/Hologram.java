@@ -29,6 +29,7 @@ public class Hologram {
     private ChatFormatting background;
 
     private Display.TextDisplay entity;
+    private boolean isDirty;
 
     public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background) {
         this.name = name;
@@ -37,6 +38,7 @@ public class Hologram {
         this.billboard = billboard;
         this.scale = scale;
         this.background = background;
+        this.isDirty = false;
     }
 
     public void create(){
@@ -137,6 +139,7 @@ public class Hologram {
 
     public void setLocation(Location location) {
         this.location = location;
+        this.isDirty = true;
     }
 
     public List<String> getLines() {
@@ -145,6 +148,7 @@ public class Hologram {
 
     public void setLines(List<String> lines) {
         this.lines = lines;
+        this.isDirty = true;
     }
 
     public Display.BillboardConstraints getBillboard() {
@@ -153,6 +157,7 @@ public class Hologram {
 
     public void setBillboard(Display.BillboardConstraints billboard) {
         this.billboard = billboard;
+        this.isDirty = true;
     }
 
     public float getScale() {
@@ -161,6 +166,7 @@ public class Hologram {
 
     public void setScale(float scale) {
         this.scale = scale;
+        this.isDirty = true;
     }
 
     public ChatFormatting getBackground() {
@@ -169,9 +175,18 @@ public class Hologram {
 
     public void setBackground(ChatFormatting background) {
         this.background = background;
+        this.isDirty = true;
     }
 
     public Display.TextDisplay getEntity() {
         return entity;
+    }
+
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        isDirty = dirty;
     }
 }

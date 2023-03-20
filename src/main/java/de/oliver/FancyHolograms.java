@@ -93,11 +93,15 @@ public class FancyHolograms extends JavaPlugin {
             }
 
         }, 20L * 5);
+
+        Bukkit.getScheduler().runTaskTimer(instance, () -> {
+            hologramManager.saveHolograms(false);
+        }, 20*60*5, 20*60*15);
     }
 
     @Override
     public void onDisable() {
-        hologramManager.saveHolograms();
+        hologramManager.saveHolograms(true);
     }
 
     public HologramManager getHologramManager() {
