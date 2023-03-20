@@ -2,6 +2,7 @@ package de.oliver;
 
 import com.mojang.math.Transformation;
 import io.papermc.paper.adventure.PaperAdventure;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.entity.Player;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -76,7 +78,7 @@ public class Hologram {
     }
 
     public void updateText(ServerPlayer serverPlayer){
-        entity.setText(getText());
+        entity.setText(getText(serverPlayer.getBukkitEntity()));
 
         if(serverPlayer != null) {
             entity.getEntityData().refresh(serverPlayer);
@@ -124,8 +126,13 @@ public class Hologram {
         }
     }
 
-    private Component getText(){
+    private Component getText(Player player){
         String t = String.join("\n", lines);
+
+        if(FancyHolograms.getInstance().isUsingPlaceholderApi()){
+            t = PlaceholderAPI.setPlaceholders(player, t);
+        }
+
         return PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(t));
     }
 

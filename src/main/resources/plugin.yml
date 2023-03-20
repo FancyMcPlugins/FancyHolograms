@@ -4,6 +4,8 @@ author: OliverHD
 version: 1.0.0
 api-version: 1.19
 load: POSTWORLD
+softdepend:
+  - PlaceholderAPI
 commands:
   Hologram:
     permission: FancyHolograms.admin

@@ -12,8 +12,13 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
+repositories {
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+}
+
 dependencies {
-    paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    compileOnly("me.clip:placeholderapi:2.11.3")
+    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 }
 
 tasks {

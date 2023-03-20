@@ -21,6 +21,7 @@ public class FancyHolograms extends JavaPlugin {
 
     private final HologramManager hologramManager;
     private boolean muteVersionNotification;
+    private boolean usingPlaceholderApi;
 
     public FancyHolograms() {
         instance = this;
@@ -36,6 +37,8 @@ public class FancyHolograms extends JavaPlugin {
         muteVersionNotification = getConfig().getBoolean("mute_version_notification");
 
         PluginManager pluginManager = Bukkit.getPluginManager();
+
+        usingPlaceholderApi = pluginManager.getPlugin("PlaceholderAPI") != null;
 
         new Thread(() -> {
             ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
@@ -110,6 +113,10 @@ public class FancyHolograms extends JavaPlugin {
 
     public boolean isMuteVersionNotification() {
         return muteVersionNotification;
+    }
+
+    public boolean isUsingPlaceholderApi() {
+        return usingPlaceholderApi;
     }
 
     public static FancyHolograms getInstance() {
