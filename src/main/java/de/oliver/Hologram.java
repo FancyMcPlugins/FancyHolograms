@@ -119,7 +119,14 @@ public class Hologram {
     }
 
     public void updateBackground(ServerPlayer serverPlayer){
-        entity.setBackgroundColor(background.getColor() | 0xC8000000);
+        if(background == ChatFormatting.RESET || background == null){
+            entity.setBackgroundColor(Display.TextDisplay.INITIAL_BACKGROUND);
+        } else if(background == ChatFormatting.ITALIC){ // transparent
+            entity.setBackgroundColor(0);
+        } else {
+            entity.setBackgroundColor(background.getColor() | 0xC8000000);
+        }
+
 
         if(serverPlayer != null) {
             entity.getEntityData().refresh(serverPlayer);

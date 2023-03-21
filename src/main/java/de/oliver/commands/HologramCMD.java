@@ -45,7 +45,8 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return Arrays.stream(Display.BillboardConstraints.values()).map(Display.BillboardConstraints::getSerializedName).filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase())).toList();
         } else if(args.length == 4 && args[2].equalsIgnoreCase("background")){
             List<String> suggestions = new ArrayList<>(Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getName).toList());
-            suggestions.add("RESET");
+            suggestions.add("reset");
+            suggestions.add("transparent");
             return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase())).toList();
         } else if(args.length >= 4 && args[2].equalsIgnoreCase("moveTo")){
             if(!(sender instanceof Player p)){
@@ -317,18 +318,19 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             return false;
                         }
 
-                        ChatFormatting background = null;
-                        boolean resetBackground = false;
+                        ChatFormatting background;
 
-                        if(args[3].equalsIgnoreCase("RESET")){
-                            resetBackground = true;
-                        } else {
+                        if(args[3].equalsIgnoreCase("reset")){
+                            background = ChatFormatting.RESET;
+                        }else if(args[3].equalsIgnoreCase("transparent")){
+                            background = ChatFormatting.ITALIC;
+                        }else {
                             background = ChatFormatting.getByName(args[3]);
-                        }
 
-                        if(background == null && !resetBackground || background != null && !background.isColor()){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse background color</red>"));
-                            return false;
+                            if(background == null || !background.isColor()){
+                                p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse background color</red>"));
+                                return false;
+                            }
                         }
 
                         boolean success = editBackground(p, playerList, hologram, background);
@@ -441,8 +443,6 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         for (ServerPlayer player : playerList.players) {
             hologram.updateBackground(player);
         }
-
-
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed background color</color>"));
         return true;
