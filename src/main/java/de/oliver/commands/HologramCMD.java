@@ -34,19 +34,19 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1){
-            return Stream.of("help", "version", "create", "remove", "edit").filter(s -> s.startsWith(args[0])).toList();
+            return Stream.of("help", "version", "create", "remove", "edit").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background").filter(s -> s.startsWith(args[2])).toList();
+            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
-            return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(s -> s.startsWith(args[1])).toList();
+            return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
             return Arrays.asList("1", "2", "3");
         } else if(args.length == 4 && args[2].equalsIgnoreCase("billboard")){
-            return Arrays.stream(Display.BillboardConstraints.values()).map(Display.BillboardConstraints::getSerializedName).filter(s -> s.startsWith(args[3])).toList();
+            return Arrays.stream(Display.BillboardConstraints.values()).map(Display.BillboardConstraints::getSerializedName).filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase())).toList();
         } else if(args.length == 4 && args[2].equalsIgnoreCase("background")){
             List<String> suggestions = new ArrayList<>(Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getName).toList());
             suggestions.add("RESET");
-            return suggestions.stream().filter(s -> s.startsWith(args[3])).toList();
+            return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase())).toList();
         } else if(args.length >= 4 && args[2].equalsIgnoreCase("moveTo")){
             if(!(sender instanceof Player p)){
                 return null;
