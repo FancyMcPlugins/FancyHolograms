@@ -28,6 +28,8 @@ import java.util.List;
 
 public class HologramCMD implements CommandExecutor, TabExecutor {
 
+    private final static DecimalFormat COORDINATES_DECIMAL_FORMAT = new DecimalFormat("#########.##");
+
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1){
@@ -41,7 +43,9 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         } else if(args.length == 4 && args[2].equalsIgnoreCase("billboard")){
             return Arrays.stream(Display.BillboardConstraints.values()).map(Display.BillboardConstraints::getSerializedName).toList();
         } else if(args.length == 4 && args[2].equalsIgnoreCase("background")){
-            return Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getName).toList();
+            List<String> suggestions = new ArrayList<>(Arrays.stream(ChatFormatting.values()).filter(ChatFormatting::isColor).map(ChatFormatting::getName).toList());
+            suggestions.add("RESET");
+            return suggestions;
         } else if(args.length >= 4 && args[2].equalsIgnoreCase("moveTo")){
             if(!(sender instanceof Player p)){
                 return null;
@@ -312,9 +316,16 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             return false;
                         }
 
-                        ChatFormatting background = ChatFormatting.getByName(args[3]);
+                        ChatFormatting background = null;
+                        boolean resetBackground = false;
 
-                        if(background == null || !background.isColor()){
+                        if(args[3].equalsIgnoreCase("RESET")){
+                            resetBackground = true;
+                        } else {
+                            background = ChatFormatting.getByName(args[3]);
+                        }
+
+                        if(background == null && !resetBackground || background != null && !background.isColor()){
                             p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse background color</red>"));
                             return false;
                         }
@@ -397,9 +408,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateLocation(player);
         }
 
-        DecimalFormat df = new DecimalFormat("#########.##");
-
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Moved the hologram to " + df.format(pos.x()) + "/" + df.format(pos.y()) + "/" + df.format(pos.z()) + "</color>"));
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Moved the hologram to " + COORDINATES_DECIMAL_FORMAT.format(pos.x()) + "/" + COORDINATES_DECIMAL_FORMAT.format(pos.y()) + "/" + COORDINATES_DECIMAL_FORMAT.format(pos.z()) + "</color>"));
         return true;
     }
 
