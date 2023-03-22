@@ -56,6 +56,10 @@ public class Hologram {
     }
 
     public void spawn(ServerPlayer serverPlayer){
+        if(!location.getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())){
+            return;
+        }
+
         if(entity == null){
             create();
         }
