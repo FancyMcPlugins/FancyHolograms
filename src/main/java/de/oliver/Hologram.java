@@ -67,9 +67,7 @@ public class Hologram {
         updateText(serverPlayer);
         updateBillboard(serverPlayer);
         updateScale(serverPlayer);
-        if(background != null){
-            updateBackground(serverPlayer);
-        }
+        updateBackground(serverPlayer);
     }
 
     public void remove(ServerPlayer serverPlayer) {
@@ -78,10 +76,11 @@ public class Hologram {
     }
 
     public void updateText(ServerPlayer serverPlayer){
-        entity.setText(getText(serverPlayer.getBukkitEntity()));
-
         if(serverPlayer != null) {
+            entity.setText(getText(serverPlayer.getBukkitEntity()));
             entity.getEntityData().refresh(serverPlayer);
+        } else {
+            entity.setText(getText(null));
         }
     }
 
@@ -136,7 +135,7 @@ public class Hologram {
     private Component getText(Player player){
         String t = String.join("\n", lines);
 
-        if(FancyHolograms.getInstance().isUsingPlaceholderApi()){
+        if(player != null && FancyHolograms.getInstance().isUsingPlaceholderApi()){
             t = PlaceholderAPI.setPlaceholders(player, t);
         }
 
