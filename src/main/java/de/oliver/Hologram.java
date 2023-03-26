@@ -50,6 +50,7 @@ public class Hologram {
     public void create(){
         Level level = ((CraftWorld) location.getWorld()).getHandle();
         entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY, level);
+        entity.setLineWidth(1000);
 
         FancyHolograms.getInstance().getHologramManager().addHologram(this);
     }
