@@ -21,8 +21,6 @@ public class HologramManager {
     public void saveHolograms(boolean force){
         FileConfiguration config = FancyHolograms.getInstance().getConfig();
 
-        config.set("holograms", null);
-
         for (Hologram hologram : holograms.values()) {
             if(!hologram.isDirty() && !force){
                 continue;
@@ -83,6 +81,10 @@ public class HologramManager {
 
     public void removeHologram(Hologram hologram){
         holograms.remove(hologram.getName());
+
+        FileConfiguration config = FancyHolograms.getInstance().getConfig();
+        config.set("holograms." + hologram.getName(), null);
+        FancyHolograms.getInstance().saveConfig();
     }
 
     public Hologram getHologram(String name){
