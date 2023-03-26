@@ -31,12 +31,6 @@ public class FancyHolograms extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if(!getConfig().isBoolean("mute_version_notification")){
-            getConfig().set("mute_version_notification", false);
-            saveConfig();
-        }
-        muteVersionNotification = getConfig().getBoolean("mute_version_notification");
-
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         usingPlaceholderApi = pluginManager.getPlugin("PlaceholderAPI") != null;
@@ -100,6 +94,12 @@ public class FancyHolograms extends JavaPlugin {
         }, 20L * 5);
 
         Bukkit.getScheduler().runTaskTimer(instance, () -> {
+            if(!getConfig().isBoolean("mute_version_notification")){
+                getConfig().set("mute_version_notification", false);
+                saveConfig();
+            }
+            muteVersionNotification = getConfig().getBoolean("mute_version_notification");
+
             for (Hologram hologram : hologramManager.getAllHolograms()) {
                 long interval = hologram.getUpdateTextInterval() * 1000L;
 
