@@ -100,6 +100,32 @@ public class FancyHolograms extends JavaPlugin {
         }, 20L * 5);
 
         Bukkit.getScheduler().runTaskTimer(instance, () -> {
+            for (Hologram hologram : hologramManager.getAllHolograms()) {
+                long interval = hologram.getUpdateTextInterval() * 1000L;
+
+                if(interval < 1){
+                    continue;
+                }
+
+                long lastUpdate = hologram.getLastTextUpdate();
+                long nextUpdate = lastUpdate + interval;
+                long current = System.currentTimeMillis();
+                if(current < nextUpdate){
+                    continue;
+                }
+
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    CraftPlayer craftPlayer = (CraftPlayer) onlinePlayer;
+                    ServerPlayer serverPlayer = craftPlayer.getHandle();
+                    hologram.updateText(serverPlayer);
+                }
+
+                hologram.setLastTextUpdate(current);
+            }
+
+        }, 20 * 6L, 20);
+
+        Bukkit.getScheduler().runTaskTimer(instance, () -> {
             hologramManager.saveHolograms(false);
         }, 20*60*5, 20*60*15);
     }

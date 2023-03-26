@@ -30,6 +30,7 @@ public class HologramManager {
             config.set("holograms." + hologram.getName() + ".billboard", hologram.getBillboard().getSerializedName());
             config.set("holograms." + hologram.getName() + ".scale", hologram.getScale());
             config.set("holograms." + hologram.getName() + ".text", hologram.getLines());
+            config.set("holograms." + hologram.getName() + ".update_text_interval", hologram.getUpdateTextInterval());
             if(hologram.getBackground() != null){
                 config.set("holograms." + hologram.getName() + ".background", hologram.getBackground().getSerializedName());
             }
@@ -54,6 +55,7 @@ public class HologramManager {
             ChatFormatting background = config.isString("holograms." + name + ".background") ? ChatFormatting.getByName(config.getString("holograms." + name + ".background")) : null;
             float scale = (float) config.getDouble("holograms." + name + ".scale");
             List<String> text = config.getStringList("holograms." + name + ".text");
+            int updateTextInterval = config.getInt("holograms." + name + ".update_text_interval");
 
             String billboardName = config.getString("holograms." + name + ".billboard");
             Display.BillboardConstraints billboard = Display.BillboardConstraints.CENTER;
@@ -63,7 +65,7 @@ public class HologramManager {
                 }
             }
 
-            Hologram hologram = new Hologram(name, location, text, billboard, scale, background);
+            Hologram hologram = new Hologram(name, location, text, billboard, scale, background, updateTextInterval);
             hologram.create();
         }
 

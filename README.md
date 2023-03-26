@@ -28,7 +28,8 @@ You can download the latest versions at the following places:
 /hologram edit (hologram name) moveTo (x) (y) (z) (optional: yaw)<br>
 /hologram edit (hologram name) scale (factor)<br>
 /hologram edit (hologram name) billboard (center|fixed|horizontal|vertical)<br>
-/hologram edit (hologram name) background
+/hologram edit (hologram name) background<br>
+/hologram edit (hologram name) updateTextInterval (seconds)<br>
 
 
 ## Permissions

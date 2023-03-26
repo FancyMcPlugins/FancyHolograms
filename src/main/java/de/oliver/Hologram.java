@@ -29,17 +29,21 @@ public class Hologram {
     private Display.BillboardConstraints billboard;
     private float scale;
     private ChatFormatting background;
+    private int updateTextInterval; // if < 0 = no update
+    private long lastTextUpdate; // millisecond timestamp
 
     private Display.TextDisplay entity;
     private boolean isDirty;
 
-    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background) {
+    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background, int updateTextInterval) {
         this.name = name;
         this.location = location;
         this.lines = lines;
         this.billboard = billboard;
         this.scale = scale;
         this.background = background;
+        this.updateTextInterval = updateTextInterval;
+        this.lastTextUpdate = System.currentTimeMillis();
         this.isDirty = false;
     }
 
@@ -193,6 +197,22 @@ public class Hologram {
     public void setBackground(ChatFormatting background) {
         this.background = background;
         this.isDirty = true;
+    }
+
+    public int getUpdateTextInterval() {
+        return updateTextInterval;
+    }
+
+    public void setUpdateTextInterval(int updateTextInterval) {
+        this.updateTextInterval = updateTextInterval;
+    }
+
+    public long getLastTextUpdate() {
+        return lastTextUpdate;
+    }
+
+    public void setLastTextUpdate(long lastTextUpdate) {
+        this.lastTextUpdate = lastTextUpdate;
     }
 
     public Display.TextDisplay getEntity() {

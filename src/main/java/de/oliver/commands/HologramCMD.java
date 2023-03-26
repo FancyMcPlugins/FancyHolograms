@@ -36,7 +36,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length == 1){
             return Stream.of("help", "version", "create", "remove", "edit").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
+            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "updateTextInterval").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
@@ -91,6 +91,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text"));
             return true;
         }
 
@@ -338,6 +339,26 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             return false;
                         }
                     }
+
+                    case "updatetextinterval" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        int interval;
+                        try{
+                            interval = Integer.parseInt(args[3]);
+                        }catch (NumberFormatException e){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse interval</red>"));
+                            return false;
+                        }
+
+                        boolean success = editUpdateTextInterval(p, playerList, hologram, interval);
+                        if(!success){
+                            return false;
+                        }
+                    }
                 }
 
             }
@@ -355,7 +376,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
-        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null);
+        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null, -1);
         hologram.create();
         for (ServerPlayer player : playerList.players) {
             hologram.spawn(player);
@@ -445,6 +466,18 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed background color</color>"));
+        return true;
+    }
+
+    private boolean editUpdateTextInterval(Player p, PlayerList playerList, Hologram hologram, int interval){
+        hologram.setUpdateTextInterval(interval);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateText(player);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed the update text interval</color>"));
+
         return true;
     }
 }
