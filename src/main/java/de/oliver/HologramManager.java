@@ -22,7 +22,8 @@ public class HologramManager {
         FileConfiguration config = FancyHolograms.getInstance().getConfig();
 
         for (Hologram hologram : holograms.values()) {
-            if(!hologram.isDirty() && !force){
+            boolean shouldSave = force || hologram.isDirty();
+            if(!shouldSave){
                 continue;
             }
 
