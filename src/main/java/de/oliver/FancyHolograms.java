@@ -114,7 +114,7 @@ public class FancyHolograms extends JavaPlugin {
                     continue;
                 }
 
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                for (Player onlinePlayer : hologram.getLocation().getWorld().getPlayers()) {
                     CraftPlayer craftPlayer = (CraftPlayer) onlinePlayer;
                     ServerPlayer serverPlayer = craftPlayer.getHandle();
                     hologram.updateText(serverPlayer);
