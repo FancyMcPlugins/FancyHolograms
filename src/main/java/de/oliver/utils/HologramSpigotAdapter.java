@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 public class HologramSpigotAdapter {
 
     private final Hologram hologram;
-    public HologramSpigotAdapter(Hologram hologram){
+    public HologramSpigotAdapter(Hologram hologram) {
         this.hologram = hologram;
     }
 

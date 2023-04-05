@@ -34,11 +34,12 @@ public class Hologram {
     private float shadowStrength;
     private int updateTextInterval; // if < 0 = no update
     private long lastTextUpdate; // millisecond timestamp
+    private Npc linkedNpc;
 
     private Display.TextDisplay entity;
     private boolean isDirty;
 
-    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background, float shadowRadius, float shadowStrength, int updateTextInterval) {
+    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background, float shadowRadius, float shadowStrength, int updateTextInterval, Npc linkedNpc) {
         this.name = name;
         this.location = location;
         this.lines = lines;
@@ -48,6 +49,7 @@ public class Hologram {
         this.shadowRadius = shadowRadius;
         this.shadowStrength = shadowStrength;
         this.updateTextInterval = updateTextInterval;
+        this.linkedNpc = linkedNpc;
         this.lastTextUpdate = System.currentTimeMillis();
         this.isDirty = false;
     }
@@ -90,6 +92,7 @@ public class Hologram {
         updateScale(serverPlayer);
         updateBackground(serverPlayer);
         updateShadow(serverPlayer);
+        syncWithNpc(serverPlayer);
     }
 
     public void remove(ServerPlayer serverPlayer) {
@@ -154,13 +157,25 @@ public class Hologram {
         }
     }
 
-    public void updateShadow(ServerPlayer serverPlayer){
+    public void updateShadow(ServerPlayer serverPlayer) {
         entity.setShadowRadius(shadowRadius);
         entity.setShadowStrength(shadowStrength);
 
-        if(serverPlayer != null) {
+        if (serverPlayer != null) {
             entity.getEntityData().refresh(serverPlayer);
         }
+    }
+
+    public void syncWithNpc(ServerPlayer serverPlayer){
+        if(linkedNpc == null)
+            return;
+
+        linkedNpc.updateDisplayName("<empty>");
+
+        location = linkedNpc.getLocation().clone().add(0, 2.1, 0);
+        updateLocation(serverPlayer);
+
+        isDirty = true;
     }
 
     private Component getText(Player player){
@@ -252,6 +267,14 @@ public class Hologram {
 
     public void setLastTextUpdate(long lastTextUpdate) {
         this.lastTextUpdate = lastTextUpdate;
+    }
+
+    public Npc getLinkedNpc() {
+        return linkedNpc;
+    }
+
+    public void setLinkedNpc(Npc linkedNpc) {
+        this.linkedNpc = linkedNpc;
     }
 
     public Display.TextDisplay getEntity() {
