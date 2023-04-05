@@ -2,6 +2,9 @@ package de.oliver.commands;
 
 import de.oliver.FancyHolograms;
 import de.oliver.Hologram;
+import de.oliver.events.HologramCreateEvent;
+import de.oliver.events.HologramModifyEvent;
+import de.oliver.events.HologramRemoveEvent;
 import de.oliver.utils.VersionFetcher;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
@@ -377,6 +380,15 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         lines.add("Edit this line with /hologram edit " + name);
 
         Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null, -1);
+
+        HologramCreateEvent hologramCreateEvent = new HologramCreateEvent(hologram, p);
+        hologramCreateEvent.callEvent();
+
+        if(hologramCreateEvent.isCancelled()){
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Creating the hologram was cancelled</red>"));
+            return false;
+        }
+
         hologram.create();
         for (ServerPlayer player : playerList.players) {
             hologram.spawn(player);
@@ -387,6 +399,14 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean remove(Player p, PlayerList playerList, Hologram hologram){
+        HologramRemoveEvent hologramRemoveEvent = new HologramRemoveEvent(hologram, p);
+        hologramRemoveEvent.callEvent();
+
+        if(hologramRemoveEvent.isCancelled()){
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Removing the hologram was cancelled</red>"));
+            return false;
+        }
+
         for (ServerPlayer player : playerList.players) {
             hologram.remove(player);
         }
@@ -415,6 +435,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             }
         }
 
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.TEXT);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            return false;
+        }
+
         hologram.setLines(lines);
 
         for (ServerPlayer player : playerList.players) {
@@ -426,6 +453,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean editPosition(Player p, PlayerList playerList, Hologram hologram, Location pos){
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.POSITION);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            return false;
+        }
+
         hologram.setLocation(pos);
 
         for (ServerPlayer player : playerList.players) {
@@ -437,6 +471,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean editBillboard(Player p, PlayerList playerList, Hologram hologram, Display.BillboardConstraints billboard){
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.BILLBOARD);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            return false;
+        }
+
         hologram.setBillboard(billboard);
 
         for (ServerPlayer player : playerList.players) {
@@ -448,6 +489,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean editScale(Player p, PlayerList playerList, Hologram hologram, float scale){
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.SCALE);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            return false;
+        }
+
         hologram.setScale(scale);
 
         for (ServerPlayer player : playerList.players) {
@@ -459,6 +507,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean editBackground(Player p, PlayerList playerList, Hologram hologram, ChatFormatting background){
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.BACKGROUND);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            return false;
+        }
+
         hologram.setBackground(background);
 
         for (ServerPlayer player : playerList.players) {
@@ -470,6 +525,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean editUpdateTextInterval(Player p, PlayerList playerList, Hologram hologram, int interval){
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.UPDATE_TEXT_INTERVAL);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            return false;
+        }
+
         hologram.setUpdateTextInterval(interval);
 
         for (ServerPlayer player : playerList.players) {
