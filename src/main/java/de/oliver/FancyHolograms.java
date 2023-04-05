@@ -93,7 +93,7 @@ public class FancyHolograms extends JavaPlugin {
                 }
             }
 
-        }, 20L * 5);
+        }, 20L * 6);
 
         Bukkit.getScheduler().runTaskTimer(instance, () -> {
             if(!getConfig().isBoolean("mute_version_notification")){
@@ -125,7 +125,7 @@ public class FancyHolograms extends JavaPlugin {
                 hologram.setLastTextUpdate(current);
             }
 
-        }, 20 * 6L, 20);
+        }, 20 * 7L, 20);
 
         Bukkit.getScheduler().runTaskTimer(instance, () -> {
             hologramManager.saveHolograms(false);
