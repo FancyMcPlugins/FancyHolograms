@@ -23,6 +23,7 @@ public class FancyHolograms extends JavaPlugin {
     private final HologramManager hologramManager;
     private boolean muteVersionNotification;
     private boolean usingPlaceholderApi;
+    private boolean usingFancyNpcs;
 
     public FancyHolograms() {
         instance = this;
@@ -33,7 +34,8 @@ public class FancyHolograms extends JavaPlugin {
     public void onEnable() {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        usingPlaceholderApi = pluginManager.getPlugin("PlaceholderAPI") != null;
+        usingPlaceholderApi = pluginManager.isPluginEnabled("PlaceholderAPI");
+        usingFancyNpcs = pluginManager.isPluginEnabled("FancyNpcs");
 
         new Thread(() -> {
             ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
@@ -145,6 +147,10 @@ public class FancyHolograms extends JavaPlugin {
 
     public boolean isUsingPlaceholderApi() {
         return usingPlaceholderApi;
+    }
+
+    public boolean isUsingFancyNpcs() {
+        return usingFancyNpcs;
     }
 
     public static FancyHolograms getInstance() {

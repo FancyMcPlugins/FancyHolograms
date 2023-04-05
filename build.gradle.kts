@@ -14,10 +14,12 @@ java {
 }
 
 repositories {
+    mavenLocal()
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
 
 dependencies {
+    compileOnly("de.oliver:FancyNpcs:1.1.2")
     compileOnly("me.clip:placeholderapi:2.11.3")
     paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 }
