@@ -37,6 +37,9 @@ public class HologramManager {
             if(hologram.getBackground() != null){
                 config.set("holograms." + hologram.getName() + ".background", hologram.getBackground().getSerializedName());
             }
+            if(hologram.getLinkedNpc() != null){
+                config.set("holograms." + hologram.getName() + ".linkedNpc", hologram.getLinkedNpc().getName());
+            }
 
             hologram.setDirty(false);
         }
@@ -61,6 +64,7 @@ public class HologramManager {
             int updateTextInterval = config.getInt("holograms." + name + ".update_text_interval");
             float shadowRadius = (float) config.getDouble("holograms." + name + ".shadow_radius");
             float shadowStrength = (float) config.getDouble("holograms." + name + ".shadow_strength", 1);
+            String linkedNpcName = config.getString("holograms." + name + ".linkedNpc");
 
             String billboardName = config.getString("holograms." + name + ".billboard");
             Display.BillboardConstraints billboard = Display.BillboardConstraints.CENTER;
@@ -70,7 +74,12 @@ public class HologramManager {
                 }
             }
 
-            Hologram hologram = new Hologram(name, location, text, billboard, scale, background, shadowRadius, shadowStrength, updateTextInterval);
+            Hologram hologram = new Hologram(name, location, text, billboard, scale, background, shadowRadius, shadowStrength, updateTextInterval, null);
+
+            if(FancyHolograms.getInstance().isUsingFancyNpcs() && linkedNpcName != null && linkedNpcName.length() > 0){
+                hologram.setLinkedNpc(de.oliver.FancyNpcs.getInstance().getNpcManager().getNpc(linkedNpcName));
+            }
+
             hologram.create();
         }
 

@@ -479,7 +479,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
-        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null, 0, 1, -1);
+        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null, 0, 1, -1, null);
 
         HologramCreateEvent hologramCreateEvent = new HologramCreateEvent(hologram, p);
         hologramCreateEvent.callEvent();
@@ -532,7 +532,8 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 hologram.getBackground(),
                 hologram.getShadowRadius(),
                 hologram.getShadowStrength(),
-                hologram.getUpdateTextInterval()
+                hologram.getUpdateTextInterval(),
+                hologram.getLinkedNpc()
         );
 
         HologramCreateEvent hologramCreateEvent = new HologramCreateEvent(newHologram, p);
@@ -588,6 +589,12 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean editPosition(Player p, PlayerList playerList, Hologram hologram, Location pos){
+        if(hologram.getLinkedNpc() != null){
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>This hologram is linked with an NPC</red>"));
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>To unlink: /hologram edit " + hologram.getName() + " unlinkWithNpc " + hologram.getLinkedNpc().getName() + "</red>"));
+            return false;
+        }
+
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.POSITION);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
@@ -715,11 +722,14 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean editLinkWithNpc(Player p, PlayerList playerList, Hologram hologram, Npc npc){
-        npc.updateDisplayName("<empty>");
-        hologram.setLocation(npc.getLocation().clone().add(0, 2.1, 0));
+        if(hologram.getLinkedNpc() != null){
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>This hologram is already linked with an NPC</red>"));
+            return false;
+        }
+        hologram.setLinkedNpc(npc);
 
         for (ServerPlayer player : playerList.players) {
-            hologram.updateLocation(player);
+            hologram.syncWithNpc(player);
         }
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Linked hologram with NPC</color>"));
