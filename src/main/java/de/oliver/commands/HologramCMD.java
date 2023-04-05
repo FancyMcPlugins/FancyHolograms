@@ -2,6 +2,7 @@ package de.oliver.commands;
 
 import de.oliver.FancyHolograms;
 import de.oliver.Hologram;
+import de.oliver.Npc;
 import de.oliver.events.HologramCreateEvent;
 import de.oliver.events.HologramModifyEvent;
 import de.oliver.events.HologramRemoveEvent;
@@ -39,8 +40,9 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length == 1){
             return Stream.of("help", "version", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "shadowRadius", "shadowStrength", "updateTextInterval").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
+            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "shadowRadius", "shadowStrength", "updateTextInterval", FancyHolograms.getInstance().isUsingFancyNpcs() ? "linkWithNpc" : "").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy")) ){
+
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
             return Arrays.asList("1", "2", "3");
@@ -67,6 +69,14 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 case 5 -> { return Arrays.asList(String.valueOf(target.getY())); }
                 case 6 -> { return Arrays.asList(String.valueOf(target.getZ())); }
             }
+        } else if(args.length == 4 && args[2].equalsIgnoreCase("linkWithNpc") && FancyHolograms.getInstance().isUsingFancyNpcs()){
+            return de.oliver.FancyNpcs.getInstance()
+                    .getNpcManager()
+                    .getAllNpcs()
+                    .stream()
+                    .map(Npc::getName)
+                    .filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase()))
+                    .toList();
         }
 
         return null;
@@ -98,6 +108,9 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text"));
+            if(FancyHolograms.getInstance().isUsingFancyNpcs()){
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> linkToNpc <npc name> <dark_gray>- <white>Links the hologram to an NPC"));
+            }
             return true;
         }
 
@@ -425,6 +438,30 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             return false;
                         }
                     }
+
+                    case "linkwithnpc" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        if(!FancyHolograms.getInstance().isUsingFancyNpcs()){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>You need to install the FancyNpcs plugin for this functionality to work</color>"));
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>Download link: <click:open_url:'https://modrinth.com/plugin/npc-plugin/versions'><u>click here</u></click>.</color>"));
+                            return false;
+                        }
+
+                        Npc npc = de.oliver.FancyNpcs.getInstance().getNpcManager().getNpc(args[3]);
+                        if(npc == null){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find NPC</red>"));
+                            return false;
+                        }
+
+                        boolean success = editLinkWithNpc(p, playerList, hologram, npc);
+                        if(!success){
+                            return false;
+                        }
+                    }
                 }
 
             }
@@ -674,6 +711,18 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed the update text interval</color>"));
 
+        return true;
+    }
+
+    private boolean editLinkWithNpc(Player p, PlayerList playerList, Hologram hologram, Npc npc){
+        npc.updateDisplayName("<empty>");
+        hologram.setLocation(npc.getLocation().clone().add(0, 2.1, 0));
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateLocation(player);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Linked hologram with NPC</color>"));
         return true;
     }
 }
