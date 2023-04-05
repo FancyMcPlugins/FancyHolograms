@@ -1,6 +1,7 @@
 package de.oliver;
 
 import com.mojang.math.Transformation;
+import de.oliver.events.HologramSpawnEvent;
 import io.papermc.paper.adventure.PaperAdventure;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -62,6 +63,13 @@ public class Hologram {
 
     public void spawn(ServerPlayer serverPlayer){
         if(!location.getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())){
+            return;
+        }
+
+        HologramSpawnEvent hologramSpawnEvent = new HologramSpawnEvent(this, serverPlayer.getBukkitEntity());
+        hologramSpawnEvent.callEvent();
+
+        if(hologramSpawnEvent.isCancelled()){
             return;
         }
 
