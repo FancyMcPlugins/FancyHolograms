@@ -8,9 +8,9 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Is fired when a {@link Hologram} is being spawned
+ * Is fired when a {@link Hologram} gets modified
  */
-public class HologramSpawnEvent extends Event implements Cancellable {
+public class HologramModifyEvent extends Event implements Cancellable {
 
     private static HandlerList handlerList = new HandlerList();
     private boolean isCancelled;
@@ -19,10 +19,13 @@ public class HologramSpawnEvent extends Event implements Cancellable {
     private final Hologram hologram;
     @NotNull
     private final Player player;
+    @NotNull
+    private final HologramModification modification;
 
-    public HologramSpawnEvent(@NotNull Hologram hologram, @NotNull Player player) {
+    public HologramModifyEvent(@NotNull Hologram hologram, @NotNull Player player, @NotNull HologramModification modification) {
         this.hologram = hologram;
         this.player = player;
+        this.modification = modification;
     }
 
     /**
@@ -37,6 +40,13 @@ public class HologramSpawnEvent extends Event implements Cancellable {
      */
     public @NotNull Player getPlayer() {
         return player;
+    }
+
+    /**
+     * @return the modified attribute
+     */
+    public @NotNull HologramModification getModification() {
+        return modification;
     }
 
     @Override
@@ -56,6 +66,16 @@ public class HologramSpawnEvent extends Event implements Cancellable {
 
     public static HandlerList getHandlerList() {
         return handlerList;
+    }
+
+    public enum HologramModification{
+        TEXT,
+        POSITION,
+        SCALE,
+        BILLBOARD,
+        BACKGROUND,
+        UPDATE_TEXT_INTERVAL,
+        ;
     }
 
 }
