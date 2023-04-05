@@ -3,6 +3,7 @@ package de.oliver.commands;
 import de.oliver.FancyHolograms;
 import de.oliver.Hologram;
 import de.oliver.events.HologramCreateEvent;
+import de.oliver.events.HologramRemoveEvent;
 import de.oliver.utils.VersionFetcher;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
@@ -397,6 +398,14 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     }
 
     private boolean remove(Player p, PlayerList playerList, Hologram hologram){
+        HologramRemoveEvent hologramRemoveEvent = new HologramRemoveEvent(hologram, p);
+        hologramRemoveEvent.callEvent();
+
+        if(hologramRemoveEvent.isCancelled()){
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Removing the hologram was cancelled</red>"));
+            return false;
+        }
+
         for (ServerPlayer player : playerList.players) {
             hologram.remove(player);
         }
