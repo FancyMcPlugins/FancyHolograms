@@ -743,8 +743,9 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
         hologram.setLinkedNpc(npc);
 
+        hologram.syncWithNpc();
         for (ServerPlayer player : playerList.players) {
-            hologram.syncWithNpc(player);
+            hologram.updateLocation(player);
         }
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Linked hologram with NPC</color>"));
