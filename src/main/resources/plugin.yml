@@ -1,7 +1,7 @@
 name: FancyHolograms
 main: de.oliver.FancyHolograms
 author: OliverHD
-version: 1.0.4
+version: 1.0.4-fancynpcs
 api-version: 1.19
 load: POSTWORLD
 softdepend:
