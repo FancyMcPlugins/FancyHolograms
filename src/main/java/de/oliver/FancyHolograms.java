@@ -1,6 +1,7 @@
 package de.oliver;
 
 import de.oliver.commands.HologramCMD;
+import de.oliver.listeners.NpcModifyListener;
 import de.oliver.listeners.PlayerChangedWorldListener;
 import de.oliver.listeners.PlayerJoinListener;
 import de.oliver.utils.Metrics;
@@ -80,6 +81,9 @@ public class FancyHolograms extends JavaPlugin {
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
+        if(usingFancyNpcs){
+            pluginManager.registerEvents(new NpcModifyListener(), instance);
+        }
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             hologramManager.loadHolograms();

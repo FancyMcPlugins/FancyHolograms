@@ -86,13 +86,14 @@ public class Hologram {
         ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(entity);
         serverPlayer.connection.send(addEntityPacket);
 
+        syncWithNpc();
         updateLocation(serverPlayer);
         updateText(serverPlayer);
         updateBillboard(serverPlayer);
         updateScale(serverPlayer);
         updateBackground(serverPlayer);
         updateShadow(serverPlayer);
-        syncWithNpc(serverPlayer);
+        syncWithNpc();
     }
 
     public void remove(ServerPlayer serverPlayer) {
@@ -166,15 +167,14 @@ public class Hologram {
         }
     }
 
-    public void syncWithNpc(ServerPlayer serverPlayer){
+    public void syncWithNpc(){
         if(linkedNpc == null)
             return;
 
         linkedNpc.updateDisplayName("<empty>");
+        linkedNpc.updateShowInTab(false);
 
         location = linkedNpc.getLocation().clone().add(0, 2.1, 0);
-        updateLocation(serverPlayer);
-
         isDirty = true;
     }
 
