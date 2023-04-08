@@ -21,6 +21,7 @@ You can download the latest versions at the following places:
 /hologram version<br>
 /hologram create (name)<br>
 /hologram remove (hologram name)<br>
+/hologram copy (hologram name) (new name)<br>
 /hologram edit (hologram name) addLine (text ...)<br>
 /hologram edit (hologram name) removeLine (text ...)<br>
 /hologram edit (hologram name) setLine (line number) (text ...)<br>

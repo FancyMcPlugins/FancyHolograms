@@ -37,10 +37,10 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1){
-            return Stream.of("help", "version", "create", "remove", "edit").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
+            return Stream.of("help", "version", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
             return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "updateTextInterval").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
-        }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit")) ){
+        }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy")) ){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
             return Arrays.asList("1", "2", "3");
@@ -86,6 +86,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram version <dark_gray>- <white>Shows the plugin version"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram create <name> <dark_gray>- <white>Creates a new hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram remove <name> <dark_gray>- <white>Removes a hologram"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> addLine <text ...> <dark_gray>- <white>Adds a line at the bottom"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> removeLine <dark_gray>- <white>Removes a line at the bottom"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line"));
@@ -140,6 +141,26 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 }
 
                 boolean success = remove(p, playerList, hologram);
+                if(!success){
+                    return false;
+                }
+            }
+
+            case "copy" -> {
+                Hologram hologram = FancyHolograms.getInstance().getHologramManager().getHologram(holoName);
+                if(hologram == null){
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find hologram: '" + holoName + "'</red>"));
+                    return false;
+                }
+
+                if(args.length < 3){
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                    return false;
+                }
+
+                String newName = args[2];
+
+                boolean success = copy(p, playerList, hologram, newName);
                 if(!success){
                     return false;
                 }
@@ -414,6 +435,39 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         hologram.delete();
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Removed the hologram</color>"));
+        return true;
+    }
+
+    private boolean copy(Player p, PlayerList playerList, Hologram hologram, String newName){
+        if (FancyHolograms.getInstance().getHologramManager().getHologram(newName) != null) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>There already exists a hologram with this name</red>"));
+            return false;
+        }
+
+        Hologram newHologram = new Hologram(
+                newName,
+                p.getLocation(),
+                hologram.getLines(),
+                hologram.getBillboard(),
+                hologram.getScale(),
+                hologram.getBackground(),
+                hologram.getUpdateTextInterval()
+        );
+
+        HologramCreateEvent hologramCreateEvent = new HologramCreateEvent(newHologram, p);
+        hologramCreateEvent.callEvent();
+
+        if(hologramCreateEvent.isCancelled()){
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Creating the hologram was cancelled</red>"));
+            return false;
+        }
+
+        newHologram.create();
+        for (ServerPlayer player : playerList.players) {
+            newHologram.spawn(player);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Copied the hologram</color>"));
         return true;
     }
 
