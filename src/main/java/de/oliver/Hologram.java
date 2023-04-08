@@ -30,19 +30,23 @@ public class Hologram {
     private Display.BillboardConstraints billboard;
     private float scale;
     private ChatFormatting background;
+    private float shadowRadius;
+    private float shadowStrength;
     private int updateTextInterval; // if < 0 = no update
     private long lastTextUpdate; // millisecond timestamp
 
     private Display.TextDisplay entity;
     private boolean isDirty;
 
-    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background, int updateTextInterval) {
+    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background, float shadowRadius, float shadowStrength, int updateTextInterval) {
         this.name = name;
         this.location = location;
         this.lines = lines;
         this.billboard = billboard;
         this.scale = scale;
         this.background = background;
+        this.shadowRadius = shadowRadius;
+        this.shadowStrength = shadowStrength;
         this.updateTextInterval = updateTextInterval;
         this.lastTextUpdate = System.currentTimeMillis();
         this.isDirty = false;
@@ -85,6 +89,7 @@ public class Hologram {
         updateBillboard(serverPlayer);
         updateScale(serverPlayer);
         updateBackground(serverPlayer);
+        updateShadow(serverPlayer);
     }
 
     public void remove(ServerPlayer serverPlayer) {
@@ -149,6 +154,15 @@ public class Hologram {
         }
     }
 
+    public void updateShadow(ServerPlayer serverPlayer){
+        entity.setShadowRadius(shadowRadius);
+        entity.setShadowStrength(shadowStrength);
+
+        if(serverPlayer != null) {
+            entity.getEntityData().refresh(serverPlayer);
+        }
+    }
+
     private Component getText(Player player){
         String t = String.join("\n", lines);
 
@@ -206,6 +220,22 @@ public class Hologram {
     public void setBackground(ChatFormatting background) {
         this.background = background;
         this.isDirty = true;
+    }
+
+    public float getShadowRadius() {
+        return shadowRadius;
+    }
+
+    public void setShadowRadius(float shadowRadius) {
+        this.shadowRadius = shadowRadius;
+    }
+
+    public float getShadowStrength() {
+        return shadowStrength;
+    }
+
+    public void setShadowStrength(float shadowStrength) {
+        this.shadowStrength = shadowStrength;
     }
 
     public int getUpdateTextInterval() {

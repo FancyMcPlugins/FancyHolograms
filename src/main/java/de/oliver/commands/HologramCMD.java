@@ -39,7 +39,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length == 1){
             return Stream.of("help", "version", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
-            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "updateTextInterval").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
+            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "shadowRadius", "shadowStrength", "updateTextInterval").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         }else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy")) ){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
@@ -95,6 +95,8 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text"));
             return true;
         }
@@ -364,6 +366,46 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         }
                     }
 
+                    case "shadowradius" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        float radius;
+                        try{
+                            radius = Float.parseFloat(args[3]);
+                        }catch (NumberFormatException e){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse shadow radius</red>"));
+                            return false;
+                        }
+
+                        boolean success = editShadowRadius(p, playerList, hologram, radius);
+                        if(!success){
+                            return false;
+                        }
+                    }
+
+                    case "shadowstrength" -> {
+                        if(args.length < 4){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            return false;
+                        }
+
+                        float strength;
+                        try{
+                            strength = Float.parseFloat(args[3]);
+                        }catch (NumberFormatException e){
+                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse shadow strength</red>"));
+                            return false;
+                        }
+
+                        boolean success = editShadowStrength(p, playerList, hologram, strength);
+                        if(!success){
+                            return false;
+                        }
+                    }
+
                     case "updatetextinterval" -> {
                         if(args.length < 4){
                             p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
@@ -400,7 +442,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
-        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null, -1);
+        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null, 0, 1, -1);
 
         HologramCreateEvent hologramCreateEvent = new HologramCreateEvent(hologram, p);
         hologramCreateEvent.callEvent();
@@ -451,6 +493,8 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 hologram.getBillboard(),
                 hologram.getScale(),
                 hologram.getBackground(),
+                hologram.getShadowRadius(),
+                hologram.getShadowStrength(),
                 hologram.getUpdateTextInterval()
         );
 
@@ -575,6 +619,42 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed background color</color>"));
+        return true;
+    }
+
+    private boolean editShadowRadius(Player p, PlayerList playerList, Hologram hologram, float radius){
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.SHADOW_RADIUS);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            return false;
+        }
+
+        hologram.setShadowRadius(radius);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateShadow(player);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed shadow radius</color>"));
+        return true;
+    }
+
+    private boolean editShadowStrength(Player p, PlayerList playerList, Hologram hologram, float strength){
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.SHADOW_STRENGTH);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            return false;
+        }
+
+        hologram.setShadowStrength(strength);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateShadow(player);
+        }
+
+        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed shadow strength</color>"));
         return true;
     }
 
