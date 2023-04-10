@@ -16,11 +16,13 @@ java {
 repositories {
     mavenLocal()
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    mavenCentral()
 }
 
 dependencies {
     compileOnly("de.oliver:FancyNpcs:1.1.3")
     compileOnly("me.clip:placeholderapi:2.11.3")
+    compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.0.0")
     paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 }
 
