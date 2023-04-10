@@ -30,12 +30,12 @@ You can download the latest versions at the following places:
 /hologram edit (hologram name) scale (factor)<br>
 /hologram edit (hologram name) billboard (center|fixed|horizontal|vertical)<br>
 /hologram edit (hologram name) background (color)<br>
-/hologram edit <hologram> shadowRadius (value)<br>
-/hologram edit <hologram> shadowStrength (value)<br>
+/hologram edit (hologram name) shadowRadius (value)<br>
+/hologram edit (hologram name) shadowStrength (value)<br>
 /hologram edit (hologram name) updateTextInterval (seconds)<br>
 
-/hologram edit <hologram> linkWithNpc (npc name)<br>
-/hologram edit <hologram> unlinkWithNpc
+/hologram edit (hologram) linkWithNpc (npc name)<br>
+/hologram edit (hologram) unlinkWithNpc
 
 
 ## Permissions
