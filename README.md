@@ -1,4 +1,4 @@
-[![Generic badge](https://img.shields.io/badge/version-1.0.4-orange.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-1.0.5-orange.svg)](https://shields.io/)
 
 # Fancy holograms
 Create fancy looking holograms with the new 1.19.4 text display entities.<br>
@@ -29,8 +29,13 @@ You can download the latest versions at the following places:
 /hologram edit (hologram name) moveTo (x) (y) (z) (optional: yaw)<br>
 /hologram edit (hologram name) scale (factor)<br>
 /hologram edit (hologram name) billboard (center|fixed|horizontal|vertical)<br>
-/hologram edit (hologram name) background<br>
+/hologram edit (hologram name) background (color)<br>
+/hologram edit <hologram> shadowRadius (value)<br>
+/hologram edit <hologram> shadowStrength (value)<br>
 /hologram edit (hologram name) updateTextInterval (seconds)<br>
+
+/hologram edit <hologram> linkWithNpc (npc name)<br>
+/hologram edit <hologram> unlinkWithNpc
 
 
 ## Permissions

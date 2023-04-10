@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.0.4-fancynpcs"
+version = "1.0.5"
 description = "Hologram plugin"
 
 java {
