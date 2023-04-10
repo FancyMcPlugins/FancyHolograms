@@ -29,15 +29,13 @@ public class NpcModifyListener implements Listener {
                         continue;
                     }
 
-                    FancyHolograms.getInstance().getLogger().info("Syncing npc");
-
-                    Bukkit.getScheduler().runTaskLater(FancyHolograms.getInstance(), () -> {
+                    FancyHolograms.getInstance().getScheduler().runTaskLater(null, 1L, () -> {
                         hologram.syncWithNpc();
                         HologramSpigotAdapter adapter = HologramSpigotAdapter.fromHologram(hologram);
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             adapter.updateLocation(player);
                         }
-                    }, 1);
+                    });
 
                 }
             }
@@ -52,7 +50,6 @@ public class NpcModifyListener implements Listener {
                 }
                 if(isLinked){
                     event.setCancelled(true);
-                    System.out.println("pog?");
                     MessageHelper.error(event.getPlayer(), "This modification is not allowed on a linked npc");
                 }
             }

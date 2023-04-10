@@ -3,9 +3,13 @@ package de.oliver.fancyholograms;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.listeners.*;
+import de.oliver.fancyholograms.utils.FoliaScheduler;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
+import de.oliver.fancylib.serverSoftware.ServerSoftware;
+import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
+import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -17,12 +21,14 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class FancyHolograms extends JavaPlugin {
 
     public static final String SUPPORTED_VERSION = "1.19.4";
     private static FancyHolograms instance;
 
+    private final FancyScheduler scheduler;
     private final VersionFetcher versionFetcher;
     private final HologramManager hologramManager;
     private final FancyHologramsConfig config;
@@ -32,6 +38,9 @@ public class FancyHolograms extends JavaPlugin {
 
     public FancyHolograms() {
         instance = this;
+        scheduler = ServerSoftware.isFolia()
+                    ? new FoliaScheduler(instance)
+                    : new BukkitScheduler(instance);
         versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancyholograms/version", "https://modrinth.com/plugin/fancyholograms/versions");
         hologramManager = new HologramManager();
         config = new FancyHologramsConfig();
@@ -71,8 +80,7 @@ public class FancyHolograms extends JavaPlugin {
             return;
         }
 
-        String serverSoftware = nmsServer.getServerModName();
-        if (!serverSoftware.equals("Paper")){
+        if (!ServerSoftware.isPaper()){
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("It is recommended to use Paper as server software.");
             getLogger().warning("Because you are not using paper, the plugin");
@@ -98,7 +106,7 @@ public class FancyHolograms extends JavaPlugin {
 
         config.reload();
 
-        Bukkit.getScheduler().runTaskLater(instance, () -> {
+        scheduler.runTaskLater(null, 20L*6, () -> {
             hologramManager.loadHolograms();
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -109,10 +117,9 @@ public class FancyHolograms extends JavaPlugin {
                     hologram.spawn(serverPlayer);
                 }
             }
+        });
 
-        }, 20L * 6);
-
-        Bukkit.getScheduler().runTaskTimer(instance, () -> {
+        scheduler.runTaskTimerAsynchronously(7, 1, () -> {
             for (Hologram hologram : hologramManager.getAllHolograms()) {
                 long interval = hologram.getUpdateTextInterval() * 1000L;
 
@@ -135,23 +142,21 @@ public class FancyHolograms extends JavaPlugin {
 
                 hologram.setLastTextUpdate(current);
             }
+        });
 
-        }, 20 * 7L, 20);
-
-        if(config.isEnableAutosave()){
+        if(config.isEnableAutosave()) {
             int autosaveInterval = config.getAutosaveInterval();
-            Bukkit.getScheduler().runTaskTimer(
-                    instance,
-                    () -> hologramManager.saveHolograms(false),
-                    20L*60*autosaveInterval,
-                    20L*60*autosaveInterval
-            );
+            scheduler.runTaskTimerAsynchronously(autosaveInterval*60L, autosaveInterval*60L, () -> hologramManager.saveHolograms(false));
         }
     }
 
     @Override
     public void onDisable() {
         hologramManager.saveHolograms(true);
+    }
+
+    public FancyScheduler getScheduler() {
+        return scheduler;
     }
 
     public VersionFetcher getVersionFetcher() {
