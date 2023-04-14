@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms;
 
 import de.oliver.fancyholograms.commands.HologramCMD;
+import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
 import de.oliver.fancyholograms.listeners.NpcModifyListener;
@@ -39,8 +40,9 @@ public class FancyHolograms extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        PluginManager pluginManager = Bukkit.getPluginManager();
+        MessageHelper.pluginName = getDescription().getName();
 
+        PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlaceholderApi = pluginManager.isPluginEnabled("PlaceholderAPI");
         usingFancyNpcs = pluginManager.isPluginEnabled("FancyNpcs");
         usingMiniPlaceholders = pluginManager.isPluginEnabled("MiniPlaceholders");
