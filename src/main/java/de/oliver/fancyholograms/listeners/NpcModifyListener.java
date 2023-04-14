@@ -2,9 +2,9 @@ package de.oliver.fancyholograms.listeners;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.Hologram;
-import de.oliver.fancynpcs.events.NpcModifyEvent;
 import de.oliver.fancyholograms.utils.HologramSpigotAdapter;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancynpcs.events.NpcModifyEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,7 +48,7 @@ public class NpcModifyListener implements Listener {
                 }
                 if(isLinked){
                     event.setCancelled(true);
-                    event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<red>This modification is not allowed on a linked npc</red>"));
+                    MessageHelper.error(event.getPlayer(), "This modification is not allowed on a linked npc");
                 }
             }
         }

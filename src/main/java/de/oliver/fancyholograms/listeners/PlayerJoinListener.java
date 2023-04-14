@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.listeners;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.Hologram;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import de.oliver.fancylib.MessageHelper;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
@@ -26,8 +26,8 @@ public class PlayerJoinListener implements Listener {
                 ComparableVersion newestVersion = FancyHolograms.getInstance().getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyHolograms.getInstance().getDescription().getVersion());
                 if(newestVersion.compareTo(currentVersion) > 0){
-                    event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyHolograms plugin.</color>"));
-                    event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyHolograms.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>.</color>"));
+                    MessageHelper.warning(event.getPlayer(), "You are using an outdated version of the FancyHolograms plugin.</color>");
+                    MessageHelper.warning(event.getPlayer(), "Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyHolograms.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>.</color>");
                 }
             }).start();
         }

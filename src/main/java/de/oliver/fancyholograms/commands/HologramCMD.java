@@ -5,9 +5,9 @@ import de.oliver.fancyholograms.Hologram;
 import de.oliver.fancyholograms.events.HologramCreateEvent;
 import de.oliver.fancyholograms.events.HologramModifyEvent;
 import de.oliver.fancyholograms.events.HologramRemoveEvent;
+import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.Npc;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -87,45 +87,45 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(!(sender instanceof Player p)){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Only players can execute this command</red>"));
+            MessageHelper.error(sender, "Only players can execute this command");
             return false;
         }
 
         if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>NPC Plugin help:"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram help <dark_gray>- <white>Shows all (sub)commands"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram version <dark_gray>- <white>Shows the plugin version"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram create <name> <dark_gray>- <white>Creates a new hologram"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram remove <name> <dark_gray>- <white>Removes a hologram"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> addLine <text ...> <dark_gray>- <white>Adds a line at the bottom"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> removeLine <dark_gray>- <white>Removes a line at the bottom"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> position <dark_gray>- <white>Teleports the hologram to you"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> moveTo <x> <y> <z> [yaw] <dark_gray>- <white>Teleports the hologram to the coordinates"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text"));
+            MessageHelper.info(p, "<b>FancyHolograms commands help:");
+            MessageHelper.info(p, "- /hologram help <dark_gray>- <white>Shows all (sub)commands", false);
+            MessageHelper.info(p, "- /hologram version <dark_gray>- <white>Shows the plugin version", false);
+            MessageHelper.info(p, "- /hologram create <name> <dark_gray>- <white>Creates a new hologram", false);
+            MessageHelper.info(p, "- /hologram remove <name> <dark_gray>- <white>Removes a hologram", false);
+            MessageHelper.info(p, "- /hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> addLine <text ...> <dark_gray>- <white>Adds a line at the bottom", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> removeLine <dark_gray>- <white>Removes a line at the bottom", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> position <dark_gray>- <white>Teleports the hologram to you", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> moveTo <x> <y> <z> [yaw] <dark_gray>- <white>Teleports the hologram to the coordinates", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text", false);
             if(FancyHolograms.getInstance().isUsingFancyNpcs()){
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> linkWithNpc <npc name> <dark_gray>- <white>Links the hologram with an NPC"));
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/hologram edit <hologram> unlinkWithNpc <dark_gray>- <white>Unlinks the hologram with an NPC"));
+                MessageHelper.info(p, " - /hologram edit <hologram> linkWithNpc <npc name> <dark_gray>- <white>Links the hologram with an NPC", false);
+                MessageHelper.info(p, " - /hologram edit <hologram> unlinkWithNpc <dark_gray>- <white>Unlinks the hologram with an NPC", false);
             }
             return true;
         }
 
         if(args.length >= 1 && args[0].equalsIgnoreCase("version")){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790><i>Checking version, please wait...</i></color>"));
+            MessageHelper.info(p, "<i>Checking version, please wait...</i>");
             new Thread(() -> {
                 ComparableVersion newestVersion = FancyHolograms.getInstance().getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyHolograms.getInstance().getDescription().getVersion());
                 if(newestVersion.compareTo(currentVersion) > 0){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyHolograms plugin.</color>"));
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyHolograms.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>.</color>"));
+                    MessageHelper.warning(p, "You are using an outdated version of the FancyHolograms plugin.</color>");
+                    MessageHelper.warning(p, "Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyHolograms.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>.</color>");
                 } else {
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790>You are using the latest version of the FancyHolograms plugin (" + currentVersion + ").</color>"));
+                    MessageHelper.success(p, "You are using the latest version of the FancyHolograms plugin (" + currentVersion + ")");
                 }
             }).start();
 
@@ -133,7 +133,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         if(args.length < 2){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+            MessageHelper.error(p, "Wrong usage: /hologram help");
             return false;
         }
 
@@ -153,7 +153,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             case "remove" -> {
                 Hologram hologram = FancyHolograms.getInstance().getHologramManager().getHologram(holoName);
                 if(hologram == null){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find hologram: '" + holoName + "'</red>"));
+                    MessageHelper.error(p, "Could not find hologram: '" + holoName + "'");
                     return false;
                 }
 
@@ -166,12 +166,12 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             case "copy" -> {
                 Hologram hologram = FancyHolograms.getInstance().getHologramManager().getHologram(holoName);
                 if(hologram == null){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find hologram: '" + holoName + "'</red>"));
+                    MessageHelper.error(p, "Could not find hologram: '" + holoName + "'");
                     return false;
                 }
 
                 if(args.length < 3){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                    MessageHelper.error(p, "Wrong usage: /hologram help");
                     return false;
                 }
 
@@ -186,12 +186,12 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             case "edit" -> {
                 Hologram hologram = FancyHolograms.getInstance().getHologramManager().getHologram(holoName);
                 if(hologram == null){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find hologram: '" + holoName + "'</red>"));
+                    MessageHelper.error(p, "Could not find hologram: '" + holoName + "'");
                     return false;
                 }
 
                 if(args.length < 3){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                    MessageHelper.error(p, "Wrong usage: /hologram help");
                     return false;
                 }
 
@@ -200,7 +200,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 switch (editAction.toLowerCase()){
                     case "setline" -> {
                         if(args.length < 5){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -208,7 +208,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         try{
                             line = Integer.parseInt(args[3]);
                         }catch (NumberFormatException e){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse input to number</red>"));
+                            MessageHelper.error(p, "Could not parse input to number");
                             return false;
                         }
 
@@ -228,7 +228,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "addline" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -248,7 +248,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "removeline" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -256,7 +256,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         try{
                             line = Integer.parseInt(args[3]);
                         }catch (NumberFormatException e){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse input to number</red>"));
+                            MessageHelper.error(p, "Could not parse input to number");
                             return false;
                         }
 
@@ -275,7 +275,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "moveto" -> {
                         if(args.length < 6){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -290,7 +290,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                                 yaw = Float.parseFloat(args[6]);
                             }
                         } catch (NumberFormatException e){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse position</red>"));
+                            MessageHelper.error(p, "Could not parse position");
                             return false;
                         }
 
@@ -307,7 +307,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "billboard" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -319,12 +319,12 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         }
 
                         if(billboard == null){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse billboard</red>"));
+                            MessageHelper.error(p, "Could not parse billboard");
                             return false;
                         }
 
                         if(hologram.getBillboard() == billboard){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<yellow>This billboard is already set</yellow>"));
+                            MessageHelper.warning(p, "This billboard is already set");
                             return false;
                         }
 
@@ -336,7 +336,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "scale" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -344,7 +344,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         try{
                             scale = Float.parseFloat(args[3]);
                         }catch (NumberFormatException e){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse scale</red>"));
+                            MessageHelper.error(p, "Could not parse scale");
                             return false;
                         }
 
@@ -356,7 +356,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "background" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -370,7 +370,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             background = ChatFormatting.getByName(args[3]);
 
                             if(background == null || !background.isColor()){
-                                p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse background color</red>"));
+                                MessageHelper.error(p, "Could not parse background color");
                                 return false;
                             }
                         }
@@ -383,7 +383,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "shadowradius" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -391,7 +391,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         try{
                             radius = Float.parseFloat(args[3]);
                         }catch (NumberFormatException e){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse shadow radius</red>"));
+                            MessageHelper.error(p, "Could not parse shadow radius");
                             return false;
                         }
 
@@ -403,7 +403,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "shadowstrength" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -411,7 +411,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         try{
                             strength = Float.parseFloat(args[3]);
                         }catch (NumberFormatException e){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse shadow strength</red>"));
+                            MessageHelper.error(p, "Could not parse shadow strength");
                             return false;
                         }
 
@@ -423,7 +423,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "updatetextinterval" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
@@ -431,7 +431,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         try{
                             interval = Integer.parseInt(args[3]);
                         }catch (NumberFormatException e){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not parse interval</red>"));
+                            MessageHelper.error(p, "Could not parse interval");
                             return false;
                         }
 
@@ -443,19 +443,19 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
                     case "linkwithnpc" -> {
                         if(args.length < 4){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /hologram help</red>"));
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
                             return false;
                         }
 
                         if(!FancyHolograms.getInstance().isUsingFancyNpcs()){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>You need to install the FancyNpcs plugin for this functionality to work</color>"));
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>Download link: <click:open_url:'https://modrinth.com/plugin/npc-plugin/versions'><u>click here</u></click>.</color>"));
+                            MessageHelper.warning(p, "You need to install the FancyNpcs plugin for this functionality to work");
+                            MessageHelper.warning(p, "Download link: <click:open_url:'https://modrinth.com/plugin/fancynpcs/versions'><u>click here</u></click>.");
                             return false;
                         }
 
                         Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(args[3]);
                         if(npc == null){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find NPC</red>"));
+                            MessageHelper.error(p, "Could not find NPC");
                             return false;
                         }
 
@@ -466,9 +466,9 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                     }
 
                     case "unlinkwithnpc" -> {
-                         if(!FancyHolograms.getInstance().isUsingFancyNpcs()){
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>You need to install the FancyNpcs plugin for this functionality to work</color>"));
-                            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>Download link: <click:open_url:'https://modrinth.com/plugin/npc-plugin/versions'><u>click here</u></click>.</color>"));
+                        if(!FancyHolograms.getInstance().isUsingFancyNpcs()){
+                            MessageHelper.warning(p, "You need to install the FancyNpcs plugin for this functionality to work");
+                            MessageHelper.warning(p, "Download link: <click:open_url:'https://modrinth.com/plugin/fancynpcs/versions'><u>click here</u></click>.");
                             return false;
                         }
 
@@ -487,7 +487,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
     private boolean create(Player p, PlayerList playerList, String name){
         if (FancyHolograms.getInstance().getHologramManager().getHologram(name) != null) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>There already exists a hologram with this name</red>"));
+            MessageHelper.error(p, "There already exists a hologram with this name");
             return false;
         }
 
@@ -500,7 +500,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         hologramCreateEvent.callEvent();
 
         if(hologramCreateEvent.isCancelled()){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Creating the hologram was cancelled</red>"));
+            MessageHelper.error(p, "Creating the hologram was cancelled");
             return false;
         }
 
@@ -509,7 +509,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.spawn(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Created the hologram</color>"));
+        MessageHelper.success(p,"Created the hologram");
         return true;
     }
 
@@ -518,7 +518,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         hologramRemoveEvent.callEvent();
 
         if(hologramRemoveEvent.isCancelled()){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Removing the hologram was cancelled</red>"));
+            MessageHelper.error(p, "Removing the hologram was cancelled");
             return false;
         }
 
@@ -528,13 +528,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
         hologram.delete();
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Removed the hologram</color>"));
+        MessageHelper.success(p, "Removed the hologram");
         return true;
     }
 
     private boolean copy(Player p, PlayerList playerList, Hologram hologram, String newName){
         if (FancyHolograms.getInstance().getHologramManager().getHologram(newName) != null) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>There already exists a hologram with this name</red>"));
+            MessageHelper.error(p, "There already exists a hologram with this name");
             return false;
         }
 
@@ -555,7 +555,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         hologramCreateEvent.callEvent();
 
         if(hologramCreateEvent.isCancelled()){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Creating the hologram was cancelled</red>"));
+            MessageHelper.error(p, "Creating the hologram was cancelled");
             return false;
         }
 
@@ -564,13 +564,13 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             newHologram.spawn(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Copied the hologram</color>"));
+        MessageHelper.success(p, "Copied the hologram");
         return true;
     }
 
     private boolean editSetLine(Player p, PlayerList playerList, Hologram hologram, int line, String text){
         if(line < 0){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid line index</red>"));
+            MessageHelper.error(p, "Invalid line index");
             return false;
         }
 
@@ -589,7 +589,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.TEXT);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            MessageHelper.error(p, "Cancelled hologram modification");
             return false;
         }
 
@@ -599,21 +599,21 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateText(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed text for line " + line + "</color>"));
+        MessageHelper.success(p, "Changed text for line " + line);
         return true;
     }
 
     private boolean editPosition(Player p, PlayerList playerList, Hologram hologram, Location pos){
         if(hologram.getLinkedNpc() != null){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>This hologram is linked with an NPC</red>"));
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>To unlink: /hologram edit " + hologram.getName() + " unlinkWithNpc</red>"));
+            MessageHelper.error(p, "This hologram is linked with an NPC");
+            MessageHelper.error(p, "To unlink: /hologram edit " + hologram.getName() + " unlinkWithNpc");
             return false;
         }
 
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.POSITION);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            MessageHelper.error(p, "Cancelled hologram modification");
             return false;
         }
 
@@ -623,7 +623,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateLocation(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Moved the hologram to " + COORDINATES_DECIMAL_FORMAT.format(pos.x()) + "/" + COORDINATES_DECIMAL_FORMAT.format(pos.y()) + "/" + COORDINATES_DECIMAL_FORMAT.format(pos.z()) + "</color>"));
+        MessageHelper.success(p, "Moved the hologram to " + COORDINATES_DECIMAL_FORMAT.format(pos.x()) + "/" + COORDINATES_DECIMAL_FORMAT.format(pos.y()) + "/" + COORDINATES_DECIMAL_FORMAT.format(pos.z()));
         return true;
     }
 
@@ -631,7 +631,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.BILLBOARD);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            MessageHelper.error(p, "Cancelled hologram modification");
             return false;
         }
 
@@ -641,7 +641,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateBillboard(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed the billboard to " + billboard.getSerializedName() + "</color>"));
+        MessageHelper.success(p, "Changed the billboard to " + billboard.getSerializedName());
         return true;
     }
 
@@ -649,7 +649,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.SCALE);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            MessageHelper.error(p, "Cancelled hologram modification");
             return false;
         }
 
@@ -659,7 +659,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateScale(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed scale to " + scale +"</color>"));
+        MessageHelper.success(p, "Changed scale to " + scale);
         return true;
     }
 
@@ -667,7 +667,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.BACKGROUND);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            MessageHelper.error(p, "Cancelled hologram modification");
             return false;
         }
 
@@ -677,7 +677,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateBackground(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed background color</color>"));
+        MessageHelper.success(p, "Changed background color");
         return true;
     }
 
@@ -685,7 +685,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.SHADOW_RADIUS);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            MessageHelper.error(p, "Cancelled hologram modification");
             return false;
         }
 
@@ -695,7 +695,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateShadow(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed shadow radius</color>"));
+        MessageHelper.success(p, "Changed shadow radius");
         return true;
     }
 
@@ -703,7 +703,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.SHADOW_STRENGTH);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            MessageHelper.error(p, "Cancelled hologram modification");
             return false;
         }
 
@@ -713,7 +713,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateShadow(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed shadow strength</color>"));
+        MessageHelper.success(p, "Changed shadow strength");
         return true;
     }
 
@@ -721,7 +721,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.UPDATE_TEXT_INTERVAL);
         hologramModifyEvent.callEvent();
         if (hologramModifyEvent.isCancelled()) {
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Cancelled hologram modification</red>"));
+            MessageHelper.error(p, "Cancelled hologram modification");
             return false;
         }
 
@@ -731,14 +731,14 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateText(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Changed the update text interval</color>"));
+        MessageHelper.success(p, "Changed the update text interval");
 
         return true;
     }
 
     private boolean editLinkWithNpc(Player p, PlayerList playerList, Hologram hologram, Npc npc){
         if(hologram.getLinkedNpc() != null){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>This hologram is already linked with an NPC</red>"));
+            MessageHelper.error(p, "This hologram is already linked with an NPC");
             return false;
         }
         hologram.setLinkedNpc(npc);
@@ -748,20 +748,20 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             hologram.updateLocation(player);
         }
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Linked hologram with NPC</color>"));
+        MessageHelper.success(p, "Linked hologram with NPC");
         return true;
     }
 
     private boolean editUnLinkWithNpc(Player p, Hologram hologram){
         if(hologram.getLinkedNpc() == null){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<red>This hologram is not linked with an NPC</red>"));
+            MessageHelper.error(p, "This hologram is not linked with an NPC");
             return false;
         }
 
         hologram.getLinkedNpc().updateDisplayName(hologram.getLinkedNpc().getName());
         hologram.setLinkedNpc(null);
 
-        p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#1a9c3d>Unlinked hologram with NPC</color>"));
+        MessageHelper.success(p, "Unlinked hologram with NPC");
         return true;
     }
 }
