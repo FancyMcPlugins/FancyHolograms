@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.CompletableFuture;
+
 public class FancyHolograms extends JavaPlugin {
 
     public static final String SUPPORTED_VERSION = "1.19.4";
@@ -25,6 +27,7 @@ public class FancyHolograms extends JavaPlugin {
     private final HologramManager hologramManager;
     private boolean muteVersionNotification;
     private boolean usingPlaceholderApi;
+    private boolean usingMiniPlaceholders;
     private boolean usingFancyNpcs;
 
     public FancyHolograms() {
@@ -38,8 +41,9 @@ public class FancyHolograms extends JavaPlugin {
 
         usingPlaceholderApi = pluginManager.isPluginEnabled("PlaceholderAPI");
         usingFancyNpcs = pluginManager.isPluginEnabled("FancyNpcs");
+        usingMiniPlaceholders = pluginManager.isPluginEnabled("MiniPlaceholders");
 
-        new Thread(() -> {
+        CompletableFuture.runAsync(() -> {
             ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
             ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
             if (newestVersion.compareTo(currentVersion) > 0) {
@@ -49,12 +53,12 @@ public class FancyHolograms extends JavaPlugin {
                 getLogger().warning(VersionFetcher.DOWNLOAD_URL);
                 getLogger().warning("-------------------------------------------------------");
             }
-        }).start();
+        });
 
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 
         String serverVersion = nmsServer.getServerVersion();
-        if(!serverVersion.equals(SUPPORTED_VERSION)){
+        if (!serverVersion.equals(SUPPORTED_VERSION)){
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
             getLogger().warning("Please update the server to " + SUPPORTED_VERSION + ".");
@@ -65,7 +69,7 @@ public class FancyHolograms extends JavaPlugin {
         }
 
         String serverSoftware = nmsServer.getServerModName();
-        if(!serverSoftware.equals("Paper")){
+        if (!serverSoftware.equals("Paper")){
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("It is recommended to use Paper as server software.");
             getLogger().warning("Because you are not using paper, the plugin");
@@ -153,6 +157,10 @@ public class FancyHolograms extends JavaPlugin {
 
     public boolean isUsingPlaceholderApi() {
         return usingPlaceholderApi;
+    }
+
+    public boolean isUsingMiniplaceholders() {
+        return usingMiniPlaceholders;
     }
 
     public boolean isUsingFancyNpcs() {

@@ -2,9 +2,11 @@ package de.oliver;
 
 import com.mojang.math.Transformation;
 import de.oliver.events.HologramSpawnEvent;
+import io.github.miniplaceholders.api.MiniPlaceholders;
 import io.papermc.paper.adventure.PaperAdventure;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
@@ -180,12 +182,18 @@ public class Hologram {
 
     private Component getText(Player player){
         String t = String.join("\n", lines);
+        TagResolver resolver = TagResolver.empty();
 
-        if(player != null && FancyHolograms.getInstance().isUsingPlaceholderApi()){
-            t = PlaceholderAPI.setPlaceholders(player, t);
+        if (player != null) {
+            if (FancyHolograms.getInstance().isUsingPlaceholderApi()) {
+                t = PlaceholderAPI.setPlaceholders(player, t);
+            }
+            if (FancyHolograms.getInstance().isUsingMiniplaceholders()) {
+                resolver = MiniPlaceholders.getAudienceGlobalPlaceholders(player);
+            }
         }
 
-        return PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(t));
+        return PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(t, resolver));
     }
 
     public String getName() {
