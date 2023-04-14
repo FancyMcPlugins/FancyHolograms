@@ -1,6 +1,6 @@
-package de.oliver.utils;
+package de.oliver.fancyholograms.utils;
 
-import de.oliver.Hologram;
+import de.oliver.fancyholograms.Hologram;
 import net.minecraft.ChatFormatting;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;

@@ -1,12 +1,12 @@
-package de.oliver;
+package de.oliver.fancyholograms;
 
-import de.oliver.commands.HologramCMD;
-import de.oliver.listeners.NpcModifyListener;
-import de.oliver.listeners.NpcRemoveListener;
-import de.oliver.listeners.PlayerChangedWorldListener;
-import de.oliver.listeners.PlayerJoinListener;
-import de.oliver.utils.Metrics;
-import de.oliver.utils.VersionFetcher;
+import de.oliver.fancyholograms.commands.HologramCMD;
+import de.oliver.fancylib.Metrics;
+import de.oliver.fancylib.VersionFetcher;
+import de.oliver.fancyholograms.listeners.NpcModifyListener;
+import de.oliver.fancyholograms.listeners.NpcRemoveListener;
+import de.oliver.fancyholograms.listeners.PlayerChangedWorldListener;
+import de.oliver.fancyholograms.listeners.PlayerJoinListener;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -24,6 +24,7 @@ public class FancyHolograms extends JavaPlugin {
     public static final String SUPPORTED_VERSION = "1.19.4";
     private static FancyHolograms instance;
 
+    private final VersionFetcher versionFetcher;
     private final HologramManager hologramManager;
     private boolean muteVersionNotification;
     private boolean usingPlaceholderApi;
@@ -32,6 +33,7 @@ public class FancyHolograms extends JavaPlugin {
 
     public FancyHolograms() {
         instance = this;
+        versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancyholograms/version", "https://modrinth.com/plugin/fancyholograms/versions");
         hologramManager = new HologramManager();
     }
 
@@ -44,13 +46,13 @@ public class FancyHolograms extends JavaPlugin {
         usingMiniPlaceholders = pluginManager.isPluginEnabled("MiniPlaceholders");
 
         CompletableFuture.runAsync(() -> {
-            ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+            ComparableVersion newestVersion = versionFetcher.getNewestVersion();
             ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
             if (newestVersion.compareTo(currentVersion) > 0) {
                 getLogger().warning("-------------------------------------------------------");
                 getLogger().warning("You are not using the latest version the FancyHolograms plugin.");
                 getLogger().warning("Please update to the newest version (" + newestVersion + ").");
-                getLogger().warning(VersionFetcher.DOWNLOAD_URL);
+                getLogger().warning(versionFetcher.getDownloadUrl());
                 getLogger().warning("-------------------------------------------------------");
             }
         });
@@ -145,6 +147,10 @@ public class FancyHolograms extends JavaPlugin {
     @Override
     public void onDisable() {
         hologramManager.saveHolograms(true);
+    }
+
+    public VersionFetcher getVersionFetcher() {
+        return versionFetcher;
     }
 
     public HologramManager getHologramManager() {

@@ -1,7 +1,7 @@
-package de.oliver.listeners;
+package de.oliver.fancyholograms.listeners;
 
-import de.oliver.FancyHolograms;
-import de.oliver.Hologram;
+import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.Hologram;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;

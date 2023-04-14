@@ -1,12 +1,12 @@
-package de.oliver.commands;
+package de.oliver.fancyholograms.commands;
 
-import de.oliver.FancyHolograms;
-import de.oliver.Hologram;
-import de.oliver.Npc;
-import de.oliver.events.HologramCreateEvent;
-import de.oliver.events.HologramModifyEvent;
-import de.oliver.events.HologramRemoveEvent;
-import de.oliver.utils.VersionFetcher;
+import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.Hologram;
+import de.oliver.fancyholograms.events.HologramCreateEvent;
+import de.oliver.fancyholograms.events.HologramModifyEvent;
+import de.oliver.fancyholograms.events.HologramRemoveEvent;
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.Npc;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
@@ -71,7 +71,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 case 6 -> { return Arrays.asList(String.valueOf(target.getZ())); }
             }
         } else if(args.length == 4 && args[2].equalsIgnoreCase("linkWithNpc") && FancyHolograms.getInstance().isUsingFancyNpcs()){
-            return de.oliver.FancyNpcs.getInstance()
+            return FancyNpcs.getInstance()
                     .getNpcManager()
                     .getAllNpcs()
                     .stream()
@@ -119,11 +119,11 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length >= 1 && args[0].equalsIgnoreCase("version")){
             p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790><i>Checking version, please wait...</i></color>"));
             new Thread(() -> {
-                ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+                ComparableVersion newestVersion = FancyHolograms.getInstance().getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyHolograms.getInstance().getDescription().getVersion());
                 if(newestVersion.compareTo(currentVersion) > 0){
                     p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyHolograms plugin.</color>"));
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>.</color>"));
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyHolograms.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>.</color>"));
                 } else {
                     p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790>You are using the latest version of the FancyHolograms plugin (" + currentVersion + ").</color>"));
                 }
@@ -453,7 +453,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                             return false;
                         }
 
-                        Npc npc = de.oliver.FancyNpcs.getInstance().getNpcManager().getNpc(args[3]);
+                        Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(args[3]);
                         if(npc == null){
                             p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find NPC</red>"));
                             return false;

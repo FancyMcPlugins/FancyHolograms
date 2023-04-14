@@ -1,9 +1,9 @@
-package de.oliver.listeners;
+package de.oliver.fancyholograms.listeners;
 
-import de.oliver.FancyHolograms;
-import de.oliver.Hologram;
-import de.oliver.Npc;
-import de.oliver.events.NpcRemoveEvent;
+import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.Hologram;
+import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.events.NpcRemoveEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 

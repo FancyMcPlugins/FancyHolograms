@@ -1,5 +1,6 @@
-package de.oliver;
+package de.oliver.fancyholograms;
 
+import de.oliver.fancynpcs.FancyNpcs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.Display;
 import org.bukkit.Location;
@@ -77,7 +78,7 @@ public class HologramManager {
             Hologram hologram = new Hologram(name, location, text, billboard, scale, background, shadowRadius, shadowStrength, updateTextInterval, null);
 
             if(FancyHolograms.getInstance().isUsingFancyNpcs() && linkedNpcName != null && linkedNpcName.length() > 0){
-                hologram.setLinkedNpc(de.oliver.FancyNpcs.getInstance().getNpcManager().getNpc(linkedNpcName));
+                hologram.setLinkedNpc(FancyNpcs.getInstance().getNpcManager().getNpc(linkedNpcName));
             }
 
             hologram.create();

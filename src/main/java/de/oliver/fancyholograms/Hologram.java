@@ -1,7 +1,8 @@
-package de.oliver;
+package de.oliver.fancyholograms;
 
 import com.mojang.math.Transformation;
-import de.oliver.events.HologramSpawnEvent;
+import de.oliver.fancyholograms.events.HologramSpawnEvent;
+import de.oliver.fancynpcs.Npc;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import io.papermc.paper.adventure.PaperAdventure;
 import me.clip.placeholderapi.PlaceholderAPI;

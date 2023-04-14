@@ -1,9 +1,9 @@
-package de.oliver.listeners;
+package de.oliver.fancyholograms.listeners;
 
-import de.oliver.FancyHolograms;
-import de.oliver.Hologram;
-import de.oliver.events.NpcModifyEvent;
-import de.oliver.utils.HologramSpigotAdapter;
+import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.Hologram;
+import de.oliver.fancynpcs.events.NpcModifyEvent;
+import de.oliver.fancyholograms.utils.HologramSpigotAdapter;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
