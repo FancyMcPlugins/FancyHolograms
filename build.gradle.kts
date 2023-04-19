@@ -3,7 +3,7 @@ plugins {
     id("io.papermc.paperweight.userdev") version "1.5.4"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
     id("maven-publish")
-    id ("com.github.johnrengelman.shadow") version "8.1.1";
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "de.oliver"
@@ -15,13 +15,14 @@ java {
 }
 
 repositories {
-    mavenLocal()
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     mavenCentral()
+    mavenLocal()
+    maven("https://jitpack.io")
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
 
 dependencies {
-    implementation("de.oliver:FancyLib:1.0.0")
+    implementation("com.github.FancyMcPlugins:FancyLib:main-SNAPSHOT")
     compileOnly("de.oliver:FancyNpcs:1.1.3")
     compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.0.0")
