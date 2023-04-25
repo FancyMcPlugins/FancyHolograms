@@ -548,7 +548,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 hologram.getShadowRadius(),
                 hologram.getShadowStrength(),
                 hologram.getUpdateTextInterval(),
-                hologram.getLinkedNpc()
+                null
         );
 
         HologramCreateEvent hologramCreateEvent = new HologramCreateEvent(newHologram, p);
