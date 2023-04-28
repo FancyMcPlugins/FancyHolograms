@@ -1,13 +1,10 @@
 package de.oliver.fancyholograms;
 
 import de.oliver.fancyholograms.commands.HologramCMD;
+import de.oliver.fancyholograms.listeners.*;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
-import de.oliver.fancyholograms.listeners.NpcModifyListener;
-import de.oliver.fancyholograms.listeners.NpcRemoveListener;
-import de.oliver.fancyholograms.listeners.PlayerChangedWorldListener;
-import de.oliver.fancyholograms.listeners.PlayerJoinListener;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -27,6 +24,7 @@ public class FancyHolograms extends JavaPlugin {
 
     private final VersionFetcher versionFetcher;
     private final HologramManager hologramManager;
+    private final FancyHologramsConfig config;
     private boolean muteVersionNotification;
     private boolean usingPlaceholderApi;
     private boolean usingMiniPlaceholders;
@@ -36,11 +34,13 @@ public class FancyHolograms extends JavaPlugin {
         instance = this;
         versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancyholograms/version", "https://modrinth.com/plugin/fancyholograms/versions");
         hologramManager = new HologramManager();
+        config = new FancyHologramsConfig();
     }
 
     @Override
     public void onEnable() {
         MessageHelper.pluginName = getDescription().getName();
+
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlaceholderApi = pluginManager.isPluginEnabled("PlaceholderAPI");
@@ -90,10 +90,13 @@ public class FancyHolograms extends JavaPlugin {
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
+        pluginManager.registerEvents(new PlayerMoveListener(), instance);
         if(usingFancyNpcs){
             pluginManager.registerEvents(new NpcModifyListener(), instance);
             pluginManager.registerEvents(new NpcRemoveListener(), instance);
         }
+
+        config.reload();
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             hologramManager.loadHolograms();
@@ -157,6 +160,10 @@ public class FancyHolograms extends JavaPlugin {
 
     public HologramManager getHologramManager() {
         return hologramManager;
+    }
+
+    public FancyHologramsConfig getFancyHologramsConfig() {
+        return config;
     }
 
     public boolean isMuteVersionNotification() {

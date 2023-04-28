@@ -23,7 +23,10 @@ import org.bukkit.entity.Player;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class Hologram {
 
@@ -41,6 +44,7 @@ public class Hologram {
 
     private Display.TextDisplay entity;
     private boolean isDirty;
+    private final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
 
     public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background, float shadowRadius, float shadowStrength, int updateTextInterval, Npc linkedNpc) {
         this.name = name;
@@ -97,11 +101,13 @@ public class Hologram {
         updateBackground(serverPlayer);
         updateShadow(serverPlayer);
         syncWithNpc();
+        isVisibleForPlayer.put(serverPlayer.getUUID(), true);
     }
 
     public void remove(ServerPlayer serverPlayer) {
         ClientboundRemoveEntitiesPacket removeEntitiesPacket = new ClientboundRemoveEntitiesPacket(entity.getId());
         serverPlayer.connection.send(removeEntitiesPacket);
+        isVisibleForPlayer.put(serverPlayer.getUUID(), false);
     }
 
     public void updateText(ServerPlayer serverPlayer){
@@ -296,5 +302,9 @@ public class Hologram {
 
     public void setDirty(boolean dirty) {
         isDirty = dirty;
+    }
+
+    public Map<UUID, Boolean> getIsVisibleForPlayer() {
+        return isVisibleForPlayer;
     }
 }
