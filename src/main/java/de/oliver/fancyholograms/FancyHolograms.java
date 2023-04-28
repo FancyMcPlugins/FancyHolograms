@@ -25,7 +25,6 @@ public class FancyHolograms extends JavaPlugin {
     private final VersionFetcher versionFetcher;
     private final HologramManager hologramManager;
     private final FancyHologramsConfig config;
-    private boolean muteVersionNotification;
     private boolean usingPlaceholderApi;
     private boolean usingMiniPlaceholders;
     private boolean usingFancyNpcs;
@@ -113,12 +112,6 @@ public class FancyHolograms extends JavaPlugin {
         }, 20L * 6);
 
         Bukkit.getScheduler().runTaskTimer(instance, () -> {
-            if(!getConfig().isBoolean("mute_version_notification")){
-                getConfig().set("mute_version_notification", false);
-                saveConfig();
-            }
-            muteVersionNotification = getConfig().getBoolean("mute_version_notification");
-
             for (Hologram hologram : hologramManager.getAllHolograms()) {
                 long interval = hologram.getUpdateTextInterval() * 1000L;
 
@@ -164,10 +157,6 @@ public class FancyHolograms extends JavaPlugin {
 
     public FancyHologramsConfig getFancyHologramsConfig() {
         return config;
-    }
-
-    public boolean isMuteVersionNotification() {
-        return muteVersionNotification;
     }
 
     public boolean isUsingPlaceholderApi() {

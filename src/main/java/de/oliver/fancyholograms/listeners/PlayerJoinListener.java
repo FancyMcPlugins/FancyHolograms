@@ -21,7 +21,7 @@ public class PlayerJoinListener implements Listener {
             hologram.spawn(serverPlayer);
         }
 
-        if(!FancyHolograms.getInstance().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyHolograms.admin")){
+        if(!FancyHolograms.getInstance().getFancyHologramsConfig().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyHolograms.admin")){
             new Thread(() -> {
                 ComparableVersion newestVersion = FancyHolograms.getInstance().getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyHolograms.getInstance().getDescription().getVersion());
