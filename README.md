@@ -19,6 +19,8 @@ You can download the latest versions at the following places:
 ## Commands
 /hologram help<br>
 /hologram version<br>
+/hologram list<br>
+/hologram teleport (name)<br>
 /hologram create (name)<br>
 /hologram remove (hologram name)<br>
 /hologram copy (hologram name) (new name)<br>
