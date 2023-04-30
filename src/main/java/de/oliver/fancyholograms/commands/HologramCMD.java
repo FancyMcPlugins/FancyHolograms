@@ -39,11 +39,11 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1){
-            return Stream.of("help", "version", "list", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
+            return Stream.of("help", "version", "list", "teleport", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
             boolean usingNpcs = FancyHolograms.getInstance().isUsingFancyNpcs();
             return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
-        } else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy")) ){
+        } else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("teleport"))){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
             return Arrays.asList("1", "2", "3");
@@ -96,6 +96,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             MessageHelper.info(p, "- /hologram help <dark_gray>- <white>Shows all (sub)commands", false);
             MessageHelper.info(p, "- /hologram version <dark_gray>- <white>Shows the plugin version", false);
             MessageHelper.info(p, "- /hologram list <dark_gray>- <white>Shows you a overview of all holograms", false);
+            MessageHelper.info(p, "- /hologram teleport <name> <dark_gray>- <white>Teleports you to a hologram", false);
             MessageHelper.info(p, "- /hologram create <name> <dark_gray>- <white>Creates a new hologram", false);
             MessageHelper.info(p, "- /hologram remove <name> <dark_gray>- <white>Removes a hologram", false);
             MessageHelper.info(p, "- /hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram", false);
@@ -201,6 +202,19 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 String newName = args[2];
 
                 boolean success = copy(p, playerList, hologram, newName);
+                if(!success){
+                    return false;
+                }
+            }
+
+            case "teleport" -> {
+                Hologram hologram = FancyHolograms.getInstance().getHologramManager().getHologram(holoName);
+                if(hologram == null){
+                    MessageHelper.error(p, "Could not find hologram: '" + holoName + "'");
+                    return false;
+                }
+
+                boolean success = teleport(p, hologram);
                 if(!success){
                     return false;
                 }
@@ -588,6 +602,12 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         MessageHelper.success(p, "Copied the hologram");
+        return true;
+    }
+
+    private boolean teleport(Player p, Hologram hologram){
+        p.teleport(hologram.getLocation());
+        MessageHelper.success(p, "Teleport you to the hologram");
         return true;
     }
 
