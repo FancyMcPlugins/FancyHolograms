@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -38,7 +39,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1){
-            return Stream.of("help", "version", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
+            return Stream.of("help", "version", "list", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
             boolean usingNpcs = FancyHolograms.getInstance().isUsingFancyNpcs();
             return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
@@ -94,6 +95,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             MessageHelper.info(p, "<b>FancyHolograms commands help:");
             MessageHelper.info(p, "- /hologram help <dark_gray>- <white>Shows all (sub)commands", false);
             MessageHelper.info(p, "- /hologram version <dark_gray>- <white>Shows the plugin version", false);
+            MessageHelper.info(p, "- /hologram list <dark_gray>- <white>Shows you a overview of all holograms", false);
             MessageHelper.info(p, "- /hologram create <name> <dark_gray>- <white>Creates a new hologram", false);
             MessageHelper.info(p, "- /hologram remove <name> <dark_gray>- <white>Removes a hologram", false);
             MessageHelper.info(p, "- /hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram", false);
@@ -115,7 +117,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return true;
         }
 
-        if(args.length >= 1 && args[0].equalsIgnoreCase("version")){
+        if(args.length == 1 && args[0].equalsIgnoreCase("version")){
             MessageHelper.info(p, "<i>Checking version, please wait...</i>");
             new Thread(() -> {
                 ComparableVersion newestVersion = FancyHolograms.getInstance().getVersionFetcher().getNewestVersion();
@@ -129,6 +131,28 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             }).start();
 
             return true;
+        } else if(args.length == 1 && args[0].equalsIgnoreCase("list")){
+            Collection<Hologram> holograms = FancyHolograms.getInstance().getHologramManager().getAllHolograms();
+
+            if(holograms.isEmpty()){
+                MessageHelper.warning(sender, "There are no holograms. Use '/hologram create' to create one");
+                return true;
+            } else {
+                final DecimalFormat df = new DecimalFormat("#########.##");
+                MessageHelper.info(p, "<b>List of all holograms:</b>");
+                for (Hologram hologram : holograms) {
+                    MessageHelper.info(
+                            sender,
+                            "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>"
+                                .replace("{name}", hologram.getName())
+                                .replace("{x}", df.format(hologram.getLocation().x()))
+                                .replace("{y}", df.format(hologram.getLocation().y()))
+                                .replace("{z}", df.format(hologram.getLocation().z()))
+                                .replace("{tp_cmd}", "/tp " + hologram.getLocation().x() + " " + hologram.getLocation().y() + " " + hologram.getLocation().z()),
+                            false);
+                }
+                return true;
+            }
         }
 
         if(args.length < 2){
