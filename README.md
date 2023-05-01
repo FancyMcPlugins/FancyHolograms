@@ -1,4 +1,8 @@
-[![Generic badge](https://img.shields.io/badge/version-1.0.5-orange.svg)](https://shields.io/)
+![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyHolograms?style=flat-square)
+[![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&logo=Discord&label=Discord&style=flat-square)](https://discord.gg/ZUgYCEJUEx)
+![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyHolograms/total?logo=GitHub&style=flat-square)
+[![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-108694.svg)](https://www.spigotmc.org/resources/fancy-holograms-1-19-4.108694/)
+[![Downloads](https://img.shields.io/modrinth/dt/fancyholograms?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancyholograms/versions)
 
 # Fancy holograms
 Create fancy looking holograms with the new 1.19.4 text display entities.<br>
