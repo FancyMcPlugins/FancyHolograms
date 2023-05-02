@@ -43,6 +43,7 @@ public class Hologram {
     private Npc linkedNpc;
 
     private Display.TextDisplay entity;
+    private boolean saveToFile;
     private boolean isDirty;
     private final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
 
@@ -58,6 +59,7 @@ public class Hologram {
         this.updateTextInterval = updateTextInterval;
         this.linkedNpc = linkedNpc;
         this.lastTextUpdate = System.currentTimeMillis();
+        this.saveToFile = true;
         this.isDirty = false;
     }
 
@@ -294,6 +296,14 @@ public class Hologram {
 
     public Display.TextDisplay getEntity() {
         return entity;
+    }
+
+    public boolean isSaveToFile() {
+        return saveToFile;
+    }
+
+    public void setSaveToFile(boolean saveToFile) {
+        this.saveToFile = saveToFile;
     }
 
     public boolean isDirty() {
