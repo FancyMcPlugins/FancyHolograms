@@ -42,7 +42,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return Stream.of("help", "version", "list", "teleport", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
             boolean usingNpcs = FancyHolograms.getInstance().isUsingFancyNpcs();
-            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
+            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         } else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("teleport"))){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
@@ -102,6 +102,8 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             MessageHelper.info(p, "- /hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram", false);
             MessageHelper.info(p, "- /hologram edit <hologram> addLine <text ...> <dark_gray>- <white>Adds a line at the bottom", false);
             MessageHelper.info(p, "- /hologram edit <hologram> removeLine <dark_gray>- <white>Removes a line at the bottom", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> insertBefore <line number> <text ...> <dark_gray>- <white>Inserts a line before another", false);
+            MessageHelper.info(p, "- /hologram edit <hologram> insertAfter <line number> <text ...> <dark_gray>- <white>Inserts a line after another", false);
             MessageHelper.info(p, "- /hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line", false);
             MessageHelper.info(p, "- /hologram edit <hologram> position <dark_gray>- <white>Teleports the hologram to you", false);
             MessageHelper.info(p, "- /hologram edit <hologram> moveTo <x> <y> <z> [yaw] <dark_gray>- <white>Teleports the hologram to the coordinates", false);
@@ -298,6 +300,62 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         }
 
                         boolean success = editSetLine(p, playerList, hologram, line - 1, "");
+                        if(!success){
+                            return false;
+                        }
+                    }
+
+                    case "insertbefore" -> {
+                        if(args.length < 4){
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
+                            return false;
+                        }
+
+                        int line;
+                        try{
+                            line = Integer.parseInt(args[3]);
+                        }catch (NumberFormatException e){
+                            MessageHelper.error(p, "Could not parse input to number");
+                            return false;
+                        }
+
+                        String text = "";
+
+                        for (int i = 4; i < args.length; i++) {
+                            text += args[i] + " ";
+                        }
+
+                        text = text.substring(0, text.length() - 1);
+
+                        boolean success = editInsertLine(p, playerList, hologram, line-1, text);
+                        if(!success){
+                            return false;
+                        }
+                    }
+
+                    case "insertafter" -> {
+                        if(args.length < 4){
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
+                            return false;
+                        }
+
+                        int line;
+                        try{
+                            line = Integer.parseInt(args[3]);
+                        }catch (NumberFormatException e){
+                            MessageHelper.error(p, "Could not parse input to number");
+                            return false;
+                        }
+
+                        String text = "";
+
+                        for (int i = 4; i < args.length; i++) {
+                            text += args[i] + " ";
+                        }
+
+                        text = text.substring(0, text.length() - 1);
+
+                        boolean success = editInsertLine(p, playerList, hologram, line, text);
                         if(!success){
                             return false;
                         }
@@ -643,6 +701,32 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         MessageHelper.success(p, "Changed text for line " + line);
+        return true;
+    }
+
+    private boolean editInsertLine(Player p, PlayerList playerList, Hologram hologram, int line, String text){
+        if(line < 0){
+            MessageHelper.error(p, "Invalid line index");
+            return false;
+        }
+
+        List<String> lines = new ArrayList<>(hologram.getLines());
+        lines.add(Math.min(lines.size(), line), text);
+
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.TEXT);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            MessageHelper.error(p, "Cancelled hologram modification");
+            return false;
+        }
+
+        hologram.setLines(lines);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateText(player);
+        }
+
+        MessageHelper.success(p, "Inserted line");
         return true;
     }
 

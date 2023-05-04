@@ -31,6 +31,8 @@ You can download the latest versions at the following places:
 /hologram copy (hologram name) (new name)<br>
 /hologram edit (hologram name) addLine (text ...)<br>
 /hologram edit (hologram name) removeLine (text ...)<br>
+/hologram edit (hologram name) insertBefore (line number) (text ...)<br>
+/hologram edit (hologram name) insertAfter (line number) (text ...)<br>
 /hologram edit (hologram name) setLine (line number) (text ...)<br>
 /hologram edit (hologram name) position<br>
 /hologram edit (hologram name) moveTo (x) (y) (z) (optional: yaw)<br>
