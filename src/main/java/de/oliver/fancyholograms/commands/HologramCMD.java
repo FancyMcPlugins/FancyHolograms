@@ -93,29 +93,29 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
 
         if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
             MessageHelper.info(p, "<b>FancyHolograms commands help:");
-            MessageHelper.info(p, "- /hologram help <dark_gray>- <white>Shows all (sub)commands", false);
-            MessageHelper.info(p, "- /hologram version <dark_gray>- <white>Shows the plugin version", false);
-            MessageHelper.info(p, "- /hologram list <dark_gray>- <white>Shows you a overview of all holograms", false);
-            MessageHelper.info(p, "- /hologram teleport <name> <dark_gray>- <white>Teleports you to a hologram", false);
-            MessageHelper.info(p, "- /hologram create <name> <dark_gray>- <white>Creates a new hologram", false);
-            MessageHelper.info(p, "- /hologram remove <name> <dark_gray>- <white>Removes a hologram", false);
-            MessageHelper.info(p, "- /hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> addLine <text ...> <dark_gray>- <white>Adds a line at the bottom", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> removeLine <dark_gray>- <white>Removes a line at the bottom", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> insertBefore <line number> <text ...> <dark_gray>- <white>Inserts a line before another", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> insertAfter <line number> <text ...> <dark_gray>- <white>Inserts a line after another", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> position <dark_gray>- <white>Teleports the hologram to you", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> moveTo <x> <y> <z> [yaw] <dark_gray>- <white>Teleports the hologram to the coordinates", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram", false);
-            MessageHelper.info(p, "- /hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text", false);
+            MessageHelper.info(p, "- /hologram help <dark_gray>- <white>Shows all (sub)commands");
+            MessageHelper.info(p, "- /hologram version <dark_gray>- <white>Shows the plugin version");
+            MessageHelper.info(p, "- /hologram list <dark_gray>- <white>Shows you a overview of all holograms");
+            MessageHelper.info(p, "- /hologram teleport <name> <dark_gray>- <white>Teleports you to a hologram");
+            MessageHelper.info(p, "- /hologram create <name> <dark_gray>- <white>Creates a new hologram");
+            MessageHelper.info(p, "- /hologram remove <name> <dark_gray>- <white>Removes a hologram");
+            MessageHelper.info(p, "- /hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram");
+            MessageHelper.info(p, "- /hologram edit <hologram> addLine <text ...> <dark_gray>- <white>Adds a line at the bottom");
+            MessageHelper.info(p, "- /hologram edit <hologram> removeLine <dark_gray>- <white>Removes a line at the bottom");
+            MessageHelper.info(p, "- /hologram edit <hologram> insertBefore <line number> <text ...> <dark_gray>- <white>Inserts a line before another");
+            MessageHelper.info(p, "- /hologram edit <hologram> insertAfter <line number> <text ...> <dark_gray>- <white>Inserts a line after another");
+            MessageHelper.info(p, "- /hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line");
+            MessageHelper.info(p, "- /hologram edit <hologram> position <dark_gray>- <white>Teleports the hologram to you");
+            MessageHelper.info(p, "- /hologram edit <hologram> moveTo <x> <y> <z> [yaw] <dark_gray>- <white>Teleports the hologram to the coordinates");
+            MessageHelper.info(p, "- /hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram");
+            MessageHelper.info(p, "- /hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram");
+            MessageHelper.info(p, "- /hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram");
+            MessageHelper.info(p, "- /hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram");
+            MessageHelper.info(p, "- /hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram");
+            MessageHelper.info(p, "- /hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text");
             if(FancyHolograms.getInstance().isUsingFancyNpcs()){
-                MessageHelper.info(p, " - /hologram edit <hologram> linkWithNpc <npc name> <dark_gray>- <white>Links the hologram with an NPC", false);
-                MessageHelper.info(p, " - /hologram edit <hologram> unlinkWithNpc <dark_gray>- <white>Unlinks the hologram with an NPC", false);
+                MessageHelper.info(p, " - /hologram edit <hologram> linkWithNpc <npc name> <dark_gray>- <white>Links the hologram with an NPC");
+                MessageHelper.info(p, " - /hologram edit <hologram> unlinkWithNpc <dark_gray>- <white>Unlinks the hologram with an NPC");
             }
             return true;
         }
@@ -151,8 +151,8 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                                 .replace("{x}", df.format(hologram.getLocation().x()))
                                 .replace("{y}", df.format(hologram.getLocation().y()))
                                 .replace("{z}", df.format(hologram.getLocation().z()))
-                                .replace("{tp_cmd}", "/tp " + hologram.getLocation().x() + " " + hologram.getLocation().y() + " " + hologram.getLocation().z()),
-                            false);
+                                .replace("{tp_cmd}", "/tp " + hologram.getLocation().x() + " " + hologram.getLocation().y() + " " + hologram.getLocation().z())
+                            );
                 }
                 return true;
             }

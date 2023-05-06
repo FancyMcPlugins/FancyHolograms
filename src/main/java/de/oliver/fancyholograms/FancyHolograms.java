@@ -2,7 +2,7 @@ package de.oliver.fancyholograms;
 
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.listeners.*;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
 import net.minecraft.server.dedicated.DedicatedServer;
@@ -38,8 +38,7 @@ public class FancyHolograms extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        MessageHelper.pluginName = getDescription().getName();
-
+        FancyLib.setPlugin(instance);
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlaceholderApi = pluginManager.isPluginEnabled("PlaceholderAPI");
@@ -137,9 +136,15 @@ public class FancyHolograms extends JavaPlugin {
 
         }, 20 * 7L, 20);
 
-        Bukkit.getScheduler().runTaskTimer(instance, () -> {
-            hologramManager.saveHolograms(false);
-        }, 20*60*5, 20*60*15);
+        if(config.isEnableAutosave()){
+            int autosaveInterval = config.getAutosaveInterval();
+            Bukkit.getScheduler().runTaskTimer(
+                    instance,
+                    () -> hologramManager.saveHolograms(false),
+                    20L*60*autosaveInterval,
+                    20L*60*autosaveInterval
+            );
+        }
     }
 
     @Override
