@@ -12,7 +12,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Display;
-import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -94,7 +93,6 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
             MessageHelper.info(p, "<b>FancyHolograms commands help:");
             MessageHelper.info(p, "- /hologram help <dark_gray>- <white>Shows all (sub)commands");
-            MessageHelper.info(p, "- /hologram version <dark_gray>- <white>Shows the plugin version");
             MessageHelper.info(p, "- /hologram list <dark_gray>- <white>Shows you a overview of all holograms");
             MessageHelper.info(p, "- /hologram teleport <name> <dark_gray>- <white>Teleports you to a hologram");
             MessageHelper.info(p, "- /hologram create <name> <dark_gray>- <white>Creates a new hologram");
@@ -120,21 +118,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return true;
         }
 
-        if(args.length == 1 && args[0].equalsIgnoreCase("version")){
-            MessageHelper.info(p, "<i>Checking version, please wait...</i>");
-            new Thread(() -> {
-                ComparableVersion newestVersion = FancyHolograms.getInstance().getVersionFetcher().getNewestVersion();
-                ComparableVersion currentVersion = new ComparableVersion(FancyHolograms.getInstance().getDescription().getVersion());
-                if(newestVersion.compareTo(currentVersion) > 0){
-                    MessageHelper.warning(p, "You are using an outdated version of the FancyHolograms plugin.</color>");
-                    MessageHelper.warning(p, "Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyHolograms.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>.</color>");
-                } else {
-                    MessageHelper.success(p, "You are using the latest version of the FancyHolograms plugin (" + currentVersion + ")");
-                }
-            }).start();
-
-            return true;
-        } else if(args.length == 1 && args[0].equalsIgnoreCase("list")){
+        if(args.length == 1 && args[0].equalsIgnoreCase("list")){
             Collection<Hologram> holograms = FancyHolograms.getInstance().getHologramManager().getAllHolograms();
 
             if(holograms.isEmpty()){

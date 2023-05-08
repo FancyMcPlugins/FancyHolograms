@@ -22,8 +22,11 @@ You can download the latest versions at the following places:
 - Build from source (``gradlew reobfJar``)
 
 ## Commands
+/fancyholograms version<br>
+/fancyholograms reload<br>
+/fancyholograms save<br>
+
 /hologram help<br>
-/hologram version<br>
 /hologram list<br>
 /hologram teleport (name)<br>
 /hologram create (name)<br>

@@ -2,14 +2,17 @@ package de.oliver.fancyholograms;
 
 import de.oliver.fancynpcs.FancyNpcs;
 import net.minecraft.ChatFormatting;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.world.entity.Display;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HologramManager {
 
@@ -32,7 +35,12 @@ public class HologramManager {
                 continue;
             }
 
-            config.set("holograms." + hologram.getName() + ".location", hologram.getLocation());
+            config.set("holograms." + hologram.getName() + ".location.world", hologram.getLocation().getWorld().getName());
+            config.set("holograms." + hologram.getName() + ".location.x", hologram.getLocation().x());
+            config.set("holograms." + hologram.getName() + ".location.y", hologram.getLocation().y());
+            config.set("holograms." + hologram.getName() + ".location.z", hologram.getLocation().z());
+            config.set("holograms." + hologram.getName() + ".location.yaw", hologram.getLocation().getYaw());
+            config.set("holograms." + hologram.getName() + ".location.pitch", hologram.getLocation().getPitch());
             config.set("holograms." + hologram.getName() + ".billboard", hologram.getBillboard().getSerializedName());
             config.set("holograms." + hologram.getName() + ".scale", hologram.getScale());
             config.set("holograms." + hologram.getName() + ".text", hologram.getLines());
@@ -62,7 +70,35 @@ public class HologramManager {
         }
 
         for (String name : config.getConfigurationSection("holograms").getKeys(false)) {
-            Location location = config.getLocation("holograms." + name + ".location");
+            Location location = null;
+
+            try{
+                location = config.getLocation("holograms." + name + ".location");
+            } catch (Exception ignored){ }
+
+            if(location == null) {
+                String worldName = config.getString("holograms." + name + ".location.world");
+                World world = Bukkit.getWorld(worldName);
+
+                if (world == null) {
+                    FancyHolograms.getInstance().getLogger().info("Trying to load the world: '" + worldName + "'");
+                    world = new WorldCreator(worldName).createWorld();
+                }
+
+                if (world == null) {
+                    FancyHolograms.getInstance().getLogger().info("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
+                    continue;
+                }
+
+                double x = config.getDouble("holograms." + name + ".location.x");
+                double y = config.getDouble("holograms." + name + ".location.y");
+                double z = config.getDouble("holograms." + name + ".location.z");
+                float yaw = (float) config.getDouble("holograms." + name + ".location.yaw");
+                float pitch = (float) config.getDouble("holograms." + name + ".location.pitch");
+
+                location = new Location(world, x, y, z, yaw, pitch);
+            }
+            
             ChatFormatting background = config.isString("holograms." + name + ".background") ? ChatFormatting.getByName(config.getString("holograms." + name + ".background")) : null;
             float scale = (float) config.getDouble("holograms." + name + ".scale", 1f);
             List<String> text = config.getStringList("holograms." + name + ".text");
@@ -88,6 +124,18 @@ public class HologramManager {
             hologram.create();
         }
 
+    }
+
+    public void reloadHolograms(){
+        PlayerList playerList = ((CraftServer) Bukkit.getServer()).getHandle();
+
+        for (Hologram hologram : new ArrayList<>(getAllHolograms())) {
+            for (ServerPlayer player : playerList.players) {
+                hologram.remove(player);
+            }
+        }
+
+        loadHolograms();
     }
 
     public Collection<Hologram> getAllHolograms(){

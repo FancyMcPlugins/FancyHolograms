@@ -9,6 +9,8 @@ softdepend:
   - FancyNpcs
   - MiniPlaceholders
 commands:
+  FancyHolograms:
+    permission: FancyHolograms.admin
   Hologram:
     permission: FancyHolograms.admin
     description: Main command for the FancyHolograms plugin

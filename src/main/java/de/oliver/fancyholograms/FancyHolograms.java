@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms;
 
+import de.oliver.fancyholograms.commands.FancyHologramsCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.listeners.*;
 import de.oliver.fancylib.FancyLib;
@@ -83,6 +84,7 @@ public class FancyHolograms extends JavaPlugin {
         Metrics metrics = new Metrics(this, 17990);
 
         // register commands
+        getCommand("FancyHolograms").setExecutor(new FancyHologramsCMD());
         getCommand("hologram").setExecutor(new HologramCMD());
 
         // register listeners
