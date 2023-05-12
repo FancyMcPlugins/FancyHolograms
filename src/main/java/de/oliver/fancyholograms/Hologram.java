@@ -3,8 +3,10 @@ package de.oliver.fancyholograms;
 import com.mojang.math.Transformation;
 import de.oliver.fancyholograms.events.HologramSpawnEvent;
 import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.utils.ReflectionUtils;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import io.papermc.paper.adventure.PaperAdventure;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -12,7 +14,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EntityType;
@@ -23,10 +27,7 @@ import org.bukkit.entity.Player;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Hologram {
 
@@ -115,7 +116,7 @@ public class Hologram {
     public void updateText(ServerPlayer serverPlayer){
         if(serverPlayer != null) {
             entity.setText(getText(serverPlayer.getBukkitEntity()));
-            entity.getEntityData().refresh(serverPlayer);
+            refreshEntityData(serverPlayer);
         } else {
             entity.setText(getText(null));
         }
@@ -135,7 +136,7 @@ public class Hologram {
 
 
         if(serverPlayer != null) {
-            entity.getEntityData().refresh(serverPlayer);
+           refreshEntityData(serverPlayer);
         }
     }
 
@@ -150,7 +151,7 @@ public class Hologram {
 
 
         if(serverPlayer != null) {
-            entity.getEntityData().refresh(serverPlayer);
+            refreshEntityData(serverPlayer);
         }
     }
 
@@ -165,7 +166,7 @@ public class Hologram {
 
 
         if(serverPlayer != null) {
-            entity.getEntityData().refresh(serverPlayer);
+            refreshEntityData(serverPlayer);
         }
     }
 
@@ -174,7 +175,7 @@ public class Hologram {
         entity.setShadowStrength(shadowStrength);
 
         if (serverPlayer != null) {
-            entity.getEntityData().refresh(serverPlayer);
+            refreshEntityData(serverPlayer);
         }
     }
 
@@ -203,6 +204,16 @@ public class Hologram {
         }
 
         return PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(t, resolver));
+    }
+
+    private void refreshEntityData(ServerPlayer serverPlayer){
+        Int2ObjectMap<SynchedEntityData.DataItem<?>> itemsById = (Int2ObjectMap<SynchedEntityData.DataItem<?>>) ReflectionUtils.getValue(entity.getEntityData(), "e"); // itemsById
+        List<SynchedEntityData.DataValue<?>> entityData = new ArrayList<>();
+        for (SynchedEntityData.DataItem<?> dataItem : itemsById.values()) {
+            entityData.add(dataItem.value());
+        }
+        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(entity.getId(), entityData);
+        serverPlayer.connection.send(setEntityDataPacket);
     }
 
     public String getName() {
