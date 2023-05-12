@@ -19,9 +19,13 @@ public class NpcModifyListener implements Listener {
         }
 
         switch (event.getModification()){
-            case LOCATION -> {
+            case LOCATION, TYPE -> {
                 for (Hologram hologram : FancyHolograms.getInstance().getHologramManager().getAllHolograms()) {
                     if(hologram.getLinkedNpc() == null){
+                        continue;
+                    }
+
+                    if(hologram.getLinkedNpc() != event.getNpc()){
                         continue;
                     }
 
@@ -48,6 +52,7 @@ public class NpcModifyListener implements Listener {
                 }
                 if(isLinked){
                     event.setCancelled(true);
+                    System.out.println("pog?");
                     MessageHelper.error(event.getPlayer(), "This modification is not allowed on a linked npc");
                 }
             }

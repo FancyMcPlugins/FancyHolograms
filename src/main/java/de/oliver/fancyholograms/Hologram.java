@@ -186,7 +186,7 @@ public class Hologram {
         linkedNpc.updateDisplayName("<empty>");
         linkedNpc.updateShowInTab(false);
 
-        location = linkedNpc.getLocation().clone().add(0, 2.1, 0);
+        location = linkedNpc.getLocation().clone().add(0, linkedNpc.getNpc().getEyeHeight() + 0.5, 0);
         isDirty = true;
     }
 
