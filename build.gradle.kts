@@ -23,7 +23,7 @@ repositories {
 
 dependencies {
     implementation("com.github.FancyMcPlugins:FancyLib:25458c9930")
-    compileOnly("de.oliver:FancyNpcs:1.1.4")
+    compileOnly("de.oliver:FancyNpcs:1.1.5-beta")
     compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.1.0")
     paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
