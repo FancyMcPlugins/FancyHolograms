@@ -1,7 +1,7 @@
 name: FancyHolograms
 main: de.oliver.fancyholograms.FancyHolograms
 author: OliverHD
-version: 1.0.6-folia
+version: 1.0.6
 api-version: 1.19
 folia-supported: true
 load: POSTWORLD
