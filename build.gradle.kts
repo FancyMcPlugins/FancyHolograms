@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.FancyMcPlugins:FancyLib:225ba14e03")
+    implementation("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
     compileOnly("de.oliver:FancyNpcs:1.1.5-beta")
     compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.1.0")
