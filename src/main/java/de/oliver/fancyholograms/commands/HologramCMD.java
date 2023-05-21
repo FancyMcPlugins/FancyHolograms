@@ -38,7 +38,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length == 1){
-            return Stream.of("help", "version", "list", "teleport", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
+            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
             boolean usingNpcs = FancyHolograms.getInstance().isUsingFancyNpcs();
             return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();

@@ -22,11 +22,13 @@ repositories {
 }
 
 dependencies {
+    paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
+
     implementation("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
-    compileOnly("de.oliver:FancyNpcs:1.1.5-beta")
+    compileOnly("de.oliver:FancyNpcs:1.1.5")
+
     compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.1.0")
-    paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
 }
 
 tasks {

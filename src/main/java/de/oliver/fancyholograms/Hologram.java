@@ -2,8 +2,8 @@ package de.oliver.fancyholograms;
 
 import com.mojang.math.Transformation;
 import de.oliver.fancyholograms.events.HologramSpawnEvent;
+import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.Npc;
-import de.oliver.fancynpcs.utils.ReflectionUtils;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

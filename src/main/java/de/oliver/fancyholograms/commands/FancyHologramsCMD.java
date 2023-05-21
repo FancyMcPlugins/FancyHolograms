@@ -28,7 +28,7 @@ public class FancyHologramsCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(sender, "<i>Checking version, please wait...</i>");
             new Thread(() -> {
                 ComparableVersion newestVersion = FancyHolograms.getInstance().getVersionFetcher().getNewestVersion();
-                ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
+                ComparableVersion currentVersion = new ComparableVersion(FancyHolograms.getInstance().getDescription().getVersion());
                 if(newestVersion == null){
                     MessageHelper.error(sender, "Could not find latest version");
                 } else if(newestVersion.compareTo(currentVersion) > 0){
