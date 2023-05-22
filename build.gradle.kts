@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.0.6"
+version = "1.0.7"
 description = "Hologram plugin"
 
 java {
