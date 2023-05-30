@@ -9,6 +9,8 @@
 Create fancy looking holograms with the new 1.19.4 text display entities.<br>
 It is lightweight and fast (using [packets](https://wiki.vg/Protocol)).
 
+PlaceholderAPI and MiniPlaceholders is supported.
+
 **Only for minecraft server version 1.19.4**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
@@ -53,3 +55,15 @@ You can download the latest versions at the following places:
 
 ## Permissions
 For the /hologram command - ``FancyHolograms.admin``
+
+## Example images
+
+![example1](exampleImages/example1.png)
+
+![example2](exampleImages/example2.png)
+
+![example3](exampleImages/example3.png)
+
+![example4](exampleImages/example4.png)
+
+![example5](exampleImages/example5.png)
