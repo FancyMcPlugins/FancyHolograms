@@ -23,9 +23,9 @@ repositories {
 }
 
 dependencies {
-    paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
 
-    implementation("de.oliver:FancyLib:1.0.1")
+    implementation("de.oliver:FancyLib:1.0.2")
     compileOnly("de.oliver:FancyNpcs:1.1.5")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
