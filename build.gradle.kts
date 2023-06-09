@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.0.7"
+version = "1.1.0-rc1"
 description = "Hologram plugin"
 
 java {
@@ -18,14 +18,15 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-    maven("https://repo.fancyplugins.de/releases")
+//    maven("https://repo.fancyplugins.de/releases")
+    maven("https://repo.fancyplugins.de/snapshots")
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
 
     implementation("de.oliver:FancyLib:1.0.2")
-    compileOnly("de.oliver:FancyNpcs:1.1.5")
+    compileOnly("de.oliver:FancyNpcs:1.2.0-rc1")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.1.0")
@@ -62,6 +63,10 @@ tasks {
                 from(project.components["java"])
             }
         }
+    }
+
+    runServer{
+        minecraftVersion("1.20")
     }
 
     // Configure reobfJar to run when invoking the build task

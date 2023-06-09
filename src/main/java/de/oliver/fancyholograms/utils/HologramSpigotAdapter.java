@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.utils;
 import de.oliver.fancyholograms.Hologram;
 import net.minecraft.ChatFormatting;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 

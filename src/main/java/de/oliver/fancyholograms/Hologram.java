@@ -19,10 +19,11 @@ import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -78,7 +79,7 @@ public class Hologram {
     }
 
     public void spawn(ServerPlayer serverPlayer){
-        if(!location.getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())){
+        if(!location.getWorld().getName().equalsIgnoreCase(serverPlayer.level().getWorld().getName())){
             return;
         }
 
@@ -123,7 +124,7 @@ public class Hologram {
     }
 
     public void updateLocation(ServerPlayer serverPlayer){
-        entity.level = ((CraftWorld) location.getWorld()).getHandle();
+        // TODO: switch world if needed
         entity.setPosRaw(location.x(), location.y(), location.z());
         entity.setYRot(location.getYaw());
 

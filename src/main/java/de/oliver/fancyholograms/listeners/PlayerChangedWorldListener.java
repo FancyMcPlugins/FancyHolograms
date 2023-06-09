@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.listeners;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.Hologram;
 import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
