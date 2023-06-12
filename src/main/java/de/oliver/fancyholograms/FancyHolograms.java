@@ -73,7 +73,7 @@ public class FancyHolograms extends JavaPlugin {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
             getLogger().warning("Please update the server to " + SUPPORTED_VERSION + ".");
-            getLogger().warning("Disabling the FancyHologram plugin.");
+            getLogger().warning("Disabling the FancyHolograms plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
             return;

@@ -6,8 +6,8 @@ api-version: 1.19
 folia-supported: true
 load: POSTWORLD
 softdepend:
-  - PlaceholderAPI
   - FancyNpcs
+  - PlaceholderAPI
   - MiniPlaceholders
 commands:
   FancyHolograms:

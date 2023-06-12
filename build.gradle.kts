@@ -8,7 +8,7 @@ plugins {
 
 group = "de.oliver"
 version = "1.1.0"
-description = "Hologram plugin"
+description = "Simple, lightweight and fast hologram plugin using display entities"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
