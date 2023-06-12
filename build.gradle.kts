@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.1.0-rc1"
+version = "1.1.0"
 description = "Hologram plugin"
 
 java {
@@ -18,15 +18,14 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-//    maven("https://repo.fancyplugins.de/releases")
-    maven("https://repo.fancyplugins.de/snapshots")
+    maven("https://repo.fancyplugins.de/releases")
 }
 
 dependencies {
     paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
 
     implementation("de.oliver:FancyLib:1.0.2")
-    compileOnly("de.oliver:FancyNpcs:1.2.0-rc1")
+    compileOnly("de.oliver:FancyNpcs:1.2.0")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.1.0")
