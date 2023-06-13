@@ -7,8 +7,9 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.1.0"
 description = "Simple, lightweight and fast hologram plugin using display entities"
+version = "1.1.0"
+val mcVersion = "1.20.1"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -22,16 +23,20 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("$mcVersion-R0.1-SNAPSHOT")
 
     implementation("de.oliver:FancyLib:1.0.2")
-    compileOnly("de.oliver:FancyNpcs:1.2.0")
+    compileOnly("de.oliver:FancyNpcs:1.2.1")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
-    compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.1.0")
+    compileOnly("io.github.miniplaceholders:miniplaceholders-api:2.2.0")
 }
 
 tasks {
+    runServer{
+        minecraftVersion(mcVersion)
+    }
+
     publishing {
         repositories {
             maven {
@@ -64,10 +69,6 @@ tasks {
         }
     }
 
-    runServer{
-        minecraftVersion("1.20")
-    }
-
     // Configure reobfJar to run when invoking the build task
     assemble {
         dependsOn(reobfJar)
@@ -85,5 +86,13 @@ tasks {
     }
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
+        val props = mapOf(
+            "version" to project.version,
+            "description" to project.description,
+        )
+        inputs.properties(props)
+        filesMatching("plugin.yml") {
+            expand(props)
+        }
     }
 }
