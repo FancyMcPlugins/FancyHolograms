@@ -8,7 +8,7 @@ plugins {
 
 group = "de.oliver"
 description = "Simple, lightweight and fast hologram plugin using display entities"
-version = "1.1.0"
+version = "1.1.1"
 val mcVersion = "1.20.1"
 
 java {
