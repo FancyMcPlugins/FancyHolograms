@@ -25,32 +25,29 @@ You can download the latest versions at the following places:
 - Build from source (``gradlew reobfJar``)
 
 ## Commands
-/fancyholograms version<br>
-/fancyholograms reload<br>
-/fancyholograms save<br>
-
-/hologram help<br>
-/hologram list<br>
-/hologram teleport (name)<br>
-/hologram create (name)<br>
-/hologram remove (hologram name)<br>
-/hologram copy (hologram name) (new name)<br>
-/hologram edit (hologram name) addLine (text ...)<br>
-/hologram edit (hologram name) removeLine (text ...)<br>
-/hologram edit (hologram name) insertBefore (line number) (text ...)<br>
-/hologram edit (hologram name) insertAfter (line number) (text ...)<br>
-/hologram edit (hologram name) setLine (line number) (text ...)<br>
-/hologram edit (hologram name) position<br>
-/hologram edit (hologram name) moveTo (x) (y) (z) (optional: yaw)<br>
-/hologram edit (hologram name) scale (factor)<br>
-/hologram edit (hologram name) billboard (center|fixed|horizontal|vertical)<br>
-/hologram edit (hologram name) background (color)<br>
-/hologram edit (hologram name) shadowRadius (value)<br>
-/hologram edit (hologram name) shadowStrength (value)<br>
-/hologram edit (hologram name) updateTextInterval (seconds)<br>
-
-/hologram edit (hologram) linkWithNpc (npc name)<br>
-/hologram edit (hologram) unlinkWithNpc
+/FancyHolograms version - Shows you the current plugin version
+/FancyHolograms save - Saves all holograms
+/FancyHolograms reload - Reloads the config and holograms
+/Hologram help - Shows a list of all subcommands
+/Hologram list - Shows a list of all holograms
+/Hologram create (name) - Creates a new hologram at your location
+/Hologram remove (hologram) - Removes a certain hologram
+/Hologram copy (hologram) (new name) - Creates a copy of a hologram
+/Hologram edit (hologram) position - Teleports the hologram to you
+/Hologram edit (hologram) moveTo (x) (y) (z) [yaw] - Teleports the hologram to the location
+/Hologram edit (hologram) setLine (line) (text...) - Sets the content of the line
+/Hologram edit (hologram) addLine (text...) - Adds a line at the bottom
+/Hologram edit (hologram) removeLine (line) - Removes a line
+/Hologram edit (hologram) insertBefore (line) (text...) - Adds a line after another
+/Hologram edit (hologram) insertAfter (line) (text...) - Adds a line before another
+/Hologram edit (hologram) background (color) - Sets the background color
+/Hologram edit (hologram) scale (factor) - Sets the scale (can be floats)
+/Hologram edit (hologram) billboard (billboard) - Sets the billboard
+/Hologram edit (hologram) shadowStrength (strength) - Sets the shadow strength
+/Hologram edit (hologram) shadowRadius (radius) - Sets the shadow radius
+/Hologram edit (hologram) updateTextInterval (seconds) - Sets the interval for refreshing the text (useful for placeholders)
+/Hologram edit (hologram) linkWithNpc (npc) - Links a hologram with an NPC
+/Hologram edit (hologram) unlinkWithNpc - Unlinks the hologram from the NPC
 
 
 ## Permissions
