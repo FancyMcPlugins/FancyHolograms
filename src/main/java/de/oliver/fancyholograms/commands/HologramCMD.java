@@ -41,7 +41,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy").filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("edit")){
             boolean usingNpcs = FancyHolograms.getInstance().isUsingFancyNpcs();
-            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
+            return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "").filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         } else if(args.length == 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("edit") || args[0].equalsIgnoreCase("copy") || args[0].equalsIgnoreCase("teleport"))){
             return FancyHolograms.getInstance().getHologramManager().getAllHolograms().stream().map(Hologram::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
         } else if(args.length == 4 && (args[2].equalsIgnoreCase("setLine") || args[2].equalsIgnoreCase("removeLine"))){
@@ -53,6 +53,8 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             suggestions.add("reset");
             suggestions.add("transparent");
             return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase())).toList();
+        } else if(args.length == 4 && args[2].equalsIgnoreCase("textShadow")){
+            return Arrays.asList("true", "false");
         } else if(args.length >= 4 && args[2].equalsIgnoreCase("moveTo")){
             if(!(sender instanceof Player p)){
                 return null;
@@ -108,6 +110,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
             MessageHelper.info(p, "- /hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram");
             MessageHelper.info(p, "- /hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram");
             MessageHelper.info(p, "- /hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram");
+            MessageHelper.info(p, "- /hologram edit <hologram> textShadow <true|false> <dark_gray>- <white>Enables/disables the text shadow");
             MessageHelper.info(p, "- /hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram");
             MessageHelper.info(p, "- /hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram");
             MessageHelper.info(p, "- /hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text");
@@ -460,6 +463,29 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                         }
                     }
 
+                    case "textshadow" -> {
+                        if(args.length < 4){
+                            MessageHelper.error(p, "Wrong usage: /hologram help");
+                            return false;
+                        }
+
+                        boolean value;
+
+                        if(args[3].equalsIgnoreCase("true")){
+                            value = true;
+                        }else if(args[3].equalsIgnoreCase("false")){
+                            value = false;
+                        }else {
+                            MessageHelper.error(p, "Could not parse text shadow flag");
+                            return false;
+                        }
+
+                        boolean success = editTextShadow(p, playerList, hologram, value);
+                        if(!success){
+                            return false;
+                        }
+                    }
+
                     case "shadowradius" -> {
                         if(args.length < 4){
                             MessageHelper.error(p, "Wrong usage: /hologram help");
@@ -573,7 +599,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         List<String> lines = new ArrayList<>();
         lines.add("Edit this line with /hologram edit " + name);
 
-        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null, 0, 1, -1, null);
+        Hologram hologram = new Hologram(name, p.getLocation(), lines, Display.BillboardConstraints.CENTER, 1f, null, 0, 1, -1, false, null);
 
         HologramCreateEvent hologramCreateEvent = new HologramCreateEvent(hologram, p);
         hologramCreateEvent.callEvent();
@@ -627,6 +653,7 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
                 hologram.getShadowRadius(),
                 hologram.getShadowStrength(),
                 hologram.getUpdateTextInterval(),
+                hologram.hasTextShadow(),
                 null
         );
 
@@ -789,6 +816,24 @@ public class HologramCMD implements CommandExecutor, TabExecutor {
         }
 
         MessageHelper.success(p, "Changed background color");
+        return true;
+    }
+
+    private boolean editTextShadow(Player p, PlayerList playerList, Hologram hologram, boolean value){
+        HologramModifyEvent hologramModifyEvent = new HologramModifyEvent(hologram, p, HologramModifyEvent.HologramModification.TEXT_SHADOW);
+        hologramModifyEvent.callEvent();
+        if (hologramModifyEvent.isCancelled()) {
+            MessageHelper.error(p, "Cancelled hologram modification");
+            return false;
+        }
+
+        hologram.setTextShadow(value);
+
+        for (ServerPlayer player : playerList.players) {
+            hologram.updateTextShadow(player);
+        }
+
+        MessageHelper.success(p, "Changed text shadow");
         return true;
     }
 

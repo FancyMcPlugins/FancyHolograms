@@ -19,7 +19,6 @@ import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 import org.bukkit.Location;
@@ -42,6 +41,7 @@ public class Hologram {
     private float shadowStrength;
     private int updateTextInterval; // if < 0 = no update
     private long lastTextUpdate; // millisecond timestamp
+    private boolean textShadow;
     private Npc linkedNpc;
 
     private Display.TextDisplay entity;
@@ -49,7 +49,7 @@ public class Hologram {
     private boolean isDirty;
     private final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
 
-    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background, float shadowRadius, float shadowStrength, int updateTextInterval, Npc linkedNpc) {
+    public Hologram(String name, Location location, List<String> lines, Display.BillboardConstraints billboard, float scale, ChatFormatting background, float shadowRadius, float shadowStrength, int updateTextInterval, boolean textShadow, Npc linkedNpc) {
         this.name = name;
         this.location = location;
         this.lines = lines;
@@ -59,6 +59,7 @@ public class Hologram {
         this.shadowRadius = shadowRadius;
         this.shadowStrength = shadowStrength;
         this.updateTextInterval = updateTextInterval;
+        this.textShadow = textShadow;
         this.linkedNpc = linkedNpc;
         this.lastTextUpdate = System.currentTimeMillis();
         this.saveToFile = true;
@@ -100,10 +101,12 @@ public class Hologram {
         syncWithNpc();
         updateLocation(serverPlayer);
         updateText(serverPlayer);
-        updateBillboard(serverPlayer);
-        updateScale(serverPlayer);
-        updateBackground(serverPlayer);
-        updateShadow(serverPlayer);
+        updateBillboard(null);
+        updateScale(null);
+        updateBackground(null);
+        updateShadow(null);
+        updateTextShadow(null);
+        refreshEntityData(serverPlayer);
         syncWithNpc();
         isVisibleForPlayer.put(serverPlayer.getUUID(), true);
     }
@@ -174,6 +177,18 @@ public class Hologram {
     public void updateShadow(ServerPlayer serverPlayer) {
         entity.setShadowRadius(shadowRadius);
         entity.setShadowStrength(shadowStrength);
+
+        if (serverPlayer != null) {
+            refreshEntityData(serverPlayer);
+        }
+    }
+
+    public void updateTextShadow(ServerPlayer serverPlayer){
+        if(textShadow) {
+            entity.setFlags((byte)(entity.getFlags() | Display.TextDisplay.FLAG_SHADOW));
+        } else {
+            entity.setFlags((byte)(entity.getFlags() & ~Display.TextDisplay.FLAG_SHADOW));
+        }
 
         if (serverPlayer != null) {
             refreshEntityData(serverPlayer);
@@ -296,6 +311,14 @@ public class Hologram {
 
     public void setLastTextUpdate(long lastTextUpdate) {
         this.lastTextUpdate = lastTextUpdate;
+    }
+
+    public boolean hasTextShadow() {
+        return textShadow;
+    }
+
+    public void setTextShadow(boolean textShadow) {
+        this.textShadow = textShadow;
     }
 
     public Npc getLinkedNpc() {

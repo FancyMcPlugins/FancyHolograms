@@ -74,6 +74,7 @@ public class HologramModifyEvent extends Event implements Cancellable {
         SCALE,
         BILLBOARD,
         BACKGROUND,
+        TEXT_SHADOW,
         SHADOW_RADIUS,
         SHADOW_STRENGTH,
         UPDATE_TEXT_INTERVAL,

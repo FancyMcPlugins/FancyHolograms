@@ -43,6 +43,7 @@ You can download the latest versions at the following places:
 /Hologram edit (hologram) background (color) - Sets the background color<br>
 /Hologram edit (hologram) scale (factor) - Sets the scale (can be floats)<br>
 /Hologram edit (hologram) billboard (billboard) - Sets the billboard<br>
+/Hologram edit (hologram) textShadow (true|false) - Enables/disables the text shadow<br>
 /Hologram edit (hologram) shadowStrength (strength) - Sets the shadow strength<br>
 /Hologram edit (hologram) shadowRadius (radius) - Sets the shadow radius<br>
 /Hologram edit (hologram) updateTextInterval (seconds) - Sets the interval for refreshing the text (useful for placeholders)<br>

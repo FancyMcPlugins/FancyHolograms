@@ -42,6 +42,14 @@ public class HologramSpigotAdapter {
         hologram.updateBackground(((CraftPlayer) player).getHandle());
     }
 
+    public void updateShadow(Player player){
+        hologram.updateShadow(((CraftPlayer) player).getHandle());
+    }
+
+    public void updateTextShadow(Player player){
+        hologram.updateTextShadow(((CraftPlayer) player).getHandle());
+    }
+
     public void setBillboard(Display.Billboard billboard) {
         hologram.setBillboard(net.minecraft.world.entity.Display.BillboardConstraints.valueOf(billboard.name()));
     }

@@ -44,6 +44,7 @@ public class HologramManager {
             config.set("holograms." + hologram.getName() + ".billboard", hologram.getBillboard().getSerializedName());
             config.set("holograms." + hologram.getName() + ".scale", hologram.getScale());
             config.set("holograms." + hologram.getName() + ".text", hologram.getLines());
+            config.set("holograms." + hologram.getName() + ".text_shadow", hologram.hasTextShadow());
             config.set("holograms." + hologram.getName() + ".shadow_radius", hologram.getShadowRadius());
             config.set("holograms." + hologram.getName() + ".shadow_strength", hologram.getShadowStrength());
             config.set("holograms." + hologram.getName() + ".update_text_interval", hologram.getUpdateTextInterval());
@@ -105,6 +106,7 @@ public class HologramManager {
             int updateTextInterval = config.getInt("holograms." + name + ".update_text_interval");
             float shadowRadius = (float) config.getDouble("holograms." + name + ".shadow_radius");
             float shadowStrength = (float) config.getDouble("holograms." + name + ".shadow_strength", 1);
+            boolean textShadow = config.getBoolean("holograms." + name + ".text_shadow", false);
             String linkedNpcName = config.getString("holograms." + name + ".linkedNpc");
 
             String billboardName = config.getString("holograms." + name + ".billboard");
@@ -115,7 +117,7 @@ public class HologramManager {
                 }
             }
 
-            Hologram hologram = new Hologram(name, location, text, billboard, scale, background, shadowRadius, shadowStrength, updateTextInterval, null);
+            Hologram hologram = new Hologram(name, location, text, billboard, scale, background, shadowRadius, shadowStrength, updateTextInterval, textShadow, null);
 
             if(FancyHolograms.getInstance().isUsingFancyNpcs() && linkedNpcName != null && linkedNpcName.length() > 0){
                 hologram.setLinkedNpc(FancyNpcs.getInstance().getNpcManager().getNpc(linkedNpcName));
