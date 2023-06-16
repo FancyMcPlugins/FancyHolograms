@@ -2,7 +2,6 @@ package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancynpcs.FancyNpcs;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
