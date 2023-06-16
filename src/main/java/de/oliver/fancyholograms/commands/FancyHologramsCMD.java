@@ -5,7 +5,6 @@ import de.oliver.fancylib.MessageHelper;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -13,10 +12,10 @@ import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-public class FancyHologramsCMD implements CommandExecutor, TabCompleter {
+public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length != 1) {
             return Collections.emptyList();
         }
@@ -70,4 +69,5 @@ public class FancyHologramsCMD implements CommandExecutor, TabCompleter {
 
         return true;
     }
+
 }
