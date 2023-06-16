@@ -8,17 +8,22 @@ import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 public class FancyHologramsCMD implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length == 1){
-            return Stream.of("version", "reload", "save").filter(input -> input.toLowerCase().startsWith(args[0])).toList();
+        if (args.length != 1) {
+            return Collections.emptyList();
         }
-        return null;
+
+        return Stream.of("version", "reload", "save")
+                     .filter(alias -> alias.startsWith(args[0].toLowerCase(Locale.ROOT)))
+                     .toList();
     }
 
     @Override
