@@ -78,7 +78,7 @@ public class HologramManager {
             } catch (Exception ignored){ }
 
             if(location == null) {
-                String worldName = config.getString("holograms." + name + ".location.world");
+                String worldName = config.getString("holograms." + name + ".location.world", "world");
                 World world = Bukkit.getWorld(worldName);
 
                 if (world == null) {
@@ -91,11 +91,11 @@ public class HologramManager {
                     continue;
                 }
 
-                double x = config.getDouble("holograms." + name + ".location.x");
-                double y = config.getDouble("holograms." + name + ".location.y");
-                double z = config.getDouble("holograms." + name + ".location.z");
-                float yaw = (float) config.getDouble("holograms." + name + ".location.yaw");
-                float pitch = (float) config.getDouble("holograms." + name + ".location.pitch");
+                double x = config.getDouble("holograms." + name + ".location.x", 0);
+                double y = config.getDouble("holograms." + name + ".location.y", 0);
+                double z = config.getDouble("holograms." + name + ".location.z", 0);
+                float yaw = (float) config.getDouble("holograms." + name + ".location.yaw", 0);
+                float pitch = (float) config.getDouble("holograms." + name + ".location.pitch", 0);
 
                 location = new Location(world, x, y, z, yaw, pitch);
             }
@@ -103,18 +103,22 @@ public class HologramManager {
             ChatFormatting background = config.isString("holograms." + name + ".background") ? ChatFormatting.getByName(config.getString("holograms." + name + ".background")) : null;
             float scale = (float) config.getDouble("holograms." + name + ".scale", 1f);
             List<String> text = config.getStringList("holograms." + name + ".text");
-            int updateTextInterval = config.getInt("holograms." + name + ".update_text_interval");
-            float shadowRadius = (float) config.getDouble("holograms." + name + ".shadow_radius");
+            int updateTextInterval = config.getInt("holograms." + name + ".update_text_interval", -1);
+            float shadowRadius = (float) config.getDouble("holograms." + name + ".shadow_radius", 0);
             float shadowStrength = (float) config.getDouble("holograms." + name + ".shadow_strength", 1);
             boolean textShadow = config.getBoolean("holograms." + name + ".text_shadow", false);
             String linkedNpcName = config.getString("holograms." + name + ".linkedNpc");
 
-            String billboardName = config.getString("holograms." + name + ".billboard");
+            String billboardName = config.getString("holograms." + name + ".billboard", "center");
             Display.BillboardConstraints billboard = Display.BillboardConstraints.CENTER;
             for (Display.BillboardConstraints b : Display.BillboardConstraints.values()) {
                 if(b.getSerializedName().equalsIgnoreCase(billboardName)){
                     billboard = b;
                 }
+            }
+
+            if(text.size() == 0){
+                text.add("<red><b>Could not load text</b></red>");
             }
 
             Hologram hologram = new Hologram(name, location, text, billboard, scale, background, shadowRadius, shadowStrength, updateTextInterval, textShadow, null);
