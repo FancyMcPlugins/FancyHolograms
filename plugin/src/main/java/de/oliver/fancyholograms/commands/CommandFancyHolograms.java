@@ -3,7 +3,10 @@ package de.oliver.fancyholograms.commands;
 import de.oliver.fancyholograms.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.apache.maven.artifact.versioning.ComparableVersion;
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;

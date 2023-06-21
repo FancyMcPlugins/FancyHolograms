@@ -7,11 +7,9 @@ import de.oliver.fancynpcs.FancyNpcs;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import javax.swing.text.html.Option;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Function;
