@@ -14,8 +14,8 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$minecraftVersion-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-    implementation(project(":implementation_1_19", configuration = "reobf"))
     implementation(project(":implementation_1_20", configuration = "reobf"))
+    implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:1.0.2")
 

@@ -6,7 +6,7 @@ import de.oliver.fancyholograms.commands.CommandFancyHolograms;
 import de.oliver.fancyholograms.commands.CommandHologram;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
-import de.oliver.fancyholograms.version.Hologram1_19;
+import de.oliver.fancyholograms.version.Hologram1_19_4;
 import de.oliver.fancyholograms.version.Hologram1_20;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
@@ -132,9 +132,9 @@ public final class FancyHologramsPlugin extends JavaPlugin {
     private @Nullable Function<HologramData, Hologram> resolveHologramAdapter() {
         final var version = Bukkit.getMinecraftVersion();
 
-        return switch (version.substring(0, Math.min(4, version.length()))) {
-            case "1.19" -> Hologram1_19::new;
-            case "1.20" -> Hologram1_20::new;
+        return switch (version) {
+            case "1.20", "1.20.1" -> Hologram1_20::new;
+            case "1.19.4" -> Hologram1_19_4::new;
             default -> null;
         };
     }

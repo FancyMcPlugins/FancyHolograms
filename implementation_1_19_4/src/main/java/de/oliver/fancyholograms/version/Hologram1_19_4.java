@@ -26,13 +26,13 @@ import java.util.ArrayList;
 
 import static de.oliver.fancylib.ReflectionUtils.getValue;
 
-public final class Hologram1_19 extends Hologram {
+public final class Hologram1_19_4 extends Hologram {
 
     @Nullable
     private TextDisplay display;
 
 
-    public Hologram1_19(@NotNull final HologramData data) {
+    public Hologram1_19_4(@NotNull final HologramData data) {
         super(data);
     }
 
