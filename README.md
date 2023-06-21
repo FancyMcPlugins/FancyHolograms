@@ -6,6 +6,7 @@
 [![Downloads](https://img.shields.io/modrinth/dt/fancyholograms?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancyholograms/versions)
 
 # Fancy Holograms
+
 Simple, lightweight and fast hologram plugin using display entities.<br>
 It is lightweight and fast (using [packets](https://wiki.vg/Protocol)).
 
@@ -14,8 +15,8 @@ PlaceholderAPI and MiniPlaceholders is supported.
 **Only for minecraft server version 1.20 & 1.20.1**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
-
 ## Get the plugin
+
 You can download the latest versions at the following places:
 
 - https://hangar.papermc.io/Oliver/FancyHolograms
@@ -25,6 +26,7 @@ You can download the latest versions at the following places:
 - Build from source (``gradlew reobfJar``)
 
 ## Commands
+
 /FancyHolograms version - Shows you the current plugin version<br>
 /FancyHolograms save - Saves all holograms<br>
 /FancyHolograms reload - Reloads the config and holograms<br>
@@ -46,12 +48,13 @@ You can download the latest versions at the following places:
 /Hologram edit (hologram) textShadow (true|false) - Enables/disables the text shadow<br>
 /Hologram edit (hologram) shadowStrength (strength) - Sets the shadow strength<br>
 /Hologram edit (hologram) shadowRadius (radius) - Sets the shadow radius<br>
-/Hologram edit (hologram) updateTextInterval (seconds) - Sets the interval for refreshing the text (useful for placeholders)<br>
+/Hologram edit (hologram) updateTextInterval (seconds) - Sets the interval for refreshing the text (useful for
+placeholders)<br>
 /Hologram edit (hologram) linkWithNpc (npc) - Links a hologram with an NPC<br>
 /Hologram edit (hologram) unlinkWithNpc - Unlinks the hologram from the NPC<br>
 
-
 ## Permissions
+
 For the /hologram command - ``FancyHolograms.admin``
 
 ## Example images

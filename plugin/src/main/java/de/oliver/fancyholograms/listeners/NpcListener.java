@@ -42,12 +42,12 @@ public final class NpcListener implements Listener {
                                                       .toList();
 
                 this.plugin.getScheduler()
-                        .runTaskLater(null, 1L, () -> {
-                            final var players = Bukkit.getOnlinePlayers();
+                           .runTaskLater(null, 1L, () -> {
+                               final var players = Bukkit.getOnlinePlayers();
 
-                            needsToBeUpdated.forEach(this.plugin.getHologramsManager()::syncHologramWithNpc);
-                            needsToBeUpdated.forEach(hologram -> hologram.refreshHologram(players));
-                        });
+                               needsToBeUpdated.forEach(this.plugin.getHologramsManager()::syncHologramWithNpc);
+                               needsToBeUpdated.forEach(hologram -> hologram.refreshHologram(players));
+                           });
             }
             case DISPLAY_NAME, SHOW_IN_TAB -> {
                 final var isLinked = holograms.stream()
