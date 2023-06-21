@@ -1,0 +1,25 @@
+name: "FancyHolograms"
+main: "de.oliver.fancyholograms.FancyHologramsPlugin"
+
+version: "$version"
+authors: ["OliverHD", "Sxtanna"]
+
+description: "$description"
+
+api-version: "1.19"
+folia-supported: true
+
+softdepend:
+  - "FancyNpcs"
+  - "PlaceholderAPI"
+  - "MiniPlaceholders"
+
+commands:
+  fancyholograms:
+    permission: "fancyholograms.admin"
+  hologram:
+    permission: "fancyholograms.admin"
+    description: "Main command for the FancyHolograms plugin"
+    aliases:
+      - "holograms"
+      - "holo"
