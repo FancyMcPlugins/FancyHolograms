@@ -1,11 +1,13 @@
+![](fancyholograms_title.png)
+
+#   
+
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyHolograms?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
 [![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&logo=Discord&label=Discord&style=flat-square)](https://discord.gg/ZUgYCEJUEx)
 ![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyHolograms/total?logo=GitHub&style=flat-square)
 [![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-108694.svg)](https://www.spigotmc.org/resources/fancy-holograms-1-19-4.108694/)
 [![Downloads](https://img.shields.io/modrinth/dt/fancyholograms?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancyholograms/versions)
-
-# Fancy Holograms
 
 Simple, lightweight and fast hologram plugin using display entities.<br>
 It is lightweight and fast (using [packets](https://wiki.vg/Protocol)).
@@ -23,7 +25,7 @@ You can download the latest versions at the following places:
 - https://modrinth.com/plugin/fancyholograms
 - https://github.com/FancyMcPlugins/FancyHolograms/releases
 - https://www.spigotmc.org/resources/fancyholograms.108694/
-- Build from source (``gradlew build``)
+- Build from source (``gradlew shadowJar``)
 
 ## Commands
 
