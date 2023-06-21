@@ -12,7 +12,7 @@ It is lightweight and fast (using [packets](https://wiki.vg/Protocol)).
 
 PlaceholderAPI and MiniPlaceholders is supported.
 
-**Only for minecraft server version 1.20 & 1.20.1**<br>
+**Only for minecraft server versions 1.19.4 .. 1.20.1**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Get the plugin
@@ -23,7 +23,7 @@ You can download the latest versions at the following places:
 - https://modrinth.com/plugin/fancyholograms
 - https://github.com/FancyMcPlugins/FancyHolograms/releases
 - https://www.spigotmc.org/resources/fancyholograms.108694/
-- Build from source (``gradlew reobfJar``)
+- Build from source (``gradlew build``)
 
 ## Commands
 
