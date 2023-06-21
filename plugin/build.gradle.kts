@@ -7,7 +7,7 @@ plugins {
 }
 
 
-val minecraftVersion = "1.19.4"
+val minecraftVersion = "1.20.1"
 
 
 dependencies {
