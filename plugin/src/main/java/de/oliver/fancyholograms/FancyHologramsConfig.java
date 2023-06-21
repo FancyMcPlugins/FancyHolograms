@@ -37,11 +37,11 @@ public final class FancyHologramsConfig {
     /**
      * The interval at which autosave is performed.
      */
-    private int     autosaveInterval;
+    private int autosaveInterval;
     /**
      * The visibility distance for holograms.
      */
-    private int     visibilityDistance;
+    private int visibilityDistance;
 
 
     FancyHologramsConfig(@NotNull final FancyHologramsPlugin plugin) {
@@ -57,8 +57,8 @@ public final class FancyHologramsConfig {
         final var config = this.plugin.getConfig();
 
         versionNotifsMuted = (boolean) ConfigHelper.getOrDefault(config, "mute_version_notification", false);
-        autosaveEnabled    = (boolean) ConfigHelper.getOrDefault(config, "enable_autosave", true);
-        autosaveInterval   = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
+        autosaveEnabled = (boolean) ConfigHelper.getOrDefault(config, "enable_autosave", true);
+        autosaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
         visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
 
         this.plugin.saveConfig();
@@ -107,7 +107,8 @@ public final class FancyHologramsConfig {
      *
      * @return A map of hologram names to hologram data.
      */
-    public @NotNull @Unmodifiable Map<String, HologramData> loadHolograms() {
+    public @NotNull
+    @Unmodifiable Map<String, HologramData> loadHolograms() {
         final var config = this.plugin.getConfig();
 
         final var root = config.getConfigurationSection("holograms");
@@ -167,10 +168,10 @@ public final class FancyHologramsConfig {
             final var locationSection = section.getConfigurationSection("location");
             if (locationSection != null) {
                 final var world = locationSection.getString("world", "world");
-                final var x     = locationSection.getDouble("x", 0.0);
-                final var y     = locationSection.getDouble("y", 0.0);
-                final var z     = locationSection.getDouble("z", 0.0);
-                final var yaw   = locationSection.getDouble("yaw", 0.0);
+                final var x = locationSection.getDouble("x", 0.0);
+                final var y = locationSection.getDouble("y", 0.0);
+                final var z = locationSection.getDouble("z", 0.0);
+                final var yaw = locationSection.getDouble("yaw", 0.0);
                 final var pitch = locationSection.getDouble("pitch", 0.0);
 
                 location = new Location(Bukkit.getWorld(world), x, y, z, ((float) yaw), ((float) pitch));
@@ -178,16 +179,16 @@ public final class FancyHologramsConfig {
         }
 
 
-        final var text               = section.getStringList("text");
-        final var textHasShadow      = section.getBoolean("text_shadow", HologramData.DEFAULT_TEXT_SHADOW_STATE);
+        final var text = section.getStringList("text");
+        final var textHasShadow = section.getBoolean("text_shadow", HologramData.DEFAULT_TEXT_SHADOW_STATE);
         final var textUpdateInterval = section.getInt("update_text_interval", HologramData.DEFAULT_TEXT_UPDATE_INTERVAL);
 
-        final var scale          = section.getDouble("scale", HologramData.DEFAULT_SCALE);
-        final var shadowRadius   = section.getDouble("shadow_radius", HologramData.DEFAULT_SHADOW_RADIUS);
+        final var scale = section.getDouble("scale", HologramData.DEFAULT_SCALE);
+        final var shadowRadius = section.getDouble("shadow_radius", HologramData.DEFAULT_SHADOW_RADIUS);
         final var shadowStrength = section.getDouble("shadow_strength", HologramData.DEFAULT_SHADOW_STRENGTH);
 
         final var background = section.getString("background");
-        final var billboard  = section.getString("billboard", HologramData.DEFAULT_BILLBOARD.name());
+        final var billboard = section.getString("billboard", HologramData.DEFAULT_BILLBOARD.name());
 
 
         final var data = new HologramData(name);

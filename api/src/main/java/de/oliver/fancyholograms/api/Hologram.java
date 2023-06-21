@@ -31,7 +31,7 @@ import java.util.*;
  */
 public abstract class Hologram {
 
-    public static final int       LINE_WIDTH  = 1000;
+    public static final int LINE_WIDTH = 1000;
     public static final TextColor TRANSPARENT = () -> 0;
 
 
@@ -44,13 +44,30 @@ public abstract class Hologram {
      * Set of UUIDs of players to whom the hologram is currently shown.
      */
     @NotNull
-    protected final Set<UUID>    shown = new HashSet<>();
+    protected final Set<UUID> shown = new HashSet<>();
 
 
     protected Hologram(@NotNull final HologramData data) {
         this.data = data;
     }
 
+    /**
+     * Checks whether the PlaceholderAPI plugin is enabled.
+     *
+     * @return true if the PlaceholderAPI plugin is enabled, false otherwise
+     */
+    private static boolean isUsingPlaceholderApi() {
+        return Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
+    }
+
+    /**
+     * Checks whether the MiniPlaceholders plugin is enabled.
+     *
+     * @return true if the MiniPlaceholders plugin is enabled, false otherwise
+     */
+    private static boolean isUsingMiniplaceholders() {
+        return Bukkit.getPluginManager().isPluginEnabled("MiniPlaceholders");
+    }
 
     /**
      * Returns the HologramData of this Hologram object.
@@ -60,7 +77,6 @@ public abstract class Hologram {
     public final @NotNull HologramData getData() {
         return this.data;
     }
-
 
     /**
      * Abstract method for creating a hologram.
@@ -80,7 +96,6 @@ public abstract class Hologram {
      */
     protected abstract void update();
 
-
     /**
      * Abstract method for showing a hologram to a specific player.
      * This method must be implemented in the version-specific subclass.
@@ -99,7 +114,6 @@ public abstract class Hologram {
      */
     protected abstract boolean hide(@NotNull final Player player);
 
-
     /**
      * Abstract method for refreshing a hologram for a specific player.
      * This method must be implemented in the version-specific subclass.
@@ -107,7 +121,6 @@ public abstract class Hologram {
      * @param player the player for whom the hologram should be refreshed
      */
     protected abstract void refresh(@NotNull final Player player);
-
 
     /**
      * Creates the hologram in the world
@@ -129,7 +142,6 @@ public abstract class Hologram {
     public final void updateHologram() {
         update();
     }
-
 
     /**
      * Shows the hologram to the specified player, firing a HologramShowEvent.
@@ -182,7 +194,6 @@ public abstract class Hologram {
         refresh(player);
     }
 
-
     /**
      * Shows the hologram to a collection of players.
      *
@@ -210,13 +221,13 @@ public abstract class Hologram {
         players.forEach(this::refreshHologram);
     }
 
-
     /**
      * Returns a read-only view of the UUIDs of players to whom the hologram is currently shown.
      *
      * @return an read-only set of UUIDs of players to whom the hologram is currently shown
      */
-    public final @NotNull @UnmodifiableView Set<UUID> getShownToPlayers() {
+    public final @NotNull
+    @UnmodifiableView Set<UUID> getShownToPlayers() {
         return Collections.unmodifiableSet(this.shown);
     }
 
@@ -240,7 +251,6 @@ public abstract class Hologram {
         return isShown(player.getUniqueId());
     }
 
-
     /**
      * Method to calculate the distance between the hologram's location and another location.
      * Returns NaN if the hologram doesn't have a location, or if the worlds do not match.
@@ -260,7 +270,6 @@ public abstract class Hologram {
 
         return other.distance(location);
     }
-
 
     /**
      * Gets the text shown in the hologram. If a player is specified, placeholders in the text are replaced
@@ -286,7 +295,6 @@ public abstract class Hologram {
         return MiniMessage.miniMessage().deserialize(text, tags);
     }
 
-
     @Override
     public final boolean equals(@Nullable final Object o) {
         if (this == o) return true;
@@ -298,25 +306,6 @@ public abstract class Hologram {
     @Override
     public final int hashCode() {
         return Objects.hash(this.getData());
-    }
-
-
-    /**
-     * Checks whether the PlaceholderAPI plugin is enabled.
-     *
-     * @return true if the PlaceholderAPI plugin is enabled, false otherwise
-     */
-    private static boolean isUsingPlaceholderApi() {
-        return Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
-    }
-
-    /**
-     * Checks whether the MiniPlaceholders plugin is enabled.
-     *
-     * @return true if the MiniPlaceholders plugin is enabled, false otherwise
-     */
-    private static boolean isUsingMiniplaceholders() {
-        return Bukkit.getPluginManager().isPluginEnabled("MiniPlaceholders");
     }
 
 }

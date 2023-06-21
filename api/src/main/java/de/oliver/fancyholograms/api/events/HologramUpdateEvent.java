@@ -16,18 +16,22 @@ public final class HologramUpdateEvent extends HologramEvent {
 
 
     @NotNull
-    private final Player               player;
+    private final Player player;
     @NotNull
-    private final HologramData         updatedData;
+    private final HologramData updatedData;
     @NotNull
     private final HologramModification modification;
 
     public HologramUpdateEvent(@NotNull final Hologram hologram, @NotNull final Player player, @NotNull final HologramData updatedData, @NotNull final HologramModification modification) {
         super(hologram);
 
-        this.player       = player;
-        this.updatedData  = updatedData;
+        this.player = player;
+        this.updatedData = updatedData;
         this.modification = modification;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 
     public @NotNull Player getPlayer() {
@@ -63,11 +67,6 @@ public final class HologramUpdateEvent extends HologramEvent {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return handlerList;
-    }
-
-
-    public static HandlerList getHandlerList() {
         return handlerList;
     }
 

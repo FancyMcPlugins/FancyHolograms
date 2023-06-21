@@ -71,12 +71,12 @@ public final class CommandHologram implements CommandExecutor, TabCompleter {
                     }
 
                     MessageHelper.info(sender,
-                                       "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'%s'> - %s (%s/%s/%s)</click></hover>"
-                                               .formatted("/hologram teleport " + hologram.getData().getName(),
-                                                          hologram.getData().getName(),
-                                                          Constants.DECIMAL_FORMAT.format(location.x()),
-                                                          Constants.DECIMAL_FORMAT.format(location.y()),
-                                                          Constants.DECIMAL_FORMAT.format(location.z())));
+                            "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'%s'> - %s (%s/%s/%s)</click></hover>"
+                                    .formatted("/hologram teleport " + hologram.getData().getName(),
+                                            hologram.getData().getName(),
+                                            Constants.DECIMAL_FORMAT.format(location.x()),
+                                            Constants.DECIMAL_FORMAT.format(location.y()),
+                                            Constants.DECIMAL_FORMAT.format(location.z())));
                 }
             }
 
@@ -125,7 +125,7 @@ public final class CommandHologram implements CommandExecutor, TabCompleter {
                     hologram.updateHologram();
 
                     this.plugin.getHologramsManager()
-                               .refreshHologramForPlayersInWorld(hologram);
+                            .refreshHologramForPlayersInWorld(hologram);
                 }
 
                 yield updated;
@@ -143,8 +143,8 @@ public final class CommandHologram implements CommandExecutor, TabCompleter {
         // /holo {tab:action}
         if (args.length == 1) {
             return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy")
-                         .filter(input -> input.startsWith(args[0].toLowerCase(Locale.ROOT)))
-                         .toList();
+                    .filter(input -> input.startsWith(args[0].toLowerCase(Locale.ROOT)))
+                    .toList();
         }
 
         // /holo [action] {tab:hologram}
@@ -156,11 +156,11 @@ public final class CommandHologram implements CommandExecutor, TabCompleter {
             }
 
             return this.plugin.getHologramsManager()
-                              .getHolograms()
-                              .stream()
-                              .map(hologram -> hologram.getData().getName())
-                              .filter(input -> input.startsWith(args[1].toLowerCase(Locale.ROOT)))
-                              .toList();
+                    .getHolograms()
+                    .stream()
+                    .map(hologram -> hologram.getData().getName())
+                    .filter(input -> input.startsWith(args[1].toLowerCase(Locale.ROOT)))
+                    .toList();
         }
 
         final var hologram = this.plugin.getHologramsManager().getHologram(args[1]).orElse(null);
@@ -177,8 +177,8 @@ public final class CommandHologram implements CommandExecutor, TabCompleter {
             final var usingNpcs = FancyHologramsPlugin.isUsingFancyNpcs();
 
             return Stream.of("position", "moveTo", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
-                         .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
-                         .toList();
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
+                    .toList();
         }
 
         if (!args[0].equalsIgnoreCase("edit")) {
@@ -218,7 +218,8 @@ public final class CommandHologram implements CommandExecutor, TabCompleter {
                     yield colors.stream();
                 }
                 case "textshadow" -> Stream.of(!hologram.getData().isTextHasShadow()).map(Object::toString);
-                case "setline", "removeline" -> IntStream.range(1, hologram.getData().getText().size() + 1).mapToObj(Integer::toString);
+                case "setline", "removeline" ->
+                        IntStream.range(1, hologram.getData().getText().size() + 1).mapToObj(Integer::toString);
                 case "linkwithnpc" -> {
                     if (!FancyHologramsPlugin.isUsingFancyNpcs()) {
                         yield Stream.<String>empty();
@@ -231,7 +232,7 @@ public final class CommandHologram implements CommandExecutor, TabCompleter {
 
             if (suggestions != null) {
                 return suggestions.filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase(Locale.ROOT)))
-                                  .toList();
+                        .toList();
             }
         }
 
@@ -634,8 +635,8 @@ public final class CommandHologram implements CommandExecutor, TabCompleter {
         hologram.getData().setLocation(updatedLocation);
 
         MessageHelper.success(player, "Moved the hologram to %s/%s/%s".formatted(Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.x()),
-                                                                                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.y()),
-                                                                                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.z())));
+                Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.y()),
+                Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.z())));
 
         return true;
     }

@@ -2,7 +2,7 @@ name: "FancyHolograms"
 main: "de.oliver.fancyholograms.FancyHologramsPlugin"
 
 version: "$version"
-authors: ["OliverHD", "Sxtanna"]
+authors: [ "OliverHD", "Sxtanna" ]
 
 description: "$description"
 

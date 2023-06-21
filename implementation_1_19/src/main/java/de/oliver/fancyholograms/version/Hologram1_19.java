@@ -96,11 +96,11 @@ public final class Hologram1_19 extends Hologram {
 
         // entity scale
         display.setTransformation(new Transformation(new Vector3f(),
-                                                     new Quaternionf(),
-                                                     new Vector3f(getData().getScale(),
-                                                                  getData().getScale(),
-                                                                  getData().getScale()),
-                                                     new Quaternionf()));
+                new Quaternionf(),
+                new Vector3f(getData().getScale(),
+                        getData().getScale(),
+                        getData().getScale()),
+                new Quaternionf()));
 
 
         // entity shadow

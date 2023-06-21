@@ -23,7 +23,7 @@ import static java.util.Optional.ofNullable;
 public final class FancyHologramsManager {
 
     @NotNull
-    private final FancyHologramsPlugin             plugin;
+    private final FancyHologramsPlugin plugin;
     /**
      * The adapter function used to create holograms from hologram data.
      */
@@ -37,7 +37,7 @@ public final class FancyHologramsManager {
 
 
     FancyHologramsManager(@NotNull final FancyHologramsPlugin plugin, @NotNull final Function<HologramData, Hologram> adapter) {
-        this.plugin  = plugin;
+        this.plugin = plugin;
         this.adapter = adapter;
     }
 
@@ -47,7 +47,8 @@ public final class FancyHologramsManager {
      *
      * @return A read-only collection of holograms.
      */
-    public @NotNull @UnmodifiableView Collection<Hologram> getHolograms() {
+    public @NotNull
+    @UnmodifiableView Collection<Hologram> getHolograms() {
         return Collections.unmodifiableCollection(this.holograms.values());
     }
 
@@ -118,8 +119,8 @@ public final class FancyHologramsManager {
 
 
         final var updateTimes = CacheBuilder.newBuilder()
-                                            .expireAfterAccess(Duration.ofMinutes(5))
-                                            .<String, Long>build();
+                .expireAfterAccess(Duration.ofMinutes(5))
+                .<String, Long>build();
 
         this.plugin.getScheduler().runTaskTimerAsynchronously(20L, 1L, () -> {
             final var time = System.currentTimeMillis();
@@ -158,9 +159,9 @@ public final class FancyHologramsManager {
      */
     public void saveHolograms() {
         this.plugin.getConfiguration()
-                   .saveHolograms(getHolograms().stream()
-                                                .map(Hologram::getData)
-                                                .toList());
+                .saveHolograms(getHolograms().stream()
+                        .map(Hologram::getData)
+                        .toList());
     }
 
 
@@ -231,9 +232,9 @@ public final class FancyHologramsManager {
      */
     public void refreshHologramForPlayersShownTo(@NotNull final Hologram hologram) {
         final var players = hologram.getShownToPlayers()
-                                    .stream()
-                                    .map(Bukkit::getPlayer)
-                                    .toList();
+                .stream()
+                .map(Bukkit::getPlayer)
+                .toList();
 
         hologram.refreshHologram(players);
     }

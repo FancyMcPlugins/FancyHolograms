@@ -16,31 +16,31 @@ import java.util.*;
  */
 public final class HologramData {
 
-    public static final Billboard DEFAULT_BILLBOARD            = Billboard.CENTER;
-    public static final float     DEFAULT_SCALE                = 1.0f; // todo: update to support scaling axes independently?
-    public static final float     DEFAULT_SHADOW_RADIUS        = 0.0f;
-    public static final float     DEFAULT_SHADOW_STRENGTH      = 1.0f;
-    public static final boolean   DEFAULT_TEXT_SHADOW_STATE    = false;
-    public static final int       DEFAULT_TEXT_UPDATE_INTERVAL = -1;
+    public static final Billboard DEFAULT_BILLBOARD = Billboard.CENTER;
+    public static final float DEFAULT_SCALE = 1.0f; // todo: update to support scaling axes independently?
+    public static final float DEFAULT_SHADOW_RADIUS = 0.0f;
+    public static final float DEFAULT_SHADOW_STRENGTH = 1.0f;
+    public static final boolean DEFAULT_TEXT_SHADOW_STATE = false;
+    public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
 
 
     @NotNull
-    private final String       name;
+    private final String name;
     @NotNull
     private final List<String> text = new ArrayList<>();
 
     @Nullable
-    private Location  location;
+    private Location location;
     @NotNull
     private Billboard billboard = DEFAULT_BILLBOARD;
     @Nullable
     private TextColor background;
 
-    private float   scale              = DEFAULT_SCALE;
-    private float   shadowRadius       = DEFAULT_SHADOW_RADIUS;
-    private float   shadowStrength     = DEFAULT_SHADOW_STRENGTH;
-    private boolean textHasShadow      = DEFAULT_TEXT_SHADOW_STATE;
-    private int     textUpdateInterval = DEFAULT_TEXT_UPDATE_INTERVAL;
+    private float scale = DEFAULT_SCALE;
+    private float shadowRadius = DEFAULT_SHADOW_RADIUS;
+    private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
+    private boolean textHasShadow = DEFAULT_TEXT_SHADOW_STATE;
+    private int textUpdateInterval = DEFAULT_TEXT_UPDATE_INTERVAL;
 
 
     @Nullable
@@ -66,15 +66,15 @@ public final class HologramData {
         this.name = name;
         this.text.addAll(other.getText());
 
-        this.location           = other.getLocation() == null ? null : other.getLocation().clone();
-        this.billboard          = other.getBillboard();
-        this.background         = other.getBackground();
-        this.scale              = other.getScale();
-        this.shadowRadius       = other.getShadowRadius();
-        this.shadowStrength     = other.getShadowStrength();
-        this.textHasShadow      = other.isTextHasShadow();
+        this.location = other.getLocation() == null ? null : other.getLocation().clone();
+        this.billboard = other.getBillboard();
+        this.background = other.getBackground();
+        this.scale = other.getScale();
+        this.shadowRadius = other.getShadowRadius();
+        this.shadowStrength = other.getShadowStrength();
+        this.textHasShadow = other.isTextHasShadow();
         this.textUpdateInterval = other.getTextUpdateInterval();
-        this.linkedNpcName      = other.getLinkedNpcName();
+        this.linkedNpcName = other.getLinkedNpcName();
     }
 
 
@@ -92,7 +92,8 @@ public final class HologramData {
      *
      * @return a read-only view of the text of the hologram
      */
-    public @NotNull @UnmodifiableView List<String> getText() {
+    public @NotNull
+    @UnmodifiableView List<String> getText() {
         return Collections.unmodifiableList(this.text);
     }
 

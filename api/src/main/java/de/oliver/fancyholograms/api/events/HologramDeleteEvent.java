@@ -24,17 +24,16 @@ public final class HologramDeleteEvent extends HologramEvent {
         this.player = player;
     }
 
+    public static HandlerList getHandlerList() {
+        return handlerList;
+    }
+
     public @NotNull Player getPlayer() {
         return this.player;
     }
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return handlerList;
-    }
-
-
-    public static HandlerList getHandlerList() {
         return handlerList;
     }
 

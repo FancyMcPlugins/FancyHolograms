@@ -54,9 +54,9 @@ public final class CommandFancyHolograms implements CommandExecutor, TabComplete
                         MessageHelper.error(sender, "Could not find latest version");
                     } else if (newest.compareTo(current) > 0) {
                         MessageHelper.warning(sender, """
-                                                      You are using an outdated version of the FancyHolograms Plugin
-                                                      [!] Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>
-                                                      """.formatted(newest, fetcher.getDownloadUrl()));
+                                You are using an outdated version of the FancyHolograms Plugin
+                                [!] Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>
+                                """.formatted(newest, fetcher.getDownloadUrl()));
                     } else {
                         MessageHelper.success(sender, "You are using the latest version of the FancyHolograms Plugin (" + current + ")");
                     }
@@ -77,8 +77,8 @@ public final class CommandFancyHolograms implements CommandExecutor, TabComplete
         }
 
         return Stream.of("version", "reload", "save")
-                     .filter(alias -> alias.startsWith(args[0].toLowerCase(Locale.ROOT)))
-                     .toList();
+                .filter(alias -> alias.startsWith(args[0].toLowerCase(Locale.ROOT)))
+                .toList();
     }
 
 }

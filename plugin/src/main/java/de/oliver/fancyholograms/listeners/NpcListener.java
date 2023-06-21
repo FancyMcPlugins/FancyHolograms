@@ -25,10 +25,10 @@ public final class NpcListener implements Listener {
     @EventHandler
     public void onRemove(@NotNull final NpcRemoveEvent event) {
         this.plugin.getHologramsManager()
-                   .getHolograms()
-                   .stream()
-                   .filter(hologram -> event.getNpc().getName().equals(hologram.getData().getLinkedNpcName()))
-                   .forEach(hologram -> hologram.getData().setLinkedNpcName(null));
+                .getHolograms()
+                .stream()
+                .filter(hologram -> event.getNpc().getName().equals(hologram.getData().getLinkedNpcName()))
+                .forEach(hologram -> hologram.getData().setLinkedNpcName(null));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -38,22 +38,22 @@ public final class NpcListener implements Listener {
         switch (event.getModification()) {
             case TYPE, LOCATION -> {
                 final var needsToBeUpdated = holograms.stream()
-                                                      .filter(hologram -> event.getNpc().getName().equals(hologram.getData().getLinkedNpcName()))
-                                                      .toList();
+                        .filter(hologram -> event.getNpc().getName().equals(hologram.getData().getLinkedNpcName()))
+                        .toList();
 
                 this.plugin.getScheduler()
-                           .runTaskLater(null, 1L, () -> {
-                               final var players = Bukkit.getOnlinePlayers();
+                        .runTaskLater(null, 1L, () -> {
+                            final var players = Bukkit.getOnlinePlayers();
 
-                               needsToBeUpdated.forEach(this.plugin.getHologramsManager()::syncHologramWithNpc);
-                               needsToBeUpdated.forEach(hologram -> hologram.refreshHologram(players));
-                           });
+                            needsToBeUpdated.forEach(this.plugin.getHologramsManager()::syncHologramWithNpc);
+                            needsToBeUpdated.forEach(hologram -> hologram.refreshHologram(players));
+                        });
             }
             case DISPLAY_NAME, SHOW_IN_TAB -> {
                 final var isLinked = holograms.stream()
-                                              .map(Hologram::getData)
-                                              .map(HologramData::getLinkedNpcName)
-                                              .anyMatch(event.getNpc().getName()::equals);
+                        .map(Hologram::getData)
+                        .map(HologramData::getLinkedNpcName)
+                        .anyMatch(event.getNpc().getName()::equals);
 
                 if (isLinked) {
                     event.setCancelled(true);
