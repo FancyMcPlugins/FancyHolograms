@@ -252,21 +252,27 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                 return Collections.emptyList();
             }
 
+            final var suggestions = new ArrayList<String>();
+            suggestions.add("~");
+            suggestions.add("~~");
+
+            if (args.length == 7) {
+                suggestions.add(String.valueOf(player.getLocation().getYaw()));
+            }
+
             final var target = player.getTargetBlockExact(10);
-            if (target == null) {
-                return Collections.emptyList();
+            if (target != null) {
+                final var coordinate = switch (args.length) {
+                    case 4 -> target.getX();
+                    case 5 -> target.getY();
+                    case 6 -> target.getZ();
+                    default -> null;
+                };
+
+                suggestions.add(String.valueOf(coordinate));
             }
 
-            final var coordinate = switch (args.length) {
-                case 4 -> target.getX();
-                case 5 -> target.getY();
-                case 6 -> target.getZ();
-                default -> null;
-            };
-
-            if (coordinate != null) {
-                return List.of(String.valueOf(coordinate));
-            }
+            return suggestions;
         }
 
         return Collections.emptyList();
