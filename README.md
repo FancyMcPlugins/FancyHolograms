@@ -1,6 +1,6 @@
 ![](fancyholograms_title.png)
 
-#   
+#      
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyHolograms?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -57,7 +57,7 @@ placeholders)<br>
 
 ## Permissions
 
-For the /hologram command - ``FancyHolograms.admin``
+For the /Hologram and /FancyHolograms commands - ``FancyHolograms.admin``
 
 ## Example images
 

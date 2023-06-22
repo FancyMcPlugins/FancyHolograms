@@ -16,12 +16,12 @@ import java.util.stream.Stream;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
-public final class CommandFancyHolograms implements CommandExecutor, TabCompleter {
+public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
 
     @NotNull
     private final FancyHologramsPlugin plugin;
 
-    public CommandFancyHolograms(@NotNull final FancyHologramsPlugin plugin) {
+    public FancyHologramsCMD(@NotNull final FancyHologramsPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -29,6 +29,7 @@ public final class CommandFancyHolograms implements CommandExecutor, TabComplete
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length != 1) {
+            MessageHelper.info(sender, "/FancyHolograms <save|reload|version>");
             return false;
         }
 
@@ -54,15 +55,16 @@ public final class CommandFancyHolograms implements CommandExecutor, TabComplete
                         MessageHelper.error(sender, "Could not find latest version");
                     } else if (newest.compareTo(current) > 0) {
                         MessageHelper.warning(sender, """
-                                You are using an outdated version of the FancyHolograms Plugin
+                                You are using an outdated version of the FancyHolograms Plugin (%s)
                                 [!] Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>
-                                """.formatted(newest, fetcher.getDownloadUrl()));
+                                """.formatted(current, newest, fetcher.getDownloadUrl()));
                     } else {
                         MessageHelper.success(sender, "You are using the latest version of the FancyHolograms Plugin (" + current + ")");
                     }
                 });
             }
             default -> {
+                MessageHelper.info(sender, "/FancyHolograms <save|reload|version>");
                 return false;
             }
         }

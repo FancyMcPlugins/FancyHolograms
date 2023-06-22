@@ -33,12 +33,12 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public final class CommandHologram implements CommandExecutor, TabCompleter {
+public final class HologramCMD implements CommandExecutor, TabCompleter {
 
     @NotNull
     private final FancyHologramsPlugin plugin;
 
-    public CommandHologram(@NotNull final FancyHologramsPlugin plugin) {
+    public HologramCMD(@NotNull final FancyHologramsPlugin plugin) {
         this.plugin = plugin;
     }
 

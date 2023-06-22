@@ -50,9 +50,9 @@ public final class PlayerListener implements Listener {
                         }
 
                         MessageHelper.warning(event.getPlayer(), """
-                                <#e3ca66>You are using an outdated version of the FancyHolograms plugin.
+                                <#e3ca66>You are using an outdated version of the FancyHolograms plugin (%s).
                                 <#e3ca66>Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>.</color>
-                                """.formatted(newest, this.plugin.getVersionFetcher().getDownloadUrl()));
+                                """.formatted(current, newest, this.plugin.getVersionFetcher().getDownloadUrl()));
                     });
         }
     }

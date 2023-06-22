@@ -226,8 +226,7 @@ public abstract class Hologram {
      *
      * @return an read-only set of UUIDs of players to whom the hologram is currently shown
      */
-    public final @NotNull
-    @UnmodifiableView Set<UUID> getShownToPlayers() {
+    public final @NotNull @UnmodifiableView Set<UUID> getShownToPlayers() {
         return Collections.unmodifiableSet(this.shown);
     }
 

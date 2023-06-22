@@ -2,8 +2,8 @@ package de.oliver.fancyholograms;
 
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramData;
-import de.oliver.fancyholograms.commands.CommandFancyHolograms;
-import de.oliver.fancyholograms.commands.CommandHologram;
+import de.oliver.fancyholograms.commands.FancyHologramsCMD;
+import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
 import de.oliver.fancyholograms.version.Hologram1_19_4;
@@ -140,14 +140,14 @@ public final class FancyHologramsPlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        final var commandHologram = getCommand("hologram");
-        if (commandHologram != null) {
-            commandHologram.setExecutor(new CommandHologram(this));
+        final var hologramCommand = getCommand("hologram");
+        if (hologramCommand != null) {
+            hologramCommand.setExecutor(new HologramCMD(this));
         }
 
-        final var commandFancyHolograms = getCommand("fancyholograms");
-        if (commandFancyHolograms != null) {
-            commandFancyHolograms.setExecutor(new CommandFancyHolograms(this));
+        final var fancyHologramsCommand = getCommand("fancyholograms");
+        if (fancyHologramsCommand != null) {
+            fancyHologramsCommand.setExecutor(new FancyHologramsCMD(this));
         }
     }
 
