@@ -1,6 +1,6 @@
 ![](fancyholograms_title.png)
 
-#      
+#       
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyHolograms?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -39,6 +39,7 @@ You can download the latest versions at the following places:
 /Hologram copy (hologram) (new name) - Creates a copy of a hologram<br>
 /Hologram edit (hologram) position - Teleports the hologram to you<br>
 /Hologram edit (hologram) moveTo (x) (y) (z) [yaw] - Teleports the hologram to the location<br>
+/Hologram edit (hologram) rotate (degrees) - Rotates the hologram<br>
 /Hologram edit (hologram) setLine (line) (text...) - Sets the content of the line<br>
 /Hologram edit (hologram) addLine (text...) - Adds a line at the bottom<br>
 /Hologram edit (hologram) removeLine (line) - Removes a line<br>
