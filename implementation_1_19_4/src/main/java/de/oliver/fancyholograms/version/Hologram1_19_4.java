@@ -11,6 +11,7 @@ import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.SynchedEntityData.DataItem;
 import net.minecraft.network.syncher.SynchedEntityData.DataValue;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Display.TextDisplay;
 import net.minecraft.world.entity.EntityType;
@@ -128,7 +129,14 @@ public final class Hologram1_19_4 extends Hologram {
             return false; // could not be created, nothing to show
         }
 
-        ((CraftPlayer) player).getHandle().connection.send(new ClientboundAddEntityPacket(display));
+        ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
+        final var protocolVersion = serverPlayer.connection.connection.protocolVersion;
+
+        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
+            return false;
+        }
+
+        serverPlayer.connection.send(new ClientboundAddEntityPacket(display));
         refreshHologram(player);
 
         return true;

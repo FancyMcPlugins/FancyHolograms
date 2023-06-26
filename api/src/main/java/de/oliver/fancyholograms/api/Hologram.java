@@ -33,6 +33,7 @@ public abstract class Hologram {
 
     public static final int LINE_WIDTH = 1000;
     public static final TextColor TRANSPARENT = () -> 0;
+    protected static final int MINIMUM_PROTOCOL_VERSION = 762;
 
 
     /**
