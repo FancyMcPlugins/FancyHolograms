@@ -115,6 +115,19 @@ public final class Hologram1_19_4 extends Hologram {
         } else {
             display.setFlags((byte) (display.getFlags() & ~TextDisplay.FLAG_SHADOW));
         }
+
+        // text alignment
+        if (getData().getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.LEFT) {
+            display.setFlags((byte) (display.getFlags() | TextDisplay.FLAG_ALIGN_LEFT));
+        } else {
+            display.setFlags((byte) (display.getFlags() & ~TextDisplay.FLAG_ALIGN_LEFT));
+        }
+
+        if (getData().getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.RIGHT) {
+            display.setFlags((byte) (display.getFlags() | TextDisplay.FLAG_ALIGN_RIGHT));
+        } else {
+            display.setFlags((byte) (display.getFlags() & ~TextDisplay.FLAG_ALIGN_RIGHT));
+        }
     }
 
 
