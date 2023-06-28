@@ -13,7 +13,6 @@ import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.Npc;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.apache.commons.lang3.StringUtils;
@@ -227,7 +226,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                         yield Stream.<String>empty();
                     }
 
-                    yield FancyNpcs.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName);
+                    yield FancyNpcs.getInstance().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
                 default -> null;
             };
@@ -873,7 +872,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        hologram.getData().setLinkedNpcName(npc.getName());
+        hologram.getData().setLinkedNpcName(npc.getData().getName());
 
         this.plugin.getHologramsManager().syncHologramWithNpc(hologram);
 
@@ -892,7 +891,8 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
         hologram.getData().setLinkedNpcName(null);
 
         if (npc != null) {
-            npc.updateDisplayName(npc.getName());
+            npc.getData().setDisplayName(npc.getData().getName());
+            npc.updateForAll();
         }
 
         MessageHelper.success(player, "Unlinked hologram with NPC");

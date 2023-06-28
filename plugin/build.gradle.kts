@@ -17,9 +17,9 @@ dependencies {
     implementation(project(":implementation_1_20", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.2")
+    implementation("de.oliver:FancyLib:1.0.3-beta11")
 
-    compileOnly("de.oliver:FancyNpcs:1.2.2-beta1")
+    compileOnly("de.oliver:FancyNpcs:2.0.0")
 }
 
 tasks {
@@ -73,8 +73,8 @@ tasks {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
 
         val props = mapOf(
-            "version" to project.version,
-            "description" to project.description,
+                "version" to project.version,
+                "description" to project.description,
         )
 
         inputs.properties(props)

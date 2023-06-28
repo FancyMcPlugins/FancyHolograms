@@ -4,8 +4,8 @@ import de.oliver.fancyholograms.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramData;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancynpcs.events.NpcModifyEvent;
-import de.oliver.fancynpcs.events.NpcRemoveEvent;
+import de.oliver.fancynpcs.api.events.NpcModifyEvent;
+import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,7 +27,7 @@ public final class NpcListener implements Listener {
         this.plugin.getHologramsManager()
                 .getHolograms()
                 .stream()
-                .filter(hologram -> event.getNpc().getName().equals(hologram.getData().getLinkedNpcName()))
+                .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getLinkedNpcName()))
                 .forEach(hologram -> hologram.getData().setLinkedNpcName(null));
     }
 
@@ -38,7 +38,7 @@ public final class NpcListener implements Listener {
         switch (event.getModification()) {
             case TYPE, LOCATION -> {
                 final var needsToBeUpdated = holograms.stream()
-                        .filter(hologram -> event.getNpc().getName().equals(hologram.getData().getLinkedNpcName()))
+                        .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getLinkedNpcName()))
                         .toList();
 
                 this.plugin.getScheduler()
@@ -53,7 +53,7 @@ public final class NpcListener implements Listener {
                 final var isLinked = holograms.stream()
                         .map(Hologram::getData)
                         .map(HologramData::getLinkedNpcName)
-                        .anyMatch(event.getNpc().getName()::equals);
+                        .anyMatch(event.getNpc().getData().getName()::equals);
 
                 if (isLinked) {
                     event.setCancelled(true);
