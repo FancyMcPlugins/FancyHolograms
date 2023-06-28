@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.api;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.TextDisplay;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -17,6 +18,7 @@ import java.util.*;
 public final class HologramData {
 
     public static final Billboard DEFAULT_BILLBOARD = Billboard.CENTER;
+    public static final TextDisplay.TextAlignment DEFAULT_TEXT_ALIGNMENT = TextDisplay.TextAlignment.CENTER;
     public static final float DEFAULT_SCALE = 1.0f; // todo: update to support scaling axes independently?
     public static final float DEFAULT_SHADOW_RADIUS = 0.0f;
     public static final float DEFAULT_SHADOW_STRENGTH = 1.0f;
@@ -35,6 +37,8 @@ public final class HologramData {
     private Billboard billboard = DEFAULT_BILLBOARD;
     @Nullable
     private TextColor background;
+    @NotNull
+    private TextDisplay.TextAlignment textAlignment = DEFAULT_TEXT_ALIGNMENT;
 
     private float scale = DEFAULT_SCALE;
     private float shadowRadius = DEFAULT_SHADOW_RADIUS;
@@ -69,6 +73,7 @@ public final class HologramData {
         this.location = other.getLocation() == null ? null : other.getLocation().clone();
         this.billboard = other.getBillboard();
         this.background = other.getBackground();
+        this.textAlignment = other.getTextAlignment();
         this.scale = other.getScale();
         this.shadowRadius = other.getShadowRadius();
         this.shadowStrength = other.getShadowStrength();
@@ -162,6 +167,23 @@ public final class HologramData {
         this.background = background;
     }
 
+    /**
+     * Returns the text alignment of this HologramData
+     *
+     * @return the text alignment of the hologram
+     */
+    public TextDisplay.@NotNull TextAlignment getTextAlignment() {
+        return textAlignment;
+    }
+
+    /**
+     * Sets the text alignment of this HologramData
+     *
+     * @param textAlignment the new text alignment for the hologram
+     */
+    public void setTextAlignment(TextDisplay.@NotNull TextAlignment textAlignment) {
+        this.textAlignment = textAlignment;
+    }
 
     /**
      * Returns the scale of this HologramData.

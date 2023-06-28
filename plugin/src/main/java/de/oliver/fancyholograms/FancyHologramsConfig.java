@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.TextDisplay;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -107,8 +108,7 @@ public final class FancyHologramsConfig {
      *
      * @return A map of hologram names to hologram data.
      */
-    public @NotNull
-    @Unmodifiable Map<String, HologramData> loadHolograms() {
+    public @NotNull @Unmodifiable Map<String, HologramData> loadHolograms() {
         final var config = this.plugin.getConfig();
 
         final var root = config.getConfigurationSection("holograms");
@@ -189,6 +189,7 @@ public final class FancyHologramsConfig {
 
         final var background = section.getString("background");
         final var billboard = section.getString("billboard", HologramData.DEFAULT_BILLBOARD.name());
+        final var textAlignment = section.getString("text_alignment", HologramData.DEFAULT_TEXT_ALIGNMENT.name());
 
 
         final var data = new HologramData(name);
@@ -224,6 +225,12 @@ public final class FancyHologramsConfig {
             data.setBackground(color);
         }
 
+        data.setTextAlignment(switch (textAlignment.toLowerCase(Locale.ROOT)) {
+            case "right" -> TextDisplay.TextAlignment.RIGHT;
+            case "left" -> TextDisplay.TextAlignment.LEFT;
+            default -> TextDisplay.TextAlignment.CENTER;
+        });
+
         data.setLinkedNpcName(section.getString("linkedNpc"));
 
         return data;
@@ -253,6 +260,7 @@ public final class FancyHologramsConfig {
 
         section.set("text", data.getText());
         section.set("text_shadow", data.isTextHasShadow());
+        section.set("text_alignment", data.getTextAlignment().name().toLowerCase(Locale.ROOT));
         section.set("update_text_interval", data.getTextUpdateInterval());
 
         section.set("scale", data.getScale());

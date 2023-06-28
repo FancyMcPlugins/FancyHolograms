@@ -25,6 +25,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TextDisplay;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -176,7 +177,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
             final var usingNpcs = FancyHologramsPlugin.isUsingFancyNpcs();
 
-            return Stream.of("position", "moveTo", "rotate", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
+            return Stream.of("position", "moveTo", "rotate", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
                     .toList();
         }
@@ -218,6 +219,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                     yield colors.stream();
                 }
                 case "textshadow" -> Stream.of(!hologram.getData().isTextHasShadow()).map(Object::toString);
+                case "textalignment" -> Arrays.stream(TextDisplay.TextAlignment.values()).map(Enum::name);
                 case "setline", "removeline" ->
                         IntStream.range(1, hologram.getData().getText().size() + 1).mapToObj(Integer::toString);
                 case "linkwithnpc" -> {
@@ -502,6 +504,16 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
                 yield editHasTextShadow(player, hologram, enabled);
             }
+            case "textalignment" -> {
+                final var alignment = Enums.getIfPresent(TextDisplay.TextAlignment.class, args.remove(0).toUpperCase(Locale.ROOT)).orNull();
+
+                if (alignment == null) {
+                    MessageHelper.error(player, "Could not parse text alignment");
+                    yield false;
+                }
+
+                yield editTextAlignment(player, hologram, alignment);
+            }
             case "shadowradius" -> {
                 final var radius = Floats.tryParse(args.remove(0));
 
@@ -750,6 +762,30 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
         hologram.getData().setTextHasShadow(copied.isTextHasShadow());
 
         MessageHelper.success(player, "Changed text shadow");
+        return true;
+    }
+
+    private boolean editTextAlignment(@NotNull final Player player, @NotNull final Hologram hologram, @NotNull final TextDisplay.TextAlignment alignment) {
+        if (hologram.getData().getTextAlignment() == alignment) {
+            MessageHelper.warning(player, "This hologram already has this text alignment");
+            return false;
+        }
+
+        final var copied = hologram.getData().copy();
+        copied.setTextAlignment(alignment);
+
+        if (!callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.TEXT_ALIGNMENT)) {
+            return false;
+        }
+
+        if (hologram.getData().getTextAlignment() == alignment) {
+            MessageHelper.warning(player, "This hologram already has this text alignment");
+            return false;
+        }
+
+        hologram.getData().setTextAlignment(copied.getTextAlignment());
+
+        MessageHelper.success(player, "Changed text alignment");
         return true;
     }
 

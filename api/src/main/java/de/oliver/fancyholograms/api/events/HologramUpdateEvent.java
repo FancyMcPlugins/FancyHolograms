@@ -100,6 +100,10 @@ public final class HologramUpdateEvent extends HologramEvent {
          */
         TEXT_SHADOW,
         /**
+         * @see HologramData#getTextAlignment()
+         */
+        TEXT_ALIGNMENT,
+        /**
          * @see HologramData#getShadowRadius()
          */
         SHADOW_RADIUS,
