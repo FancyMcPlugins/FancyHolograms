@@ -46,7 +46,10 @@ public final class NpcListener implements Listener {
                             final var players = Bukkit.getOnlinePlayers();
 
                             needsToBeUpdated.forEach(this.plugin.getHologramsManager()::syncHologramWithNpc);
-                            needsToBeUpdated.forEach(hologram -> hologram.refreshHologram(players));
+                            needsToBeUpdated.forEach(hologram -> {
+                                hologram.updateHologram();
+                                hologram.refreshHologram(players);
+                            });
                         });
             }
             case DISPLAY_NAME, SHOW_IN_TAB -> {

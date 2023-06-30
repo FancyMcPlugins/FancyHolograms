@@ -206,8 +206,9 @@ public final class FancyHologramsManager {
 
         npc.getData().setDisplayName("<empty>");
         npc.getData().setShowInTab(false);
+        npc.updateForAll();
 
-        final var location = npc.getData().getLocation().clone().add(0, npc.getEyeHeight(), 0);
+        final var location = npc.getData().getLocation().clone().add(0, npc.getEyeHeight() + 0.5, 0);
         hologram.getData().setLocation(location);
     }
 

@@ -363,6 +363,14 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
         if (action.equals("position")) {
             return editLocation(player, hologram, player.getLocation());
+        } else if (action.equals("unlinkwithnpc")) {
+            if (!FancyHologramsPlugin.isUsingFancyNpcs()) {
+                MessageHelper.warning(player, "You need to install the FancyNpcs plugin for this functionality to work");
+                MessageHelper.warning(player, "Download link: <click:open_url:'https://modrinth.com/plugin/fancynpcs/versions'><u>click here</u></click>.");
+                return false;
+            }
+
+            return editUnlinkWithNpc(player, hologram);
         }
 
         if (args.isEmpty()) {
@@ -575,15 +583,6 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                 }
 
                 yield editLinkWithNpc(player, hologram, args.remove(0));
-            }
-            case "unlinkwithnpc" -> {
-                if (!FancyHologramsPlugin.isUsingFancyNpcs()) {
-                    MessageHelper.warning(player, "You need to install the FancyNpcs plugin for this functionality to work");
-                    MessageHelper.warning(player, "Download link: <click:open_url:'https://modrinth.com/plugin/fancynpcs/versions'><u>click here</u></click>.");
-                    yield false;
-                }
-
-                yield editUnlinkWithNpc(player, hologram);
             }
             default -> false;
         };
