@@ -1,6 +1,6 @@
 allprojects {
     group = "de.oliver"
-    version = "2.0.0-pre1"
+    version = "2.0.0"
 
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
