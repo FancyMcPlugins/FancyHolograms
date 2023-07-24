@@ -29,7 +29,6 @@ tasks {
 
     shadowJar {
         archiveBaseName.set(rootProject.name)
-        archiveClassifier.set("")
     }
 
     runServer {
@@ -60,9 +59,9 @@ tasks {
         }
         publications {
             create<MavenPublication>("maven") {
-                groupId = project.group.toString()
-                artifactId = project.name
-                version = project.version.toString()
+                groupId = rootProject.group.toString()
+                artifactId = rootProject.name
+                version = rootProject.version.toString()
                 from(project.components["java"])
             }
         }
@@ -73,8 +72,8 @@ tasks {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
 
         val props = mapOf(
-                "version" to project.version,
-                "description" to project.description,
+            "version" to project.version,
+            "description" to project.description,
         )
 
         inputs.properties(props)

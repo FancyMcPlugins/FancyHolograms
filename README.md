@@ -1,6 +1,6 @@
 ![](fancyholograms_title.png)
 
-#        
+#            
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyHolograms?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -72,3 +72,13 @@ For the /Hologram and /FancyHolograms commands - ``FancyHolograms.admin``
 ![example4](exampleImages/example4.png)
 
 ![example5](exampleImages/example5.png)
+
+## Developer API
+
+```kotlin
+// repo
+maven("https://repo.fancyplugins.de/releases")
+
+// dependency
+implementation("de.oliver:FancyHolograms:2.0.0")
+```
