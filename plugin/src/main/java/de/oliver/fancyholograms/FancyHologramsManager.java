@@ -156,12 +156,11 @@ public final class FancyHologramsManager {
 
     /**
      * Saves the holograms managed by this manager to the plugin's configuration.
+     *
+     * @param force Indicates whether existing holograms collection should be replaced with this collection.
      */
-    public void saveHolograms() {
-        this.plugin.getConfiguration()
-                .saveHolograms(getHolograms().stream()
-                        .map(Hologram::getData)
-                        .toList());
+    public void saveHolograms(final boolean force) {
+        this.plugin.getConfiguration().saveHolograms(getHolograms().stream().map(Hologram::getData).toList(), force);
     }
 
 

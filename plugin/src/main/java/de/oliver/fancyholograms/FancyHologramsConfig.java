@@ -132,14 +132,20 @@ public final class FancyHologramsConfig {
      * Saves holograms to the plugin's configuration based on the provided hologram data.
      *
      * @param holograms The collection of hologram data to save.
+     * @param force Indicates whether existing holograms collection should be replaced with this collection.
      */
-    public void saveHolograms(@NotNull @Unmodifiable final Collection<HologramData> holograms) {
+    public void saveHolograms(@NotNull @Unmodifiable final Collection<HologramData> holograms, final boolean force) {
         final var config = this.plugin.getConfig();
 
-        final var root = config.createSection("holograms");
+        final var root = (force == false && config.isConfigurationSection("holograms") == true)
+                ? config.getConfigurationSection("holograms")
+                : config.createSection("holograms");
 
         for (final var hologram : holograms) {
-            saveHologram(hologram, root.createSection(hologram.getName()));
+            saveHologram(hologram, (force == false && config.isConfigurationSection(hologram.getName()))
+                    ? root.getConfigurationSection(hologram.getName())
+                    : root.createSection(hologram.getName())
+            );
         }
 
         this.plugin.saveConfig();

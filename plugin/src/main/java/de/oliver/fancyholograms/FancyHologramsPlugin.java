@@ -100,9 +100,9 @@ public final class FancyHologramsPlugin extends JavaPlugin {
         getHologramsManager().initializeTasks();
 
         if (getConfiguration().isAutosaveEnabled()) {
-            getScheduler().runTaskTimerAsynchronously(getConfiguration().getAutosaveInterval() * 60L,
-                    getConfiguration().getAutosaveInterval() * 60L,
-                    getHologramsManager()::saveHolograms);
+            getScheduler().runTaskTimerAsynchronously(getConfiguration().getAutosaveInterval() * 60L, getConfiguration().getAutosaveInterval() * 60L, () -> {
+                    getHologramsManager().saveHolograms(true);
+            });
         }
     }
 
@@ -110,7 +110,7 @@ public final class FancyHologramsPlugin extends JavaPlugin {
     public void onDisable() {
         INSTANCE = null;
 
-        getHologramsManager().saveHolograms();
+        getHologramsManager().saveHolograms(true);
     }
 
     public @NotNull VersionFetcher getVersionFetcher() {
