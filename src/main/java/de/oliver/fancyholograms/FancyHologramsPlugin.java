@@ -145,7 +145,7 @@ public final class FancyHologramsPlugin extends JavaPlugin {
             hologramCommand.setExecutor(new HologramCMD(this));
         }
 
-        final var fancyHologramsCommand = getCommand("fancyholograms");
+        final var fancyHologramsCommand = getCommand("de/oliver/fancyholograms");
         if (fancyHologramsCommand != null) {
             fancyHologramsCommand.setExecutor(new FancyHologramsCMD(this));
         }
