@@ -137,12 +137,12 @@ public final class FancyHologramsConfig {
     public void saveHolograms(@NotNull @Unmodifiable final Collection<HologramData> holograms, final boolean force) {
         final var config = this.plugin.getConfig();
 
-        final var root = (force == false && config.isConfigurationSection("holograms") == true)
+        final var root = (!force && config.isConfigurationSection("holograms"))
                 ? config.getConfigurationSection("holograms")
                 : config.createSection("holograms");
 
         for (final var hologram : holograms) {
-            saveHologram(hologram, (force == false && config.isConfigurationSection(hologram.getName()))
+            saveHologram(hologram, (!force && config.isConfigurationSection(hologram.getName()))
                     ? root.getConfigurationSection(hologram.getName())
                     : root.createSection(hologram.getName())
             );
