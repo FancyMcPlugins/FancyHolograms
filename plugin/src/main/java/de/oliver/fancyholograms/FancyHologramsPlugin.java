@@ -28,7 +28,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public final class FancyHologramsPlugin extends JavaPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = {"1.19(.x)", "1.20(.x)"};
+    public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1"};
     @Nullable
     private static FancyHologramsPlugin INSTANCE;
     private final VersionFetcher VERSION_FETCHER = new VersionFetcher("https://api.modrinth.com/v2/project/fancyholograms/version",
@@ -101,7 +101,7 @@ public final class FancyHologramsPlugin extends JavaPlugin {
 
         if (getConfiguration().isAutosaveEnabled()) {
             getScheduler().runTaskTimerAsynchronously(getConfiguration().getAutosaveInterval() * 60L, getConfiguration().getAutosaveInterval() * 60L, () -> {
-                    getHologramsManager().saveHolograms(true);
+                getHologramsManager().saveHolograms(true);
             });
         }
     }
