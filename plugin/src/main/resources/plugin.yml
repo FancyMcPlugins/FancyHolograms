@@ -23,3 +23,4 @@ commands:
     aliases:
       - "holograms"
       - "holo"
+      - "fholo"
