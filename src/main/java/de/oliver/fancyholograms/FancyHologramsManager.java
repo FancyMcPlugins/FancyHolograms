@@ -160,7 +160,14 @@ public final class FancyHologramsManager {
      * @param force Indicates whether existing holograms collection should be replaced with this collection.
      */
     public void saveHolograms(final boolean force) {
-        this.plugin.getConfiguration().saveHolograms(getHolograms().stream().map(Hologram::getData).toList(), force);
+        this.plugin.getConfiguration().saveHolograms(
+                getHolograms()
+                        .stream()
+                        .map(Hologram::getData)
+                        .sorted(Comparator.comparing(HologramData::getName))
+                        .toList(),
+                force
+        );
     }
 
 
