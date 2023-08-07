@@ -32,7 +32,7 @@ dependencies {
     implementation(project(":implementation_1_20", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.3-beta11")
+    implementation("de.oliver:FancyLib:1.0.3")
 
     compileOnly("de.oliver:FancyNpcs:2.0.0")
 }
