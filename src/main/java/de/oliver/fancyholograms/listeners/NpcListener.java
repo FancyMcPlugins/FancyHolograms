@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.listeners;
 
-import de.oliver.fancyholograms.FancyHologramsPlugin;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramData;
 import de.oliver.fancylib.MessageHelper;
@@ -15,9 +15,9 @@ import org.jetbrains.annotations.NotNull;
 public final class NpcListener implements Listener {
 
     @NotNull
-    private final FancyHologramsPlugin plugin;
+    private final FancyHolograms plugin;
 
-    public NpcListener(@NotNull final FancyHologramsPlugin plugin) {
+    public NpcListener(@NotNull final FancyHolograms plugin) {
         this.plugin = plugin;
     }
 

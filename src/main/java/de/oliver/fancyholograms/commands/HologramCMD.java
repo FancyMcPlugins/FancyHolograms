@@ -4,7 +4,7 @@ import com.google.common.base.Enums;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Floats;
 import com.google.common.primitives.Ints;
-import de.oliver.fancyholograms.FancyHologramsPlugin;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramData;
 import de.oliver.fancyholograms.api.events.HologramCreateEvent;
@@ -36,9 +36,9 @@ import java.util.stream.Stream;
 public final class HologramCMD implements CommandExecutor, TabCompleter {
 
     @NotNull
-    private final FancyHologramsPlugin plugin;
+    private final FancyHolograms plugin;
 
-    public HologramCMD(@NotNull final FancyHologramsPlugin plugin) {
+    public HologramCMD(@NotNull final FancyHolograms plugin) {
         this.plugin = plugin;
     }
 
@@ -51,7 +51,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-            MessageHelper.info(player, Constants.HELP_TEXT + (!FancyHologramsPlugin.isUsingFancyNpcs() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
+            MessageHelper.info(player, Constants.HELP_TEXT + (!FancyHolograms.isUsingFancyNpcs() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
             return true;
         }
 
@@ -174,7 +174,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                 return Collections.emptyList();
             }
 
-            final var usingNpcs = FancyHologramsPlugin.isUsingFancyNpcs();
+            final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
 
             return Stream.of("position", "moveTo", "rotate", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
@@ -222,7 +222,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                 case "setline", "removeline" ->
                         IntStream.range(1, hologram.getData().getText().size() + 1).mapToObj(Integer::toString);
                 case "linkwithnpc" -> {
-                    if (!FancyHologramsPlugin.isUsingFancyNpcs()) {
+                    if (!FancyHolograms.isUsingFancyNpcs()) {
                         yield Stream.<String>empty();
                     }
 
@@ -364,7 +364,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
         if (action.equals("position")) {
             return editLocation(player, hologram, player.getLocation());
         } else if (action.equals("unlinkwithnpc")) {
-            if (!FancyHologramsPlugin.isUsingFancyNpcs()) {
+            if (!FancyHolograms.isUsingFancyNpcs()) {
                 MessageHelper.warning(player, "You need to install the FancyNpcs plugin for this functionality to work");
                 MessageHelper.warning(player, "Download link: <click:open_url:'https://modrinth.com/plugin/fancynpcs/versions'><u>click here</u></click>.");
                 return false;
@@ -576,7 +576,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                 yield editTextUpdateInterval(player, hologram, Math.max(-1, interval));
             }
             case "linkwithnpc" -> {
-                if (!FancyHologramsPlugin.isUsingFancyNpcs()) {
+                if (!FancyHolograms.isUsingFancyNpcs()) {
                     MessageHelper.warning(player, "You need to install the FancyNpcs plugin for this functionality to work");
                     MessageHelper.warning(player, "Download link: <click:open_url:'https://modrinth.com/plugin/fancynpcs/versions'><u>click here</u></click>.");
                     yield false;

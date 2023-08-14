@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.commands;
 
-import de.oliver.fancyholograms.FancyHologramsPlugin;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancylib.MessageHelper;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.Command;
@@ -19,9 +19,9 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
 
     @NotNull
-    private final FancyHologramsPlugin plugin;
+    private final FancyHolograms plugin;
 
-    public FancyHologramsCMD(@NotNull final FancyHologramsPlugin plugin) {
+    public FancyHologramsCMD(@NotNull final FancyHolograms plugin) {
         this.plugin = plugin;
     }
 

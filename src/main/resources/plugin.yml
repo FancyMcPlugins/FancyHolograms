@@ -1,5 +1,5 @@
 name: "FancyHolograms"
-main: "de.oliver.fancyholograms.FancyHologramsPlugin"
+main: "de.oliver.fancyholograms.FancyHolograms"
 
 version: "$version"
 authors: [ "OliverHD", "Sxtanna" ]

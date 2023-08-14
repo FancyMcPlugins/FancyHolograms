@@ -25,7 +25,7 @@ import static java.util.Optional.ofNullable;
 public final class FancyHologramsConfig {
 
     @NotNull
-    private final FancyHologramsPlugin plugin;
+    private final FancyHolograms plugin;
 
     /**
      * Indicates whether version notifications are muted.
@@ -45,7 +45,7 @@ public final class FancyHologramsConfig {
     private int visibilityDistance;
 
 
-    FancyHologramsConfig(@NotNull final FancyHologramsPlugin plugin) {
+    FancyHologramsConfig(@NotNull final FancyHolograms plugin) {
         this.plugin = plugin;
     }
 
@@ -132,7 +132,7 @@ public final class FancyHologramsConfig {
      * Saves holograms to the plugin's configuration based on the provided hologram data.
      *
      * @param holograms The collection of hologram data to save.
-     * @param force Indicates whether existing holograms collection should be replaced with this collection.
+     * @param force     Indicates whether existing holograms collection should be replaced with this collection.
      */
     public void saveHolograms(@NotNull @Unmodifiable final Collection<HologramData> holograms, final boolean force) {
         final var config = this.plugin.getConfig();

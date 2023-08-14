@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.listeners;
 
-import de.oliver.fancyholograms.FancyHologramsPlugin;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancylib.MessageHelper;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.event.EventHandler;
@@ -19,9 +19,9 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 public final class PlayerListener implements Listener {
 
     @NotNull
-    private final FancyHologramsPlugin plugin;
+    private final FancyHolograms plugin;
 
-    public PlayerListener(@NotNull final FancyHologramsPlugin plugin) {
+    public PlayerListener(@NotNull final FancyHolograms plugin) {
         this.plugin = plugin;
     }
 

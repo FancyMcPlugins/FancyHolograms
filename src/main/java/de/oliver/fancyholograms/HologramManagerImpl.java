@@ -3,6 +3,7 @@ package de.oliver.fancyholograms;
 import com.google.common.cache.CacheBuilder;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramData;
+import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancynpcs.FancyNpcs;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,10 +21,10 @@ import static java.util.Optional.ofNullable;
  * The FancyHologramsManager class is responsible for managing holograms in the FancyHolograms plugin.
  * It provides methods for adding, removing, and retrieving holograms, as well as other related operations.
  */
-public final class FancyHologramsManager {
+public final class HologramManagerImpl implements HologramManager {
 
     @NotNull
-    private final FancyHologramsPlugin plugin;
+    private final FancyHolograms plugin;
     /**
      * The adapter function used to create holograms from hologram data.
      */
@@ -36,7 +37,7 @@ public final class FancyHologramsManager {
     private final Map<String, Hologram> holograms = new HashMap<>();
 
 
-    FancyHologramsManager(@NotNull final FancyHologramsPlugin plugin, @NotNull final Function<HologramData, Hologram> adapter) {
+    HologramManagerImpl(@NotNull final FancyHolograms plugin, @NotNull final Function<HologramData, Hologram> adapter) {
         this.plugin = plugin;
         this.adapter = adapter;
     }
