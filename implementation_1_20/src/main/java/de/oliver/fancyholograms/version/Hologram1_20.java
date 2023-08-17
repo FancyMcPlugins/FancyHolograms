@@ -149,6 +149,10 @@ public final class Hologram1_20 extends Hologram {
             return false; // could not be created, nothing to show
         }
 
+        if (!data.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
+            return false;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
         // TODO: cache player protocol version
         final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
