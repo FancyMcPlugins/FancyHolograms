@@ -1,14 +1,18 @@
 package de.oliver.fancyholograms.version;
 
 import com.mojang.math.Transformation;
+import com.viaversion.viaversion.api.Via;
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramData;
+import de.oliver.fancylib.ReflectionUtils;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData.DataItem;
 import net.minecraft.network.syncher.SynchedEntityData.DataValue;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,7 +67,8 @@ public final class Hologram1_19_4 extends Hologram {
         }
 
         // initial data
-        display.setLineWidth(Hologram.LINE_WIDTH);
+        final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aM"); //DATA_LINE_WIDTH_ID
+        display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
 
 
         // location data
@@ -86,13 +91,15 @@ public final class Hologram1_19_4 extends Hologram {
 
 
         // background
+        final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aN"); //DATA_BACKGROUND_COLOR_ID
+
         final var background = getData().getBackground();
         if (background == null) {
-            display.setBackgroundColor(TextDisplay.INITIAL_BACKGROUND);
+            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, TextDisplay.INITIAL_BACKGROUND);
         } else if (background == Hologram.TRANSPARENT) {
-            display.setBackgroundColor(0);
+            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, 0);
         } else {
-            display.setBackgroundColor(background.value() | 0xC8000000);
+            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.value() | 0xC8000000);
         }
 
         // entity scale
@@ -142,8 +149,13 @@ public final class Hologram1_19_4 extends Hologram {
             return false; // could not be created, nothing to show
         }
 
+        if (!data.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
+            return false;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
-        final var protocolVersion = serverPlayer.connection.connection.protocolVersion;
+        // TODO: cache player protocol version
+        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
 
         if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
             return false;
