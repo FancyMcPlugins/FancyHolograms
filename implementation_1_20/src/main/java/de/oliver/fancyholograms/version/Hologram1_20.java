@@ -1,6 +1,8 @@
 package de.oliver.fancyholograms.version;
 
 import com.mojang.math.Transformation;
+import com.viaversion.viaversion.api.Via;
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramData;
 import de.oliver.fancylib.ReflectionUtils;
@@ -148,7 +150,8 @@ public final class Hologram1_20 extends Hologram {
         }
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
-        final var protocolVersion = serverPlayer.connection.connection.protocolVersion;
+        // TODO: cache player protocol version
+        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
 
         if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
             return false;

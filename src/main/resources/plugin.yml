@@ -13,6 +13,8 @@ softdepend:
   - "FancyNpcs"
   - "PlaceholderAPI"
   - "MiniPlaceholders"
+  - "ViaVersion"
+  - "ViaBackwards"
 
 commands:
   fancyholograms:

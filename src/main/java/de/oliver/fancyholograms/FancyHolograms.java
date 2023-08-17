@@ -43,6 +43,8 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     @Nullable
     private HologramManagerImpl hologramsManager;
 
+    private boolean isUsingViaVersion;
+
     public static @NotNull FancyHolograms get() {
         return Objects.requireNonNull(INSTANCE, "plugin is not initialized");
     }
@@ -104,8 +106,9 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         checkForNewerVersion();
 
-
         getHologramsManager().initializeTasks();
+
+        isUsingViaVersion = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
 
         if (getConfiguration().isAutosaveEnabled()) {
             getScheduler().runTaskTimerAsynchronously(getConfiguration().getAutosaveInterval() * 60L, getConfiguration().getAutosaveInterval() * 60L, () -> {
@@ -119,6 +122,11 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         INSTANCE = null;
 
         getHologramsManager().saveHolograms(true);
+    }
+
+    @Override
+    public boolean isUsingViaVersion() {
+        return isUsingViaVersion;
     }
 
     public @NotNull VersionFetcher getVersionFetcher() {

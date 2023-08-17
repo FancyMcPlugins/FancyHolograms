@@ -22,6 +22,7 @@ allprojects {
 
         maven(url = "https://repo.fancyplugins.de/snapshots")
         maven(url = "https://repo.extendedclip.com/content/repositories/placeholderapi/")
+        maven(url = "https://repo.viaversion.com/")
     }
 }
 

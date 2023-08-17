@@ -19,6 +19,8 @@ public interface FancyHologramsPlugin {
 
     JavaPlugin getPlugin();
 
+    boolean isUsingViaVersion();
+
     FancyScheduler getScheduler();
 
     HologramManager getHologramManager();
