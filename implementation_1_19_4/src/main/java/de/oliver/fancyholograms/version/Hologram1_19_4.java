@@ -187,6 +187,10 @@ public final class Hologram1_19_4 extends Hologram {
             return; // doesn't exist, nothing to refresh
         }
 
+        if (!isShown(player)) {
+            return;
+        }
+
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundTeleportEntityPacket(display));
 
         display.setText(PaperAdventure.asVanilla(getShownText(player)));

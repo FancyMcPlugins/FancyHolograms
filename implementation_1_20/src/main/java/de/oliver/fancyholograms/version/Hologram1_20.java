@@ -154,9 +154,9 @@ public final class Hologram1_20 extends Hologram {
         }
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
+
         // TODO: cache player protocol version
         final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
-
         if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
             return false;
         }
@@ -185,6 +185,10 @@ public final class Hologram1_20 extends Hologram {
         final var display = this.display;
         if (display == null) {
             return; // doesn't exist, nothing to refresh
+        }
+
+        if (!isShown(player)) {
+            return;
         }
 
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundTeleportEntityPacket(display));

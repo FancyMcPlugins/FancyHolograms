@@ -138,7 +138,7 @@ public final class HologramManagerImpl implements HologramManager {
                     continue;
                 }
 
-                refreshHologramForPlayersInWorld(hologram);
+                refreshHologramForPlayersShownTo(hologram);
 
                 updateTimes.put(hologram.getData().getName(), time);
             }

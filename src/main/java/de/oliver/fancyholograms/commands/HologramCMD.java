@@ -554,8 +554,8 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
                     if (!text.isEmpty()) {
                         switch (text.charAt(text.length() - 1)) {
-                            case 's' -> multiplier = 20;
-                            case 'm' -> multiplier = 20 * 60;
+                            case 's' -> multiplier = 1000;
+                            case 'm' -> multiplier = 1000 * 60;
                         }
                     }
 
