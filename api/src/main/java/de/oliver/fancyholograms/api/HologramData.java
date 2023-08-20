@@ -24,6 +24,7 @@ public final class HologramData {
     public static final float DEFAULT_SHADOW_STRENGTH = 1.0f;
     public static final boolean DEFAULT_TEXT_SHADOW_STATE = false;
     public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
+    public static final boolean DEFAULT_IS_SAVED = true;
 
 
     @NotNull
@@ -45,6 +46,7 @@ public final class HologramData {
     private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
     private boolean textHasShadow = DEFAULT_TEXT_SHADOW_STATE;
     private int textUpdateInterval = DEFAULT_TEXT_UPDATE_INTERVAL;
+    private boolean isSaved = DEFAULT_IS_SAVED;
 
 
     @Nullable
@@ -80,6 +82,7 @@ public final class HologramData {
         this.textHasShadow = other.isTextHasShadow();
         this.textUpdateInterval = other.getTextUpdateInterval();
         this.linkedNpcName = other.getLinkedNpcName();
+        this.isSaved = other.isSaved();
     }
 
 
@@ -275,6 +278,23 @@ public final class HologramData {
         this.textUpdateInterval = textUpdateInterval;
     }
 
+    /**
+     * Returns the saving state of this HologramData.
+     *
+     * @return true if the hologram will be saved, false otherwise
+     */
+    public boolean isSaved() {
+        return isSaved;
+    }
+
+    /**
+     * Sets the saving state of this HologramData.
+     *
+     * @param saved the new saving state for the hologram
+     */
+    public void setSaved(boolean saved) {
+        this.isSaved = saved;
+    }
 
     /**
      * Returns the linked NPC name of this HologramData.

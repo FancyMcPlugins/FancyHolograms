@@ -165,6 +165,7 @@ public final class HologramManagerImpl implements HologramManager {
                 getHolograms()
                         .stream()
                         .map(Hologram::getData)
+                        .filter(HologramData::isSaved)
                         .sorted(Comparator.comparing(HologramData::getName))
                         .toList(),
                 force
