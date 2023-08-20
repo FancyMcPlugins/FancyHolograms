@@ -162,6 +162,7 @@ public final class Hologram1_20 extends Hologram {
         }
 
         serverPlayer.connection.send(new ClientboundAddEntityPacket(display));
+        this.shown.add(player.getUniqueId());
         refreshHologram(player);
 
         return true;
