@@ -156,13 +156,7 @@ public abstract class Hologram {
             return false;
         }
 
-        final var result = show(player);
-
-        if (result) {
-            this.shown.add(player.getUniqueId());
-        }
-
-        return result;
+        return show(player);
     }
 
     /**
