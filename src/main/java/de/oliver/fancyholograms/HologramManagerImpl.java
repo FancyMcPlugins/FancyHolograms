@@ -4,7 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramData;
 import de.oliver.fancyholograms.api.HologramManager;
-import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -206,7 +206,7 @@ public final class HologramManagerImpl implements HologramManager {
             return;
         }
 
-        final var npc = FancyNpcs.getInstance().getNpcManager().getNpc(linkedNpcName);
+        final var npc = FancyNpcsPlugin.get().getNpcManager().getNpc(linkedNpcName);
         if (npc == null) {
             return;
         }

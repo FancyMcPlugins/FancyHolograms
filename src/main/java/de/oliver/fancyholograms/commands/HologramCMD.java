@@ -12,7 +12,7 @@ import de.oliver.fancyholograms.api.events.HologramDeleteEvent;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.apache.commons.lang3.StringUtils;
@@ -226,7 +226,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                         yield Stream.<String>empty();
                     }
 
-                    yield FancyNpcs.getInstance().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
+                    yield FancyNpcsPlugin.get().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
                 default -> null;
             };
@@ -865,7 +865,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        final var npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+        final var npc = FancyNpcsPlugin.get().getNpcManager().getNpc(name);
         if (npc == null) {
             MessageHelper.error(player, "Could not find NPC with that name");
             return false;
@@ -885,7 +885,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        final var npc = FancyNpcs.getInstance().getNpcManager().getNpc(hologram.getData().getLinkedNpcName());
+        final var npc = FancyNpcsPlugin.get().getNpcManager().getNpc(hologram.getData().getLinkedNpcName());
 
         hologram.getData().setLinkedNpcName(null);
 

@@ -35,7 +35,7 @@ dependencies {
 
     implementation("de.oliver:FancyLib:1.0.3")
 
-    compileOnly("de.oliver:FancyNpcs:2.0.1")
+    compileOnly("de.oliver:FancyNpcs:2.0.2.1")
 }
 
 tasks {
