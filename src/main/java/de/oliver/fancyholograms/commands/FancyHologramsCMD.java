@@ -50,7 +50,7 @@ public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
                 final var fetcher = this.plugin.getVersionFetcher();
                 final var current = new ComparableVersion(this.plugin.getDescription().getVersion());
 
-                supplyAsync(fetcher::getNewestVersion).whenComplete((newest, error) -> {
+                supplyAsync(fetcher::fetchNewestVersion).whenComplete((newest, error) -> {
                     if (newest == null || error != null) {
                         MessageHelper.error(sender, "Could not find latest version");
                     } else if (newest.compareTo(current) > 0) {

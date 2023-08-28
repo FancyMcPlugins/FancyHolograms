@@ -42,7 +42,7 @@ public final class PlayerListener implements Listener {
         if (!this.plugin.getConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
             final var current = new ComparableVersion(plugin.getDescription().getVersion());
 
-            supplyAsync(this.plugin.getVersionFetcher()::getNewestVersion)
+            supplyAsync(this.plugin.getVersionFetcher()::fetchNewestVersion)
                     .thenApply(Objects::requireNonNull)
                     .whenComplete((newest, error) -> {
                         if (error != null || newest.compareTo(current) <= 0) {

@@ -11,7 +11,7 @@ dependencies {
     paperweight.paperDevBundle("$minecraftVersion-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-    implementation("de.oliver:FancyLib:1.0.3")
+    implementation("de.oliver:FancyLib:1.0.4")
     compileOnly("com.viaversion:viaversion-api:4.7.0")
 }
 
