@@ -159,7 +159,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                     .getHolograms()
                     .stream()
                     .map(hologram -> hologram.getData().getName())
-                    .filter(input -> input.startsWith(args[1].toLowerCase(Locale.ROOT)))
+                    .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT)))
                     .toList();
         }
 
