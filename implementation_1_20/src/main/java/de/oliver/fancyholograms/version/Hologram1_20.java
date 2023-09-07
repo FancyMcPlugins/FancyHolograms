@@ -78,6 +78,7 @@ public final class Hologram1_20 extends Hologram {
         } else {
             display.setPosRaw(location.x(), location.y(), location.z());
             display.setYRot(location.getYaw());
+            display.setXRot(location.getPitch());
         }
 
 

@@ -176,7 +176,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
             final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
 
-            return Stream.of("position", "moveTo", "rotate", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
+            return Stream.of("position", "moveTo", "rotate", "rotatepitch", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
                     .toList();
         }
@@ -453,6 +453,13 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
                 yield editLocation(player, hologram, location);
             }
+            case "rotatepitch" -> {
+                final var pitch = calculateCoordinate(args.remove(0), hologram.getData().getLocation(), player.getLocation(), loc -> loc.getPitch() - 180f);
+                Location location = hologram.getData().getLocation().clone();
+                location.setPitch(pitch.floatValue());
+
+                yield editLocation(player, hologram, location);
+            }
             case "billboard" -> {
                 final var billboard = Enums.getIfPresent(Display.Billboard.class, args.remove(0).toUpperCase(Locale.ROOT)).orNull();
 
@@ -657,11 +664,12 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
         final var updatedLocation = copied.getLocation() == null ? location : copied.getLocation(); // note: maybe should fall back to original location?
         hologram.getData().setLocation(updatedLocation);
 
-        MessageHelper.success(player, "Moved the hologram to %s/%s/%s %s\u00B0".formatted(
+        MessageHelper.success(player, "Moved the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.x()),
                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.y()),
                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.z()),
-                Constants.COORDINATES_DECIMAL_FORMAT.format((updatedLocation.getYaw() + 180f) % 360f)
+                Constants.COORDINATES_DECIMAL_FORMAT.format((updatedLocation.getYaw() + 180f) % 360f),
+                Constants.COORDINATES_DECIMAL_FORMAT.format((updatedLocation.getPitch()) % 360f)
         ));
 
         return true;
