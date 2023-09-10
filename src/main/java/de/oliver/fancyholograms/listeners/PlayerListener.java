@@ -1,8 +1,6 @@
 package de.oliver.fancyholograms.listeners;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancylib.MessageHelper;
-import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -11,10 +9,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
-
-import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public final class PlayerListener implements Listener {
 
@@ -40,21 +34,7 @@ public final class PlayerListener implements Listener {
         }
 
         if (!this.plugin.getConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
-            final var current = new ComparableVersion(plugin.getDescription().getVersion());
-
-            supplyAsync(this.plugin.getVersionFetcher()::fetchNewestVersion)
-                    .thenApply(Objects::requireNonNull)
-                    .whenComplete((newest, error) -> {
-                        if (error != null || newest.compareTo(current) <= 0) {
-                            return; // could not get the newest version or already on latest
-                        }
-
-                        MessageHelper.warning(event.getPlayer(), """
-                                <%warning_color%>You are using an outdated version of the FancyHolograms plugin (%s).
-                                <%warning_color%>Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>.</color>
-                                """.replace("%warning_color%", MessageHelper.getWarningColor())
-                                .formatted(current, newest, this.plugin.getVersionFetcher().getDownloadUrl()));
-                    });
+            FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true);
         }
     }
 

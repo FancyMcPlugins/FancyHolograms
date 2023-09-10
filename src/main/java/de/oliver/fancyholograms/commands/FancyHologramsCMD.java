@@ -2,7 +2,6 @@ package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancylib.MessageHelper;
-import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
-
-import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
 
@@ -44,25 +41,7 @@ public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }
-            case "version" -> {
-                MessageHelper.info(sender, "<i>Checking version, please wait...</i>");
-
-                final var fetcher = this.plugin.getVersionFetcher();
-                final var current = new ComparableVersion(this.plugin.getDescription().getVersion());
-
-                supplyAsync(fetcher::fetchNewestVersion).whenComplete((newest, error) -> {
-                    if (newest == null || error != null) {
-                        MessageHelper.error(sender, "Could not find latest version");
-                    } else if (newest.compareTo(current) > 0) {
-                        MessageHelper.warning(sender, """
-                                You are using an outdated version of the FancyHolograms Plugin (%s)
-                                [!] Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>
-                                """.formatted(current, newest, fetcher.getDownloadUrl()));
-                    } else {
-                        MessageHelper.success(sender, "You are using the latest version of the FancyHolograms Plugin (" + current + ")");
-                    }
-                });
-            }
+            case "version" -> FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
             default -> {
                 MessageHelper.info(sender, "/FancyHolograms <save|reload|version>");
                 return false;

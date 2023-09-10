@@ -12,6 +12,7 @@ import de.oliver.fancyholograms.version.Hologram1_19_4;
 import de.oliver.fancyholograms.version.Hologram1_20;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
+import de.oliver.fancylib.VersionConfig;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
@@ -35,8 +36,9 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1"};
     @Nullable
     private static FancyHolograms INSTANCE;
-    private final VersionFetcher VERSION_FETCHER = new MasterVersionFetcher("FancyHolograms");
+    private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final FancyHologramsConfig configuration = new FancyHologramsConfig(this);
+    private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ?
             new FoliaScheduler(this) :
             new BukkitScheduler(this);
@@ -130,7 +132,11 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     }
 
     public @NotNull VersionFetcher getVersionFetcher() {
-        return VERSION_FETCHER;
+        return versionFetcher;
+    }
+
+    public @NotNull VersionConfig getVersionConfig() {
+        return versionConfig;
     }
 
     public @NotNull FancyHologramsConfig getConfiguration() {
@@ -182,7 +188,9 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     }
 
     private void checkForNewerVersion() {
-        final var current = new ComparableVersion(getDescription().getVersion());
+        versionConfig.load();
+
+        final var current = new ComparableVersion(versionConfig.getVersion());
 
         supplyAsync(getVersionFetcher()::fetchNewestVersion)
                 .thenApply(Objects::requireNonNull)
