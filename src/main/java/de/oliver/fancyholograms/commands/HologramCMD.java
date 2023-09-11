@@ -176,7 +176,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
             final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
 
-            return Stream.of("position", "moveTo", "rotate", "rotatepitch", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
+            return Stream.of("position", "moveHere", "moveTo", "rotate", "rotatepitch", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
                     .toList();
         }
@@ -361,7 +361,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
     private boolean edit(@NotNull final Player player, @NotNull final Hologram hologram, @NotNull final List<String> args) {
         final var action = args.remove(0).toLowerCase(Locale.ROOT);
 
-        if (action.equals("position")) {
+        if (action.equals("position") || action.equals("movehere")) {
             return editLocation(player, hologram, player.getLocation());
         } else if (action.equals("unlinkwithnpc")) {
             if (!FancyHolograms.isUsingFancyNpcs()) {
