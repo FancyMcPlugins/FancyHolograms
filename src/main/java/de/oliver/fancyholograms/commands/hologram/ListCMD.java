@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms.commands.hologram;
 
+import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -25,22 +26,43 @@ public class ListCMD implements Subcommand {
         if (holograms.isEmpty()) {
             MessageHelper.warning(player, "There are no holograms. Use '/hologram create' to create one");
         } else {
-            MessageHelper.info(player, "<b>List of all holograms:</b>");
-
-            for (final var holo : holograms) {
-                final var location = holo.getData().getLocation();
-                if (location == null || location.getWorld() == null) {
-                    continue;
+            int page;
+            if (args.length < 2) {
+                page = 1;
+            } else {
+                final var index = Ints.tryParse(args[1]);
+                if (index == null) {
+                    MessageHelper.error(player, "Could not parse page number");
+                    return false;
                 }
-
-                MessageHelper.info(player,
-                        "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'%s'> - %s (%s/%s/%s)</click></hover>"
-                                .formatted("/hologram teleport " + holo.getData().getName(),
-                                        holo.getData().getName(),
-                                        Constants.DECIMAL_FORMAT.format(location.x()),
-                                        Constants.DECIMAL_FORMAT.format(location.y()),
-                                        Constants.DECIMAL_FORMAT.format(location.z())));
+                page = index;
             }
+
+            var pages = holograms.size() / 10 + 1;
+            if (page > pages) {
+                MessageHelper.error(player, "Page %s does not exist".formatted(page));
+                return true;
+            }
+            MessageHelper.info(player, "<b>List of holograms:</b>");
+            MessageHelper.info(player, "<b>Page %s/%s</b>".formatted(page, pages));
+            holograms.stream()
+                    .skip((page - 1) * 10)
+                    .limit(10)
+                    .forEach(holo -> {
+                        final var location = holo.getData().getLocation();
+                        if (location == null || location.getWorld() == null) {
+                            return;
+                        }
+
+                        MessageHelper.info(player,
+                                "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'%s'> - %s (%s/%s/%s)</click></hover>"
+                                        .formatted("/hologram teleport " + holo.getData().getName(),
+                                                holo.getData().getName(),
+                                                Constants.DECIMAL_FORMAT.format(location.x()),
+                                                Constants.DECIMAL_FORMAT.format(location.y()),
+                                                Constants.DECIMAL_FORMAT.format(location.z())));
+                    });
+
         }
 
         return true;
