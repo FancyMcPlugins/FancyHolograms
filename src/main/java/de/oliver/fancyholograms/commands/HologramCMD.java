@@ -349,12 +349,16 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
     private boolean teleport(@NotNull final Player player, @NotNull final Hologram hologram) {
         final var location = hologram.getData().getLocation();
 
-        if (location == null || location.getWorld() == null || !player.teleport(location)) {
+        if (location == null || location.getWorld() == null) {
             MessageHelper.error(player, "Could not teleport to the hologram");
             return false;
         }
 
-        MessageHelper.success(player, "Teleported you to the hologram");
+        player.teleportAsync(location).thenAccept(success -> {
+            if (success) MessageHelper.success(player, "Teleported you to the hologram");
+            else MessageHelper.error(player, "Could not teleport to the hologram");
+        });
+        
         return true;
     }
 
