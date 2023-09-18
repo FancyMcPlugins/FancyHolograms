@@ -114,7 +114,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         isUsingViaVersion = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
 
         if (getConfiguration().isAutosaveEnabled()) {
-            getScheduler().runTaskTimerAsynchronously(getConfiguration().getAutosaveInterval() * 60L, getConfiguration().getAutosaveInterval() * 60L, () -> {
+            getScheduler().runTaskTimerAsynchronously(getConfiguration().getAutosaveInterval() * 20L, 20L * 60L * 5L, () -> {
                 getHologramsManager().saveHolograms(true);
             });
         }
