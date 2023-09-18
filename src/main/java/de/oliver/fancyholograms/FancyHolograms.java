@@ -88,7 +88,8 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         FancyLib.setPlugin(this);
 
-        new Metrics(this, 17990);
+        Metrics metrics = new Metrics(this, 17990);
+        metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> hologramsManager.getHolograms().size()));
 
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("""
