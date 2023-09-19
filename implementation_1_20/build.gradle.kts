@@ -1,10 +1,10 @@
 plugins {
     id("java-library")
-    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("io.papermc.paperweight.userdev") version "1.5.6"
 }
 
 
-val minecraftVersion = "1.20"
+val minecraftVersion = "1.20.1"
 
 
 dependencies {
