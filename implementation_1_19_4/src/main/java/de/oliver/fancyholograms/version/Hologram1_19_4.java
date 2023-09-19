@@ -50,8 +50,12 @@ public final class Hologram1_19_4 extends Hologram {
         }
 
         this.display = new TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) location.getWorld()).getHandle());
-        this.display.setInterpolationDuration(1);
-        this.display.setInterpolationDelay(0);
+
+        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, "r"); //DATA_INTERPOLATION_DURATION_ID
+        display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_DURATION_ID, 1);
+
+        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, "q"); //DATA_INTERPOLATION_START_DELTA_TICKS_ID
+        display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
 
         updateHologram();
     }
@@ -107,15 +111,15 @@ public final class Hologram1_19_4 extends Hologram {
 
         if (getData().getBrightness() != null) {
             display.setBrightnessOverride(new Brightness(getData().getBrightness().getBlockLight(),
-                getData().getBrightness().getSkyLight()));
+                    getData().getBrightness().getSkyLight()));
         }
 
         // entity scale
         display.setTransformation(new Transformation(
-            getData().getTranslation(),
-            new Quaternionf(),
-            getData().getScale(),
-            new Quaternionf()));
+                getData().getTranslation(),
+                new Quaternionf(),
+                getData().getScale(),
+                new Quaternionf()));
 
         // entity shadow
         display.setShadowRadius(getData().getShadowRadius());
