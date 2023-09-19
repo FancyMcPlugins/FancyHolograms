@@ -28,7 +28,9 @@ public class ScaleCMD implements Subcommand {
             return false;
         }
 
-        if (Float.compare(scale, hologram.getData().getScale()) == 0) {
+        if (Float.compare(scale, hologram.getData().getScale().x()) == 0 &&
+            Float.compare(scale, hologram.getData().getScale().y()) == 0 &&
+            Float.compare(scale, hologram.getData().getScale().z()) == 0) {
             MessageHelper.warning(player, "This hologram is already at this scale");
             return false;
         }
@@ -40,12 +42,14 @@ public class ScaleCMD implements Subcommand {
             return false;
         }
 
-        if (Float.compare(copied.getScale(), hologram.getData().getScale()) == 0) {
+        if (Float.compare(scale, hologram.getData().getScale().x()) == 0 &&
+            Float.compare(scale, hologram.getData().getScale().y()) == 0 &&
+            Float.compare(scale, hologram.getData().getScale().z()) == 0) {
             MessageHelper.warning(player, "This hologram is already at this scale");
             return false;
         }
 
-        hologram.getData().setScale(copied.getScale());
+        hologram.getData().setScale(copied.getScale().x(), copied.getScale().y(), copied.getScale().z());
 
         MessageHelper.success(player, "Changed scale to " + scale);
         return true;
