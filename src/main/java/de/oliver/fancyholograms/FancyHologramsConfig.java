@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
+import org.joml.Vector3f;
 
 import static java.util.Optional.ofNullable;
 
@@ -187,7 +188,9 @@ public final class FancyHologramsConfig {
         final var textHasShadow = section.getBoolean("text_shadow", HologramData.DEFAULT_TEXT_SHADOW_STATE);
         final var textUpdateInterval = section.getInt("update_text_interval", HologramData.DEFAULT_TEXT_UPDATE_INTERVAL);
 
-        final var scale = section.getDouble("scale", HologramData.DEFAULT_SCALE);
+        final var scaleX = section.getDouble("scale_x", 1);
+        final var scaleY = section.getDouble("scale_y", 1);
+        final var scaleZ = section.getDouble("scale_z", 1);
         final var shadowRadius = section.getDouble("shadow_radius", HologramData.DEFAULT_SHADOW_RADIUS);
         final var shadowStrength = section.getDouble("shadow_strength", HologramData.DEFAULT_SHADOW_STRENGTH);
 
@@ -204,7 +207,7 @@ public final class FancyHologramsConfig {
         data.setTextHasShadow(textHasShadow);
         data.setTextUpdateInterval(textUpdateInterval);
 
-        data.setScale((float) scale);
+        data.setScale((float) scaleX, (float) scaleY, (float) scaleZ);
         data.setShadowRadius((float) shadowRadius);
         data.setShadowStrength((float) shadowStrength);
 
@@ -267,7 +270,9 @@ public final class FancyHologramsConfig {
         section.set("text_alignment", data.getTextAlignment().name().toLowerCase(Locale.ROOT));
         section.set("update_text_interval", data.getTextUpdateInterval());
 
-        section.set("scale", data.getScale());
+        section.set("scale_x", data.getScale().x);
+        section.set("scale_y", data.getScale().y);
+        section.set("scale_y", data.getScale().z);
         section.set("shadow_radius", data.getShadowRadius());
         section.set("shadow_strength", data.getShadowStrength());
 

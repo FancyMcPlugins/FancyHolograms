@@ -16,6 +16,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData.DataItem;
 import net.minecraft.network.syncher.SynchedEntityData.DataValue;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Brightness;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Display.TextDisplay;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +26,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
@@ -50,6 +50,8 @@ public final class Hologram1_19_4 extends Hologram {
         }
 
         this.display = new TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) location.getWorld()).getHandle());
+        this.display.setInterpolationDuration(1);
+        this.display.setInterpolationDelay(0);
 
         updateHologram();
     }
@@ -103,14 +105,17 @@ public final class Hologram1_19_4 extends Hologram {
             display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.value() | 0xC8000000);
         }
 
-        // entity scale
-        display.setTransformation(new Transformation(new Vector3f(),
-                new Quaternionf(),
-                new Vector3f(getData().getScale(),
-                        getData().getScale(),
-                        getData().getScale()),
-                new Quaternionf()));
+        if (getData().getBrightness() != null) {
+            display.setBrightnessOverride(new Brightness(getData().getBrightness().getBlockLight(),
+                getData().getBrightness().getSkyLight()));
+        }
 
+        // entity scale
+        display.setTransformation(new Transformation(
+            getData().getTranslation(),
+            new Quaternionf(),
+            getData().getScale(),
+            new Quaternionf()));
 
         // entity shadow
         display.setShadowRadius(getData().getShadowRadius());

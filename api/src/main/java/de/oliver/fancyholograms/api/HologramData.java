@@ -3,12 +3,14 @@ package de.oliver.fancyholograms.api;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.Display.Brightness;
 import org.bukkit.entity.TextDisplay;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
+import org.joml.Vector3f;
 
 /**
  * This class represents a Hologram with all its properties like name, text, location,
@@ -19,7 +21,8 @@ public final class HologramData {
 
     public static final Billboard DEFAULT_BILLBOARD = Billboard.CENTER;
     public static final TextDisplay.TextAlignment DEFAULT_TEXT_ALIGNMENT = TextDisplay.TextAlignment.CENTER;
-    public static final float DEFAULT_SCALE = 1.0f; // todo: update to support scaling axes independently?
+    public static final Vector3f DEFAULT_SCALE = new Vector3f(1, 1, 1);
+    public static final Vector3f DEFAULT_TRANSLATION = new Vector3f(0, 0, 0);
     public static final float DEFAULT_SHADOW_RADIUS = 0.0f;
     public static final float DEFAULT_SHADOW_STRENGTH = 1.0f;
     public static final boolean DEFAULT_TEXT_SHADOW_STATE = false;
@@ -40,7 +43,9 @@ public final class HologramData {
     @NotNull
     private TextDisplay.TextAlignment textAlignment = DEFAULT_TEXT_ALIGNMENT;
 
-    private float scale = DEFAULT_SCALE;
+    private Vector3f scale = new Vector3f(DEFAULT_SCALE);
+    private Vector3f translation = new Vector3f(DEFAULT_TRANSLATION);
+    private Brightness brightness;
     private float shadowRadius = DEFAULT_SHADOW_RADIUS;
     private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
     private boolean textHasShadow = DEFAULT_TEXT_SHADOW_STATE;
@@ -75,6 +80,8 @@ public final class HologramData {
         this.background = other.getBackground();
         this.textAlignment = other.getTextAlignment();
         this.scale = other.getScale();
+        this.translation = other.getTranslation();
+        this.brightness = other.getBrightness();
         this.shadowRadius = other.getShadowRadius();
         this.shadowStrength = other.getShadowStrength();
         this.textHasShadow = other.isTextHasShadow();
@@ -186,11 +193,11 @@ public final class HologramData {
     }
 
     /**
-     * Returns the scale of this HologramData.
+     * Returns the translation of this HologramData.
      *
-     * @return the scale of the hologram
+     * @return the translation of the hologram
      */
-    public float getScale() {
+    public Vector3f getScale() {
         return this.scale;
     }
 
@@ -200,7 +207,56 @@ public final class HologramData {
      * @param scale the new scale for the hologram
      */
     public void setScale(final float scale) {
-        this.scale = scale;
+        this.scale.set(scale, scale, scale);
+    }
+
+    /**
+     * Sets the scale of this HologramData.
+     *
+     * @param scaleX the new x scale for the hologram
+     * @param scaleY the new y scale for the hologram
+     * @param scaleZ the new z scale for the hologram
+     */
+    public void setScale(final float scaleX, final float scaleY, final float scaleZ) {
+        this.scale.set(scaleX, scaleY, scaleZ);
+    }
+
+
+    /**
+     * Returns the translation of this HologramData.
+     *
+     * @return the translation of the hologram
+     */
+    public Vector3f getTranslation() {
+        return this.translation;
+    }
+
+    /**
+     * Sets the translation of this HologramData.
+     *
+     * @param translation the translation for the hologram
+     */
+    public void setTranslation(final Vector3f translation) {
+        this.translation = translation;
+    }
+
+
+    /**
+     * Returns the brightness of this HologramData.
+     *
+     * @return the brightness of the hologram
+     */
+    public Brightness getBrightness() {
+        return this.brightness;
+    }
+
+    /**
+     * Sets the brightness of this HologramData.
+     *
+     * @param brightness the brightness for the hologram
+     */
+    public void setBrightness(final Brightness brightness) {
+        this.brightness = brightness;
     }
 
     /**
