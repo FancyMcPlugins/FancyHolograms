@@ -9,7 +9,7 @@ import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
 import de.oliver.fancyholograms.version.Hologram1_19_4;
-import de.oliver.fancyholograms.version.Hologram1_20;
+import de.oliver.fancyholograms.version.Hologram1_20_1;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
@@ -162,7 +162,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         final var version = Bukkit.getMinecraftVersion();
 
         return switch (version) {
-            case "1.20", "1.20.1" -> Hologram1_20::new;
+            case "1.20", "1.20.1" -> Hologram1_20_1::new;
             case "1.19.4" -> Hologram1_19_4::new;
             default -> null;
         };
