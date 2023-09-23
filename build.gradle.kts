@@ -9,11 +9,11 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-val minecraftVersion = "1.20.1"
+val minecraftVersion = "1.20.2"
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.1"
+    version = "2.1.0-experimental"
 
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
