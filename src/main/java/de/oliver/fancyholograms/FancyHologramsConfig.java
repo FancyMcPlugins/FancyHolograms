@@ -275,7 +275,7 @@ public final class FancyHologramsConfig {
 
         section.set("scale_x", data.getScale().x);
         section.set("scale_y", data.getScale().y);
-        section.set("scale_y", data.getScale().z);
+        section.set("scale_z", data.getScale().z);
         section.set("shadow_radius", data.getShadowRadius());
         section.set("shadow_strength", data.getShadowStrength());
 
