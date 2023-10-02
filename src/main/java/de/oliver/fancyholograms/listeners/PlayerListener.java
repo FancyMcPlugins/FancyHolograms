@@ -22,11 +22,9 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(@NotNull final PlayerJoinEvent event) {
-        final var visibilityDistance = this.plugin.getConfiguration().getVisibilityDistance();
-
         for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
             final var distance = hologram.distanceTo(event.getPlayer().getLocation());
-            if (Double.isNaN(distance) || distance > visibilityDistance) {
+            if (Double.isNaN(distance) || distance > hologram.getData().getVisibilityDistance()) {
                 continue;
             }
 
@@ -51,15 +49,13 @@ public final class PlayerListener implements Listener {
             return; // reduce checks we need to do
         }
 
-        final var visibilityDistance = this.plugin.getConfiguration().getVisibilityDistance();
-
         for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
             final var distance = hologram.distanceTo(event.getTo());
             if (Double.isNaN(distance)) {
                 continue;
             }
 
-            final var inRange = distance <= visibilityDistance;
+            final var inRange = distance <= hologram.getData().getVisibilityDistance();
             final var isShown = hologram.isShown(event.getPlayer());
 
             if (inRange && !isShown) {
@@ -72,11 +68,9 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(@NotNull final PlayerChangedWorldEvent event) {
-        final var visibilityDistance = this.plugin.getConfiguration().getVisibilityDistance();
-
         for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
             final var distance = hologram.distanceTo(event.getPlayer().getLocation());
-            if (Double.isNaN(distance) || distance > visibilityDistance) {
+            if (Double.isNaN(distance) || distance > hologram.getData().getVisibilityDistance()) {
                 continue;
             }
 

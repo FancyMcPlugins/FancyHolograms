@@ -50,6 +50,7 @@ public final class HologramData {
     private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
     private boolean textHasShadow = DEFAULT_TEXT_SHADOW_STATE;
     private int textUpdateInterval = DEFAULT_TEXT_UPDATE_INTERVAL;
+    private int visibilityDistance;
 
 
     @Nullable
@@ -79,7 +80,7 @@ public final class HologramData {
         this.billboard = other.getBillboard();
         this.background = other.getBackground();
         this.textAlignment = other.getTextAlignment();
-        this.scale = other.getScale();
+        this.scale = new Vector3f(other.getScale());
         this.translation = other.getTranslation();
         this.brightness = other.getBrightness();
         this.shadowRadius = other.getShadowRadius();
@@ -87,6 +88,7 @@ public final class HologramData {
         this.textHasShadow = other.isTextHasShadow();
         this.textUpdateInterval = other.getTextUpdateInterval();
         this.linkedNpcName = other.getLinkedNpcName();
+        this.visibilityDistance = other.getVisibilityDistance();
     }
 
 
@@ -331,6 +333,23 @@ public final class HologramData {
         this.textUpdateInterval = textUpdateInterval;
     }
 
+    /**
+     * Returns the text visibility distance, in blocks/meters, of this HologramData.
+     *
+     * @return the text visibility distance of the hologram in blocks/meters
+     */
+    public int getVisibilityDistance() {
+        return visibilityDistance;
+    }
+
+    /**
+     * Sets the text visibility distance, in blocks/meters, of this HologramData.
+     *
+     * @param visibilityDistance the new visibility distance for the hologram
+     */
+    public void setVisibilityDistance(int visibilityDistance) {
+        this.visibilityDistance = visibilityDistance;
+    }
 
     /**
      * Returns the linked NPC name of this HologramData.
