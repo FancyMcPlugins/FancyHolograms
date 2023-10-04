@@ -51,10 +51,10 @@ public final class Hologram1_20_2 extends Hologram {
 
         this.display = new TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) location.getWorld()).getHandle());
 
-        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, "q"); //DATA_INTERPOLATION_DURATION_ID
+        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, "r"); //DATA_INTERPOLATION_DURATION_ID
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_DURATION_ID, 1);
 
-        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, "p"); //DATA_INTERPOLATION_START_DELTA_TICKS_ID
+        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, "q"); //DATA_INTERPOLATION_START_DELTA_TICKS_ID
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
 
         updateHologram();
@@ -73,7 +73,7 @@ public final class Hologram1_20_2 extends Hologram {
         }
 
         // initial data
-        final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aM"); //DATA_LINE_WIDTH_ID
+        final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aN"); //DATA_LINE_WIDTH_ID
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
 
 
@@ -98,7 +98,7 @@ public final class Hologram1_20_2 extends Hologram {
 
 
         // background
-        final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aN"); //DATA_BACKGROUND_COLOR_ID
+        final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aO"); //DATA_BACKGROUND_COLOR_ID
 
         final var background = getData().getBackground();
         if (background == null) {
