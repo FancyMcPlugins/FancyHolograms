@@ -41,9 +41,9 @@ public final class FancyHologramsConfig {
      */
     private int autosaveInterval;
     /**
-     * The visibility distance for holograms.
+     * The default visibility distance for holograms.
      */
-    private int visibilityDistance;
+    private int defaultVisibilityDistance;
 
 
     FancyHologramsConfig(@NotNull final FancyHolograms plugin) {
@@ -61,7 +61,7 @@ public final class FancyHologramsConfig {
         versionNotifsMuted = (boolean) ConfigHelper.getOrDefault(config, "mute_version_notification", false);
         autosaveEnabled = (boolean) ConfigHelper.getOrDefault(config, "enable_autosave", true);
         autosaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
-        visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
+        defaultVisibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
 
         this.plugin.saveConfig();
     }
@@ -95,12 +95,12 @@ public final class FancyHologramsConfig {
     }
 
     /**
-     * Returns the visibility distance for holograms.
+     * Returns the default visibility distance for holograms.
      *
-     * @return The hologram visibility distance.
+     * @return The default hologram visibility distance.
      */
     public int getVisibilityDistance() {
-        return this.visibilityDistance;
+        return this.defaultVisibilityDistance;
     }
 
 
@@ -187,6 +187,7 @@ public final class FancyHologramsConfig {
         final var text = section.getStringList("text");
         final var textHasShadow = section.getBoolean("text_shadow", HologramData.DEFAULT_TEXT_SHADOW_STATE);
         final var textUpdateInterval = section.getInt("update_text_interval", HologramData.DEFAULT_TEXT_UPDATE_INTERVAL);
+        final var visibilityDistance = section.getInt("visibility_distance", defaultVisibilityDistance);
 
         final var scaleX = section.getDouble("scale_x", 1);
         final var scaleY = section.getDouble("scale_y", 1);
@@ -206,6 +207,7 @@ public final class FancyHologramsConfig {
         data.setText(text);
         data.setTextHasShadow(textHasShadow);
         data.setTextUpdateInterval(textUpdateInterval);
+        data.setVisibilityDistance(visibilityDistance);
 
         data.setScale((float) scaleX, (float) scaleY, (float) scaleZ);
         data.setShadowRadius((float) shadowRadius);
@@ -269,10 +271,11 @@ public final class FancyHologramsConfig {
         section.set("text_shadow", data.isTextHasShadow());
         section.set("text_alignment", data.getTextAlignment().name().toLowerCase(Locale.ROOT));
         section.set("update_text_interval", data.getTextUpdateInterval());
+        section.set("visibility_distance", data.getVisibilityDistance());
 
         section.set("scale_x", data.getScale().x);
         section.set("scale_y", data.getScale().y);
-        section.set("scale_y", data.getScale().z);
+        section.set("scale_z", data.getScale().z);
         section.set("shadow_radius", data.getShadowRadius());
         section.set("shadow_strength", data.getShadowStrength());
 

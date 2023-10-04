@@ -144,7 +144,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
             final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
 
-            return Stream.of("position", "moveHere", "moveTo", "rotate", "rotatepitch", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
+            return Stream.of("position", "moveHere", "moveTo", "rotate", "rotatepitch", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "visibilityDistance", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
                     .toList();
         }
@@ -278,6 +278,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
             case "shadowradius" -> new ShadowRadiusCMD().run(player, hologram, args);
             case "shadowstrength" -> new ShadowStrengthCMD().run(player, hologram, args);
             case "updatetextinterval" -> new UpdateTextIntervalCMD().run(player, hologram, args);
+            case "visibilitydistance" -> new VisibilityDistanceCMD().run(player, hologram, args);
             case "linkwithnpc" -> new LinkWithNpcCMD().run(player, hologram, args);
             default -> false;
         };

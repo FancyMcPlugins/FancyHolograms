@@ -42,9 +42,9 @@ public class ScaleCMD implements Subcommand {
             return false;
         }
 
-        if (Float.compare(scale, hologram.getData().getScale().x()) == 0 &&
-            Float.compare(scale, hologram.getData().getScale().y()) == 0 &&
-            Float.compare(scale, hologram.getData().getScale().z()) == 0) {
+        if (Float.compare(copied.getScale().x(), hologram.getData().getScale().x()) == 0 &&
+            Float.compare(copied.getScale().y(), hologram.getData().getScale().y()) == 0 &&
+            Float.compare(copied.getScale().z(), hologram.getData().getScale().z()) == 0) {
             MessageHelper.warning(player, "This hologram is already at this scale");
             return false;
         }

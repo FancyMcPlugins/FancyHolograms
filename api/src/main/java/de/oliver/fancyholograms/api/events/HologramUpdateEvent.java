@@ -114,7 +114,11 @@ public final class HologramUpdateEvent extends HologramEvent {
         /**
          * @see HologramData#getTextUpdateInterval()
          */
-        UPDATE_TEXT_INTERVAL;
+        UPDATE_TEXT_INTERVAL,
+        /**
+         * @see HologramData#getVisibilityDistance()
+         */
+        UPDATE_VISIBILITY_DISTANCE;
     }
 
 }
