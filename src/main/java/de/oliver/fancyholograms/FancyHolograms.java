@@ -39,6 +39,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     private static FancyHolograms INSTANCE;
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final FancyHologramsConfig configuration = new FancyHologramsConfig(this);
+    private final HologramsConfig hologramsConfig = new HologramsConfig();
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ?
             new FoliaScheduler(this) :
@@ -116,16 +117,15 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         if (getConfiguration().isAutosaveEnabled()) {
             getScheduler().runTaskTimerAsynchronously(getConfiguration().getAutosaveInterval() * 20L, 20L * 60L * 5L, () -> {
-                getHologramsManager().saveHolograms(true);
+                hologramsManager.saveHolograms();
             });
         }
     }
 
     @Override
     public void onDisable() {
+        hologramsManager.saveHolograms();
         INSTANCE = null;
-
-        getHologramsManager().saveHolograms(true);
     }
 
     @Override
@@ -143,6 +143,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     public @NotNull FancyHologramsConfig getConfiguration() {
         return this.configuration;
+    }
+
+    public @NotNull HologramsConfig getHologramsConfig() {
+        return hologramsConfig;
     }
 
     public @NotNull FancyScheduler getScheduler() {

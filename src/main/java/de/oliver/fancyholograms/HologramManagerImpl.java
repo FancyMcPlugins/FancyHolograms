@@ -8,9 +8,11 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Function;
@@ -79,7 +81,7 @@ public final class HologramManagerImpl implements HologramManager {
      * @param hologram The hologram to remove.
      */
     public void removeHologram(@NotNull final Hologram hologram) {
-        this.holograms.remove(hologram.getData().getName().toLowerCase(Locale.ROOT));
+        removeHologram(hologram.getData().getName());
     }
 
     /**
@@ -89,6 +91,8 @@ public final class HologramManagerImpl implements HologramManager {
      * @return An optional containing the removed hologram, or empty if not found.
      */
     public @NotNull Optional<Hologram> removeHologram(@NotNull final String name) {
+        FancyHolograms.get().getHologramsConfig().removeHologramFromConfig(HologramsConfig.HOLOGRAMS_CONFIG_FILE, name);
+
         return ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
     }
 
@@ -101,6 +105,28 @@ public final class HologramManagerImpl implements HologramManager {
      */
     public @NotNull Hologram create(@NotNull final HologramData data) {
         return this.adapter.apply(data);
+    }
+
+    public void saveHolograms() {
+        FancyHolograms.get().getHologramsConfig().writeHolograms(HologramsConfig.HOLOGRAMS_CONFIG_FILE, getHolograms());
+    }
+
+    public void loadHolograms() {
+        // try to load holograms from config.yml but then remove from there
+        YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(HologramsConfig.PLUGIN_CONFIG_FILE);
+        if (pluginConfig.isConfigurationSection("holograms")) {
+            FancyHolograms.get().getHologramsConfig().readHolograms(HologramsConfig.PLUGIN_CONFIG_FILE).forEach(this::addHologram);
+            pluginConfig.set("holograms", null);
+
+            try {
+                pluginConfig.save(HologramsConfig.PLUGIN_CONFIG_FILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        FancyHolograms.get().getHologramsConfig().readHolograms(HologramsConfig.HOLOGRAMS_CONFIG_FILE).forEach(this::addHologram);
     }
 
 
@@ -145,39 +171,11 @@ public final class HologramManagerImpl implements HologramManager {
         });
     }
 
-
-    /**
-     * Loads holograms from the plugin's configuration and adds them to the manager.
-     */
-    public void loadHolograms() {
-        for (final var data : this.plugin.getConfiguration().loadHolograms().values()) {
-            addHologram(create(data));
-        }
-    }
-
-    /**
-     * Saves the holograms managed by this manager to the plugin's configuration.
-     *
-     * @param force Indicates whether existing holograms collection should be replaced with this collection.
-     */
-    public void saveHolograms(final boolean force) {
-        this.plugin.getConfiguration().saveHolograms(
-                getHolograms()
-                        .stream()
-                        .map(Hologram::getData)
-                        .sorted(Comparator.comparing(HologramData::getName))
-                        .toList(),
-                force
-        );
-    }
-
-
     /**
      * Reloads holograms by clearing the existing holograms and loading them again from the plugin's configuration.
      */
     public void reloadHolograms() {
         clearHolograms();
-
         loadHolograms();
     }
 

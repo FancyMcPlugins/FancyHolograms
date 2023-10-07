@@ -32,7 +32,7 @@ public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
 
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "save" -> {
-                this.plugin.getHologramsManager().saveHolograms(true);
+                this.plugin.getHologramsManager().saveHolograms();
                 MessageHelper.success(sender, "Saved all holograms");
             }
             case "reload" -> {
