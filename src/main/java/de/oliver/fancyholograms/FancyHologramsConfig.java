@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
-import org.joml.Vector3f;
 
 import static java.util.Optional.ofNullable;
 

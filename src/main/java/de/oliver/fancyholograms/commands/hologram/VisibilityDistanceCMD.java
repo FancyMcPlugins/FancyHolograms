@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
@@ -21,11 +22,15 @@ public class VisibilityDistanceCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
-        final var visibilityDistance = Ints.tryParse(args[3]);
+        var visibilityDistance = Ints.tryParse(args[3]);
 
         if (visibilityDistance == null) {
             MessageHelper.error(player, "Could not parse visibility distance");
             return false;
+        }
+
+        if (visibilityDistance <= 0) {
+            visibilityDistance = FancyHolograms.get().getConfiguration().getVisibilityDistance();
         }
 
         if (Ints.compare(visibilityDistance, hologram.getData().getVisibilityDistance()) == 0) {

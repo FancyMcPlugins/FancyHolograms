@@ -8,9 +8,9 @@ import org.bukkit.entity.TextDisplay;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
+import org.joml.Vector3f;
 
 import java.util.*;
-import org.joml.Vector3f;
 
 /**
  * This class represents a Hologram with all its properties like name, text, location,
@@ -27,6 +27,7 @@ public final class HologramData {
     public static final float DEFAULT_SHADOW_STRENGTH = 1.0f;
     public static final boolean DEFAULT_TEXT_SHADOW_STATE = false;
     public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
+    public static final int DEFAULT_VISIBILITY_DISTANCE = 20;
 
 
     @NotNull
@@ -50,7 +51,7 @@ public final class HologramData {
     private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
     private boolean textHasShadow = DEFAULT_TEXT_SHADOW_STATE;
     private int textUpdateInterval = DEFAULT_TEXT_UPDATE_INTERVAL;
-    private int visibilityDistance;
+    private int visibilityDistance = DEFAULT_VISIBILITY_DISTANCE;
 
 
     @Nullable
