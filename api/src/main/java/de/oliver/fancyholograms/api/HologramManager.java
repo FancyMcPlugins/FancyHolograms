@@ -14,8 +14,8 @@ public interface HologramManager {
 
     void loadHolograms();
 
-    void saveHolograms(boolean force);
+    void saveHolograms();
 
     void reloadHolograms();
-    
+
 }
