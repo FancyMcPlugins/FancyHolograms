@@ -34,7 +34,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public final class FancyHolograms extends JavaPlugin implements FancyHologramsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1"};
+    public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2"};
     @Nullable
     private static FancyHolograms INSTANCE;
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
