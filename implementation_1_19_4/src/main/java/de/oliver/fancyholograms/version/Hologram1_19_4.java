@@ -114,12 +114,14 @@ public final class Hologram1_19_4 extends Hologram {
                     getData().getBrightness().getSkyLight()));
         }
 
-        // entity scale
+        // entity scale AND MORE!
         display.setTransformation(new Transformation(
                 getData().getTranslation(),
                 new Quaternionf(),
                 getData().getScale(),
-                new Quaternionf()));
+                new Quaternionf())
+        );
+
 
         // entity shadow
         display.setShadowRadius(getData().getShadowRadius());
@@ -164,9 +166,9 @@ public final class Hologram1_19_4 extends Hologram {
         }
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
+
         // TODO: cache player protocol version
         final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
-
         if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
             return false;
         }
