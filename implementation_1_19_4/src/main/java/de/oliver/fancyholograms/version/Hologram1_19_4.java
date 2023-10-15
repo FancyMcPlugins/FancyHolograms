@@ -73,7 +73,7 @@ public final class Hologram1_19_4 extends Hologram {
         }
 
         // initial data
-        final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aM"); //DATA_LINE_WIDTH_ID
+        final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aL"); //DATA_LINE_WIDTH_ID
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
 
 
@@ -98,7 +98,7 @@ public final class Hologram1_19_4 extends Hologram {
 
 
         // background
-        final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aN"); //DATA_BACKGROUND_COLOR_ID
+        final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aM"); //DATA_BACKGROUND_COLOR_ID
 
         final var background = getData().getBackground();
         if (background == null) {
