@@ -50,6 +50,7 @@ public final class HologramManagerImpl implements HologramManager {
      *
      * @return A read-only collection of holograms.
      */
+    @Override
     public @NotNull
     @UnmodifiableView Collection<Hologram> getHolograms() {
         return Collections.unmodifiableCollection(this.holograms.values());

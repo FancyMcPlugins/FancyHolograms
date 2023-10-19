@@ -1,10 +1,13 @@
 package de.oliver.fancyholograms.api;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface HologramManager {
 
     Optional<Hologram> getHologram(String name);
+
+    Collection<Hologram> getHolograms();
 
     void addHologram(Hologram hologram);
 
