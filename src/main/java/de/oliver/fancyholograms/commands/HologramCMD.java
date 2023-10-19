@@ -229,6 +229,10 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                 suggestions.add(String.valueOf(player.getLocation().getYaw()));
             }
 
+            if (args.length == 8) {
+                suggestions.add(String.valueOf(player.getLocation().getPitch()));
+            }
+
             final var target = player.getTargetBlockExact(10);
             if (target != null) {
                 final var coordinate = switch (args.length) {

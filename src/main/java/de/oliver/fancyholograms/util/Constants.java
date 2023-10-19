@@ -26,7 +26,7 @@ public enum Constants {
             <%primary_color%>- /hologram edit <hologram> insertAfter <line number> <text ...> <dark_gray>- <white>Inserts a line after another
             <%primary_color%>- /hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line
             <%primary_color%>- /hologram edit <hologram> position <dark_gray>- <white>Teleports the hologram to you
-            <%primary_color%>- /hologram edit <hologram> moveTo <x> <y> <z> [yaw] <dark_gray>- <white>Teleports the hologram to the coordinates
+            <%primary_color%>- /hologram edit <hologram> moveTo <x> <y> <z> [yaw] [pitch] <dark_gray>- <white>Teleports the hologram to the coordinates
             <%primary_color%>- /hologram edit <hologram> rotate <degrees> <dark_gray>- <white>Rotates the hologram
             <%primary_color%>- /hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram
             <%primary_color%>- /hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram

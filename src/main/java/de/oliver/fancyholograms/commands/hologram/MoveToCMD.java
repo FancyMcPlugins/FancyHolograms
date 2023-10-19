@@ -46,6 +46,17 @@ public class MoveToCMD implements Subcommand {
             location.setYaw(yaw.floatValue());
         }
 
+        if (args.length > 7) {
+            final var pitch = MoveHereCMD.calculateCoordinate(args[7], hologram.getData().getLocation(), player.getLocation(), Location::getPitch);
+
+            if (pitch == null) {
+                MessageHelper.error(player, "Could not parse pitch");
+                return false;
+            }
+
+            location.setPitch(pitch.floatValue());
+        }
+
         return MoveHereCMD.setLocation(player, hologram, location);
     }
 }
