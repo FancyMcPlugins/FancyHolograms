@@ -13,7 +13,7 @@ val minecraftVersion = "1.20.2"
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.3-alpha1"
+    version = "2.0.3-alpha2"
 
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
