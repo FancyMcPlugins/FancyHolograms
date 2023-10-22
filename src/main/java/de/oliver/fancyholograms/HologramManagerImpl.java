@@ -38,6 +38,11 @@ public final class HologramManagerImpl implements HologramManager {
      */
     private final Map<String, Hologram> holograms = new HashMap<>();
 
+    /*+
+        If the holograms are loaded or not
+     */
+    private boolean isLoaded = false;
+
 
     HologramManagerImpl(@NotNull final FancyHolograms plugin, @NotNull final Function<HologramData, Hologram> adapter) {
         this.plugin = plugin;
@@ -109,6 +114,10 @@ public final class HologramManagerImpl implements HologramManager {
     }
 
     public void saveHolograms() {
+        if (!isLoaded) {
+            return;
+        }
+
         FancyHolograms.get().getHologramsConfig().writeHolograms(HologramsConfig.HOLOGRAMS_CONFIG_FILE, getHolograms());
     }
 
@@ -128,6 +137,8 @@ public final class HologramManagerImpl implements HologramManager {
 
 
         FancyHolograms.get().getHologramsConfig().readHolograms(HologramsConfig.HOLOGRAMS_CONFIG_FILE).forEach(this::addHologram);
+
+        isLoaded = true;
     }
 
 
