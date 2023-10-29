@@ -4,11 +4,14 @@ import com.mojang.math.Transformation;
 import com.viaversion.viaversion.api.Via;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.BlockHologramData;
 import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancylib.ReflectionUtils;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
@@ -16,12 +19,15 @@ import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData.DataItem;
 import net.minecraft.network.syncher.SynchedEntityData.DataValue;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Brightness;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Display.TextDisplay;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -134,8 +140,15 @@ public final class Hologram1_19_4 extends Hologram {
             } else {
                 textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_ALIGN_RIGHT));
             }
-        } else if (display instanceof Display.ItemDisplay itemDisplay) {
 
+        } else if (display instanceof Display.ItemDisplay itemDisplay && data.getTypeData() instanceof ItemHologramData itemData) {
+            // item
+            itemDisplay.setItemStack(ItemStack.fromBukkitCopy(itemData.getItem()));
+
+        } else if (display instanceof Display.BlockDisplay blockDisplay && data.getTypeData() instanceof BlockHologramData blockData) {
+            Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.of("minecraft:" + blockData.getBlock().name().toLowerCase(), ':'));
+            blockDisplay.setBlockState(block.defaultBlockState());
+            System.out.println("SET BLOCK STATE TO " + block.getName());
         }
 
         // brightness
