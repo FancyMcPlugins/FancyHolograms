@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramData;
+import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.events.HologramCreateEvent;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
@@ -35,7 +35,7 @@ public class CopyCMD implements Subcommand {
         }
 
         final var data = new HologramData(name, hologram.getData());
-        data.setLocation(player.getLocation());
+        data.getDisplayData().setLocation(player.getLocation());
 
         final var copy = FancyHolograms.get().getHologramsManager().create(data);
 

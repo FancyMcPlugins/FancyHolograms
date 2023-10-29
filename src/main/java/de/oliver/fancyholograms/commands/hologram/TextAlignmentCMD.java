@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.base.Enums;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -23,6 +24,11 @@ public class TextAlignmentCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+            MessageHelper.error(player, "This is not a text hologram");
+            return false;
+        }
+
         final var alignment = Enums.getIfPresent(TextDisplay.TextAlignment.class, args[3].toUpperCase(Locale.ROOT)).orNull();
 
         if (alignment == null) {
@@ -30,24 +36,24 @@ public class TextAlignmentCMD implements Subcommand {
             return false;
         }
 
-        if (hologram.getData().getTextAlignment() == alignment) {
+        if (textData.getTextAlignment() == alignment) {
             MessageHelper.warning(player, "This hologram already has this text alignment");
             return false;
         }
 
         final var copied = hologram.getData().copy();
-        copied.setTextAlignment(alignment);
+        ((TextHologramData) copied.getTypeData()).setTextAlignment(alignment);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.TEXT_ALIGNMENT)) {
             return false;
         }
 
-        if (hologram.getData().getTextAlignment() == alignment) {
+        if (textData.getTextAlignment() == alignment) {
             MessageHelper.warning(player, "This hologram already has this text alignment");
             return false;
         }
 
-        hologram.getData().setTextAlignment(copied.getTextAlignment());
+        textData.setTextAlignment(((TextHologramData) copied.getTypeData()).getTextAlignment());
 
         MessageHelper.success(player, "Changed text alignment");
         return true;

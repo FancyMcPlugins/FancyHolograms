@@ -28,24 +28,24 @@ public class ShadowRadiusCMD implements Subcommand {
             return false;
         }
 
-        if (Float.compare(radius, hologram.getData().getShadowRadius()) == 0) {
+        if (Float.compare(radius, hologram.getData().getDisplayData().getShadowRadius()) == 0) {
             MessageHelper.warning(player, "This hologram already has this shadow radius");
             return false;
         }
 
         final var copied = hologram.getData().copy();
-        copied.setShadowRadius(radius);
+        copied.getDisplayData().setShadowRadius(radius);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.SHADOW_RADIUS)) {
             return false;
         }
 
-        if (Float.compare(copied.getShadowRadius(), hologram.getData().getShadowRadius()) == 0) {
+        if (Float.compare(copied.getDisplayData().getShadowRadius(), hologram.getData().getDisplayData().getShadowRadius()) == 0) {
             MessageHelper.warning(player, "This hologram already has this shadow radius");
             return false;
         }
 
-        hologram.getData().setShadowRadius(copied.getShadowRadius());
+        hologram.getData().getDisplayData().setShadowRadius(copied.getDisplayData().getShadowRadius());
 
         MessageHelper.success(player, "Changed shadow radius");
         return true;

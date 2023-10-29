@@ -4,10 +4,14 @@ import com.mojang.math.Transformation;
 import com.viaversion.viaversion.api.Via;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramData;
+import de.oliver.fancyholograms.api.data.BlockHologramData;
+import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.data.ItemHologramData;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancylib.ReflectionUtils;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
@@ -15,11 +19,15 @@ import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData.DataItem;
 import net.minecraft.network.syncher.SynchedEntityData.DataValue;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Brightness;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Display.TextDisplay;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -34,27 +42,31 @@ import static de.oliver.fancylib.ReflectionUtils.getValue;
 public final class Hologram1_20_2 extends Hologram {
 
     @Nullable
-    private TextDisplay display;
-
+    private Display display;
 
     public Hologram1_20_2(@NotNull final HologramData data) {
         super(data);
     }
 
-
     @Override
     public void create() {
-        final var location = getData().getLocation();
+        final var location = data.getDisplayData().getLocation();
         if (location == null || location.getWorld() == null) {
             return; // no location data, cannot be created
         }
 
-        this.display = new TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) location.getWorld()).getHandle());
+        ServerLevel world = ((CraftWorld) location.getWorld()).getHandle();
 
-        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, "r"); //DATA_INTERPOLATION_DURATION_ID
+        switch (data.getType()) {
+            case TEXT -> this.display = new Display.TextDisplay(EntityType.TEXT_DISPLAY, world);
+            case BLOCK -> this.display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, world);
+            case ITEM -> this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, world);
+        }
+
+        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys.DATA_INTERPOLATION_DURATION_ID.getMapping());
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_DURATION_ID, 1);
 
-        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, "q"); //DATA_INTERPOLATION_START_DELTA_TICKS_ID
+        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys.DATA_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
 
         updateHologram();
@@ -72,13 +84,8 @@ public final class Hologram1_20_2 extends Hologram {
             return; // doesn't exist, nothing to update
         }
 
-        // initial data
-        final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aN"); //DATA_LINE_WIDTH_ID
-        display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
-
-
         // location data
-        final var location = getData().getLocation();
+        final var location = data.getDisplayData().getLocation();
         if (location == null || location.getWorld() == null || !location.isWorldLoaded()) {
             return;
         } else {
@@ -89,7 +96,7 @@ public final class Hologram1_20_2 extends Hologram {
 
 
         // billboard data
-        display.setBillboardConstraints(switch (getData().getBillboard()) {
+        display.setBillboardConstraints(switch (data.getDisplayData().getBillboard()) {
             case FIXED -> Display.BillboardConstraints.FIXED;
             case VERTICAL -> Display.BillboardConstraints.VERTICAL;
             case HORIZONTAL -> Display.BillboardConstraints.HORIZONTAL;
@@ -97,56 +104,71 @@ public final class Hologram1_20_2 extends Hologram {
         });
 
 
-        // background
-        final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, "aO"); //DATA_BACKGROUND_COLOR_ID
+        if (display instanceof TextDisplay textDisplay && data.getTypeData() instanceof TextHologramData textData) {
+            // line width
+            final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys.DATA_LINE_WIDTH_ID.getMapping());
+            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
 
-        final var background = getData().getBackground();
-        if (background == null) {
-            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, TextDisplay.INITIAL_BACKGROUND);
-        } else if (background == Hologram.TRANSPARENT) {
-            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, 0);
-        } else {
-            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.value() | 0xC8000000);
+            // background
+            final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys.DATA_BACKGROUND_COLOR_ID.getMapping());
+
+            final var background = textData.getBackground();
+            if (background == null) {
+                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, TextDisplay.INITIAL_BACKGROUND);
+            } else if (background == Hologram.TRANSPARENT) {
+                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, 0);
+            } else {
+                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.value() | 0xC8000000);
+            }
+
+            // text shadow
+            if (textData.isTextShadow()) {
+                textDisplay.setFlags((byte) (textDisplay.getFlags() | TextDisplay.FLAG_SHADOW));
+            } else {
+                textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_SHADOW));
+            }
+
+            // text alignment
+            if (textData.getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.LEFT) {
+                textDisplay.setFlags((byte) (textDisplay.getFlags() | TextDisplay.FLAG_ALIGN_LEFT));
+            } else {
+                textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_ALIGN_LEFT));
+            }
+
+            if (textData.getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.RIGHT) {
+                textDisplay.setFlags((byte) (textDisplay.getFlags() | TextDisplay.FLAG_ALIGN_RIGHT));
+            } else {
+                textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_ALIGN_RIGHT));
+            }
+
+        } else if (display instanceof Display.ItemDisplay itemDisplay && data.getTypeData() instanceof ItemHologramData itemData) {
+            // item
+            itemDisplay.setItemStack(ItemStack.fromBukkitCopy(itemData.getItem()));
+
+        } else if (display instanceof Display.BlockDisplay blockDisplay && data.getTypeData() instanceof BlockHologramData blockData) {
+            Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.of("minecraft:" + blockData.getBlock().name().toLowerCase(), ':'));
+            blockDisplay.setBlockState(block.defaultBlockState());
+            System.out.println("SET BLOCK STATE TO " + block.getName());
         }
 
-        if (getData().getBrightness() != null) {
-            display.setBrightnessOverride(new Brightness(getData().getBrightness().getBlockLight(),
-                    getData().getBrightness().getSkyLight()));
+        // brightness
+        if (data.getDisplayData().getBrightness() != null) {
+            display.setBrightnessOverride(new Brightness(data.getDisplayData().getBrightness().getBlockLight(),
+                    data.getDisplayData().getBrightness().getSkyLight()));
         }
 
         // entity scale AND MORE!
         display.setTransformation(new Transformation(
-                getData().getTranslation(),
+                data.getDisplayData().getTranslation(),
                 new Quaternionf(),
-                getData().getScale(),
+                data.getDisplayData().getScale(),
                 new Quaternionf())
         );
 
 
         // entity shadow
-        display.setShadowRadius(getData().getShadowRadius());
-        display.setShadowStrength(getData().getShadowStrength());
-
-
-        // text shadow
-        if (getData().isTextHasShadow()) {
-            display.setFlags((byte) (display.getFlags() | TextDisplay.FLAG_SHADOW));
-        } else {
-            display.setFlags((byte) (display.getFlags() & ~TextDisplay.FLAG_SHADOW));
-        }
-
-        // text alignment
-        if (getData().getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.LEFT) {
-            display.setFlags((byte) (display.getFlags() | TextDisplay.FLAG_ALIGN_LEFT));
-        } else {
-            display.setFlags((byte) (display.getFlags() & ~TextDisplay.FLAG_ALIGN_LEFT));
-        }
-
-        if (getData().getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.RIGHT) {
-            display.setFlags((byte) (display.getFlags() | TextDisplay.FLAG_ALIGN_RIGHT));
-        } else {
-            display.setFlags((byte) (display.getFlags() & ~TextDisplay.FLAG_ALIGN_RIGHT));
-        }
+        display.setShadowRadius(data.getDisplayData().getShadowRadius());
+        display.setShadowStrength(data.getDisplayData().getShadowStrength());
     }
 
 
@@ -161,7 +183,7 @@ public final class Hologram1_20_2 extends Hologram {
             return false; // could not be created, nothing to show
         }
 
-        if (!data.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
+        if (!data.getDisplayData().getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
             return false;
         }
 
@@ -206,7 +228,9 @@ public final class Hologram1_20_2 extends Hologram {
 
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundTeleportEntityPacket(display));
 
-        display.setText(PaperAdventure.asVanilla(getShownText(player)));
+        if (display instanceof TextDisplay textDisplay) {
+            textDisplay.setText(PaperAdventure.asVanilla(getShownText(player)));
+        }
 
         final var values = new ArrayList<DataValue<?>>();
 

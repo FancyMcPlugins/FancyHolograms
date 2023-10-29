@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -16,7 +17,12 @@ import java.util.List;
 public class SetLineCMD implements Subcommand {
 
     public static boolean setLine(Player player, Hologram hologram, int index, String text) {
-        final var lines = new ArrayList<>(hologram.getData().getText());
+        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+            MessageHelper.error(player, "This is not a text hologram");
+            return false;
+        }
+
+        final var lines = new ArrayList<>(textData.getText());
 
         if (index >= lines.size()) {
             lines.add(text == null ? " " : text);
@@ -27,13 +33,13 @@ public class SetLineCMD implements Subcommand {
         }
 
         final var copied = hologram.getData().copy();
-        copied.setText(lines);
+        ((TextHologramData) copied.getTypeData()).setText(lines);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.TEXT)) {
             return false;
         }
 
-        hologram.getData().setText(copied.getText());
+        textData.setText(((TextHologramData) copied.getTypeData()).getText());
 
         MessageHelper.success(player, "Changed text for line " + (Math.min(index, lines.size() - 1) + 1));
         return true;

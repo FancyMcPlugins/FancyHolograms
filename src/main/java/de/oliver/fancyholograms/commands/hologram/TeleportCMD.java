@@ -18,7 +18,7 @@ public class TeleportCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
-        final var location = hologram.getData().getLocation();
+        final var location = hologram.getData().getDisplayData().getLocation();
 
         if (location == null || location.getWorld() == null) {
             MessageHelper.error(player, "Could not teleport to the hologram");

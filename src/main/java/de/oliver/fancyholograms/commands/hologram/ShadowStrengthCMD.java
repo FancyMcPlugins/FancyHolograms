@@ -28,24 +28,24 @@ public class ShadowStrengthCMD implements Subcommand {
             return false;
         }
 
-        if (Float.compare(strength, hologram.getData().getShadowStrength()) == 0) {
+        if (Float.compare(strength, hologram.getData().getDisplayData().getShadowStrength()) == 0) {
             MessageHelper.warning(player, "This hologram already has this shadow strength");
             return false;
         }
 
         final var copied = hologram.getData().copy();
-        copied.setShadowStrength(strength);
+        copied.getDisplayData().setShadowStrength(strength);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.SHADOW_STRENGTH)) {
             return false;
         }
 
-        if (Float.compare(copied.getShadowStrength(), hologram.getData().getShadowStrength()) == 0) {
+        if (Float.compare(copied.getDisplayData().getShadowStrength(), hologram.getData().getDisplayData().getShadowStrength()) == 0) {
             MessageHelper.warning(player, "This hologram already has this shadow strength");
             return false;
         }
 
-        hologram.getData().setShadowStrength(copied.getShadowStrength());
+        hologram.getData().getDisplayData().setShadowStrength(copied.getDisplayData().getShadowStrength());
 
         MessageHelper.success(player, "Changed shadow strength");
         return true;

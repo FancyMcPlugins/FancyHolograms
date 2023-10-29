@@ -18,8 +18,8 @@ public class RotatePitchCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
-        final var pitch = MoveHereCMD.calculateCoordinate(args[3], hologram.getData().getLocation(), player.getLocation(), loc -> loc.getPitch() - 180f);
-        Location location = hologram.getData().getLocation().clone();
+        final var pitch = MoveHereCMD.calculateCoordinate(args[3], hologram.getData().getDisplayData().getLocation(), player.getLocation(), loc -> loc.getPitch() - 180f);
+        Location location = hologram.getData().getDisplayData().getLocation().clone();
         location.setPitch(pitch.floatValue());
 
         return MoveHereCMD.setLocation(player, hologram, location);

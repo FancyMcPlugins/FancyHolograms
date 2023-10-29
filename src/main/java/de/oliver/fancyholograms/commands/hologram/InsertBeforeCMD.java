@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -22,6 +23,11 @@ public class InsertBeforeCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+            MessageHelper.error(player, "This is not a text hologram");
+            return false;
+        }
+
         var index = Ints.tryParse(args[3]);
         if (index == null) {
             MessageHelper.error(player, "Could not parse line number");
@@ -41,17 +47,17 @@ public class InsertBeforeCMD implements Subcommand {
         }
         text = text.substring(0, text.length() - 1);
 
-        final var lines = new ArrayList<>(hologram.getData().getText());
+        final var lines = new ArrayList<>(textData.getText());
         lines.add(Math.min(index, lines.size()), text);
 
         final var copied = hologram.getData().copy();
-        copied.setText(lines);
+        ((TextHologramData) copied.getTypeData()).setText(lines);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.TEXT)) {
             return false;
         }
 
-        hologram.getData().setText(copied.getText());
+        textData.setText(((TextHologramData) copied.getTypeData()).getText());
 
         MessageHelper.success(player, "Inserted line");
         return true;

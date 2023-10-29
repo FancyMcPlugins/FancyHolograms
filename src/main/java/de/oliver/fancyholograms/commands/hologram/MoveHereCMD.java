@@ -20,14 +20,14 @@ public class MoveHereCMD implements Subcommand {
 
     public static boolean setLocation(Player player, Hologram hologram, Location location) {
         final var copied = hologram.getData().copy();
-        copied.setLocation(location);
+        copied.getDisplayData().setLocation(location);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.POSITION)) {
             return false;
         }
 
-        final var updatedLocation = copied.getLocation() == null ? location : copied.getLocation(); // note: maybe should fall back to original location?
-        hologram.getData().setLocation(updatedLocation);
+        final var updatedLocation = copied.getDisplayData().getLocation() == null ? location : copied.getDisplayData().getLocation(); // note: maybe should fall back to original location?
+        hologram.getData().getDisplayData().setLocation(updatedLocation);
 
         MessageHelper.success(player, "Moved the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.x()),
@@ -62,7 +62,7 @@ public class MoveHereCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (hologram.getData().getLinkedNpcName() != null) {
+        if (hologram.getData().getDisplayData().getLinkedNpcName() != null) {
             MessageHelper.error(player, "This hologram is linked with an NPC");
             MessageHelper.error(player, "To unlink: /hologram edit " + hologram.getData().getName() + " unlinkWithNpc");
             return false;

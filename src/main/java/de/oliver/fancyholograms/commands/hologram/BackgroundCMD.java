@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -24,6 +25,11 @@ public class BackgroundCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+            MessageHelper.error(player, "This is not a text hologram");
+            return false;
+        }
+
         final var color = args[3].toLowerCase(Locale.ROOT);
 
         final TextColor background;
@@ -45,24 +51,24 @@ public class BackgroundCMD implements Subcommand {
             }
         }
 
-        if (Objects.equals(background, hologram.getData().getBackground())) {
+        if (Objects.equals(background, textData.getBackground())) {
             MessageHelper.warning(player, "This hologram already has this background color");
             return false;
         }
 
         final var copied = hologram.getData().copy();
-        copied.setBackground(background);
+        ((TextHologramData) copied.getTypeData()).setBackground(background);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BACKGROUND)) {
             return false;
         }
 
-        if (Objects.equals(copied.getBackground(), hologram.getData().getBackground())) {
+        if (Objects.equals(((TextHologramData) copied.getTypeData()).getBackground(), textData.getBackground())) {
             MessageHelper.warning(player, "This hologram already has this background color");
             return false;
         }
 
-        hologram.getData().setBackground(copied.getBackground());
+        textData.setBackground(((TextHologramData) copied.getTypeData()).getBackground());
 
         MessageHelper.success(player, "Changed background color");
         return true;

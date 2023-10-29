@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -22,6 +23,11 @@ public class UpdateTextIntervalCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+            MessageHelper.error(player, "This is not a text hologram");
+            return false;
+        }
+
         final var text = args[3].toLowerCase(Locale.ROOT);
 
         Integer interval;
@@ -53,7 +59,7 @@ public class UpdateTextIntervalCMD implements Subcommand {
             return false;
         }
 
-        if (interval == hologram.getData().getTextUpdateInterval()) {
+        if (interval == textData.getTextUpdateInterval()) {
             MessageHelper.warning(player, "This hologram already has this text update interval");
             return false;
         }
@@ -61,18 +67,18 @@ public class UpdateTextIntervalCMD implements Subcommand {
         interval = Math.max(-1, interval);
 
         final var copied = hologram.getData().copy();
-        copied.setTextUpdateInterval(interval);
+        ((TextHologramData) copied.getTypeData()).setTextUpdateInterval(interval);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.UPDATE_TEXT_INTERVAL)) {
             return false;
         }
 
-        if (copied.getTextUpdateInterval() == hologram.getData().getTextUpdateInterval()) {
+        if (((TextHologramData) copied.getTypeData()).getTextUpdateInterval() == textData.getTextUpdateInterval()) {
             MessageHelper.warning(player, "This hologram already has this text update interval");
             return false;
         }
 
-        hologram.getData().setTextUpdateInterval(copied.getTextUpdateInterval());
+        textData.setTextUpdateInterval(((TextHologramData) copied.getTypeData()).getTextUpdateInterval());
 
         MessageHelper.success(player, "Changed the text update interval");
         return true;

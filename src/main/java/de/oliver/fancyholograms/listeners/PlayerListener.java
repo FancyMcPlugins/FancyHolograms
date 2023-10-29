@@ -24,7 +24,7 @@ public final class PlayerListener implements Listener {
     public void onJoin(@NotNull final PlayerJoinEvent event) {
         for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
             final var distance = hologram.distanceTo(event.getPlayer().getLocation());
-            if (Double.isNaN(distance) || distance > hologram.getData().getVisibilityDistance()) {
+            if (Double.isNaN(distance) || distance > hologram.getData().getDisplayData().getVisibilityDistance()) {
                 continue;
             }
 
@@ -55,7 +55,7 @@ public final class PlayerListener implements Listener {
                 continue;
             }
 
-            final var inRange = distance <= hologram.getData().getVisibilityDistance();
+            final var inRange = distance <= hologram.getData().getDisplayData().getVisibilityDistance();
             final var isShown = hologram.isShown(event.getPlayer());
 
             if (inRange && !isShown) {
@@ -70,7 +70,7 @@ public final class PlayerListener implements Listener {
     public void onWorldChange(@NotNull final PlayerChangedWorldEvent event) {
         for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
             final var distance = hologram.distanceTo(event.getPlayer().getLocation());
-            if (Double.isNaN(distance) || distance > hologram.getData().getVisibilityDistance()) {
+            if (Double.isNaN(distance) || distance > hologram.getData().getDisplayData().getVisibilityDistance()) {
                 continue;
             }
 
