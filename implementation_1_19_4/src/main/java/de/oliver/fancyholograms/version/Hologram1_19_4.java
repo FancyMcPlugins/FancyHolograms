@@ -148,7 +148,6 @@ public final class Hologram1_19_4 extends Hologram {
         } else if (display instanceof Display.BlockDisplay blockDisplay && data.getTypeData() instanceof BlockHologramData blockData) {
             Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.of("minecraft:" + blockData.getBlock().name().toLowerCase(), ':'));
             blockDisplay.setBlockState(block.defaultBlockState());
-            System.out.println("SET BLOCK STATE TO " + block.getName());
         }
 
         // brightness
