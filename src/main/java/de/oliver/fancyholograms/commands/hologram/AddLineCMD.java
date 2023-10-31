@@ -1,7 +1,9 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancylib.MessageHelper;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,6 +19,11 @@ public class AddLineCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+            MessageHelper.error(player, "This command can only be used on text holograms");
+            return false;
+        }
+        
         String text = "";
         for (int i = 3; i < args.length; i++) {
             text += args[i] + " ";

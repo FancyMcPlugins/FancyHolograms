@@ -23,7 +23,10 @@ public class BlockCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
-        BlockHologramData blockData = (BlockHologramData) hologram.getData().getTypeData();
+        if (!(hologram.getData().getTypeData() instanceof BlockHologramData blockData)) {
+            MessageHelper.error(player, "This command can only be used on item holograms");
+            return false;
+        }
 
         Material block = Material.getMaterial(args[3]);
         if (block == null) {

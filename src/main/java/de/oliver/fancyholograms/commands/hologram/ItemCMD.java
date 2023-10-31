@@ -23,7 +23,10 @@ public class ItemCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
-        ItemHologramData itemData = (ItemHologramData) hologram.getData().getTypeData();
+        if (!(hologram.getData().getTypeData() instanceof ItemHologramData itemData)) {
+            MessageHelper.error(player, "This command can only be used on item holograms");
+            return false;
+        }
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() == Material.AIR || item.getAmount() < 1) {

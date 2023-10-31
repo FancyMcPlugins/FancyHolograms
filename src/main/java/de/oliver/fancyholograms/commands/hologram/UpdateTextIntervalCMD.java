@@ -24,7 +24,7 @@ public class UpdateTextIntervalCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
         if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
-            MessageHelper.error(player, "This is not a text hologram");
+            MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
 

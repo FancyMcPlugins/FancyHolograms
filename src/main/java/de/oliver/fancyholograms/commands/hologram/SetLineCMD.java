@@ -18,7 +18,7 @@ public class SetLineCMD implements Subcommand {
 
     public static boolean setLine(Player player, Hologram hologram, int index, String text) {
         if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
-            MessageHelper.error(player, "This is not a text hologram");
+            MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
 
