@@ -2,7 +2,6 @@ package de.oliver.fancyholograms.listeners;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramData;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
@@ -27,8 +26,8 @@ public final class NpcListener implements Listener {
         this.plugin.getHologramsManager()
                 .getHolograms()
                 .stream()
-                .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getLinkedNpcName()))
-                .forEach(hologram -> hologram.getData().setLinkedNpcName(null));
+                .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getDisplayData().getLinkedNpcName()))
+                .forEach(hologram -> hologram.getData().getDisplayData().setLinkedNpcName(null));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -38,7 +37,7 @@ public final class NpcListener implements Listener {
         switch (event.getModification()) {
             case TYPE, LOCATION -> {
                 final var needsToBeUpdated = holograms.stream()
-                        .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getLinkedNpcName()))
+                        .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getDisplayData().getLinkedNpcName()))
                         .toList();
 
                 this.plugin.getScheduler()
@@ -55,7 +54,7 @@ public final class NpcListener implements Listener {
             case DISPLAY_NAME, SHOW_IN_TAB -> {
                 final var isLinked = holograms.stream()
                         .map(Hologram::getData)
-                        .map(HologramData::getLinkedNpcName)
+                        .map(data -> data.getDisplayData().getLinkedNpcName())
                         .anyMatch(event.getNpc().getData().getName()::equals);
 
                 if (isLinked) {

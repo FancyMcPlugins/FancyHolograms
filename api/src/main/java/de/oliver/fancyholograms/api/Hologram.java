@@ -1,5 +1,7 @@
 package de.oliver.fancyholograms.api;
 
+import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramHideEvent;
 import de.oliver.fancyholograms.api.events.HologramShowEvent;
 import io.github.miniplaceholders.api.MiniPlaceholders;
@@ -253,7 +255,7 @@ public abstract class Hologram {
      * @return the distance to the other location, or NaN if the locations are null or in different worlds
      */
     public final double distanceTo(@Nullable final Location other) {
-        final var location = getData().getLocation();
+        final var location = getData().getDisplayData().getLocation();
         if (location == null || other == null) {
             return Double.NaN;
         }
@@ -272,9 +274,13 @@ public abstract class Hologram {
      * @param player the player to get the placeholders for, or null if no placeholders should be replaced
      * @return the text shown in the hologram
      */
-    public final @NotNull Component getShownText(@Nullable final Player player) {
+    public final Component getShownText(@Nullable final Player player) {
+        if (!(getData().getTypeData() instanceof TextHologramData textData)) {
+            return null;
+        }
+
         var tags = TagResolver.empty();
-        var text = String.join("\n", getData().getText());
+        var text = String.join("\n", textData.getText());
 
         if (player != null) {
             if (isUsingPlaceholderApi()) {

@@ -18,8 +18,8 @@ public class RotateCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
-        final var yaw = MoveHereCMD.calculateCoordinate(args[3], hologram.getData().getLocation(), player.getLocation(), loc -> loc.getYaw() + 180f);
-        Location location = hologram.getData().getLocation().clone();
+        final var yaw = MoveHereCMD.calculateCoordinate(args[3], hologram.getData().getDisplayData().getLocation(), player.getLocation(), loc -> loc.getYaw() + 180f);
+        Location location = hologram.getData().getDisplayData().getLocation().clone();
         location.setYaw(yaw.floatValue() - 180f);
 
         return MoveHereCMD.setLocation(player, hologram, location);

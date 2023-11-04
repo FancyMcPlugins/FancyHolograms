@@ -28,7 +28,7 @@ public class LinkWithNpcCMD implements Subcommand {
 
         String name = args[3];
 
-        if (hologram.getData().getLinkedNpcName() != null) {
+        if (hologram.getData().getDisplayData().getLinkedNpcName() != null) {
             MessageHelper.error(player, "This hologram is already linked with an NPC");
             return false;
         }
@@ -39,7 +39,7 @@ public class LinkWithNpcCMD implements Subcommand {
             return false;
         }
 
-        hologram.getData().setLinkedNpcName(npc.getData().getName());
+        hologram.getData().getDisplayData().setLinkedNpcName(npc.getData().getName());
 
         FancyHolograms.get().getHologramsManager().syncHologramWithNpc(hologram);
 

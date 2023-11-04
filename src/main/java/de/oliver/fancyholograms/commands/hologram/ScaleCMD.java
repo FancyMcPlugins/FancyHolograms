@@ -9,6 +9,7 @@ import de.oliver.fancylib.MessageHelper;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -28,28 +29,31 @@ public class ScaleCMD implements Subcommand {
             return false;
         }
 
-        if (Float.compare(scale, hologram.getData().getScale().x()) == 0 &&
-            Float.compare(scale, hologram.getData().getScale().y()) == 0 &&
-            Float.compare(scale, hologram.getData().getScale().z()) == 0) {
+        if (Float.compare(scale, hologram.getData().getDisplayData().getScale().x()) == 0 &&
+                Float.compare(scale, hologram.getData().getDisplayData().getScale().y()) == 0 &&
+                Float.compare(scale, hologram.getData().getDisplayData().getScale().z()) == 0) {
             MessageHelper.warning(player, "This hologram is already at this scale");
             return false;
         }
 
         final var copied = hologram.getData().copy();
-        copied.setScale(scale);
+        copied.getDisplayData().setScale(new Vector3f(scale, scale, scale));
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.SCALE)) {
             return false;
         }
 
-        if (Float.compare(copied.getScale().x(), hologram.getData().getScale().x()) == 0 &&
-            Float.compare(copied.getScale().y(), hologram.getData().getScale().y()) == 0 &&
-            Float.compare(copied.getScale().z(), hologram.getData().getScale().z()) == 0) {
+        if (Float.compare(copied.getDisplayData().getScale().x(), hologram.getData().getDisplayData().getScale().x()) == 0 &&
+                Float.compare(copied.getDisplayData().getScale().y(), hologram.getData().getDisplayData().getScale().y()) == 0 &&
+                Float.compare(copied.getDisplayData().getScale().z(), hologram.getData().getDisplayData().getScale().z()) == 0) {
             MessageHelper.warning(player, "This hologram is already at this scale");
             return false;
         }
 
-        hologram.getData().setScale(copied.getScale().x(), copied.getScale().y(), copied.getScale().z());
+        hologram.getData().getDisplayData().setScale(new Vector3f(
+                copied.getDisplayData().getScale().x(),
+                copied.getDisplayData().getScale().y(),
+                copied.getDisplayData().getScale().z()));
 
         MessageHelper.success(player, "Changed scale to " + scale);
         return true;

@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -21,6 +22,12 @@ public class TextShadowCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+            MessageHelper.error(player, "This command can only be used on text holograms");
+            return false;
+        }
+
+
         final var enabled = switch (args[3].toLowerCase(Locale.ROOT)) {
             case "true" -> true;
             case "false" -> false;
@@ -32,24 +39,24 @@ public class TextShadowCMD implements Subcommand {
             return false;
         }
 
-        if (enabled == hologram.getData().isTextHasShadow()) {
+        if (enabled == textData.isTextShadow()) {
             MessageHelper.warning(player, "This hologram already has text shadow " + (enabled ? "enabled" : "disabled"));
             return false;
         }
 
         final var copied = hologram.getData().copy();
-        copied.setTextHasShadow(enabled);
+        ((TextHologramData) copied.getTypeData()).setTextShadow(enabled);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.TEXT_SHADOW)) {
             return false;
         }
 
-        if (enabled == hologram.getData().isTextHasShadow()) {
+        if (enabled == textData.isTextShadow()) {
             MessageHelper.warning(player, "This hologram already has text shadow " + (enabled ? "enabled" : "disabled"));
             return false;
         }
 
-        hologram.getData().setTextHasShadow(copied.isTextHasShadow());
+        textData.setTextShadow(((TextHologramData) copied.getTypeData()).isTextShadow());
 
         MessageHelper.success(player, "Changed text shadow");
         return true;

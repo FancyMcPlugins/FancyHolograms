@@ -31,24 +31,24 @@ public class BillboardCMD implements Subcommand {
             return false;
         }
 
-        if (billboard == hologram.getData().getBillboard()) {
+        if (billboard == hologram.getData().getDisplayData().getBillboard()) {
             MessageHelper.warning(player, "This billboard is already set");
             return false;
         }
 
         final var copied = hologram.getData().copy();
-        copied.setBillboard(billboard);
+        copied.getDisplayData().setBillboard(billboard);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BILLBOARD)) {
             return false;
         }
 
-        if (copied.getBillboard() == hologram.getData().getBillboard()) {
+        if (copied.getDisplayData().getBillboard() == hologram.getData().getDisplayData().getBillboard()) {
             MessageHelper.warning(player, "This billboard is already set");
             return false;
         }
 
-        hologram.getData().setBillboard(copied.getBillboard());
+        hologram.getData().getDisplayData().setBillboard(copied.getDisplayData().getBillboard());
 
         MessageHelper.success(player, "Changed the billboard to " + StringUtils.capitalize(billboard.name().toLowerCase(Locale.ROOT)));
         return true;

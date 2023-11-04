@@ -3,13 +3,16 @@ package de.oliver.fancyholograms.commands;
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramData;
+import de.oliver.fancyholograms.api.HologramType;
+import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.hologram.*;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -115,6 +118,11 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                     .toList();
         }
 
+        // /holo create {tab:type}
+        if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
+            return Arrays.asList("text", "item", "block");
+        }
+
         // /holo [action] {tab:hologram}
         if (args.length == 2) {
             final var action = args[0].toLowerCase(Locale.ROOT);
@@ -136,6 +144,8 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
             return Collections.emptyList();
         }
 
+        HologramType type = hologram.getData().getType();
+
         // /holo edit [hologram] {tab:option}
         if (args.length == 3) {
             if (!args[0].equalsIgnoreCase("edit")) {
@@ -144,7 +154,10 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
             final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
 
-            return Stream.of("position", "moveHere", "moveTo", "rotate", "rotatepitch", "setLine", "addLine", "removeLine", "insertAfter", "insertBefore", "billboard", "scale", "background", "updateTextInterval", "visibilityDistance", "shadowRadius", "shadowStrength", "textShadow", "textAlignment", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : "")
+            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
+            suggestions.addAll(type.getCommands());
+
+            return suggestions.stream()
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
                     .toList();
         }
@@ -159,18 +172,19 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                 case "billboard" -> {
                     final var values = new ArrayList<>(List.of(Display.Billboard.values()));
 
-                    values.remove(hologram.getData().getBillboard());
+                    values.remove(hologram.getData().getDisplayData().getBillboard());
 
                     yield values.stream().map(Enum::name);
                 }
                 case "background" -> {
+                    TextHologramData textData = (TextHologramData) hologram.getData().getTypeData();
                     final var colors = new ArrayList<>(NamedTextColor.NAMES.keys());
 
                     colors.add("reset");
                     colors.add("default");
                     colors.add("transparent");
 
-                    final var current = hologram.getData().getBackground();
+                    final var current = textData.getBackground();
 
                     if (current == null) {
                         colors.remove("reset");
@@ -185,10 +199,15 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
                     yield colors.stream();
                 }
-                case "textshadow" -> Stream.of(!hologram.getData().isTextHasShadow()).map(Object::toString);
+                case "textshadow" -> {
+                    TextHologramData textData = (TextHologramData) hologram.getData().getTypeData();
+                    yield Stream.of(!textData.isTextShadow()).map(Object::toString);
+                }
                 case "textalignment" -> Arrays.stream(TextDisplay.TextAlignment.values()).map(Enum::name);
-                case "setline", "removeline" ->
-                        IntStream.range(1, hologram.getData().getText().size() + 1).mapToObj(Integer::toString);
+                case "setline", "removeline" -> {
+                    TextHologramData textData = (TextHologramData) hologram.getData().getTypeData();
+                    yield IntStream.range(1, textData.getText().size() + 1).mapToObj(Integer::toString);
+                }
                 case "linkwithnpc" -> {
                     if (!FancyHolograms.isUsingFancyNpcs()) {
                         yield Stream.<String>empty();
@@ -196,6 +215,10 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
                     yield FancyNpcsPlugin.get().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
+                case "block" -> Arrays.stream(Material.values())
+                        .filter(Material::isBlock)
+                        .map(Enum::name);
+
                 default -> null;
             };
 
@@ -207,12 +230,14 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
         // /holo edit [hologram] setline [number] {tab:line_text}
         if (args[2].equalsIgnoreCase("setline")) {
+            TextHologramData textData = (TextHologramData) hologram.getData().getTypeData();
+
             final var index = Ints.tryParse(args[3]);
-            if (index == null || index < 1 || index > hologram.getData().getText().size()) {
+            if (index == null || index < 1 || index > textData.getText().size()) {
                 return Collections.emptyList();
             }
 
-            return List.of(hologram.getData().getText().get(index - 1));
+            return List.of(textData.getText().get(index - 1));
         }
 
         // /holo edit [hologram] moveto {tab:x} {tab:y} {tab:z}
@@ -254,10 +279,17 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
     private boolean edit(@NotNull final Player player, @NotNull final Hologram hologram, @NotNull final String[] args) {
         final var action = args[2].toLowerCase();
 
-        if (action.equals("position") || action.equals("movehere")) {
-            return new MoveHereCMD().run(player, hologram, args);
-        } else if (action.equals("unlinkwithnpc")) {
-            return new UnlinkWithNpcCMD().run(player, hologram, args);
+        // actions without a data
+        switch (action) {
+            case "position", "movehere" -> {
+                return new MoveHereCMD().run(player, hologram, args);
+            }
+            case "unlinkwithnpc" -> {
+                return new UnlinkWithNpcCMD().run(player, hologram, args);
+            }
+            case "item" -> {
+                return new ItemCMD().run(player, hologram, args);
+            }
         }
 
         if (args.length == 3) {
@@ -266,24 +298,31 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
         }
 
         return switch (action) {
-            case "addline" -> new AddLineCMD().run(player, hologram, args);
-            case "setline" -> new SetLineCMD().run(player, hologram, args);
-            case "removeline" -> new RemoveLineCMD().run(player, hologram, args);
-            case "insertbefore" -> new InsertBeforeCMD().run(player, hologram, args);
-            case "insertafter" -> new InsertAfterCMD().run(player, hologram, args);
+            // display data
             case "moveto" -> new MoveToCMD().run(player, hologram, args);
             case "rotate" -> new RotateCMD().run(player, hologram, args);
             case "rotatepitch" -> new RotatePitchCMD().run(player, hologram, args);
             case "billboard" -> new BillboardCMD().run(player, hologram, args);
             case "scale" -> new ScaleCMD().run(player, hologram, args);
-            case "background" -> new BackgroundCMD().run(player, hologram, args);
-            case "textshadow" -> new TextShadowCMD().run(player, hologram, args);
-            case "textalignment" -> new TextAlignmentCMD().run(player, hologram, args);
-            case "shadowradius" -> new ShadowRadiusCMD().run(player, hologram, args);
-            case "shadowstrength" -> new ShadowStrengthCMD().run(player, hologram, args);
             case "updatetextinterval" -> new UpdateTextIntervalCMD().run(player, hologram, args);
             case "visibilitydistance" -> new VisibilityDistanceCMD().run(player, hologram, args);
             case "linkwithnpc" -> new LinkWithNpcCMD().run(player, hologram, args);
+            case "shadowradius" -> new ShadowRadiusCMD().run(player, hologram, args);
+            case "shadowstrength" -> new ShadowStrengthCMD().run(player, hologram, args);
+
+            // text data
+            case "background" -> new BackgroundCMD().run(player, hologram, args);
+            case "addline" -> new AddLineCMD().run(player, hologram, args);
+            case "setline" -> new SetLineCMD().run(player, hologram, args);
+            case "removeline" -> new RemoveLineCMD().run(player, hologram, args);
+            case "insertbefore" -> new InsertBeforeCMD().run(player, hologram, args);
+            case "insertafter" -> new InsertAfterCMD().run(player, hologram, args);
+            case "textshadow" -> new TextShadowCMD().run(player, hologram, args);
+            case "textalignment" -> new TextAlignmentCMD().run(player, hologram, args);
+
+            // block data
+            case "block" -> new BlockCMD().run(player, hologram, args);
+
             default -> false;
         };
     }

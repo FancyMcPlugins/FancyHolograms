@@ -26,14 +26,14 @@ public class UnlinkWithNpcCMD implements Subcommand {
             return false;
         }
 
-        if (hologram.getData().getLinkedNpcName() == null) {
+        if (hologram.getData().getDisplayData().getLinkedNpcName() == null) {
             MessageHelper.error(player, "This hologram is not linked with an NPC");
             return false;
         }
 
-        final var npc = FancyNpcsPlugin.get().getNpcManager().getNpc(hologram.getData().getLinkedNpcName());
+        final var npc = FancyNpcsPlugin.get().getNpcManager().getNpc(hologram.getData().getDisplayData().getLinkedNpcName());
 
-        hologram.getData().setLinkedNpcName(null);
+        hologram.getData().getDisplayData().setLinkedNpcName(null);
 
         if (npc != null) {
             npc.getData().setDisplayName(npc.getData().getName());
