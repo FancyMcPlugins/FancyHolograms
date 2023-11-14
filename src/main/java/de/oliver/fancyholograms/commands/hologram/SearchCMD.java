@@ -50,9 +50,9 @@ public class SearchCMD implements Subcommand {
             MessageHelper.info(player, "<b>Search results:</b>");
             MessageHelper.info(player, "<b>Page %s/%s</b>".formatted(page, pages));
             holograms.stream()
+                    .filter(holo -> holo.getData().getName().contains(search))
                     .skip((page - 1) * 10)
                     .limit(10)
-                    .filter(holo -> holo.getData().getName().contains(search))
                     .forEach(holo -> {
                         final var location = holo.getData().getDisplayData().getLocation();
                         if (location == null || location.getWorld() == null) {
