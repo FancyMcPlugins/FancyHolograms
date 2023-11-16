@@ -63,10 +63,10 @@ public final class Hologram1_20_2 extends Hologram {
             case ITEM -> this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, world);
         }
 
-        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys.DATA_INTERPOLATION_DURATION_ID.getMapping());
+        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_2.DATA_INTERPOLATION_DURATION_ID.getMapping());
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_DURATION_ID, 1);
 
-        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys.DATA_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
+        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_2.DATA_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
 
         updateHologram();
@@ -106,11 +106,11 @@ public final class Hologram1_20_2 extends Hologram {
 
         if (display instanceof TextDisplay textDisplay && data.getTypeData() instanceof TextHologramData textData) {
             // line width
-            final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys.DATA_LINE_WIDTH_ID.getMapping());
+            final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_2.DATA_LINE_WIDTH_ID.getMapping());
             display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
 
             // background
-            final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys.DATA_BACKGROUND_COLOR_ID.getMapping());
+            final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_2.DATA_BACKGROUND_COLOR_ID.getMapping());
 
             final var background = textData.getBackground();
             if (background == null) {
