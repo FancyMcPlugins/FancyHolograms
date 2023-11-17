@@ -31,7 +31,7 @@ public class DecentHologramsConverter implements HologramConverter {
         String fhName = name;
 
         if (FH_MANAGER.getHologram(fhName).isPresent()) {
-            fhName += "-fh";
+            fhName += "-dh";
         }
 
         if (FH_MANAGER.getHologram(fhName).isPresent()) {

@@ -3,13 +3,16 @@ package de.oliver.fancyholograms.converter;
 import de.oliver.fancyholograms.converter.impl.DecentHologramsConverter;
 
 public enum Converters {
-    DECENT_HOLOGRAMS("DecentHolograms", DecentHologramsConverter.INSTANCE);
+    DECENT_HOLOGRAMS("DecentHolograms", "2.8.5", DecentHologramsConverter.INSTANCE),
+    ;
 
     private final String pluginName;
+    private final String pluginVersion;
     private final HologramConverter converter;
 
-    Converters(String pluginName, HologramConverter converter) {
+    Converters(String pluginName, String pluginVersion, HologramConverter converter) {
         this.pluginName = pluginName;
+        this.pluginVersion = pluginVersion;
         this.converter = converter;
     }
 
@@ -25,6 +28,10 @@ public enum Converters {
 
     public String getPluginName() {
         return pluginName;
+    }
+
+    public String getPluginVersion() {
+        return pluginVersion;
     }
 
     public HologramConverter getConverter() {

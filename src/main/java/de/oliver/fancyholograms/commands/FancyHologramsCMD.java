@@ -4,6 +4,7 @@ import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.converter.Converters;
 import de.oliver.fancylib.MessageHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -57,6 +58,17 @@ public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
                 Converters converter = Converters.getConverter(args[1]);
                 if (converter == null) {
                     MessageHelper.error(sender, "Could not find converter for the " + args[1] + " plugin");
+                    return false;
+                }
+
+                if (!Bukkit.getPluginManager().isPluginEnabled(converter.getPluginName())) {
+                    MessageHelper.error(sender, "The " + converter.getPluginName() + " plugin is not enabled");
+                    return false;
+                }
+
+                final String pluginVersion = Bukkit.getPluginManager().getPlugin(converter.getPluginName()).getDescription().getVersion();
+                if (!pluginVersion.equals(converter.getPluginVersion())) {
+                    MessageHelper.error(sender, "Please get " + converter.getPluginName() + " version <bold>" + converter.getPluginVersion());
                     return false;
                 }
 
