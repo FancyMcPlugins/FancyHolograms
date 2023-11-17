@@ -26,6 +26,7 @@ allprojects {
         maven(url = "https://repo.fancyplugins.de/snapshots")
         maven(url = "https://repo.extendedclip.com/content/repositories/placeholderapi/")
         maven(url = "https://repo.viaversion.com/")
+        maven(url = "https://jitpack.io")
     }
 }
 
@@ -40,6 +41,8 @@ dependencies {
     implementation("de.oliver:FancyLib:1.0.5")
 
     compileOnly("de.oliver:FancyNpcs:2.0.4")
+
+    compileOnly("com.github.decentsoftware-eu:decentholograms:2.8.5")
 }
 
 tasks {
