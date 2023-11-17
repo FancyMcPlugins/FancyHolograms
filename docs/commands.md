@@ -118,6 +118,12 @@ Description: Rotates the hologram around the x-axis<br>
 Syntax: ``/Hologram edit (hologram) rotatepitch (degrees)``<br>
 Permission: ``FancyHolograms.admin``
 
+### visibilityDistance
+
+Description: Sets from how far away players can see the hologram (-1 for default distance)<br>
+Syntax: ``/Hologram edit (hologram) visibilityDistance (distance)``<br>
+Permission: ``FancyHolograms.admin``
+
 ### scale
 
 Description: Sets the scale (can be floats)<br>
@@ -214,4 +220,24 @@ Permission: ``FancyHolograms.admin``
 
 Description: Enables/disables the text shadow<br>
 Syntax: ``/Hologram edit (hologram) textAlignment (center | left | right)``<br>
+Permission: ``FancyHolograms.admin``
+
+## Item hologram modification
+
+These commands can be run for all **item** holograms.
+
+### item
+
+Description: Sets the hologram item you are holding in your main hand<br>
+Syntax: ``/Hologram edit (hologram) item``<br>
+Permission: ``FancyHolograms.admin``
+
+## Block hologram modification
+
+These commands can be run for all **block** holograms.
+
+### block
+
+Description: Sets the hologram block<br>
+Syntax: ``/Hologram edit (hologram) block (block type)``<br>
 Permission: ``FancyHolograms.admin``
