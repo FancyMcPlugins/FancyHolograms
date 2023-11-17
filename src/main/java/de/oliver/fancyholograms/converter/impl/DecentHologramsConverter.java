@@ -47,7 +47,11 @@ public class DecentHologramsConverter implements HologramConverter {
         List<String> lines = new ArrayList<>();
         for (HologramPage page : hologram.getPages()) {
             for (HologramLine line : page.getLines()) {
-                lines.add(HologramConverter.legacyColorCodesToMiniMessages(line.getText()));
+                if (line.getText() == null) {
+                    lines.add("");
+                } else {
+                    lines.add(HologramConverter.legacyColorCodesToMiniMessages(line.getText()));
+                }
             }
         }
 

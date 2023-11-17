@@ -7,6 +7,10 @@ import java.util.List;
 public interface HologramConverter {
 
     static String legacyColorCodesToMiniMessages(String s) {
+        if (s == null) {
+            return null;
+        }
+
         s = s.replaceAll("&a", "<green>")
                 .replaceAll("&b", "<aqua>")
                 .replaceAll("&c", "<red>")
