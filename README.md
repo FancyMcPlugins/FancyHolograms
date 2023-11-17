@@ -34,6 +34,7 @@ You can download the latest versions at the following places:
 /FancyHolograms reload - Reloads the config and holograms<br>
 /Hologram help - Shows a list of all subcommands<br>
 /Hologram list - Shows a list of all holograms<br>
+/Hologram search (search term) - Searches for a hologram<br>
 /Hologram create (name) - Creates a new hologram at your location<br>
 /Hologram remove (hologram) - Removes a certain hologram<br>
 /Hologram copy (hologram) (new name) - Creates a copy of a hologram<br>

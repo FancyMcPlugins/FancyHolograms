@@ -101,6 +101,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
                 yield updated;
             }
+            case "search" -> new SearchCMD().run(player, hologram, args);
             default -> false;
         };
     }
@@ -113,7 +114,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
         // /holo {tab:action}
         if (args.length == 1) {
-            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy")
+            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy", "search")
                     .filter(input -> input.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .toList();
         }
