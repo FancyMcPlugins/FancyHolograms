@@ -18,6 +18,7 @@
         * [moveTo](#moveto)
         * [rotate](#rotate)
         * [rotatepitch](#rotatepitch)
+        * [visibilityDistance](#visibilitydistance)
         * [scale](#scale)
         * [billboard](#billboard)
         * [shadowStrength](#shadowstrength)
@@ -34,6 +35,10 @@
         * [background](#background)
         * [textShadow](#textshadow)
         * [textAlignment](#textalignment)
+    * [Item hologram modification](#item-hologram-modification)
+        * [item](#item)
+    * [Block hologram modification](#block-hologram-modification)
+        * [block](#block)
 
 <!-- TOC -->
 
