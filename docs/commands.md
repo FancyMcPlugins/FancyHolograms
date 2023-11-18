@@ -94,6 +94,12 @@ Description: Creates a copy of a hologram<br>
 Syntax: ``/Hologram copy (hologram) (new name)``<br>
 Permission: ``FancyHolograms.admin``
 
+### info
+
+Description: Shows you all information about the hologram<br>
+Syntax: ``/Hologram info (hologram)``<br>
+Permission: ``FancyHolograms.admin``
+
 ## General hologram modification
 
 These commands can be run for any hologram type (text, item and block).

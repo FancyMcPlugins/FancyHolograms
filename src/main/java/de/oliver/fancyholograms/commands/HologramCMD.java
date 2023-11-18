@@ -82,6 +82,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
 
         return switch (args[0].toLowerCase(Locale.ROOT)) {
+            case "info" -> new InfoCMD().run(player, hologram, args);
             case "remove" -> new RemoveCMD().run(player, hologram, args);
             case "teleport" -> new TeleportCMD().run(player, hologram, args);
             case "copy" -> new CopyCMD().run(player, hologram, args);
@@ -113,7 +114,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
         // /holo {tab:action}
         if (args.length == 1) {
-            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy")
+            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy", "info")
                     .filter(input -> input.startsWith(args[0].toLowerCase(Locale.ROOT)))
                     .toList();
         }
@@ -127,7 +128,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
         if (args.length == 2) {
             final var action = args[0].toLowerCase(Locale.ROOT);
 
-            if (!Set.of("teleport", "remove", "edit", "copy").contains(action)) {
+            if (!Set.of("teleport", "remove", "edit", "copy", "info").contains(action)) {
                 return Collections.emptyList();
             }
 
