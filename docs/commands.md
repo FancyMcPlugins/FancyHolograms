@@ -1,46 +1,8 @@
-# Commands
+# FancyHolograms Commands
 
-<!-- TOC -->
-
-* [Commands](#commands)
-    * [/FancyHolograms ...](#fancyholograms-)
-        * [version](#version)
-        * [save](#save)
-        * [reload](#reload)
-    * [/Holograms ...](#holograms-)
-        * [help](#help)
-        * [list](#list)
-        * [create](#create)
-        * [remove](#remove)
-        * [copy](#copy)
-    * [General hologram modification](#general-hologram-modification)
-        * [moveHere](#movehere)
-        * [moveTo](#moveto)
-        * [rotate](#rotate)
-        * [rotatepitch](#rotatepitch)
-        * [visibilityDistance](#visibilitydistance)
-        * [scale](#scale)
-        * [billboard](#billboard)
-        * [shadowStrength](#shadowstrength)
-        * [shadowRadius](#shadowradius)
-        * [linkWithNpc](#linkwithnpc)
-        * [unlinkWithNpc](#unlinkwithnpc)
-    * [Text hologram modification](#text-hologram-modification)
-        * [setLine](#setline)
-        * [addLine](#addline)
-        * [removeLine](#removeline)
-        * [insertBefore](#insertbefore)
-        * [insertAfter](#insertafter)
-        * [updateTextInterval](#updatetextinterval)
-        * [background](#background)
-        * [textShadow](#textshadow)
-        * [textAlignment](#textalignment)
-    * [Item hologram modification](#item-hologram-modification)
-        * [item](#item)
-    * [Block hologram modification](#block-hologram-modification)
-        * [block](#block)
-
-<!-- TOC -->
+This section provides detailed information about the various commands available in FancyHolograms, allowing you to make
+the
+most out of its features.
 
 ## /FancyHolograms ...
 
