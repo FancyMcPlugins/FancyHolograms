@@ -4,6 +4,7 @@ import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramHideEvent;
 import de.oliver.fancyholograms.api.events.HologramShowEvent;
+import de.oliver.fancyholograms.api.utils.LegacyColorConverter;
 import io.github.miniplaceholders.api.MiniPlaceholders;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
@@ -291,6 +292,8 @@ public abstract class Hologram {
                 tags = MiniPlaceholders.getAudienceGlobalPlaceholders(player);
             }
         }
+
+        text = LegacyColorConverter.legacyColorCodesToMiniMessages(text);
 
         return MiniMessage.miniMessage().deserialize(text, tags);
     }
