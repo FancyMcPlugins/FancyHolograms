@@ -11,8 +11,6 @@ plugins {
 
 runPaper.folia.registerTask()
 
-val minecraftVersion = "1.20.2"
-
 allprojects {
     group = "de.oliver"
     version = "2.0.3"
@@ -32,16 +30,16 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:$minecraftVersion-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.5")
+    implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
-    compileOnly("de.oliver:FancyNpcs:2.0.4")
+    compileOnly("de.oliver:FancyNpcs:${findProperty("fancyNpcsVersion")}")
 }
 
 tasks {
@@ -54,11 +52,11 @@ tasks {
     }
 
     runServer {
-        minecraftVersion(minecraftVersion)
+        minecraftVersion(findProperty("minecraftVersion").toString())
 
         downloadPlugins {
-            hangar("FancyNpcs", "2.0.5")
-            hangar("PlaceholderAPI", "2.11.5")
+            hangar("FancyNpcs", findProperty("fancyNpcsVersion").toString())
+            hangar("PlaceholderAPI", findProperty("placeholderapiVersion").toString())
             modrinth("miniplaceholders", "M6gjRuIx")
         }
     }

@@ -59,7 +59,7 @@ public final class NpcListener implements Listener {
 
                 if (isLinked) {
                     event.setCancelled(true);
-                    MessageHelper.error(event.getPlayer(), "This modification is not allowed on a hologram linked npc");
+                    MessageHelper.error(event.getModifier(), "This modification is not allowed on a hologram linked npc");
                 }
             }
         }
