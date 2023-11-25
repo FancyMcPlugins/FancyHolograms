@@ -5,9 +5,11 @@ plugins {
     id("java-library")
     id("maven-publish")
 
-    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("xyz.jpenilla.run-paper") version "2.2.2"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
+
+runPaper.folia.registerTask()
 
 val minecraftVersion = "1.20.2"
 
@@ -53,6 +55,12 @@ tasks {
 
     runServer {
         minecraftVersion(minecraftVersion)
+
+        downloadPlugins {
+            hangar("FancyNpcs", "2.0.5")
+            hangar("PlaceholderAPI", "2.11.5")
+            modrinth("miniplaceholders", "M6gjRuIx")
+        }
     }
 
     publishing {
