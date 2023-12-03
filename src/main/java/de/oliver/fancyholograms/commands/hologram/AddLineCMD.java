@@ -23,7 +23,7 @@ public class AddLineCMD implements Subcommand {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
-        
+
         String text = "";
         for (int i = 3; i < args.length; i++) {
             text += args[i] + " ";

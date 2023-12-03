@@ -24,7 +24,7 @@ public class RemoveLineCMD implements Subcommand {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
-        
+
         final var index = Ints.tryParse(args[3]);
         if (index == null) {
             MessageHelper.error(player, "Could not parse line number");
