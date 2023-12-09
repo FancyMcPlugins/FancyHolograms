@@ -13,7 +13,7 @@ runPaper.folia.registerTask()
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.3"
+    version = "2.0.4-rc1"
 
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
@@ -33,6 +33,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
+    implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
