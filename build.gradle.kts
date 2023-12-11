@@ -26,6 +26,7 @@ allprojects {
         maven(url = "https://repo.fancyplugins.de/snapshots")
         maven(url = "https://repo.extendedclip.com/content/repositories/placeholderapi/")
         maven(url = "https://repo.viaversion.com/")
+        maven(url = "https://jitpack.io")
     }
 }
 
@@ -57,8 +58,11 @@ tasks {
 
         downloadPlugins {
             hangar("FancyNpcs", findProperty("fancyNpcsVersion").toString())
-            hangar("PlaceholderAPI", findProperty("placeholderapiVersion").toString())
+            hangar("PlaceholderAPI", "2.11.5")
             modrinth("miniplaceholders", "M6gjRuIx")
+
+            hangar("ViaVersion", "4.9.3-SNAPSHOT+148")
+            hangar("ViaBackwards", "4.9.2-SNAPSHOT+89")
         }
     }
 

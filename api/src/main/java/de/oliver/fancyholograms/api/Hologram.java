@@ -4,13 +4,9 @@ import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramHideEvent;
 import de.oliver.fancyholograms.api.events.HologramShowEvent;
-import de.oliver.fancyholograms.api.utils.LegacyColorConverter;
-import io.github.miniplaceholders.api.MiniPlaceholders;
-import me.clip.placeholderapi.PlaceholderAPI;
+import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -280,22 +276,9 @@ public abstract class Hologram {
             return null;
         }
 
-        var tags = TagResolver.empty();
         var text = String.join("\n", textData.getText());
 
-        if (player != null) {
-            if (isUsingPlaceholderApi()) {
-                text = PlaceholderAPI.setPlaceholders(player, text);
-            }
-
-            if (isUsingMiniplaceholders()) {
-                tags = MiniPlaceholders.getAudienceGlobalPlaceholders(player);
-            }
-        }
-
-        text = LegacyColorConverter.legacyColorCodesToMiniMessages(text);
-
-        return MiniMessage.miniMessage().deserialize(text, tags);
+        return ModernChatColorHandler.translate(text, player);
     }
 
     @Override
