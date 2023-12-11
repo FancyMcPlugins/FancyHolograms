@@ -2,6 +2,7 @@ package de.oliver.fancyholograms;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
@@ -39,7 +40,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     @Nullable
     private static FancyHolograms INSTANCE;
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
-    private final FancyHologramsConfig configuration = new FancyHologramsConfig(this);
+    private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private final HologramsConfig hologramsConfig = new HologramsConfig();
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ?
@@ -87,7 +88,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     @Override
     public void onEnable() {
-        getConfiguration().reload(); // initialize configuration
+        getHologramConfiguration().reload(this); // initialize configuration
 
         FancyLib.setPlugin(this);
 
@@ -116,8 +117,9 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         isUsingViaVersion = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
 
-        if (getConfiguration().isAutosaveEnabled()) {
-            getScheduler().runTaskTimerAsynchronously(getConfiguration().getAutosaveInterval() * 20L, 20L * 60L * 5L, () -> {
+        if (getHologramConfiguration().isAutosaveEnabled()) {
+            getScheduler().runTaskTimerAsynchronously(getHologramConfiguration().getAutosaveInterval() * 20L,
+                    20L * 60L * getHologramConfiguration().getAutosaveInterval(), () -> {
                 hologramsManager.saveHolograms();
             });
         }
@@ -142,10 +144,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         return versionConfig;
     }
 
-    public @NotNull FancyHologramsConfig getConfiguration() {
-        return this.configuration;
-    }
-
     public @NotNull HologramsConfig getHologramsConfig() {
         return hologramsConfig;
     }
@@ -162,6 +160,20 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     @Override
     public HologramManager getHologramManager() {
         return Objects.requireNonNull(this.hologramsManager, "plugin is not initialized");
+    }
+
+    @Override
+    public HologramConfiguration getHologramConfiguration() {
+        return configuration;
+    }
+
+    @Override
+    public void setHologramConfiguration(HologramConfiguration configuration, boolean reload) {
+        this.configuration = configuration;
+
+        if (reload) {
+            configuration.reload(this);
+        }
     }
 
     private @Nullable Function<HologramData, Hologram> resolveHologramAdapter() {

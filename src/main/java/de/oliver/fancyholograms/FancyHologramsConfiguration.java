@@ -1,5 +1,7 @@
 package de.oliver.fancyholograms;
 
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancylib.ConfigHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -7,10 +9,7 @@ import org.jetbrains.annotations.NotNull;
  * The FancyHologramsConfig class is responsible for managing the configuration of the FancyHolograms plugin.
  * It handles loading and saving hologram data, as well as providing access to various configuration settings.
  */
-public final class FancyHologramsConfig {
-
-    @NotNull
-    private final FancyHolograms plugin;
+public final class FancyHologramsConfiguration implements HologramConfiguration {
 
     /**
      * Indicates whether version notifications are muted.
@@ -29,61 +28,57 @@ public final class FancyHologramsConfig {
      */
     private int defaultVisibilityDistance;
 
-
-    FancyHologramsConfig(@NotNull final FancyHolograms plugin) {
-        this.plugin = plugin;
-    }
-
     /**
-     * Reloads the configuration by reloading the plugin's config file and updating the configuration values.
+     * Indicates whether commands should be registered.
+     *
+     * This is useful for users who want to use the plugin's API only.
      */
-    public void reload() {
-        this.plugin.reloadConfig();
+    private boolean registerCommands;
 
-        final var config = this.plugin.getConfig();
+    @Override
+    public void reload(@NotNull FancyHologramsPlugin plugin) {
+        FancyHolograms pluginImpl = (FancyHolograms) plugin;
+        pluginImpl.reloadConfig();
+
+        final var config = pluginImpl.getConfig();
 
         versionNotifsMuted = (boolean) ConfigHelper.getOrDefault(config, "mute_version_notification", false);
         autosaveEnabled = (boolean) ConfigHelper.getOrDefault(config, "enable_autosave", true);
         autosaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
         defaultVisibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
+        registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
 
-        this.plugin.saveConfig();
+        if (pluginImpl.isEnabled()) {
+            plugin.getScheduler().runTaskAsynchronously(pluginImpl::saveConfig);
+        } else {
+            // Can't dispatch task if plugin is disabled
+            pluginImpl.saveConfig();
+        }
     }
 
 
-    /**
-     * Returns whether version notifications are muted.
-     *
-     * @return {@code true} if version notifications are muted, {@code false} otherwise.
-     */
+    @Override
     public boolean areVersionNotificationsMuted() {
-        return this.versionNotifsMuted;
+        return versionNotifsMuted;
     }
 
-    /**
-     * Returns whether autosave is enabled.
-     *
-     * @return {@code true} if autosave is enabled, {@code false} otherwise.
-     */
+    @Override
     public boolean isAutosaveEnabled() {
-        return this.autosaveEnabled;
+        return autosaveEnabled;
     }
 
-    /**
-     * Returns the interval at which autosave is performed.
-     *
-     * @return The autosave interval in minutes.
-     */
+    @Override
     public int getAutosaveInterval() {
-        return this.autosaveInterval;
+        return autosaveInterval;
     }
 
-    /**
-     * Returns the default visibility distance for holograms.
-     *
-     * @return The default hologram visibility distance.
-     */
+    @Override
     public int getVisibilityDistance() {
-        return this.defaultVisibilityDistance;
+        return defaultVisibilityDistance;
+    }
+
+    @Override
+    public boolean isRegisterCommands() {
+        return registerCommands;
     }
 }

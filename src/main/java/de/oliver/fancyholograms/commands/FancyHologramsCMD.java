@@ -36,7 +36,7 @@ public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
                 MessageHelper.success(sender, "Saved all holograms");
             }
             case "reload" -> {
-                this.plugin.getConfiguration().reload();
+                this.plugin.getHologramConfiguration().reload(plugin);
                 this.plugin.getHologramsManager().reloadHolograms();
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
