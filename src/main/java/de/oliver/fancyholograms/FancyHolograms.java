@@ -203,9 +203,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     public void reloadCommands() {
         if (getHologramConfiguration().isRegisterCommands()) {
-            commands.forEach(command -> command.register(getServer().getCommandMap()));
+            commands.forEach(command -> getServer().getCommandMap().register(command.getName(), command));
         } else {
-            commands.stream().filter(Command::isRegistered).forEach(command -> command.unregister(getServer().getCommandMap()));
+            commands.stream().filter(Command::isRegistered).forEach(command ->
+                    command.unregister(getServer().getCommandMap()));
         }
     }
 
