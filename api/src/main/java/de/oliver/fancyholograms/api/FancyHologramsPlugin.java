@@ -39,4 +39,19 @@ public interface FancyHologramsPlugin {
      * @param reload Whether the configuration should be reloaded.
      */
     void setHologramConfiguration(HologramConfiguration configuration, boolean reload);
+
+    /**
+     * Returns the hologram storage.
+     *
+     * @return The hologram storage.
+     */
+    HologramStorage getHologramStorage();
+
+    /**
+     * Sets the hologram storage.
+     *
+     * @param storage The new hologram storage.
+     * @param reload Whether the current hologram cache should be reloaded.
+     */
+    void setHologramStorage(HologramStorage storage, boolean reload);
 }

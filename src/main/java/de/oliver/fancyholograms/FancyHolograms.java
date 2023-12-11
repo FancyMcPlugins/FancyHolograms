@@ -1,14 +1,12 @@
 package de.oliver.fancyholograms;
 
-import de.oliver.fancyholograms.api.FancyHologramsPlugin;
-import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramConfiguration;
-import de.oliver.fancyholograms.api.HologramManager;
+import de.oliver.fancyholograms.api.*;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
+import de.oliver.fancyholograms.storage.FlatFileHologramsConfig;
 import de.oliver.fancyholograms.version.Hologram1_19_4;
 import de.oliver.fancyholograms.version.Hologram1_20_1;
 import de.oliver.fancyholograms.version.Hologram1_20_2;
@@ -40,11 +38,15 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 public final class FancyHolograms extends JavaPlugin implements FancyHologramsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4"};
+
+
     @Nullable
     private static FancyHolograms INSTANCE;
-    private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
+
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
-    private final HologramsConfig hologramsConfig = new HologramsConfig();
+    private HologramStorage hologramStorage = new FlatFileHologramsConfig();
+
+    private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
     @Nullable
@@ -142,10 +144,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         return versionConfig;
     }
 
-    public @NotNull HologramsConfig getHologramsConfig() {
-        return hologramsConfig;
-    }
-
     public @NotNull FancyScheduler getScheduler() {
         return this.scheduler;
     }
@@ -175,6 +173,20 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         }
     }
 
+    @Override
+    public HologramStorage getHologramStorage() {
+        return hologramStorage;
+    }
+
+    @Override
+    public void setHologramStorage(HologramStorage storage, boolean reload) {
+        this.hologramStorage = storage;
+
+        if (reload) {
+            getHologramsManager().reloadHolograms();
+        }
+    }
+
     private @Nullable Function<HologramData, Hologram> resolveHologramAdapter() {
         final var version = Bukkit.getMinecraftVersion();
 
@@ -186,18 +198,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             default -> null;
         };
     }
-
-    /**
-     * fancyholograms:
-     * permission: "fancyholograms.admin"
-     * hologram:
-     * permission: "fancyholograms.admin"
-     * description: "Main command for the FancyHolograms plugin"
-     * aliases:
-     * - "holograms"
-     * - "holo"
-     * - "fholo"
-     */
 
     private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
 

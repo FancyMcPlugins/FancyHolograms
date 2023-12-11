@@ -99,9 +99,16 @@ public final class HologramManagerImpl implements HologramManager {
      * @return An optional containing the removed hologram, or empty if not found.
      */
     public @NotNull Optional<Hologram> removeHologram(@NotNull final String name) {
-        FancyHolograms.get().getHologramsConfig().removeHologramFromConfig(HologramsConfig.HOLOGRAMS_CONFIG_FILE, name);
+        Optional<Hologram> optionalHologram = ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
 
-        return ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
+        optionalHologram.ifPresent(hologram -> {
+            final var online = List.copyOf(Bukkit.getOnlinePlayers());
+
+            hologram.hideHologram(online);
+            plugin.getHologramStorage().delete(hologram);
+        });
+
+        return optionalHologram;
     }
 
 
@@ -120,26 +127,11 @@ public final class HologramManagerImpl implements HologramManager {
             return;
         }
 
-        FancyHolograms.get().getHologramsConfig().writeHolograms(HologramsConfig.HOLOGRAMS_CONFIG_FILE, getHolograms());
+        plugin.getHologramStorage().saveBatch(getHolograms(), true);
     }
 
     public void loadHolograms() {
-        // try to load holograms from config.yml but then remove from there
-        YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(HologramsConfig.PLUGIN_CONFIG_FILE);
-        if (pluginConfig.isConfigurationSection("holograms")) {
-            FancyHolograms.get().getHologramsConfig().readHolograms(HologramsConfig.PLUGIN_CONFIG_FILE).forEach(this::addHologram);
-            pluginConfig.set("holograms", null);
-
-            try {
-                pluginConfig.save(HologramsConfig.PLUGIN_CONFIG_FILE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        FancyHolograms.get().getHologramsConfig().readHolograms(HologramsConfig.HOLOGRAMS_CONFIG_FILE).forEach(this::addHologram);
-
+        plugin.getHologramStorage().loadAll();
         isLoaded = true;
     }
 
