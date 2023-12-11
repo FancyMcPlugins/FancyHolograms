@@ -24,11 +24,14 @@ import de.oliver.fancylib.versionFetcher.MasterVersionFetcher;
 import de.oliver.fancylib.versionFetcher.VersionFetcher;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -43,9 +46,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private final HologramsConfig hologramsConfig = new HologramsConfig();
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
-    private final FancyScheduler scheduler = ServerSoftware.isFolia() ?
-            new FoliaScheduler(this) :
-            new BukkitScheduler(this);
+    private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
     @Nullable
     private HologramManagerImpl hologramsManager;
 
@@ -107,7 +108,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         }
 
 
-        registerCommands();
+        reloadCommands();
 
         registerListeners();
 
@@ -118,10 +119,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         isUsingViaVersion = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
 
         if (getHologramConfiguration().isAutosaveEnabled()) {
-            getScheduler().runTaskTimerAsynchronously(getHologramConfiguration().getAutosaveInterval() * 20L,
-                    20L * 60L * getHologramConfiguration().getAutosaveInterval(), () -> {
-                hologramsManager.saveHolograms();
-            });
+            getScheduler().runTaskTimerAsynchronously(getHologramConfiguration().getAutosaveInterval() * 20L, 20L * 60L * getHologramConfiguration().getAutosaveInterval(), hologramsManager::saveHolograms);
         }
     }
 
@@ -173,6 +171,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         if (reload) {
             configuration.reload(this);
+            reloadCommands();
         }
     }
 
@@ -188,15 +187,25 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         };
     }
 
-    private void registerCommands() {
-        final var hologramCommand = getCommand("hologram");
-        if (hologramCommand != null) {
-            hologramCommand.setExecutor(new HologramCMD(this));
-        }
+    /**
+     * fancyholograms:
+     * permission: "fancyholograms.admin"
+     * hologram:
+     * permission: "fancyholograms.admin"
+     * description: "Main command for the FancyHolograms plugin"
+     * aliases:
+     * - "holograms"
+     * - "holo"
+     * - "fholo"
+     */
 
-        final var fancyHologramsCommand = getCommand("fancyholograms");
-        if (fancyHologramsCommand != null) {
-            fancyHologramsCommand.setExecutor(new FancyHologramsCMD(this));
+    private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
+
+    public void reloadCommands() {
+        if (getHologramConfiguration().isRegisterCommands()) {
+            commands.forEach(command -> command.register(getServer().getCommandMap()));
+        } else {
+            commands.stream().filter(Command::isRegistered).forEach(command -> command.unregister(getServer().getCommandMap()));
         }
     }
 
@@ -213,22 +222,20 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         final var current = new ComparableVersion(versionConfig.getVersion());
 
-        supplyAsync(getVersionFetcher()::fetchNewestVersion)
-                .thenApply(Objects::requireNonNull)
-                .whenComplete((newest, error) -> {
-                    if (error != null || newest.compareTo(current) <= 0) {
-                        return; // could not get the newest version or already on latest
-                    }
+        supplyAsync(getVersionFetcher()::fetchNewestVersion).thenApply(Objects::requireNonNull).whenComplete((newest, error) -> {
+            if (error != null || newest.compareTo(current) <= 0) {
+                return; // could not get the newest version or already on latest
+            }
 
-                    getLogger().warning("""
-                                                                    
-                            -------------------------------------------------------
-                            You are not using the latest version the FancyHolograms plugin.
-                            Please update to the newest version (%s).
-                            %s
-                            -------------------------------------------------------
-                            """.formatted(newest, getVersionFetcher().getDownloadUrl()));
-                });
+            getLogger().warning("""
+                                                            
+                    -------------------------------------------------------
+                    You are not using the latest version the FancyHolograms plugin.
+                    Please update to the newest version (%s).
+                    %s
+                    -------------------------------------------------------
+                    """.formatted(newest, getVersionFetcher().getDownloadUrl()));
+        });
     }
 
 }

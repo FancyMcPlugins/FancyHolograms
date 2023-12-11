@@ -14,9 +14,7 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TextDisplay;
@@ -26,12 +24,16 @@ import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public final class HologramCMD implements CommandExecutor, TabCompleter {
+public final class HologramCMD extends Command {
 
     @NotNull
     private final FancyHolograms plugin;
 
     public HologramCMD(@NotNull final FancyHolograms plugin) {
+        super("hologram", "Main command for the FancyHolograms plugin", "/hologram help", List.of("holograms", "holo", "fholo"));
+
+        setPermission("fancyholograms.admin");
+
         this.plugin = plugin;
     }
 
@@ -46,9 +48,13 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             MessageHelper.error(sender, "Only players can execute this command");
+            return false;
+        }
+
+        if (!testPermission(player)) {
             return false;
         }
 
@@ -107,16 +113,14 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) throws IllegalArgumentException {
         if (args.length == 0) {
             return Collections.emptyList();
         }
 
         // /holo {tab:action}
         if (args.length == 1) {
-            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy", "info")
-                    .filter(input -> input.startsWith(args[0].toLowerCase(Locale.ROOT)))
-                    .toList();
+            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy", "info").filter(input -> input.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();
         }
 
         // /holo create {tab:type}
@@ -132,12 +136,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
                 return Collections.emptyList();
             }
 
-            return this.plugin.getHologramsManager()
-                    .getHolograms()
-                    .stream()
-                    .map(hologram -> hologram.getData().getName())
-                    .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT)))
-                    .toList();
+            return this.plugin.getHologramsManager().getHolograms().stream().map(hologram -> hologram.getData().getName()).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
         }
 
         final var hologram = this.plugin.getHologramsManager().getHologram(args[1]).orElse(null);
@@ -158,9 +157,7 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
             List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
             suggestions.addAll(type.getCommands());
 
-            return suggestions.stream()
-                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT)))
-                    .toList();
+            return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT))).toList();
         }
 
         if (!args[0].equalsIgnoreCase("edit")) {
@@ -216,16 +213,13 @@ public final class HologramCMD implements CommandExecutor, TabCompleter {
 
                     yield FancyNpcsPlugin.get().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
-                case "block" -> Arrays.stream(Material.values())
-                        .filter(Material::isBlock)
-                        .map(Enum::name);
+                case "block" -> Arrays.stream(Material.values()).filter(Material::isBlock).map(Enum::name);
 
                 default -> null;
             };
 
             if (suggestions != null) {
-                return suggestions.filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase(Locale.ROOT)))
-                        .toList();
+                return suggestions.filter(input -> input.toLowerCase().startsWith(args[3].toLowerCase(Locale.ROOT))).toList();
             }
         }
 
