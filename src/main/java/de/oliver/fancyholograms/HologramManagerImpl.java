@@ -16,6 +16,7 @@ import org.jetbrains.annotations.UnmodifiableView;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 import static java.util.Optional.ofNullable;
@@ -37,7 +38,7 @@ public final class HologramManagerImpl implements HologramManager {
     /**
      * A map of hologram names to their corresponding hologram instances.
      */
-    private final Map<String, Hologram> holograms = new HashMap<>();
+    private final Map<String, Hologram> holograms = new ConcurrentHashMap<>();
 
     /*+
         If the holograms are loaded or not
