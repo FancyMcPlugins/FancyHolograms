@@ -28,7 +28,6 @@ public class FlatFileHologramsConfig implements HologramStorage {
 
         if (override) {
             config.set("holograms", null);
-            return;
         }
 
         holograms.forEach(hologram -> writeHologram(config, hologram, false));
@@ -70,7 +69,7 @@ public class FlatFileHologramsConfig implements HologramStorage {
         return holograms;
     }
 
-    public List<Hologram> readHolograms(File configFile) {
+    private List<Hologram> readHolograms(File configFile) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
         if (!config.isConfigurationSection("holograms")) {

@@ -121,6 +121,12 @@ tasks {
     }
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 fun getCurrentCommitHash(): String {
     val process = ProcessBuilder("git", "rev-parse", "HEAD").start()
     val reader = BufferedReader(InputStreamReader(process.inputStream))
