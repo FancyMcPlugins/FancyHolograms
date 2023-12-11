@@ -6,7 +6,7 @@ import de.oliver.fancyholograms.commands.FancyHologramsCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
-import de.oliver.fancyholograms.storage.FlatFileHologramsConfig;
+import de.oliver.fancyholograms.storage.FlatFileHologramStorage;
 import de.oliver.fancyholograms.version.Hologram1_19_4;
 import de.oliver.fancyholograms.version.Hologram1_20_1;
 import de.oliver.fancyholograms.version.Hologram1_20_2;
@@ -44,7 +44,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     private static FancyHolograms INSTANCE;
 
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
-    private HologramStorage hologramStorage = new FlatFileHologramsConfig();
+    private HologramStorage hologramStorage = new FlatFileHologramStorage();
 
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);

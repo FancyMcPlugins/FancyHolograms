@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class FlatFileHologramsConfig implements HologramStorage {
+public class FlatFileHologramStorage implements HologramStorage {
 
     @Override
     public void saveBatch(Collection<Hologram> holograms, boolean override) {
@@ -52,19 +52,19 @@ public class FlatFileHologramsConfig implements HologramStorage {
         // try to load holograms from config.yml but then remove from there
         final List<Hologram> holograms = new LinkedList<>();
 
-        YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(FlatFileHologramsConfig.DEPRECATED_CONFIG_FILE);
+        YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(FlatFileHologramStorage.DEPRECATED_CONFIG_FILE);
         if (pluginConfig.isConfigurationSection("holograms")) {
-            holograms.addAll(readHolograms(FlatFileHologramsConfig.DEPRECATED_CONFIG_FILE));
+            holograms.addAll(readHolograms(FlatFileHologramStorage.DEPRECATED_CONFIG_FILE));
             pluginConfig.set("holograms", null);
 
             try {
-                pluginConfig.save(FlatFileHologramsConfig.DEPRECATED_CONFIG_FILE);
+                pluginConfig.save(FlatFileHologramStorage.DEPRECATED_CONFIG_FILE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        holograms.addAll(readHolograms(FlatFileHologramsConfig.HOLOGRAMS_CONFIG_FILE));
+        holograms.addAll(readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE));
 
         return holograms;
     }

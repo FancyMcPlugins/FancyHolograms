@@ -131,7 +131,7 @@ public final class HologramManagerImpl implements HologramManager {
     }
 
     public void loadHolograms() {
-        plugin.getHologramStorage().loadAll();
+        plugin.getHologramStorage().loadAll().forEach(this::addHologram);
         isLoaded = true;
     }
 
