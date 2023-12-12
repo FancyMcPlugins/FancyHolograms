@@ -13,18 +13,23 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
-public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
+public final class FancyHologramsCMD extends Command {
 
     @NotNull
     private final FancyHolograms plugin;
 
     public FancyHologramsCMD(@NotNull final FancyHolograms plugin) {
+        super("fancyholograms");
+        setPermission("fancyholograms.admin");
         this.plugin = plugin;
     }
 
-
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+        if (!testPermission(sender)) {
+            return false;
+        }
+
         if (args.length != 1) {
             MessageHelper.info(sender, "/FancyHolograms <save|reload|version>");
             return false;
@@ -36,8 +41,9 @@ public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
                 MessageHelper.success(sender, "Saved all holograms");
             }
             case "reload" -> {
-                this.plugin.getConfiguration().reload();
+                this.plugin.getHologramConfiguration().reload(plugin);
                 this.plugin.getHologramsManager().reloadHolograms();
+                this.plugin.reloadCommands();
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }
@@ -52,7 +58,7 @@ public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public @NotNull List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) throws IllegalArgumentException {
         if (args.length != 1) {
             return Collections.emptyList();
         }
@@ -61,5 +67,4 @@ public final class FancyHologramsCMD implements CommandExecutor, TabCompleter {
                 .filter(alias -> alias.startsWith(args[0].toLowerCase(Locale.ROOT)))
                 .toList();
     }
-
 }

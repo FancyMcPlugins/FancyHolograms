@@ -25,4 +25,33 @@ public interface FancyHologramsPlugin {
 
     HologramManager getHologramManager();
 
+    /**
+     * Returns the configuration of the plugin.
+     *
+     * @return The configuration.
+     */
+    HologramConfiguration getHologramConfiguration();
+
+    /**
+     * Sets the configuration of the plugin.
+     *
+     * @param configuration The new configuration.
+     * @param reload Whether the configuration should be reloaded.
+     */
+    void setHologramConfiguration(HologramConfiguration configuration, boolean reload);
+
+    /**
+     * Returns the hologram storage.
+     *
+     * @return The hologram storage.
+     */
+    HologramStorage getHologramStorage();
+
+    /**
+     * Sets the hologram storage.
+     *
+     * @param storage The new hologram storage.
+     * @param reload Whether the current hologram cache should be reloaded.
+     */
+    void setHologramStorage(HologramStorage storage, boolean reload);
 }
