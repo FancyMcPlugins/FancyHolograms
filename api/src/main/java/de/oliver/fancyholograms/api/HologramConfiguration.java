@@ -44,7 +44,7 @@ public interface HologramConfiguration {
      *
      * @return The default hologram visibility distance.
      */
-    int getVisibilityDistance();
+    int getDefaultVisibilityDistance();
 
     /**
      * Returns whether the plugin should register its commands.

@@ -30,7 +30,7 @@ public class VisibilityDistanceCMD implements Subcommand {
         }
 
         if (visibilityDistance <= 0) {
-            visibilityDistance = FancyHolograms.get().getHologramConfiguration().getVisibilityDistance();
+            visibilityDistance = FancyHolograms.get().getHologramConfiguration().getDefaultVisibilityDistance();
         }
 
         if (Ints.compare(visibilityDistance, hologram.getData().getDisplayData().getVisibilityDistance()) == 0) {

@@ -100,7 +100,7 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
     }
 
     @Override
-    public int getVisibilityDistance() {
+    public int getDefaultVisibilityDistance() {
         return defaultVisibilityDistance;
     }
 

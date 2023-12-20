@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms.api.data;
 
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,7 +16,7 @@ public class DisplayHologramData implements Data {
     public static final Vector3f DEFAULT_TRANSLATION = new Vector3f(0, 0, 0);
     public static final float DEFAULT_SHADOW_RADIUS = 0.0f;
     public static final float DEFAULT_SHADOW_STRENGTH = 1.0f;
-    public static final int DEFAULT_VISIBILITY_DISTANCE = 20;
+    public static final int DEFAULT_VISIBILITY_DISTANCE = -1;
 
     private Location location;
     private Display.Billboard billboard = DEFAULT_BILLBOARD;
@@ -176,7 +177,11 @@ public class DisplayHologramData implements Data {
     }
 
     public int getVisibilityDistance() {
-        return visibilityDistance;
+        if (visibilityDistance > 0) {
+            return visibilityDistance;
+        }
+
+        return FancyHologramsPlugin.get().getHologramConfiguration().getDefaultVisibilityDistance();
     }
 
     public DisplayHologramData setVisibilityDistance(int visibilityDistance) {
