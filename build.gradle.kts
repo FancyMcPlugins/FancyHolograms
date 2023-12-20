@@ -51,6 +51,7 @@ tasks {
 
     shadowJar {
         archiveBaseName.set(rootProject.name)
+        archiveClassifier.set("")
     }
 
     runServer {
