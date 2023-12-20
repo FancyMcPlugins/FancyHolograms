@@ -4,10 +4,7 @@ import de.oliver.fancyholograms.FancyHolograms;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.jetbrains.annotations.NotNull;
 
 public final class PlayerListener implements Listener {
@@ -49,6 +46,25 @@ public final class PlayerListener implements Listener {
             return; // reduce checks we need to do
         }
 
+        for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
+            final var distance = hologram.distanceTo(event.getTo());
+            if (Double.isNaN(distance)) {
+                continue;
+            }
+
+            final var inRange = distance <= hologram.getData().getDisplayData().getVisibilityDistance();
+            final var isShown = hologram.isShown(event.getPlayer());
+
+            if (inRange && !isShown) {
+                hologram.showHologram(event.getPlayer());
+            } else if (!inRange && isShown) {
+                hologram.hideHologram(event.getPlayer());
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onTeleport(@NotNull final PlayerTeleportEvent event) {
         for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
             final var distance = hologram.distanceTo(event.getTo());
             if (Double.isNaN(distance)) {
