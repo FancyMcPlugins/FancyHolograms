@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms.commands.hologram;
 
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
@@ -69,6 +70,10 @@ public class BackgroundCMD implements Subcommand {
         }
 
         textData.setBackground(((TextHologramData) copied.getTypeData()).getBackground());
+
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
 
         MessageHelper.success(player, "Changed background color");
         return true;

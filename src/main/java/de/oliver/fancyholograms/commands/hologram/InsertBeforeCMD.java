@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
@@ -58,6 +59,10 @@ public class InsertBeforeCMD implements Subcommand {
         }
 
         textData.setText(((TextHologramData) copied.getTypeData()).getText());
+
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
 
         MessageHelper.success(player, "Inserted line");
         return true;

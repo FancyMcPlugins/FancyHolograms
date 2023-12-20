@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Floats;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
@@ -46,6 +47,10 @@ public class ShadowRadiusCMD implements Subcommand {
         }
 
         hologram.getData().getDisplayData().setShadowRadius(copied.getDisplayData().getShadowRadius());
+
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
 
         MessageHelper.success(player, "Changed shadow radius");
         return true;

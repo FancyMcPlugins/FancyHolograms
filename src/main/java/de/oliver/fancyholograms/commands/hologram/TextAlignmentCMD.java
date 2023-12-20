@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.base.Enums;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
@@ -54,6 +55,10 @@ public class TextAlignmentCMD implements Subcommand {
         }
 
         textData.setTextAlignment(((TextHologramData) copied.getTypeData()).getTextAlignment());
+
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
 
         MessageHelper.success(player, "Changed text alignment");
         return true;

@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms.commands.hologram;
 
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
@@ -53,6 +54,10 @@ public class ItemCMD implements Subcommand {
         }
 
         itemData.setItem(item);
+
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
 
         MessageHelper.success(player, "Set the item to '" + item.getType().name() + "'");
         return true;

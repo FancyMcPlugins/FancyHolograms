@@ -43,6 +43,10 @@ public class LinkWithNpcCMD implements Subcommand {
 
         FancyHolograms.get().getHologramsManager().syncHologramWithNpc(hologram);
 
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
+
         MessageHelper.success(player, "Linked hologram with NPC");
         return true;
     }

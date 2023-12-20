@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.base.Enums;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
@@ -49,6 +50,10 @@ public class BillboardCMD implements Subcommand {
         }
 
         hologram.getData().getDisplayData().setBillboard(copied.getDisplayData().getBillboard());
+
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
 
         MessageHelper.success(player, "Changed the billboard to " + StringUtils.capitalize(billboard.name().toLowerCase(Locale.ROOT)));
         return true;

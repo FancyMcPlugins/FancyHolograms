@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms.commands.hologram;
 
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
@@ -57,6 +58,10 @@ public class TextShadowCMD implements Subcommand {
         }
 
         textData.setTextShadow(((TextHologramData) copied.getTypeData()).isTextShadow());
+
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
 
         MessageHelper.success(player, "Changed text shadow");
         return true;

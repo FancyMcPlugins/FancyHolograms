@@ -52,6 +52,10 @@ public class VisibilityDistanceCMD implements Subcommand {
 
         hologram.getData().getDisplayData().setVisibilityDistance(copied.getDisplayData().getVisibilityDistance());
 
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
+
         MessageHelper.success(player, "Changed visibility distance");
         return true;
     }

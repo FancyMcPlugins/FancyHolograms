@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Doubles;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
@@ -29,6 +30,10 @@ public class MoveHereCMD implements Subcommand {
         final var updatedLocation = copied.getDisplayData().getLocation() == null ? location : copied.getDisplayData().getLocation(); // note: maybe should fall back to original location?
         hologram.getData().getDisplayData().setLocation(updatedLocation);
 
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
+        
         MessageHelper.success(player, "Moved the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.x()),
                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.y()),

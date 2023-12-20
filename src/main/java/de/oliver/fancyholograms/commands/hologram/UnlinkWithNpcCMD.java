@@ -40,6 +40,10 @@ public class UnlinkWithNpcCMD implements Subcommand {
             npc.updateForAll();
         }
 
+        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHolograms.get().getHologramStorage().save(hologram);
+        }
+
         MessageHelper.success(player, "Unlinked hologram with NPC");
         return true;
     }

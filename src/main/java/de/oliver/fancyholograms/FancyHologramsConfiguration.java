@@ -5,6 +5,8 @@ import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancylib.ConfigHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * The FancyHologramsConfig class is responsible for managing the configuration of the FancyHolograms plugin.
  * It handles loading and saving hologram data, as well as providing access to various configuration settings.
@@ -15,14 +17,22 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
      * Indicates whether version notifications are muted.
      */
     private boolean versionNotifsMuted;
+
     /**
      * Indicates whether autosave is enabled.
      */
     private boolean autosaveEnabled;
+
     /**
      * The interval at which autosave is performed.
      */
     private int autosaveInterval;
+
+    /**
+     * Indicates whether the plugin should save holograms when they are changed.
+     */
+    private boolean saveOnChangedEnabled;
+
     /**
      * The default visibility distance for holograms.
      */
@@ -30,7 +40,7 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
 
     /**
      * Indicates whether commands should be registered.
-     *
+     * <p>
      * This is useful for users who want to use the plugin's API only.
      */
     private boolean registerCommands;
@@ -43,10 +53,22 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         final var config = pluginImpl.getConfig();
 
         versionNotifsMuted = (boolean) ConfigHelper.getOrDefault(config, "mute_version_notification", false);
+        config.setInlineComments("mute_version_notification", List.of("Whether version notifications are muted."));
+
         autosaveEnabled = (boolean) ConfigHelper.getOrDefault(config, "enable_autosave", true);
+        config.setInlineComments("enable_autosave", List.of("Whether autosave is enabled."));
+
         autosaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
+        config.setInlineComments("autosave_interval", List.of("The interval at which autosave is performed in minutes."));
+
+        saveOnChangedEnabled = (boolean) ConfigHelper.getOrDefault(config, "save_on_changed", true);
+        config.setInlineComments("save_on_changed", List.of("Whether the plugin should save holograms when they are changed."));
+
         defaultVisibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
+        config.setInlineComments("visibility_distance", List.of("The default visibility distance for holograms."));
+
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
+        config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
 
         if (pluginImpl.isEnabled()) {
             plugin.getScheduler().runTaskAsynchronously(pluginImpl::saveConfig);
@@ -70,6 +92,11 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
     @Override
     public int getAutosaveInterval() {
         return autosaveInterval;
+    }
+
+    @Override
+    public boolean isSaveOnChangedEnabled() {
+        return saveOnChangedEnabled;
     }
 
     @Override

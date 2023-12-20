@@ -33,6 +33,13 @@ public interface HologramConfiguration {
     int getAutosaveInterval();
 
     /**
+     * Returns whether the plugin should save holograms when they are changed.
+     *
+     * @return {@code true} if the plugin should save holograms when they are changed, {@code false} otherwise.
+     */
+    boolean isSaveOnChangedEnabled();
+
+    /**
      * Returns the default visibility distance for holograms.
      *
      * @return The default hologram visibility distance.
