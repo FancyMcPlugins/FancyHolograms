@@ -41,7 +41,7 @@ Permission: ``FancyHolograms.admin``
 ### create
 
 Description: Creates a new hologram at your location<br>
-Syntax: ``/Hologram create (name)``<br>
+Syntax: ``/Hologram create (type) (name)``<br>
 Permission: ``FancyHolograms.admin``
 
 ### remove
@@ -174,7 +174,7 @@ placeholders)<br>
 Syntax: ``/Hologram edit (hologram) updateTextInterval (ticks | seconds | minutes)``<br>
 Example ticks:``/Hologram edit (hologram) updateTextInterval (15)``<br>
 Example seconds:``/Hologram edit (hologram) updateTextInterval (5s)``<br>
-Example minutes:``/Hologram edit (hologram) updateTextInterval (5min)``<br>
+Example minutes:``/Hologram edit (hologram) updateTextInterval (5m)``<br>
 Permission: ``FancyHolograms.admin``
 
 ### background
