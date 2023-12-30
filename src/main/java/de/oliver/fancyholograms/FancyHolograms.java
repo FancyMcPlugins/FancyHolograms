@@ -42,16 +42,14 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     @Nullable
     private static FancyHolograms INSTANCE;
-
-    private HologramConfiguration configuration = new FancyHologramsConfiguration();
-    private HologramStorage hologramStorage = new FlatFileHologramStorage();
-
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
+    private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
+    private HologramConfiguration configuration = new FancyHologramsConfiguration();
+    private HologramStorage hologramStorage = new FlatFileHologramStorage();
     @Nullable
     private HologramManagerImpl hologramsManager;
-
     private boolean isUsingViaVersion;
 
     public static @NotNull FancyHolograms get() {
@@ -199,11 +197,9 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         };
     }
 
-    private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
-
     public void reloadCommands() {
         if (getHologramConfiguration().isRegisterCommands()) {
-            commands.forEach(command -> getServer().getCommandMap().register(command.getName(), command));
+            commands.forEach(command -> getServer().getCommandMap().register("fancyholograms", command));
         } else {
             commands.stream().filter(Command::isRegistered).forEach(command ->
                     command.unregister(getServer().getCommandMap()));
