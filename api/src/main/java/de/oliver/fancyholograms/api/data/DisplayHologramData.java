@@ -1,8 +1,11 @@
 package de.oliver.fancyholograms.api.data;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancylib.FancyLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Display;
 import org.joml.Vector3f;
@@ -85,13 +88,26 @@ public class DisplayHologramData implements Data {
 
     @Override
     public void read(ConfigurationSection section, String name) {
-        String world = section.getString("location.world", "world");
+        String worldName = section.getString("location.world", "world");
         float x = (float) section.getDouble("location.x", 0);
         float y = (float) section.getDouble("location.y", 0);
         float z = (float) section.getDouble("location.z", 0);
         float yaw = (float) section.getDouble("location.yaw", 0);
         float pitch = (float) section.getDouble("location.pitch", 0);
-        location = new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
+
+        World world = Bukkit.getWorld(worldName);
+
+        if (world == null) {
+            FancyLib.getPlugin().getLogger().info("Trying to load the world: '" + worldName + "'");
+            world = new WorldCreator(worldName).createWorld();
+        }
+
+        if (world == null) {
+            FancyLib.getPlugin().getLogger().info("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
+            return;
+        }
+
+        location = new Location(world, x, y, z, yaw, pitch);
 
         scale = new Vector3f(
                 (float) section.getDouble("scale_x", DEFAULT_SCALE.x),
