@@ -36,14 +36,14 @@ public class MoveToCMD implements Subcommand {
         final var location = new Location(player.getWorld(), x, y, z);
 
         if (args.length > 6) {
-            final var yaw = MoveHereCMD.calculateCoordinate(args[6], hologram.getData().getDisplayData().getLocation(), player.getLocation(), Location::getYaw);
+            final var yaw = MoveHereCMD.calculateCoordinate(args[6], hologram.getData().getDisplayData().getLocation(), player.getLocation(), loc -> loc.getYaw() + 180f);
 
             if (yaw == null) {
                 MessageHelper.error(player, "Could not parse yaw");
                 return false;
             }
 
-            location.setYaw(yaw.floatValue());
+            location.setYaw(yaw.floatValue() - 180f);
         }
 
         if (args.length > 7) {
