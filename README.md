@@ -49,6 +49,12 @@ The holograms are directly sent to the player via packets, which makes FancyHolo
 
 You can find a list of all commands with description and permissions [here](docs/commands.md).
 
+## API
+
+You can find the basic API documentation [here](docs/api/getting-started.md).
+
+If you have any questions about the API, feel free to ask in the [discord](https://discord.gg/ZUgYCEJUEx).
+
 ## Example images
 
 ![example1](exampleImages/example1.png)
