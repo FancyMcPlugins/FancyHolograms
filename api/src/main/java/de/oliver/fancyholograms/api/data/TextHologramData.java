@@ -103,6 +103,14 @@ public class TextHologramData implements Data {
         return this;
     }
 
+    public void addLine(String line) {
+        text.add(line);
+    }
+
+    public void removeLine(int index) {
+        text.remove(index);
+    }
+
     public TextColor getBackground() {
         return background;
     }
