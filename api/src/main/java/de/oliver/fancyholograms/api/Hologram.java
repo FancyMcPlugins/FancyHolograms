@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,6 +78,15 @@ public abstract class Hologram {
     public final @NotNull HologramData getData() {
         return this.data;
     }
+
+    /**
+     * Returns the Display entity of this Hologram object.
+     * The entity is not registered in the world or server.
+     * Only use this method if you know what you're doing.
+     *
+     * @return the Display entity of this Hologram object
+     */
+    public abstract @Nullable Display getDisplayEntity();
 
     /**
      * Abstract method for creating a hologram.

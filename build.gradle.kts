@@ -13,7 +13,7 @@ runPaper.folia.registerTask()
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.4.43"
+    version = "2.0.4.44"
 
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
