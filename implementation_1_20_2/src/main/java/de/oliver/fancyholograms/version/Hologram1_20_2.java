@@ -1,6 +1,5 @@
 package de.oliver.fancyholograms.version;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.math.Transformation;
 import com.viaversion.viaversion.api.Via;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
@@ -13,7 +12,10 @@ import de.oliver.fancylib.ReflectionUtils;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData.DataItem;
 import net.minecraft.network.syncher.SynchedEntityData.DataValue;
@@ -26,11 +28,8 @@ import net.minecraft.world.entity.Display.TextDisplay;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -242,16 +241,4 @@ public final class Hologram1_20_2 extends Hologram {
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundSetEntityDataPacket(display.getId(), values));
     }
 
-    @Override
-    public void rideOn(Entity vehicle) {
-        if (display == null) {
-            return;
-        }
-
-        net.minecraft.world.entity.Entity nmsVehicle = ((CraftEntity) vehicle).getHandle();
-        nmsVehicle.passengers = ImmutableList.of(display);
-
-        ClientboundSetPassengersPacket packet = new ClientboundSetPassengersPacket(nmsVehicle);
-        Bukkit.getOnlinePlayers().forEach(p -> ((CraftPlayer) p).getHandle().connection.send(packet));
-    }
 }
