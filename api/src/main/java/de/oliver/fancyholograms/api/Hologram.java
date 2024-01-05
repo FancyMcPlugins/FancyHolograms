@@ -9,6 +9,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -214,6 +215,8 @@ public abstract class Hologram {
     public final void refreshHologram(@NotNull final Collection<? extends Player> players) {
         players.forEach(this::refreshHologram);
     }
+
+    public abstract void rideOn(Entity vehicle);
 
     /**
      * Returns a read-only view of the UUIDs of players to whom the hologram is currently shown.
