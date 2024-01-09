@@ -1,17 +1,14 @@
 package de.oliver.fancyholograms.api;
 
+import de.oliver.fancyholograms.api.utils.EnabledChecker;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public interface FancyHologramsPlugin {
 
     static FancyHologramsPlugin get() {
-        PluginManager pluginManager = Bukkit.getPluginManager();
-
-        if (pluginManager.isPluginEnabled("FancyHolograms")) {
-            return (FancyHologramsPlugin) pluginManager.getPlugin("FancyHolograms");
+        if (EnabledChecker.isFancyHologramsEnabled()) {
+            return (FancyHologramsPlugin) EnabledChecker.getPlugin();
         }
 
         throw new NullPointerException("Plugin is not enabled");
@@ -36,7 +33,7 @@ public interface FancyHologramsPlugin {
      * Sets the configuration of the plugin.
      *
      * @param configuration The new configuration.
-     * @param reload Whether the configuration should be reloaded.
+     * @param reload        Whether the configuration should be reloaded.
      */
     void setHologramConfiguration(HologramConfiguration configuration, boolean reload);
 
@@ -51,7 +48,7 @@ public interface FancyHologramsPlugin {
      * Sets the hologram storage.
      *
      * @param storage The new hologram storage.
-     * @param reload Whether the current hologram cache should be reloaded.
+     * @param reload  Whether the current hologram cache should be reloaded.
      */
     void setHologramStorage(HologramStorage storage, boolean reload);
 }
