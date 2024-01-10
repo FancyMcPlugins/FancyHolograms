@@ -13,7 +13,7 @@ runPaper.folia.registerTask()
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.4.44"
+    version = "2.0.4" + System.getenv("BUILD_ID")?.let { ".$it" }
 
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
