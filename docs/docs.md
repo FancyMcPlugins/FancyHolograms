@@ -11,9 +11,6 @@ The plugin is only supported for **1.19.4 - latest version**<br>
 It is highly recommended to use Paper or a fork of it - Folia is also supported.<br>
 PlaceholderAPI and MiniPlaceholders is supported.<br>
 
-[Go to the commands](FancyHolograms/commands)<br>
-[Go to the api](FancyHolograms/api)
-
 ## Features
 
 With FancyHolograms you can create fancy holograms that take advantage of the display entities. You are able to create
