@@ -3,6 +3,7 @@ package de.oliver.fancyholograms;
 import de.oliver.fancyholograms.api.*;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
+import de.oliver.fancyholograms.commands.FancyHologramsTestCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
@@ -203,6 +204,11 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         } else {
             commands.stream().filter(Command::isRegistered).forEach(command ->
                     command.unregister(getServer().getCommandMap()));
+        }
+
+        if (false) {
+            FancyHologramsTestCMD fancyHologramsTestCMD = new FancyHologramsTestCMD(this);
+            getServer().getCommandMap().register("fancyholograms", fancyHologramsTestCMD);
         }
     }
 
