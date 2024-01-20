@@ -15,6 +15,7 @@ import de.oliver.fancyholograms.version.Hologram1_20_4;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
+import de.oliver.fancylib.sentry.SentryLoader;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
@@ -94,8 +95,18 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         FancyLib.setPlugin(this);
 
+        // register bStats and sentry
+        boolean isDevelopmentBuild = !versionConfig.getBuild().equalsIgnoreCase("undefined");
+
         Metrics metrics = new Metrics(this, 17990);
         metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> hologramsManager.getHolograms().size()));
+        metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsMuted() ? "No" : "Yes"));
+        metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
+
+        if (isDevelopmentBuild) {
+            SentryLoader.initSentry("https://5c268150853515e1a40ed64985f5564e@o4506593995849728.ingest.sentry.io/4506602656890880", INSTANCE);
+            getLogger().info("Registered sentry error reporting");
+        }
 
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("""
