@@ -27,6 +27,16 @@ You can download the latest versions at the following places:
 - https://www.spigotmc.org/resources/fancyholograms.108694/
 - Build from source (``gradlew shadowJar``)
 
+## Documentation
+
+You can find the official FancyHolograms documentation here: https://fancymcplugins.github.io/docs/fancyholograms.html
+
+- Getting started: https://fancymcplugins.github.io/docs/fh-getting-started.html
+- Commands: https://fancymcplugins.github.io/docs/fh-commands.html
+- API: https://fancymcplugins.github.io/docs/fh-api.html
+
+If you have any questions about the plugin/api, feel free to ask in the [discord](https://discord.gg/ZUgYCEJUEx).
+
 ## Features
 
 With FancyHolograms you can create fancy holograms that take advantage of the display entities. You are able to create
@@ -44,16 +54,6 @@ Properties you can modify:
 - and more ...
 
 The holograms are directly sent to the player via packets, which makes FancyHologram very fast and flexible.
-
-## Commands
-
-You can find a list of all commands with description and permissions [here](docs/commands.md).
-
-## API
-
-You can find the basic API documentation [here](docs/api/getting-started.md).
-
-If you have any questions about the API, feel free to ask in the [discord](https://discord.gg/ZUgYCEJUEx).
 
 ## Example images
 
