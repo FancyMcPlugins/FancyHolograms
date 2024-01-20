@@ -271,7 +271,7 @@ public abstract class Hologram {
             return Double.NaN;
         }
 
-        return other.distance(location);
+        return other.distanceSquared(location);
     }
 
     /**
