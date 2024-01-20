@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.listeners;
 
 import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.api.Hologram;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,12 +21,7 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(@NotNull final PlayerJoinEvent event) {
         for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
-            final var distance = hologram.distanceTo(event.getPlayer().getLocation());
-            if (Double.isNaN(distance) || distance > hologram.getData().getDisplayData().getVisibilityDistance()) {
-                continue;
-            }
-
-            hologram.showHologram(event.getPlayer());
+            hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
         }
 
         if (!this.plugin.getHologramConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
@@ -46,51 +42,22 @@ public final class PlayerListener implements Listener {
             return; // reduce checks we need to do
         }
 
-        for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
-            final var distance = hologram.distanceTo(event.getTo());
-            if (Double.isNaN(distance)) {
-                continue;
-            }
-
-            final var inRange = distance <= hologram.getData().getDisplayData().getVisibilityDistance();
-            final var isShown = hologram.isShown(event.getPlayer());
-
-            if (inRange && !isShown) {
-                hologram.showHologram(event.getPlayer());
-            } else if (!inRange && isShown) {
-                hologram.hideHologram(event.getPlayer());
-            }
+        for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
+            hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onTeleport(@NotNull final PlayerTeleportEvent event) {
-        for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
-            final var distance = hologram.distanceTo(event.getTo());
-            if (Double.isNaN(distance)) {
-                continue;
-            }
-
-            final var inRange = distance <= hologram.getData().getDisplayData().getVisibilityDistance();
-            final var isShown = hologram.isShown(event.getPlayer());
-
-            if (inRange && !isShown) {
-                hologram.showHologram(event.getPlayer());
-            } else if (!inRange && isShown) {
-                hologram.hideHologram(event.getPlayer());
-            }
+        for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
+            hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(@NotNull final PlayerChangedWorldEvent event) {
-        for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
-            final var distance = hologram.distanceTo(event.getPlayer().getLocation());
-            if (Double.isNaN(distance) || distance > hologram.getData().getDisplayData().getVisibilityDistance()) {
-                continue;
-            }
-
-            hologram.showHologram(event.getPlayer());
+        for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
+            hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
         }
     }
 

@@ -216,6 +216,7 @@ public final class Hologram1_19_4 extends Hologram {
 
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(display.getId()));
 
+        this.shown.remove(player.getUniqueId());
         return true;
     }
 

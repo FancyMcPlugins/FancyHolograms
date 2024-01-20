@@ -8,7 +8,6 @@ import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -180,13 +179,7 @@ public abstract class Hologram {
             return false;
         }
 
-        final var result = hide(player);
-
-        if (result) {
-            this.shown.remove(player.getUniqueId());
-        }
-
-        return result;
+        return hide(player);
     }
 
     /**
@@ -255,23 +248,45 @@ public abstract class Hologram {
     }
 
     /**
-     * Method to calculate the distance between the hologram's location and another location.
-     * Returns NaN if the hologram doesn't have a location, or if the worlds do not match.
+     * Checks whether the hologram should be shown to a specific player.
+     * This method checks whether the player is in the same world as the hologram and whether the player is within
+     * the hologram's visibility distance.
      *
-     * @param other the other location to calculate the distance to
-     * @return the distance to the other location, or NaN if the locations are null or in different worlds
+     * @param player the player to check
+     * @return true if the hologram should be shown to the player, false otherwise
      */
-    public final double distanceTo(@Nullable final Location other) {
+    protected boolean shouldHologramBeShown(@NotNull final Player player) {
         final var location = getData().getDisplayData().getLocation();
-        if (location == null || other == null) {
-            return Double.NaN;
+        if (location == null) {
+            return false;
         }
 
-        if (location.getWorld() == null || other.getWorld() == null || !other.getWorld().equals(location.getWorld())) {
-            return Double.NaN;
+        if (!location.getWorld().equals(player.getWorld())) {
+            return false;
         }
 
-        return other.distanceSquared(location);
+        int visibilityDistance = data.getDisplayData().getVisibilityDistance();
+        double distanceSquared = location.distanceSquared(player.getLocation());
+
+        return distanceSquared <= visibilityDistance * visibilityDistance;
+    }
+
+    /**
+     * Checks and updates the shown state for a player.
+     * If the hologram is shown and should not be, it hides it.
+     * If the hologram is not shown and should be, it shows it.
+     *
+     * @param player the player to check and update the shown state for
+     */
+    public void checkAndUpdateShownStateForPlayer(Player player) {
+        boolean isShown = isShown(player);
+        boolean shouldHologramBeShown = shouldHologramBeShown(player);
+
+        if (isShown && !shouldHologramBeShown) {
+            hideHologram(player);
+        } else if (!isShown && shouldHologramBeShown) {
+            showHologram(player);
+        }
     }
 
     /**
