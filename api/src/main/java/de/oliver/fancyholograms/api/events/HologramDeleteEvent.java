@@ -19,7 +19,7 @@ public final class HologramDeleteEvent extends HologramEvent {
     private final Player player;
 
     public HologramDeleteEvent(@NotNull final Hologram hologram, @NotNull final Player player) {
-        super(hologram);
+        super(hologram, false);
 
         this.player = player;
     }

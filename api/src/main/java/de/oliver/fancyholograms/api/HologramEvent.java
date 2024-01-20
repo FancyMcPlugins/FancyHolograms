@@ -17,7 +17,8 @@ public abstract class HologramEvent extends Event implements Cancellable {
     private boolean cancelled;
 
 
-    protected HologramEvent(@NotNull final Hologram hologram) {
+    protected HologramEvent(@NotNull final Hologram hologram, final boolean isAsync) {
+        super(isAsync);
         this.hologram = hologram;
     }
 

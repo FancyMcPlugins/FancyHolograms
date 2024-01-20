@@ -73,7 +73,7 @@ public class FancyHologramsTestCMD extends Command {
                     HologramData data = new HologramData("holo-" + n, displayData, HologramType.TEXT, textData);
                     Hologram hologram = this.plugin.getHologramsManager().create(data);
                     hologram.createHologram();
-                    hologram.showHologram(p);
+                    hologram.checkAndUpdateShownStateForPlayer(p);
                 }
             }
 
@@ -104,7 +104,7 @@ public class FancyHologramsTestCMD extends Command {
             HologramData data = new HologramData("holo-test1", displayData, HologramType.TEXT, textData);
             Hologram hologram = this.plugin.getHologramsManager().create(data);
             hologram.createHologram();
-            hologram.showHologram(p);
+            hologram.checkAndUpdateShownStateForPlayer(p);
         }
 
         return false;

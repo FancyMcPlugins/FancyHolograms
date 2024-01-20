@@ -23,7 +23,7 @@ public final class HologramUpdateEvent extends HologramEvent {
     private final HologramModification modification;
 
     public HologramUpdateEvent(@NotNull final Hologram hologram, @NotNull final Player player, @NotNull final HologramData updatedData, @NotNull final HologramModification modification) {
-        super(hologram);
+        super(hologram, false);
 
         this.player = player;
         this.updatedData = updatedData;

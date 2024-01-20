@@ -31,9 +31,11 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(@NotNull final PlayerQuitEvent event) {
-        for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
-            hologram.hideHologram(event.getPlayer());
-        }
+        FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
+            for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
+                hologram.hideHologram(event.getPlayer());
+            }
+        });
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

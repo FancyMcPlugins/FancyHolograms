@@ -9,11 +9,10 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -101,12 +100,14 @@ public final class HologramManagerImpl implements HologramManager {
     public @NotNull Optional<Hologram> removeHologram(@NotNull final String name) {
         Optional<Hologram> optionalHologram = ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
 
-        optionalHologram.ifPresent(hologram -> {
-            final var online = List.copyOf(Bukkit.getOnlinePlayers());
+        optionalHologram.ifPresent(hologram ->
+                FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
+                    final var online = List.copyOf(Bukkit.getOnlinePlayers());
 
-            hologram.hideHologram(online);
-            plugin.getHologramStorage().delete(hologram);
-        });
+                    hologram.hideHologram(online);
+                    plugin.getHologramStorage().delete(hologram);
+                })
+        );
 
         return optionalHologram;
     }
@@ -145,9 +146,11 @@ public final class HologramManagerImpl implements HologramManager {
         this.plugin.getScheduler().runTaskLater(null, 20L * 6, () -> {
             loadHolograms();
 
-            final var online = List.copyOf(Bukkit.getOnlinePlayers());
-
-            getHolograms().forEach(hologram -> hologram.showHologram(online));
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                for (final Hologram hologram : getHolograms()) {
+                    hologram.checkAndUpdateShownStateForPlayer(onlinePlayer);
+                }
+            }
         });
 
 
@@ -198,7 +201,7 @@ public final class HologramManagerImpl implements HologramManager {
         this.holograms.clear();
 
         for (final var hologram : holograms.values()) {
-            hologram.hideHologram(online);
+            FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> hologram.hideHologram(online));
         }
     }
 

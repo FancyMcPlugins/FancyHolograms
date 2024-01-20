@@ -18,7 +18,7 @@ public final class HologramHideEvent extends HologramEvent {
     private final Player player;
 
     public HologramHideEvent(@NotNull final Hologram hologram, @NotNull final Player player) {
-        super(hologram);
+        super(hologram, true);
 
         this.player = player;
     }

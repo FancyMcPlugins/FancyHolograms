@@ -8,6 +8,8 @@ import de.oliver.fancyholograms.api.data.BlockHologramData;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.events.HologramHideEvent;
+import de.oliver.fancyholograms.api.events.HologramShowEvent;
 import de.oliver.fancylib.ReflectionUtils;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -179,6 +181,10 @@ public final class Hologram1_19_4 extends Hologram {
 
     @Override
     public boolean show(@NotNull final Player player) {
+        if (!new HologramShowEvent(this, player).callEvent()) {
+            return false;
+        }
+
         if (this.display == null) {
             create(); // try to create it if it doesn't exist every time
         }
@@ -209,6 +215,10 @@ public final class Hologram1_19_4 extends Hologram {
 
     @Override
     public boolean hide(@NotNull final Player player) {
+        if (!new HologramHideEvent(this, player).callEvent()) {
+            return false;
+        }
+        
         final var display = this.display;
         if (display == null) {
             return false; // doesn't exist, nothing to hide
