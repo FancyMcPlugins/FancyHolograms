@@ -45,6 +45,11 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
      */
     private boolean registerCommands;
 
+    /**
+     * Indicates whether errors should be reported to Sentry.
+     */
+    private boolean reportErrorsToSentry;
+
     @Override
     public void reload(@NotNull FancyHologramsPlugin plugin) {
         FancyHolograms pluginImpl = (FancyHolograms) plugin;
@@ -69,6 +74,9 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
 
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
         config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
+
+        reportErrorsToSentry = (boolean) ConfigHelper.getOrDefault(config, "report_errors_to_sentry", false);
+        config.setInlineComments("report_errors_to_sentry", List.of("Whether the plugin should report errors to Sentry."));
 
         if (pluginImpl.isEnabled()) {
             plugin.getScheduler().runTaskAsynchronously(pluginImpl::saveConfig);
@@ -107,5 +115,10 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
     @Override
     public boolean isRegisterCommands() {
         return registerCommands;
+    }
+
+    @Override
+    public boolean reportErrorsToSentry() {
+        return reportErrorsToSentry;
     }
 }

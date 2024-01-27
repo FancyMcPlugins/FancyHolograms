@@ -249,7 +249,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsMuted() ? "No" : "Yes"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
-        if (isDevelopmentBuild) {
+        if (isDevelopmentBuild || configuration.reportErrorsToSentry()) {
             SentryLoader.initSentry("https://5c268150853515e1a40ed64985f5564e@o4506593995849728.ingest.sentry.io/4506602656890880", INSTANCE);
             getLogger().info("Registered sentry error reporting");
         }

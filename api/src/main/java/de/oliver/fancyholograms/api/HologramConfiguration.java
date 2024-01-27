@@ -52,4 +52,11 @@ public interface HologramConfiguration {
      * @return {@code true} if the plugin should register its commands, {@code false} otherwise.
      */
     boolean isRegisterCommands();
+
+    /**
+     * Returns whether the plugin should send errors to Sentry.
+     *
+     * @return {@code true} if the plugin should send errors to Sentry, {@code false} otherwise.
+     */
+    boolean reportErrorsToSentry();
 }
