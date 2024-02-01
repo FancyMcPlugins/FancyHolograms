@@ -24,9 +24,8 @@ allprojects {
         maven(url = "https://papermc.io/repo/repository/maven-public/")
 
         maven(url = "https://repo.fancyplugins.de/snapshots")
-        maven(url = "https://repo.extendedclip.com/content/repositories/placeholderapi/")
+        maven(url = "https://repo.smrt-1.com/releases")
         maven(url = "https://repo.viaversion.com/")
-        maven(url = "https://jitpack.io")
     }
 }
 
@@ -67,8 +66,8 @@ tasks {
             hangar("PlaceholderAPI", "2.11.5")
             modrinth("miniplaceholders", "M6gjRuIx")
 
-            hangar("ViaVersion", "4.9.3-SNAPSHOT+181")
-            hangar("ViaBackwards", "4.9.2-SNAPSHOT+107")
+            hangar("ViaVersion", "4.9.3-SNAPSHOT+208")
+            hangar("ViaBackwards", "4.9.2-SNAPSHOT+126")
         }
     }
 
