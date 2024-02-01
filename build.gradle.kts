@@ -52,6 +52,9 @@ tasks {
     shadowJar {
         archiveBaseName.set(rootProject.name)
         archiveClassifier.set("")
+
+        relocate("me.dave.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
+        relocate("io.sentry", "de.oliver.fancyholograms.libs.sentry")
     }
 
     runServer {

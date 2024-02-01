@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     id("maven-publish")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 dependencies {
@@ -12,6 +13,12 @@ dependencies {
 }
 
 tasks {
+    shadowJar {
+        archiveClassifier.set("")
+
+        relocate("me.dave.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
+    }
+
     publishing {
         repositories {
             maven {
