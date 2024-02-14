@@ -25,7 +25,9 @@ public final class PlayerListener implements Listener {
         }
 
         if (!this.plugin.getHologramConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
-            FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true);
+            FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
+                FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true);
+            });
         }
     }
 
