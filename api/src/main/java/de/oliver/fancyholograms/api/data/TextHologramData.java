@@ -34,8 +34,11 @@ public class TextHologramData implements Data {
     }
 
     public static TextHologramData getDefault(String name) {
+        List<String> text = new ArrayList<>();
+        text.add("Edit this line with /hologram edit " + name);
+        
         return new TextHologramData(
-                List.of("Edit this line with /hologram edit " + name),
+                text,
                 null,
                 DEFAULT_TEXT_ALIGNMENT,
                 DEFAULT_TEXT_SHADOW_STATE,
