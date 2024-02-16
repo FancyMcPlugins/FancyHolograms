@@ -33,7 +33,9 @@ public class DisplayHologramData implements Data {
     private boolean visibleByDefault = DEFAULT_IS_VISIBLE;
     private String linkedNpcName;
 
-    public DisplayHologramData(Location location, Display.Billboard billboard, Vector3f scale, Vector3f translation, Display.Brightness brightness, float shadowRadius, float shadowStrength, int visibilityDistance, String linkedNpcName, boolean visibleByDefault) {
+    public DisplayHologramData(Location location, Display.Billboard billboard, Vector3f scale, Vector3f translation,
+                               Display.Brightness brightness, float shadowRadius, float shadowStrength,
+                               int visibilityDistance, String linkedNpcName, boolean visibleByDefault) {
         this.location = location;
         this.billboard = billboard;
         this.scale = scale;
