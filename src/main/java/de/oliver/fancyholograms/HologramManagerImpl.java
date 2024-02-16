@@ -239,10 +239,7 @@ public final class HologramManagerImpl implements HologramManager {
         final var players = ofNullable(hologram.getData().getDisplayData().getLocation())
                 .map(Location::getWorld)
                 .map(World::getPlayers)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(player -> !player.hasPermission("fancyholograms.hideholo." + hologram.getData().getName()))
-                .toList();
+                .orElse(Collections.emptyList());
 
         hologram.refreshHologram(players);
     }
