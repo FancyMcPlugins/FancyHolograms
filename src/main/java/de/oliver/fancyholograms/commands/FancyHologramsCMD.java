@@ -45,7 +45,11 @@ public final class FancyHologramsCMD extends Command {
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }
-            case "version" -> FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
+            case "version" -> {
+                FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
+                    FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
+                });
+            }
             default -> {
                 MessageHelper.info(sender, "/FancyHolograms <save|reload|version>");
                 return false;
