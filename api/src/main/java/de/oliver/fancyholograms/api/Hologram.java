@@ -144,6 +144,10 @@ public abstract class Hologram {
             return false;
         }
 
+        if (player.hasPermission("fancyholograms.hideholo." + data.getName()) && !player.isOp()) {
+            return false;
+        }
+
         int visibilityDistance = data.getDisplayData().getVisibilityDistance();
         double distanceSquared = location.distanceSquared(player.getLocation());
 
