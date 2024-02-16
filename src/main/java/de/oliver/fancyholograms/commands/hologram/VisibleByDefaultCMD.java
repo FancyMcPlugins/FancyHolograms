@@ -29,7 +29,7 @@ public class VisibleByDefaultCMD implements Subcommand {
 
 
         if (hologram.getData().getDisplayData().isVisibleByDefault() == copied.getDisplayData().isVisibleByDefault()) {
-            MessageHelper.warning(player, "This hologram already has this visibility distance");
+            MessageHelper.warning(player, "This hologram already has visibility by default set to " + visibleByDefault);
             return false;
         }
 
