@@ -150,21 +150,13 @@ public class FlatFileHologramStorage implements HologramStorage {
         config.setInlineComments("version", List.of("DO NOT CHANGE"));
 
 
-        if (!Bukkit.isPrimaryThread() || !FancyHolograms.get().isEnabled()) {
+        FancyHolograms.get().getFileStorageExecutor().execute(() -> {
             try {
                 config.save(HOLOGRAMS_CONFIG_FILE);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
-            Bukkit.getScheduler().runTaskAsynchronously(FancyHolograms.get(), () -> {
-                try {
-                    config.save(HOLOGRAMS_CONFIG_FILE);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+        });
     }
 
     private static final File DEPRECATED_CONFIG_FILE = new File("plugins/FancyHolograms/config.yml");

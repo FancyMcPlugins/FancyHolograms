@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancyholograms.api.*;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
@@ -33,6 +34,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -53,6 +56,14 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     @Nullable
     private HologramManagerImpl hologramsManager;
     private boolean isUsingViaVersion;
+
+    private final ExecutorService fileStorageExecutor = Executors.newSingleThreadExecutor(
+      new ThreadFactoryBuilder()
+        .setDaemon(true)
+        .setPriority(Thread.MIN_PRIORITY + 1)
+        .setNameFormat("FancyHolograms-FileStorageExecutor")
+        .build()
+    );
 
     public static @NotNull FancyHolograms get() {
         return Objects.requireNonNull(INSTANCE, "plugin is not initialized");
@@ -127,6 +138,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     @Override
     public void onDisable() {
         hologramsManager.saveHolograms();
+        fileStorageExecutor.shutdown();
         INSTANCE = null;
     }
 
@@ -184,6 +196,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         if (reload) {
             getHologramsManager().reloadHolograms();
         }
+    }
+
+    public ExecutorService getFileStorageExecutor() {
+        return this.fileStorageExecutor;
     }
 
     private @Nullable Function<HologramData, Hologram> resolveHologramAdapter() {
