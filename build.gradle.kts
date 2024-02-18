@@ -66,8 +66,8 @@ tasks {
             hangar("PlaceholderAPI", "2.11.5")
             modrinth("miniplaceholders", "M6gjRuIx")
 
-            hangar("ViaVersion", "4.9.3-SNAPSHOT+208")
-            hangar("ViaBackwards", "4.9.2-SNAPSHOT+126")
+            hangar("ViaVersion", "4.9.3-SNAPSHOT+216")
+            hangar("ViaBackwards", "4.9.2-SNAPSHOT+131")
         }
     }
 
