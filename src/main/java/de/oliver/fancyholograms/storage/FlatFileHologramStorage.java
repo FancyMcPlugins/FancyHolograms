@@ -22,6 +22,9 @@ import java.util.*;
 
 public class FlatFileHologramStorage implements HologramStorage {
 
+    private static final File DEPRECATED_CONFIG_FILE = new File("plugins/FancyHolograms/config.yml");
+    private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
+
     @Override
     public void saveBatch(Collection<Hologram> holograms, boolean override) {
         YamlConfiguration config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
@@ -149,26 +152,12 @@ public class FlatFileHologramStorage implements HologramStorage {
         config.set("version", 2);
         config.setInlineComments("version", List.of("DO NOT CHANGE"));
 
-
-        if (!Bukkit.isPrimaryThread() || !FancyHolograms.get().isEnabled()) {
-            try {
-                config.save(HOLOGRAMS_CONFIG_FILE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            Bukkit.getScheduler().runTaskAsynchronously(FancyHolograms.get(), () -> {
-                try {
-                    config.save(HOLOGRAMS_CONFIG_FILE);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        try {
+            config.save(HOLOGRAMS_CONFIG_FILE);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-
-    private static final File DEPRECATED_CONFIG_FILE = new File("plugins/FancyHolograms/config.yml");
-    private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
 
     static class Legacy {
         public static HologramData readHologram(String name, ConfigurationSection config) {
