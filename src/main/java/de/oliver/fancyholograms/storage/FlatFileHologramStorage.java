@@ -25,6 +25,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class FlatFileHologramStorage implements HologramStorage {
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private static final File DEPRECATED_CONFIG_FILE = new File("plugins/FancyHolograms/config.yml");
+    private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
 
     @Override
     public void saveBatch(Collection<Hologram> holograms, boolean override) {
@@ -193,7 +195,6 @@ public class FlatFileHologramStorage implements HologramStorage {
         config.set("version", 2);
         config.setInlineComments("version", List.of("DO NOT CHANGE"));
 
-
         FancyHolograms.get().getFileStorageExecutor().execute(() -> {
             lock.writeLock().lock();
             try {
@@ -205,9 +206,6 @@ public class FlatFileHologramStorage implements HologramStorage {
             }
         });
     }
-
-    private static final File DEPRECATED_CONFIG_FILE = new File("plugins/FancyHolograms/config.yml");
-    private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
 
     static class Legacy {
         public static HologramData readHologram(String name, ConfigurationSection config) {
@@ -233,6 +231,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var billboardName = config.getString("billboard", DisplayHologramData.DEFAULT_BILLBOARD.name());
             final var textAlignmentName = config.getString("text_alignment", TextHologramData.DEFAULT_TEXT_ALIGNMENT.name());
             final var linkedNpc = config.getString("linkedNpc");
+            final var visibleByDefault = config.getBoolean("visible_by_default", DisplayHologramData.DEFAULT_IS_VISIBLE);
 
             final var billboard = switch (billboardName.toLowerCase(Locale.ROOT)) {
                 case "fixed" -> Display.Billboard.FIXED;
@@ -259,7 +258,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             }
 
 
-            DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc);
+            DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc, visibleByDefault);
 
             TextHologramData textData = new TextHologramData(text, background, textAlignment, textHasShadow, textUpdateInterval);
 

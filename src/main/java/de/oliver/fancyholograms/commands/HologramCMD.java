@@ -154,7 +154,7 @@ public final class HologramCMD extends Command {
 
             final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
 
-            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
+            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibleByDefault", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
             suggestions.addAll(type.getCommands());
 
             return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT))).toList();
@@ -214,6 +214,7 @@ public final class HologramCMD extends Command {
                     yield FancyNpcsPlugin.get().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
                 case "block" -> Arrays.stream(Material.values()).filter(Material::isBlock).map(Enum::name);
+                case "visiblebydefault" -> Stream.of("true", "false");
 
                 default -> null;
             };
@@ -301,6 +302,7 @@ public final class HologramCMD extends Command {
             case "scale" -> new ScaleCMD().run(player, hologram, args);
             case "updatetextinterval" -> new UpdateTextIntervalCMD().run(player, hologram, args);
             case "visibilitydistance" -> new VisibilityDistanceCMD().run(player, hologram, args);
+            case "visiblebydefault" -> new VisibleByDefaultCMD().run(player, hologram, args);
             case "linkwithnpc" -> new LinkWithNpcCMD().run(player, hologram, args);
             case "shadowradius" -> new ShadowRadiusCMD().run(player, hologram, args);
             case "shadowstrength" -> new ShadowStrengthCMD().run(player, hologram, args);
