@@ -144,6 +144,11 @@ public abstract class Hologram {
             return false;
         }
 
+        if (!getData().getDisplayData().isVisibleByDefault() &&
+                !player.hasPermission("fancyholograms.holo." + data.getName())) {
+            return false;
+        }
+
         int visibilityDistance = data.getDisplayData().getVisibilityDistance();
         double distanceSquared = location.distanceSquared(player.getLocation());
 

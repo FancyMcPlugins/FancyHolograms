@@ -183,6 +183,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var billboardName = config.getString("billboard", DisplayHologramData.DEFAULT_BILLBOARD.name());
             final var textAlignmentName = config.getString("text_alignment", TextHologramData.DEFAULT_TEXT_ALIGNMENT.name());
             final var linkedNpc = config.getString("linkedNpc");
+            final var visibleByDefault = config.getBoolean("visible_by_default", DisplayHologramData.DEFAULT_IS_VISIBLE);
 
             final var billboard = switch (billboardName.toLowerCase(Locale.ROOT)) {
                 case "fixed" -> Display.Billboard.FIXED;
@@ -209,7 +210,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             }
 
 
-            DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc);
+            DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc, visibleByDefault);
 
             TextHologramData textData = new TextHologramData(text, background, textAlignment, textHasShadow, textUpdateInterval);
 
