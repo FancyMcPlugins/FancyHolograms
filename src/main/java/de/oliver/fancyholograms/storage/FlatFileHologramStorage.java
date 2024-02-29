@@ -19,35 +19,77 @@ import org.joml.Vector3f;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class FlatFileHologramStorage implements HologramStorage {
 
+    private static final ReadWriteLock lock = new ReentrantReadWriteLock();
     private static final File DEPRECATED_CONFIG_FILE = new File("plugins/FancyHolograms/config.yml");
     private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
 
     @Override
     public void saveBatch(Collection<Hologram> holograms, boolean override) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
+        lock.readLock().lock();
 
-        if (override) {
-            config.set("holograms", null);
+        boolean success = false;
+        YamlConfiguration config = null;
+        try {
+            config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
+
+            if (override) {
+                config.set("holograms", null);
+            }
+
+            for (final var hologram : holograms) {
+                writeHologram(config, hologram);
+            }
+
+            success = true;
+        } finally {
+            lock.readLock().unlock();
+            if (success) {
+                saveConfig(config);
+            }
         }
-
-        holograms.forEach(hologram -> writeHologram(config, hologram, false));
-        saveConfig(config);
     }
 
     @Override
     public void save(Hologram hologram) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
-        writeHologram(config, hologram, true);
+        lock.readLock().lock();
+
+        boolean success = false;
+        YamlConfiguration config = null;
+        try {
+            config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
+            writeHologram(config, hologram);
+
+            success = true;
+        } finally {
+            lock.readLock().unlock();
+            if (success) {
+                saveConfig(config);
+            }
+        }
     }
 
     @Override
     public void delete(Hologram hologram) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
-        config.set("holograms." + hologram.getData().getName(), null);
-        saveConfig(config);
+        lock.readLock().lock();
+
+        boolean success = false;
+        YamlConfiguration config = null;
+        try {
+            config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
+            config.set("holograms." + hologram.getData().getName(), null);
+
+            success = true;
+        } finally {
+            lock.readLock().unlock();
+            if (success) {
+                saveConfig(config);
+            }
+        }
     }
 
     @Override
@@ -73,60 +115,65 @@ public class FlatFileHologramStorage implements HologramStorage {
     }
 
     private List<Hologram> readHolograms(File configFile) {
-        YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        lock.readLock().lock();
+        try {
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
-        if (!config.isConfigurationSection("holograms")) {
-            return new ArrayList<>(0);
-        }
-
-        int configVersion = config.getInt("version", 1);
-
-        List<Hologram> holograms = new ArrayList<>();
-
-        ConfigurationSection hologramsSection = config.getConfigurationSection("holograms");
-        for (String name : hologramsSection.getKeys(false)) {
-            ConfigurationSection holoSection = hologramsSection.getConfigurationSection(name);
-            if (holoSection == null) {
-                FancyHolograms.get().getLogger().warning("Could not load hologram section in config");
-                continue;
+            if (!config.isConfigurationSection("holograms")) {
+                return new ArrayList<>(0);
             }
 
-            if (configVersion == 1) {
-                HologramData data = Legacy.readHologram(name, holoSection);
+            int configVersion = config.getInt("version", 1);
+
+            List<Hologram> holograms = new ArrayList<>();
+
+            ConfigurationSection hologramsSection = config.getConfigurationSection("holograms");
+            for (String name : hologramsSection.getKeys(false)) {
+                ConfigurationSection holoSection = hologramsSection.getConfigurationSection(name);
+                if (holoSection == null) {
+                    FancyHolograms.get().getLogger().warning("Could not load hologram section in config");
+                    continue;
+                }
+
+                if (configVersion == 1) {
+                    HologramData data = Legacy.readHologram(name, holoSection);
+                    Hologram hologram = FancyHolograms.get().getHologramManager().create(data);
+                    holograms.add(hologram);
+                    continue;
+                }
+
+                String typeName = holoSection.getString("type", "TEXT");
+                HologramType type = HologramType.getByName(typeName);
+                if (type == null) {
+                    FancyHolograms.get().getLogger().warning("Could not parse HologramType");
+                    continue;
+                }
+
+                DisplayHologramData displayData = new DisplayHologramData();
+                displayData.read(holoSection, name);
+
+                Data typeData = null;
+                switch (type) {
+                    case TEXT -> typeData = new TextHologramData();
+                    case ITEM -> typeData = new ItemHologramData();
+                    case BLOCK -> typeData = new BlockHologramData();
+                }
+
+                typeData.read(holoSection, name);
+
+                HologramData data = new HologramData(name, displayData, type, typeData);
+
                 Hologram hologram = FancyHolograms.get().getHologramManager().create(data);
                 holograms.add(hologram);
-                continue;
             }
 
-            String typeName = holoSection.getString("type", "TEXT");
-            HologramType type = HologramType.getByName(typeName);
-            if (type == null) {
-                FancyHolograms.get().getLogger().warning("Could not parse HologramType");
-                continue;
-            }
-
-            DisplayHologramData displayData = new DisplayHologramData();
-            displayData.read(holoSection, name);
-
-            Data typeData = null;
-            switch (type) {
-                case TEXT -> typeData = new TextHologramData();
-                case ITEM -> typeData = new ItemHologramData();
-                case BLOCK -> typeData = new BlockHologramData();
-            }
-
-            typeData.read(holoSection, name);
-
-            HologramData data = new HologramData(name, displayData, type, typeData);
-
-            Hologram hologram = FancyHolograms.get().getHologramManager().create(data);
-            holograms.add(hologram);
+            return holograms;
+        } finally {
+            lock.readLock().unlock();
         }
-
-        return holograms;
     }
 
-    private void writeHologram(YamlConfiguration config, Hologram hologram, boolean save) {
+    private void writeHologram(YamlConfiguration config, Hologram hologram) {
         @NotNull ConfigurationSection section;
         if (!config.isConfigurationSection("holograms")) {
             section = config.createSection("holograms");
@@ -142,21 +189,22 @@ public class FlatFileHologramStorage implements HologramStorage {
         }
 
         hologram.getData().write(holoSection, holoName);
-
-        if (save) {
-            saveConfig(config);
-        }
     }
 
     private void saveConfig(YamlConfiguration config) {
         config.set("version", 2);
         config.setInlineComments("version", List.of("DO NOT CHANGE"));
 
-        try {
-            config.save(HOLOGRAMS_CONFIG_FILE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FancyHolograms.get().getFileStorageExecutor().execute(() -> {
+            lock.writeLock().lock();
+            try {
+                config.save(HOLOGRAMS_CONFIG_FILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                lock.writeLock().unlock();
+            }
+        });
     }
 
     static class Legacy {
