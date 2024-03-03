@@ -34,6 +34,11 @@ public class CopyCMD implements Subcommand {
             return false;
         }
 
+        if (name.contains(".")) {
+            MessageHelper.error(player, "The name of the hologram cannot contain a dot");
+            return false;
+        }
+
         final var data = new HologramData(name, hologram.getData());
         data.getDisplayData().setLocation(player.getLocation());
 

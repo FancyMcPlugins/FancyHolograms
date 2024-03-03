@@ -42,6 +42,11 @@ public class CreateCMD implements Subcommand {
             return false;
         }
 
+        if (name.contains(".")) {
+            MessageHelper.error(player, "The name of the hologram cannot contain a dot");
+            return false;
+        }
+
         DisplayHologramData displayData = DisplayHologramData.getDefault(player.getLocation().clone());
 
         Data typeData = null;
