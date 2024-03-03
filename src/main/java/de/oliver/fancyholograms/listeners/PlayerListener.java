@@ -40,17 +40,6 @@ public final class PlayerListener implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onMove(@NotNull final PlayerMoveEvent event) {
-        if (!event.hasChangedBlock()) {
-            return; // reduce checks we need to do
-        }
-
-        for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
-            hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
-        }
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onTeleport(@NotNull final PlayerTeleportEvent event) {
         for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {

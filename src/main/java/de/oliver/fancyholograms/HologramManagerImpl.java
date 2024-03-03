@@ -182,6 +182,14 @@ public final class HologramManagerImpl implements HologramManager {
                 updateTimes.put(hologram.getData().getName(), time);
             }
         });
+
+        this.plugin.getScheduler().runTaskTimerAsynchronously(20L, 20L, () -> {
+            for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
+                for (final Player player : Bukkit.getOnlinePlayers()) {
+                    hologram.checkAndUpdateShownStateForPlayer(player);
+                }
+            }
+        });
     }
 
     /**
