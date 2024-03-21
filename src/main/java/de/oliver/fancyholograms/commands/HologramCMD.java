@@ -37,7 +37,7 @@ public final class HologramCMD extends Command {
         this.plugin = plugin;
     }
 
-    public static boolean callModificationEvent(@NotNull final Hologram hologram, @NotNull final Player player, @NotNull final HologramData updatedData, @NotNull final HologramUpdateEvent.HologramModification modification) {
+    public static boolean callModificationEvent(@NotNull final Hologram hologram, @NotNull final CommandSender player, @NotNull final HologramData updatedData, @NotNull final HologramUpdateEvent.HologramModification modification) {
         final var result = new HologramUpdateEvent(hologram, player, updatedData, modification).callEvent();
 
         if (!result) {
@@ -49,56 +49,51 @@ public final class HologramCMD extends Command {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
-            MessageHelper.error(sender, "Only players can execute this command");
-            return false;
-        }
-
-        if (!testPermission(player)) {
+        if (!testPermission(sender)) {
             return false;
         }
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-            MessageHelper.info(player, Constants.HELP_TEXT + (!FancyHolograms.isUsingFancyNpcs() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
+            MessageHelper.info(sender, Constants.HELP_TEXT + (!FancyHolograms.isUsingFancyNpcs() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
             return true;
         }
 
 
         if (args[0].equalsIgnoreCase("list")) {
-            return new ListCMD().run(player, null, args);
+            return new ListCMD().run(sender, null, args);
         }
 
 
         if (args.length < 2) {
-            MessageHelper.error(player, "Wrong usage: /hologram help");
+            MessageHelper.error(sender, "Wrong usage: /hologram help");
             return false;
         }
 
 
         if (args[0].equalsIgnoreCase("create")) {
-            return new CreateCMD().run(player, null, args);
+            return new CreateCMD().run(sender, null, args);
         }
 
 
         final var hologram = this.plugin.getHologramsManager().getHologram(args[1]).orElse(null);
         if (hologram == null) {
-            MessageHelper.error(player, "Could not find hologram: '" + args[1] + "'");
+            MessageHelper.error(sender, "Could not find hologram: '" + args[1] + "'");
             return false;
         }
 
 
         return switch (args[0].toLowerCase(Locale.ROOT)) {
-            case "info" -> new InfoCMD().run(player, hologram, args);
-            case "remove" -> new RemoveCMD().run(player, hologram, args);
-            case "teleport" -> new TeleportCMD().run(player, hologram, args);
-            case "copy" -> new CopyCMD().run(player, hologram, args);
+            case "info" -> new InfoCMD().run(sender, hologram, args);
+            case "remove" -> new RemoveCMD().run(sender, hologram, args);
+            case "teleport" -> new TeleportCMD().run(sender, hologram, args);
+            case "copy" -> new CopyCMD().run(sender, hologram, args);
             case "edit" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(player, "Wrong usage: /hologram help");
+                    MessageHelper.error(sender, "Wrong usage: /hologram help");
                     yield false;
                 }
 
-                final var updated = edit(player, hologram, args);
+                final var updated = edit(sender, hologram, args);
 
                 if (updated) {
                     hologram.updateHologram();
@@ -272,7 +267,7 @@ public final class HologramCMD extends Command {
         return Collections.emptyList();
     }
 
-    private boolean edit(@NotNull final Player player, @NotNull final Hologram hologram, @NotNull final String[] args) {
+    private boolean edit(@NotNull final CommandSender player, @NotNull final Hologram hologram, @NotNull final String[] args) {
         final var action = args[2].toLowerCase();
 
         // actions without a data

@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.api.events;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramEvent;
 import de.oliver.fancyholograms.api.data.HologramData;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,13 +16,13 @@ public final class HologramUpdateEvent extends HologramEvent {
 
 
     @NotNull
-    private final Player player;
+    private final CommandSender player;
     @NotNull
     private final HologramData updatedData;
     @NotNull
     private final HologramModification modification;
 
-    public HologramUpdateEvent(@NotNull final Hologram hologram, @NotNull final Player player, @NotNull final HologramData updatedData, @NotNull final HologramModification modification) {
+    public HologramUpdateEvent(@NotNull final Hologram hologram, @NotNull final CommandSender player, @NotNull final HologramData updatedData, @NotNull final HologramModification modification) {
         super(hologram, false);
 
         this.player = player;
@@ -34,7 +34,7 @@ public final class HologramUpdateEvent extends HologramEvent {
         return handlerList;
     }
 
-    public @NotNull Player getPlayer() {
+    public @NotNull CommandSender getPlayer() {
         return this.player;
     }
 

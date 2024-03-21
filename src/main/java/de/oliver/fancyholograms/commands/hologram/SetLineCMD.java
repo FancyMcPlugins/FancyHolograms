@@ -8,7 +8,7 @@ import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class SetLineCMD implements Subcommand {
 
-    public static boolean setLine(Player player, Hologram hologram, int index, String text) {
+    public static boolean setLine(CommandSender player, Hologram hologram, int index, String text) {
         if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
@@ -51,12 +51,12 @@ public class SetLineCMD implements Subcommand {
     }
 
     @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
         return null;
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
         var index = Ints.tryParse(args[3]);
         if (index == null) {
             MessageHelper.error(player, "Could not parse line number");

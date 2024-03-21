@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.api.events;
 
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramEvent;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,9 +16,9 @@ public final class HologramDeleteEvent extends HologramEvent {
 
 
     @NotNull
-    private final Player player;
+    private final CommandSender player;
 
-    public HologramDeleteEvent(@NotNull final Hologram hologram, @NotNull final Player player) {
+    public HologramDeleteEvent(@NotNull final Hologram hologram, @NotNull final CommandSender player) {
         super(hologram, false);
 
         this.player = player;
@@ -28,7 +28,7 @@ public final class HologramDeleteEvent extends HologramEvent {
         return handlerList;
     }
 
-    public @NotNull Player getPlayer() {
+    public @NotNull CommandSender getPlayer() {
         return this.player;
     }
 

@@ -7,7 +7,7 @@ import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,12 +16,12 @@ import java.util.List;
 public class InfoCMD implements Subcommand {
 
     @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
         return null;
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
         DisplayHologramData displayData = hologram.getData().getDisplayData();
 
         MessageHelper.info(player, "<b>Information about the " + hologram.getData().getName() + " hologram:");

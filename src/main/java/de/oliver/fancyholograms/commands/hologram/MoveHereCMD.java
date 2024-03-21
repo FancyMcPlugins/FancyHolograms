@@ -10,6 +10,7 @@ import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +34,7 @@ public class MoveHereCMD implements Subcommand {
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);
         }
-        
+
         MessageHelper.success(player, "Moved the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.x()),
                 Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.y()),
@@ -61,12 +62,17 @@ public class MoveHereCMD implements Subcommand {
     }
 
     @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
         return null;
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Hologram hologram, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender sender, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            MessageHelper.error(sender, "You must be a sender to use this command");
+            return false;
+        }
+
         if (hologram.getData().getDisplayData().getLinkedNpcName() != null) {
             MessageHelper.error(player, "This hologram is linked with an NPC");
             MessageHelper.error(player, "To unlink: /hologram edit " + hologram.getData().getName() + " unlinkWithNpc");
