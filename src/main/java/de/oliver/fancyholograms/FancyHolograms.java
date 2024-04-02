@@ -16,7 +16,6 @@ import de.oliver.fancyholograms.version.Hologram1_20_4;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
-import de.oliver.fancylib.sentry.SentryLoader;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
@@ -51,19 +50,18 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
     private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
+    private final ExecutorService fileStorageExecutor = Executors.newSingleThreadExecutor(
+            new ThreadFactoryBuilder()
+                    .setDaemon(true)
+                    .setPriority(Thread.MIN_PRIORITY + 1)
+                    .setNameFormat("FancyHolograms-FileStorageExecutor")
+                    .build()
+    );
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private HologramStorage hologramStorage = new FlatFileHologramStorage();
     @Nullable
     private HologramManagerImpl hologramsManager;
     private boolean isUsingViaVersion;
-
-    private final ExecutorService fileStorageExecutor = Executors.newSingleThreadExecutor(
-      new ThreadFactoryBuilder()
-        .setDaemon(true)
-        .setPriority(Thread.MIN_PRIORITY + 1)
-        .setNameFormat("FancyHolograms-FileStorageExecutor")
-        .build()
-    );
 
     public static @NotNull FancyHolograms get() {
         return Objects.requireNonNull(INSTANCE, "plugin is not initialized");
@@ -264,11 +262,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> hologramsManager.getHolograms().size()));
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsMuted() ? "No" : "Yes"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
-
-        if (isDevelopmentBuild || configuration.reportErrorsToSentry()) {
-            SentryLoader.initSentry("https://5c268150853515e1a40ed64985f5564e@o4506593995849728.ingest.sentry.io/4506602656890880", INSTANCE);
-            getLogger().info("Registered sentry error reporting");
-        }
     }
 
 }
