@@ -8,8 +8,7 @@ import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.hologram.*;
-import de.oliver.fancyholograms.util.Constants;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
@@ -28,6 +27,7 @@ public final class HologramCMD extends Command {
 
     @NotNull
     private final FancyHolograms plugin;
+    private final Translator translator;
 
     public HologramCMD(@NotNull final FancyHolograms plugin) {
         super("hologram", "Main command for the FancyHolograms plugin", "/hologram help", List.of("holograms", "holo", "fholo"));
@@ -35,13 +35,14 @@ public final class HologramCMD extends Command {
         setPermission("fancyholograms.admin");
 
         this.plugin = plugin;
+        this.translator = plugin.getTranslator();
     }
 
     public static boolean callModificationEvent(@NotNull final Hologram hologram, @NotNull final CommandSender player, @NotNull final HologramData updatedData, @NotNull final HologramUpdateEvent.HologramModification modification) {
         final var result = new HologramUpdateEvent(hologram, player, updatedData, modification).callEvent();
 
         if (!result) {
-            MessageHelper.error(player, "Cancelled hologram modification");
+            FancyHolograms.get().getTranslator().translate("commands.hologram.modification_cancelled").error().send(player);
         }
 
         return result;
@@ -54,7 +55,14 @@ public final class HologramCMD extends Command {
         }
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-            MessageHelper.info(sender, Constants.HELP_TEXT + (!FancyHolograms.isUsingFancyNpcs() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
+            translator.translate("commands.hologram.help.header").send(sender);
+            translator.translate("commands.hologram.help.content").send(sender);
+
+            if (FancyHolograms.isUsingFancyNpcs()) {
+                translator.translate("commands.hologram.help.content_linking").send(sender);
+            }
+
+            translator.translate("commands.hologram.help.footer").send(sender);
             return true;
         }
 
@@ -65,7 +73,7 @@ public final class HologramCMD extends Command {
 
 
         if (args.length < 2) {
-            MessageHelper.error(sender, "Wrong usage: /hologram help");
+            translator.translate("commands.hologram.wrong_usage").error().send(sender);
             return false;
         }
 
@@ -77,7 +85,10 @@ public final class HologramCMD extends Command {
 
         final var hologram = this.plugin.getHologramsManager().getHologram(args[1]).orElse(null);
         if (hologram == null) {
-            MessageHelper.error(sender, "Could not find hologram: '" + args[1] + "'");
+            translator.translate("commands.hologram.hologram_not_found")
+                    .replace("name", args[1])
+                    .error()
+                    .send(sender);
             return false;
         }
 
@@ -89,7 +100,7 @@ public final class HologramCMD extends Command {
             case "copy" -> new CopyCMD().run(sender, hologram, args);
             case "edit" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, "Wrong usage: /hologram help");
+                    translator.translate("commands.hologram.wrong_usage").error().send(sender);
                     yield false;
                 }
 
@@ -284,7 +295,7 @@ public final class HologramCMD extends Command {
         }
 
         if (args.length == 3) {
-            MessageHelper.error(player, "Wrong usage: /hologram help");
+            translator.translate("commands.hologram.wrong_usage").error().send(player);
             return false;
         }
 

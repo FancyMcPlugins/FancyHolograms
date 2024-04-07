@@ -1,0 +1,39 @@
+language_name: english
+
+# Messages support MiniMessage formatting: https://docs.advntr.dev/minimessage/format.html
+# All placeholders by PlaceholderAPI and MiniPlaceholders are supported
+messages:
+  commands:
+    hologram:
+      wrong_usage: "Wrong usage! Run '/hologram help' for more information."
+      hologram_not_found: "Could not find a hologram with the name '{name}'."
+      modification_cancelled: "The hologram modification has been cancelled."
+      help:
+        header: "<gray>Commands for {primaryColor}FancyHolograms<gray> plugin: ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)<newline>"
+        footer: "<newline><gray>Full command reference available {primaryColor}<u><click:OPEN_URL:https://fancyplugins.de/docs/fh-commands.html>here</click></u><gray>."
+        content:
+          - " <dark_gray> > {primaryColor}/hologram help <dark_gray>- <gray>Shows all (sub)commands"
+          - "<dark_gray>> {primaryColor}/hologram list <dark_gray>- <gray>Shows you a overview of all holograms"
+          - "<dark_gray>> {primaryColor}/hologram teleport {secondaryColor}(name) <dark_gray>- <gray>Teleports you to a hologram"
+          - "<dark_gray>> {primaryColor}/hologram create {secondaryColor}(name) <dark_gray>- <gray>Creates a new hologram"
+          - "<dark_gray>> {primaryColor}/hologram remove {secondaryColor}(name) <dark_gray>- <gray>Removes a hologram"
+          - "<dark_gray>> {primaryColor}/hologram copy {secondaryColor}(hologram) <new name> <dark_gray>- <gray>Copies a hologram"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) addLine (...) <dark_gray>- <gray>Adds a line at the bottom"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) removeLine <dark_gray>- <gray>Removes a line at the bottom"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) insertBefore (line number) (...) <dark_gray>- <gray>Inserts a line before another"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) insertAfter (line number) (...) <dark_gray>- <gray>Inserts a line after another"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) setLine (line number) (...) <dark_gray>- <gray>Edits the line"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) position <dark_gray>- <gray>Teleports the hologram to you"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) moveTo (x) (y) (z) [yaw] [pitch] <dark_gray>- <gray>Teleports the hologram to the coordinates"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) rotate (degrees) <dark_gray>- <gray>Rotates the hologram"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) scale (factor) <dark_gray>- <gray>Changes the scale of the hologram"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) billboard (center|fixed|horizontal|vertical) (factor) <dark_gray>- <gray>Changes the billboard of the hologram"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) background (color) <dark_gray>- <gray>Changes the background of the hologram"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) textShadow (true|false) <dark_gray>- <gray>Enables/disables the text shadow"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) textAlignment (alignment) <dark_gray>- <gray>Sets the text alignment"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) shadowRadius (value) <dark_gray>- <gray>Changes the shadow radius of the hologram"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) shadowStrength (value) <dark_gray>- <gray>Changes the shadow strength of the hologram"
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) updateTextInterval (seconds) <dark_gray>- <gray>Sets the interval for updating the text"
+        content_linking:
+          - "<dark_gray>> {primaryColor}/hologram edit {secondaryColor}(hologram) linkWithNpc (npc name) <dark_gray>- <gray>Links the hologram with an NPC"
+          - "<dark_gray>> {primaryColor}/hologram edit{secondaryColor} (hologram) unlinkWithNpc (dark_gray)- <gray>Unlinks the hologram with an NPC"

@@ -20,6 +20,8 @@ import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
+import de.oliver.fancylib.translations.TextConfig;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.versionFetcher.MasterVersionFetcher;
 import de.oliver.fancylib.versionFetcher.VersionFetcher;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -31,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,7 +51,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
-    private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
     private final ExecutorService fileStorageExecutor = Executors.newSingleThreadExecutor(
             new ThreadFactoryBuilder()
                     .setDaemon(true)
@@ -57,6 +58,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
                     .setNameFormat("FancyHolograms-FileStorageExecutor")
                     .build()
     );
+    private final Translator translator = new Translator(new TextConfig("#32e33b", "#1dad37", "#55FF55", "#FFFF55", "#FF5555", ""));
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private HologramStorage hologramStorage = new FlatFileHologramStorage();
     @Nullable
@@ -115,6 +117,8 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
                     """);
         }
 
+        translator.loadLanguages(getDataFolder().getAbsolutePath());
+        translator.setSelectedLanguage(translator.getFallbackLanguage());
 
         reloadCommands();
 
@@ -182,6 +186,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         }
     }
 
+    public Translator getTranslator() {
+        return translator;
+    }
+
     @Override
     public HologramStorage getHologramStorage() {
         return hologramStorage;
@@ -213,6 +221,8 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     }
 
     public void reloadCommands() {
+        List<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
+
         if (getHologramConfiguration().isRegisterCommands()) {
             commands.forEach(command -> getServer().getCommandMap().register("fancyholograms", command));
         } else {
