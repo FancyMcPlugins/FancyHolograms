@@ -41,7 +41,7 @@ public class BackgroundCMD implements Subcommand {
             if (color.equals("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (color.startsWith("#")) {
-                background = Color.fromARGB(Integer.parseInt(color.substring(1), 16));
+                background = Color.fromARGB((int)Long.parseLong(color.substring(1), 16));
             } else {
                 NamedTextColor named = NamedTextColor.NAMES.value(color.replace(' ', '_'));
                 background = named == null ? null : Color.fromARGB(named.value());

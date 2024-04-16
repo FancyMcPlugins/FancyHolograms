@@ -69,7 +69,7 @@ public class TextHologramData implements Data {
             if (backgroundStr.equalsIgnoreCase("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (backgroundStr.startsWith("#")) {
-                background = Color.fromARGB(Integer.parseInt(backgroundStr.substring(1), 16));
+                background = Color.fromARGB((int)Long.parseLong(backgroundStr.substring(1), 16));
             } else {
                 background = Color.fromRGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value());
             }
@@ -90,11 +90,7 @@ public class TextHologramData implements Data {
             color = "transparent";
         } else {
             NamedTextColor named = NamedTextColor.namedColor(background.asARGB());
-            if (named != null) {
-                color = named.toString();
-            } else {
-                color = '#' + Integer.toHexString(background.asARGB());
-            }
+            color = named != null ? named.toString() : '#' + Integer.toHexString(background.asARGB());
         }
 
         section.set("background", color);

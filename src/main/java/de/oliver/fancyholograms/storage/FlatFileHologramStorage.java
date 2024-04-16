@@ -251,7 +251,7 @@ public class FlatFileHologramStorage implements HologramStorage {
                 if (backgroundName.equalsIgnoreCase("transparent")) {
                     background = Hologram.TRANSPARENT;
                 } else if (backgroundName.startsWith("#")) {
-                    background = Color.fromARGB(Integer.parseInt(backgroundName.substring(1), 16));
+                    background = Color.fromARGB((int)Long.parseLong(backgroundName.substring(1), 16));
                 } else {
                     NamedTextColor named = NamedTextColor.NAMES.value(backgroundName.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
                     background = named == null ? null : Color.fromARGB(named.value());
