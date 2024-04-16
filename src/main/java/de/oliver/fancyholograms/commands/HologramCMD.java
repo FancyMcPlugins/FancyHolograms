@@ -185,7 +185,7 @@ public final class HologramCMD extends Command {
                     } else if (current == Hologram.TRANSPARENT) {
                         colors.remove("transparent");
                     } else {
-                        NamedTextColor named = NamedTextColor.namedColor(current.asARGB());
+                        NamedTextColor named = current.getAlpha() == 255 ? NamedTextColor.namedColor(current.asRGB()) : null;
                         colors.add(named != null ? named.toString() : '#' + Integer.toHexString(current.asARGB()));
                     }
 

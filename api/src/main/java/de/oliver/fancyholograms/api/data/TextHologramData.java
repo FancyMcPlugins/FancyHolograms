@@ -1,7 +1,9 @@
 package de.oliver.fancyholograms.api.data;
 
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.Hologram;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.TextDisplay;
@@ -70,6 +72,8 @@ public class TextHologramData implements Data {
                 background = Hologram.TRANSPARENT;
             } else if (backgroundStr.startsWith("#")) {
                 background = Color.fromARGB((int)Long.parseLong(backgroundStr.substring(1), 16));
+                //backwards compatibility, make rgb hex colors solid color -their alpha is 0 by default-
+                if (backgroundStr.length() == 7) background = background.setAlpha(255);
             } else {
                 background = Color.fromRGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value());
             }
@@ -89,7 +93,7 @@ public class TextHologramData implements Data {
         } else if (background == Hologram.TRANSPARENT) {
             color = "transparent";
         } else {
-            NamedTextColor named = NamedTextColor.namedColor(background.asARGB());
+            NamedTextColor named = background.getAlpha() == 255 ? NamedTextColor.namedColor(background.asRGB()) : null;
             color = named != null ? named.toString() : '#' + Integer.toHexString(background.asARGB());
         }
 
