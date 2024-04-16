@@ -4,7 +4,7 @@ import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ import java.util.*;
 public abstract class Hologram {
 
     public static final int LINE_WIDTH = 1000;
-    public static final TextColor TRANSPARENT = () -> 0;
+    public static final Color TRANSPARENT = Color.fromARGB(0);
     protected static final int MINIMUM_PROTOCOL_VERSION = 762;
 
     @NotNull

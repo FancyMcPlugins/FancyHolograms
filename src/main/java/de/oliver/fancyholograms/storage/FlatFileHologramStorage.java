@@ -6,8 +6,8 @@ import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.HologramType;
 import de.oliver.fancyholograms.api.data.*;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -246,14 +246,15 @@ public class FlatFileHologramStorage implements HologramStorage {
                 default -> TextDisplay.TextAlignment.CENTER;
             };
 
-            TextColor background = null;
+            Color background = null;
             if (backgroundName != null) {
                 if (backgroundName.equalsIgnoreCase("transparent")) {
                     background = Hologram.TRANSPARENT;
                 } else if (backgroundName.startsWith("#")) {
-                    background = TextColor.fromHexString(backgroundName);
+                    background = Color.fromARGB(Integer.parseInt(backgroundName.substring(1), 16));
                 } else {
-                    background = NamedTextColor.NAMES.value(backgroundName.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                    NamedTextColor named = NamedTextColor.NAMES.value(backgroundName.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                    background = named == null ? null : Color.fromARGB(named.value());
                 }
             }
 

@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.api.data;
 
 import de.oliver.fancyholograms.api.Hologram;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.TextDisplay;
 
@@ -17,12 +17,12 @@ public class TextHologramData implements Data {
     public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
 
     private List<String> text;
-    private TextColor background;
+    private Color background;
     private TextDisplay.TextAlignment textAlignment;
     private boolean textShadow;
     private int textUpdateInterval;
 
-    public TextHologramData(List<String> text, TextColor background, TextDisplay.TextAlignment textAlignment, boolean textShadow, int textUpdateInterval) {
+    public TextHologramData(List<String> text, Color background, TextDisplay.TextAlignment textAlignment, boolean textShadow, int textUpdateInterval) {
         this.text = text;
         this.background = background;
         this.textAlignment = textAlignment;
@@ -69,9 +69,9 @@ public class TextHologramData implements Data {
             if (backgroundStr.equalsIgnoreCase("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (backgroundStr.startsWith("#")) {
-                background = TextColor.fromHexString(backgroundStr);
+                background = Color.fromARGB(Integer.parseInt(backgroundStr.substring(1), 16));
             } else {
-                background = NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                background = Color.fromRGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value());
             }
         }
     }
@@ -88,10 +88,13 @@ public class TextHologramData implements Data {
             color = null;
         } else if (background == Hologram.TRANSPARENT) {
             color = "transparent";
-        } else if (background instanceof NamedTextColor named) {
-            color = named.toString();
         } else {
-            color = background.asHexString();
+            NamedTextColor named = NamedTextColor.namedColor(background.asARGB());
+            if (named != null) {
+                color = named.toString();
+            } else {
+                color = '#' + Integer.toHexString(background.asARGB());
+            }
         }
 
         section.set("background", color);
@@ -114,11 +117,11 @@ public class TextHologramData implements Data {
         text.remove(index);
     }
 
-    public TextColor getBackground() {
+    public Color getBackground() {
         return background;
     }
 
-    public TextHologramData setBackground(TextColor background) {
+    public TextHologramData setBackground(Color background) {
         this.background = background;
         return this;
     }
