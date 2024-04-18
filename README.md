@@ -13,7 +13,7 @@ It is lightweight and fast (using [packets](https://wiki.vg/Protocol)).
 
 PlaceholderAPI and MiniPlaceholders is supported.
 
-**Only for minecraft server versions 1.19.4 - 1.20.4**<br>
+**Only for minecraft server versions 1.19.4 - 1.20.5**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Get the plugin
