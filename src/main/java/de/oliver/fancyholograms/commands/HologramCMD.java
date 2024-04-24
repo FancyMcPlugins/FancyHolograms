@@ -209,7 +209,7 @@ public final class HologramCMD extends Command {
                     yield FancyNpcsPlugin.get().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
                 case "block" -> Arrays.stream(Material.values()).filter(Material::isBlock).map(Enum::name);
-                case "visiblebydefault" -> Stream.of("true", "false");
+                case "seethrough", "visiblebydefault" -> Stream.of("true", "false");
 
                 default -> null;
             };
