@@ -311,6 +311,7 @@ public final class HologramCMD extends Command {
             case "insertafter" -> new InsertAfterCMD().run(player, hologram, args);
             case "textshadow" -> new TextShadowCMD().run(player, hologram, args);
             case "textalignment" -> new TextAlignmentCMD().run(player, hologram, args);
+            case "seethrough" -> new SeeThroughCMD().run(player, hologram, args);
 
             // block data
             case "block" -> new BlockCMD().run(player, hologram, args);
