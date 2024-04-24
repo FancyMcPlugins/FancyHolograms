@@ -84,6 +84,7 @@ public class TextHologramData implements Data {
     public void write(ConfigurationSection section, String name) {
         section.set("text", text);
         section.set("text_shadow", textShadow);
+        section.set("see_through", seeThrough);
         section.set("text_alignment", textAlignment.name().toLowerCase(Locale.ROOT));
         section.set("update_text_interval", textUpdateInterval);
 
