@@ -6,7 +6,6 @@
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
 [![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&logo=Discord&label=Discord&style=flat-square)](https://discord.gg/ZUgYCEJUEx)
 ![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyHolograms/total?logo=GitHub&style=flat-square)
-[![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-108694.svg)](https://www.spigotmc.org/resources/fancy-holograms-1-19-4.108694/)
 [![Downloads](https://img.shields.io/modrinth/dt/fancyholograms?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancyholograms/versions)
 
 Simple, lightweight and fast hologram plugin using display entities.<br>
@@ -24,16 +23,15 @@ You can download the latest versions at the following places:
 - https://hangar.papermc.io/Oliver/FancyHolograms
 - https://modrinth.com/plugin/fancyholograms
 - https://github.com/FancyMcPlugins/FancyHolograms/releases
-- https://www.spigotmc.org/resources/fancyholograms.108694/
 - Build from source (``gradlew shadowJar``)
 
 ## Documentation
 
-You can find the official FancyHolograms documentation here: https://fancymcplugins.github.io/docs/fancyholograms.html
+You can find the official FancyHolograms documentation here: https://fancyplugins.de/docs/fancyholograms.html
 
-- Getting started: https://fancymcplugins.github.io/docs/fh-getting-started.html
-- Commands: https://fancymcplugins.github.io/docs/fh-commands.html
-- API: https://fancymcplugins.github.io/docs/fh-api.html
+- Getting started: https://fancyplugins.de/docs/docs/fh-getting-started.html
+- Commands: https://fancyplugins.de/docs/fh-commands.html
+- API: https://fancyplugins.de/docs/fh-api.html
 
 If you have any questions about the plugin/api, feel free to ask in the [discord](https://discord.gg/ZUgYCEJUEx).
 
@@ -45,7 +43,7 @@ text, item and block holograms.
 Properties you can modify:
 
 - scale
-- billoard
+- billboard
 - rotation (yaw & pitch)
 - background color
 - text shadow
