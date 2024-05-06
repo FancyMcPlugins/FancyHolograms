@@ -69,7 +69,7 @@ public class CreateCMD implements Subcommand {
         }
 
 
-        final var data = new HologramData(name, displayData, type, typeData);
+        final var data = new HologramData(name, displayData, type, typeData, true);
 
         final var holo = FancyHolograms.get().getHologramsManager().create(data);
 

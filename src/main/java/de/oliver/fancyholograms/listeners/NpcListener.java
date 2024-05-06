@@ -24,7 +24,7 @@ public final class NpcListener implements Listener {
     @EventHandler
     public void onRemove(@NotNull final NpcRemoveEvent event) {
         this.plugin.getHologramsManager()
-                .getHolograms()
+                .getAllHolograms()
                 .stream()
                 .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getDisplayData().getLinkedNpcName()))
                 .forEach(hologram -> hologram.getData().getDisplayData().setLinkedNpcName(null));
@@ -32,7 +32,7 @@ public final class NpcListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onModify(@NotNull final NpcModifyEvent event) {
-        final var holograms = this.plugin.getHologramsManager().getHolograms();
+        final var holograms = this.plugin.getHologramsManager().getAllHolograms();
 
         switch (event.getModification()) {
             case TYPE, LOCATION -> {

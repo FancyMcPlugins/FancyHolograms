@@ -70,7 +70,7 @@ public class FancyHologramsTestCMD extends Command {
                     displayData.setScale(new Vector3f(.5f, .5f, .5f));
                     displayData.setVisibilityDistance(100);
 
-                    HologramData data = new HologramData("holo-" + n, displayData, HologramType.TEXT, textData);
+                    HologramData data = new HologramData("holo-" + n, displayData, HologramType.TEXT, textData, true);
                     Hologram hologram = this.plugin.getHologramsManager().create(data);
                     hologram.createHologram();
                     hologram.checkAndUpdateShownStateForPlayer(p);
@@ -101,7 +101,7 @@ public class FancyHologramsTestCMD extends Command {
             displayData.setShadowStrength(3);
             displayData.setVisibilityDistance(100);
 
-            HologramData data = new HologramData("holo-test1", displayData, HologramType.TEXT, textData);
+            HologramData data = new HologramData("holo-test1", displayData, HologramType.TEXT, textData, true);
             Hologram hologram = this.plugin.getHologramsManager().create(data);
             hologram.createHologram();
             hologram.checkAndUpdateShownStateForPlayer(p);
