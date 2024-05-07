@@ -5,8 +5,8 @@ plugins {
     id("java-library")
     id("maven-publish")
 
-    id("xyz.jpenilla.run-paper") version "2.2.2"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("xyz.jpenilla.run-paper") version "2.2.4"
+    id("io.github.goooler.shadow") version "8.1.7"
 }
 
 runPaper.folia.registerTask()
@@ -14,14 +14,15 @@ runPaper.folia.registerTask()
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.0.6" + (if (buildId != null) ".$buildId" else "")
+    version = "2.1.0-SNAPSHOT" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
 
     repositories {
         mavenCentral()
 
-        maven(url = "https://papermc.io/repo/repository/maven-public/")
+        maven(url = "https://repo.papermc.io/repository/maven-public/")
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
         maven(url = "https://repo.fancyplugins.de/snapshots")
         maven(url = "https://repo.smrt-1.com/releases")
@@ -125,11 +126,17 @@ tasks {
             expand(props)
         }
     }
+
+    compileJava {
+        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+        options.release = 21
+    }
+
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 

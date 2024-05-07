@@ -1,10 +1,12 @@
 plugins {
     id("java-library")
-    id("io.papermc.paperweight.userdev") version "1.5.11"
+    id("io.papermc.paperweight.userdev") version "1.6.2"
 }
 
 
-val minecraftVersion = "1.20.4"
+val minecraftVersion = "1.20.6"
+
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
 
 
 dependencies {
@@ -28,6 +30,6 @@ tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
 
-        options.release.set(17)
+        options.release.set(21)
     }
 }
