@@ -56,20 +56,21 @@ tasks {
 
         dependsOn(":api:shadowJar")
 
-        relocate("me.dave.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
+//        relocate("me.dave.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
         relocate("io.sentry", "de.oliver.fancyholograms.libs.sentry")
     }
 
     runServer {
-        minecraftVersion(findProperty("minecraftVersion").toString())
+//        minecraftVersion(findProperty("minecraftVersion").toString())
+        minecraftVersion("1.20.6")
 
         downloadPlugins {
-            hangar("FancyNpcs", findProperty("fancyNpcsVersion").toString())
-            hangar("PlaceholderAPI", "2.11.5")
-            modrinth("miniplaceholders", "M6gjRuIx")
-
-            hangar("ViaVersion", "4.9.3-SNAPSHOT+216")
-            hangar("ViaBackwards", "4.9.2-SNAPSHOT+131")
+//            hangar("FancyNpcs", findProperty("fancyNpcsVersion").toString())
+//            hangar("PlaceholderAPI", "2.11.5")
+//            modrinth("miniplaceholders", "M6gjRuIx")
+//
+//            hangar("ViaVersion", "4.9.3-SNAPSHOT+216")
+//            hangar("ViaBackwards", "4.9.2-SNAPSHOT+131")
         }
     }
 
