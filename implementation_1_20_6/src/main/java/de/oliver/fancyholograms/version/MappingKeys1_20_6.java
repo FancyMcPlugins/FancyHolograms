@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.version;
 
-public enum MappingKeys1_20_5 {
+public enum MappingKeys1_20_6 {
 
     DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID("DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID"),
     DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID("DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID"),
@@ -10,7 +10,7 @@ public enum MappingKeys1_20_5 {
 
     private final String mapping;
 
-    MappingKeys1_20_5(String mapping) {
+    MappingKeys1_20_6(String mapping) {
         this.mapping = mapping;
     }
 

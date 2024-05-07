@@ -40,12 +40,12 @@ import java.util.ArrayList;
 
 import static de.oliver.fancylib.ReflectionUtils.getValue;
 
-public final class Hologram1_20_5 extends Hologram {
+public final class Hologram1_20_6 extends Hologram {
 
     @Nullable
     private Display display;
 
-    public Hologram1_20_5(@NotNull final HologramData data) {
+    public Hologram1_20_6(@NotNull final HologramData data) {
         super(data);
     }
 
@@ -70,10 +70,10 @@ public final class Hologram1_20_5 extends Hologram {
             case ITEM -> this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, world);
         }
 
-        final var DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_5.DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID.getMapping());
+        final var DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_6.DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID.getMapping());
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID, 1);
 
-        final var DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_5.DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
+        final var DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_6.DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID, 0);
 
         updateHologram();
@@ -113,11 +113,11 @@ public final class Hologram1_20_5 extends Hologram {
 
         if (display instanceof TextDisplay textDisplay && data.getTypeData() instanceof TextHologramData textData) {
             // line width
-            final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_5.TEXT_DISPLAY__DATA_LINE_WIDTH_ID.getMapping());
+            final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_6.TEXT_DISPLAY__DATA_LINE_WIDTH_ID.getMapping());
             display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
 
             // background
-            final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_5.TEXT_DISPLAY__DATA_BACKGROUND_COLOR_ID.getMapping());
+            final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_6.TEXT_DISPLAY__DATA_BACKGROUND_COLOR_ID.getMapping());
 
             final var background = textData.getBackground();
             if (background == null) {
