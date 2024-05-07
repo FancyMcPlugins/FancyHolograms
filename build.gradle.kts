@@ -5,8 +5,8 @@ plugins {
     id("java-library")
     id("maven-publish")
 
-    id("xyz.jpenilla.run-paper") version "2.2.2"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("xyz.jpenilla.run-paper") version "2.2.4"
+    id("io.github.goooler.shadow") version "8.1.7"
 }
 
 runPaper.folia.registerTask()
@@ -14,14 +14,15 @@ runPaper.folia.registerTask()
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.0.6" + (if (buildId != null) ".$buildId" else "")
+    version = "2.1.0-SNAPSHOT" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
 
     repositories {
         mavenCentral()
 
-        maven(url = "https://papermc.io/repo/repository/maven-public/")
+        maven(url = "https://repo.papermc.io/repository/maven-public/")
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
         maven(url = "https://repo.fancyplugins.de/snapshots")
         maven(url = "https://repo.smrt-1.com/releases")
@@ -33,6 +34,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
+    implementation(project(":implementation_1_20_6", configuration = "reobf"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
@@ -54,20 +56,21 @@ tasks {
 
         dependsOn(":api:shadowJar")
 
-        relocate("me.dave.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
+//        relocate("me.dave.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
         relocate("io.sentry", "de.oliver.fancyholograms.libs.sentry")
     }
 
     runServer {
-        minecraftVersion(findProperty("minecraftVersion").toString())
+//        minecraftVersion(findProperty("minecraftVersion").toString())
+        minecraftVersion("1.20.6")
 
         downloadPlugins {
-            hangar("FancyNpcs", findProperty("fancyNpcsVersion").toString())
-            hangar("PlaceholderAPI", "2.11.5")
-            modrinth("miniplaceholders", "M6gjRuIx")
-
-            hangar("ViaVersion", "4.9.3-SNAPSHOT+216")
-            hangar("ViaBackwards", "4.9.2-SNAPSHOT+131")
+//            hangar("FancyNpcs", findProperty("fancyNpcsVersion").toString())
+//            hangar("PlaceholderAPI", "2.11.5")
+//            modrinth("miniplaceholders", "M6gjRuIx")
+//
+//            hangar("ViaVersion", "4.9.3-SNAPSHOT+216")
+//            hangar("ViaBackwards", "4.9.2-SNAPSHOT+131")
         }
     }
 
@@ -124,11 +127,17 @@ tasks {
             expand(props)
         }
     }
+
+    compileJava {
+        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+        options.release = 21
+    }
+
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
