@@ -24,8 +24,8 @@ public class ScaleCMD implements Subcommand {
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
         final var scaleX = Floats.tryParse(args[3]);
-        final var scaleY = Floats.tryParse(args[4]);
-        final var scaleZ = Floats.tryParse(args[5]);
+        final var scaleY = args.length >= 6 ? Floats.tryParse(args[4]) : scaleX;
+        final var scaleZ = args.length >= 6 ? Floats.tryParse(args[5]) : scaleX;
 
         if (scaleX == null || scaleY == null || scaleZ == null) {
             MessageHelper.error(player, "Could not parse scale");
