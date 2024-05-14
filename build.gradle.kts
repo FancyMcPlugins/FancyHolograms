@@ -4,8 +4,9 @@ import java.io.InputStreamReader
 plugins {
     id("java-library")
     id("maven-publish")
+    id("io.papermc.paperweight.userdev") version "1.7.1" apply false
 
-    id("xyz.jpenilla.run-paper") version "2.2.4"
+    id("xyz.jpenilla.run-paper") version "2.3.0"
     id("io.github.goooler.shadow") version "8.1.7"
 }
 
@@ -35,7 +36,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-//    implementation(project(":implementation_1_20_6", configuration = "reobf"))
+    implementation(project(":implementation_1_20_6", configuration = "reobf"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
