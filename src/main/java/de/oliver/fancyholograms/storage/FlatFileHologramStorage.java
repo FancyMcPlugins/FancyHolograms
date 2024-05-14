@@ -219,6 +219,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var location = new Location(Bukkit.getWorld(world), x, y, z, ((float) yaw), ((float) pitch));
 
             final var text = config.getStringList("text");
+            final var bedrockText = config.getStringList("bedrock_text");
             final var textHasShadow = config.getBoolean("text_shadow", TextHologramData.DEFAULT_TEXT_SHADOW_STATE);
             final var isSeeThrough = config.getBoolean("see_through", TextHologramData.DEFAULT_SEE_THROUGH);
             final var textUpdateInterval = config.getInt("update_text_interval", TextHologramData.DEFAULT_TEXT_UPDATE_INTERVAL);
@@ -261,7 +262,7 @@ public class FlatFileHologramStorage implements HologramStorage {
 
             DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc, visibleByDefault);
 
-            TextHologramData textData = new TextHologramData(text, background, textAlignment, textHasShadow, isSeeThrough, textUpdateInterval);
+            TextHologramData textData = new TextHologramData(text, bedrockText, background, textAlignment, textHasShadow, isSeeThrough, textUpdateInterval);
 
             return new HologramData(name, displayData, HologramType.TEXT, textData);
         }

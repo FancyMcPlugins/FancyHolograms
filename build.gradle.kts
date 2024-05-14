@@ -27,6 +27,7 @@ allprojects {
         maven(url = "https://repo.fancyplugins.de/snapshots")
         maven(url = "https://repo.smrt-1.com/releases")
         maven(url = "https://repo.viaversion.com/")
+        maven(url = "https://repo.opencollab.dev/main/")
     }
 }
 
@@ -34,7 +35,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-    implementation(project(":implementation_1_20_6", configuration = "reobf"))
+//    implementation(project(":implementation_1_20_6", configuration = "reobf"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
