@@ -11,7 +11,7 @@ dependencies {
 
     implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
     implementation("org.geysermc.geyser:api:${findProperty("geyserVersion")}")
-    implementation("org.geysermc.floodgate.api:${findProperty("geyserVersion")}")
+    implementation("org.geysermc.floodgate:api:${findProperty("geyserVersion")}")
 }
 
 tasks {
