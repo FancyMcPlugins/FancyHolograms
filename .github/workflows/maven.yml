@@ -16,5 +16,5 @@ jobs:
           gradle-version: 8.7
       - uses: actions/upload-artifact@v4
         with:
-          name: AEnchantments
-          path: "AEnchantments/build/libs/*.jar"
+          name: FancyHolograms
+          path: "build/libs/*.jar"
