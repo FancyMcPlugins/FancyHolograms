@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.api.utils;
 
 import org.bukkit.entity.Player;
 import org.geysermc.geyser.api.GeyserApi;
+import org.geysermc.floodgate.api.FloodgateApi;
 
 public class GeyserChecker {
 
@@ -12,9 +13,15 @@ public class GeyserChecker {
         }
 
         try {
-            boolean b = GeyserApi.api().connectionByUuid(player.getUniqueId()) != null;
+            boolean b = GeyserApi.api().isBedrockPlayer(player.getUniqueId());
             System.out.println("GeyserChecker: " + b);
             return b;
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        try {
+            // ok lets try and use floodgate?
+            return FloodgateApi.getInstance().isFloodgatePlayer(player.getUniqueId());
         } catch (Throwable e) {
             e.printStackTrace();
             return false;
