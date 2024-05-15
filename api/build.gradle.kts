@@ -10,8 +10,7 @@ dependencies {
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
     implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
-    implementation("org.geysermc.geyser:api:${findProperty("geyserVersion")}")
-    implementation("org.geysermc.floodgate:api:${findProperty("geyserVersion")}")
+    compileOnly("org.geysermc.geyser:api:${findProperty("geyserVersion")}")
 }
 
 tasks {
