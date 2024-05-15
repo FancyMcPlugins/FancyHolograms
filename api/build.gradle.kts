@@ -8,9 +8,9 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    compileOnly("org.geysermc.geyser:api:${findProperty("geyserVersion")}")
 
     implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
-    implementation("org.geysermc.geyser:api:${findProperty("geyserVersion")}")
 }
 
 tasks {
