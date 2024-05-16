@@ -28,7 +28,7 @@ allprojects {
         maven(url = "https://repo.fancyplugins.de/snapshots")
         maven(url = "https://repo.smrt-1.com/releases")
         maven(url = "https://repo.viaversion.com/")
-        maven(url = "https://repo.opencollab.dev/main/")
+        maven(url = "https://repo.opencollab.dev/main/") // Floodgate
     }
 }
 
