@@ -2,7 +2,6 @@ package de.oliver.fancyholograms.api;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
-import de.oliver.fancyholograms.api.utils.GeyserChecker;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
