@@ -117,7 +117,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         registerListeners();
 
-        checkForNewerVersion();
+        versionConfig.load();
+        if (!getHologramConfiguration().areVersionNotificationsMuted()) {
+            checkForNewerVersion();
+        }
 
         registerMetrics();
 
@@ -233,8 +236,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     }
 
     private void checkForNewerVersion() {
-        versionConfig.load();
-
         final var current = new ComparableVersion(versionConfig.getVersion());
 
         supplyAsync(getVersionFetcher()::fetchNewestVersion).thenApply(Objects::requireNonNull).whenComplete((newest, error) -> {
