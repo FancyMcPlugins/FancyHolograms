@@ -2,7 +2,6 @@ package de.oliver.fancyholograms.api;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
-import de.oliver.fancyholograms.api.utils.GeyserChecker;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -187,8 +186,11 @@ public abstract class Hologram {
             return null;
         }
         var text = textData.getText();
-        if (GeyserChecker.isGeyserPlayer(player) && !textData.getBedrockText().isEmpty()) text = textData.getBedrockText();
-
+        var prefix = FancyHologramsPlugin.get().getHologramConfiguration().getGeyserPrefix();
+        if (player != null && player.getName().startsWith(prefix) &&
+                !textData.getBedrockText().isEmpty() && !prefix.isEmpty()) {
+            text = textData.getBedrockText();
+        }
         return ModernChatColorHandler.translate(String.join("\n", text), player);
     }
 

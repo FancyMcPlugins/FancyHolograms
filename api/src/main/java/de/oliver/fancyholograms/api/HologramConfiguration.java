@@ -59,4 +59,6 @@ public interface HologramConfiguration {
      * @return {@code true} if the plugin should send errors to Sentry, {@code false} otherwise.
      */
     boolean reportErrorsToSentry();
+
+    String getGeyserPrefix();
 }

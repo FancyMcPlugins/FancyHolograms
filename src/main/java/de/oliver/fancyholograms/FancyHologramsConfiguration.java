@@ -50,6 +50,11 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
      */
     private boolean reportErrorsToSentry;
 
+    /**
+     * The prefix used for Geyser players.
+     */
+    private String geyserPrefix;
+
     @Override
     public void reload(@NotNull FancyHologramsPlugin plugin) {
         FancyHolograms pluginImpl = (FancyHolograms) plugin;
@@ -77,6 +82,9 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
 
         reportErrorsToSentry = (boolean) ConfigHelper.getOrDefault(config, "report_errors_to_sentry", false);
         config.setInlineComments("report_errors_to_sentry", List.of("Whether the plugin should report errors to Sentry."));
+
+        geyserPrefix = (String) ConfigHelper.getOrDefault(config, "geyser_prefix", "");
+        config.setInlineComments("geyser_prefix", List.of("The prefix used for Geyser players."));
 
         if (pluginImpl.isEnabled()) {
             plugin.getScheduler().runTaskAsynchronously(pluginImpl::saveConfig);
@@ -120,5 +128,10 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
     @Override
     public boolean reportErrorsToSentry() {
         return reportErrorsToSentry;
+    }
+
+    @Override
+    public String getGeyserPrefix() {
+        return geyserPrefix;
     }
 }
