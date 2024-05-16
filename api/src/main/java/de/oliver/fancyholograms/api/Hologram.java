@@ -187,13 +187,10 @@ public abstract class Hologram {
             return null;
         }
         var text = textData.getText();
-        if (GeyserChecker.isGeyserPlayer(player) && !textData.getBedrockText().isEmpty()) {
+        if (player != null && player.getName().startsWith(FancyHologramsPlugin.get().getHologramConfiguration().getGeyserPrefix()) &&
+                !textData.getBedrockText().isEmpty()) {
             text = textData.getBedrockText();
-            System.out.println("Using bedrock text");
         }
-        System.out.println(textData.getBedrockText());
-        System.out.println(textData.getText());
-        System.out.println("Using text " + text);
         return ModernChatColorHandler.translate(String.join("\n", text), player);
     }
 
