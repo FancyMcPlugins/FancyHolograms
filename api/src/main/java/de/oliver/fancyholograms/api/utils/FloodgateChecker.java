@@ -11,10 +11,8 @@ public class FloodgateChecker {
         }
 
         try {
-            boolean b = FloodgateApi.getInstance().isFloodgateId(player.getUniqueId());
-            return b;
-        } catch (Throwable e) {
-            e.printStackTrace();
+            return FloodgateApi.getInstance().isFloodgateId(player.getUniqueId());
+        } catch (Throwable ignored) {
             return false;
         }
     }
