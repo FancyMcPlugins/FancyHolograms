@@ -9,7 +9,6 @@ dependencies {
     compileOnly("org.geysermc.floodgate:api:${findProperty("geyserVersion")}")
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("org.geysermc.geyser:api:${findProperty("geyserVersion")}")
 
     implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
