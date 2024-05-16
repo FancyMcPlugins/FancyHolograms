@@ -186,8 +186,9 @@ public abstract class Hologram {
             return null;
         }
         var text = textData.getText();
-        if (player != null && player.getName().startsWith(FancyHologramsPlugin.get().getHologramConfiguration().getGeyserPrefix()) &&
-                !textData.getBedrockText().isEmpty()) {
+        var prefix = FancyHologramsPlugin.get().getHologramConfiguration().getGeyserPrefix();
+        if (player != null && player.getName().startsWith(prefix) &&
+                !textData.getBedrockText().isEmpty() && !prefix.isEmpty()) {
             text = textData.getBedrockText();
         }
         return ModernChatColorHandler.translate(String.join("\n", text), player);
