@@ -16,8 +16,6 @@ tasks {
     shadowJar {
         relocate("me.dave.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
 
-        minimize()
-
         archiveClassifier.set("")
     }
 

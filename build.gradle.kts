@@ -51,8 +51,8 @@ tasks {
     }
 
     shadowJar {
+        dependsOn(":api:shadowJar")
         relocate("io.sentry", "de.oliver.fancyholograms.libs.sentry")
-
         minimize()
 
         archiveBaseName.set(rootProject.name)
