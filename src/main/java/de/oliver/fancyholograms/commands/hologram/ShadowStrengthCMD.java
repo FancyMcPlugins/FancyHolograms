@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.commands.hologram;
 import com.google.common.primitives.Floats;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -29,24 +30,29 @@ public class ShadowStrengthCMD implements Subcommand {
             return false;
         }
 
-        if (Float.compare(strength, hologram.getData().getDisplayData().getShadowStrength()) == 0) {
+        if (!(hologram.getData() instanceof DisplayHologramData displayData)) {
+            MessageHelper.error(player, "This command can only be used on display holograms");
+            return false;
+        }
+
+        if (Float.compare(strength, displayData.getShadowStrength()) == 0) {
             MessageHelper.warning(player, "This hologram already has this shadow strength");
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        copied.getDisplayData().setShadowStrength(strength);
+        final var copied = displayData.copy(displayData.getName());
+        copied.setShadowStrength(strength);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.SHADOW_STRENGTH)) {
             return false;
         }
 
-        if (Float.compare(copied.getDisplayData().getShadowStrength(), hologram.getData().getDisplayData().getShadowStrength()) == 0) {
+        if (Float.compare(copied.getShadowStrength(), displayData.getShadowStrength()) == 0) {
             MessageHelper.warning(player, "This hologram already has this shadow strength");
             return false;
         }
 
-        hologram.getData().getDisplayData().setShadowStrength(copied.getDisplayData().getShadowStrength());
+        displayData.setShadowStrength(copied.getShadowStrength());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

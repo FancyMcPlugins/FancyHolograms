@@ -24,7 +24,7 @@ public class TeleportCMD implements Subcommand {
             return false;
         }
 
-        final var location = hologram.getData().getDisplayData().getLocation();
+        final var location = hologram.getData().getLocation();
 
         if (location == null || location.getWorld() == null) {
             MessageHelper.error(player, "Could not teleport to the hologram");

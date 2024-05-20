@@ -26,7 +26,7 @@ public class BackgroundCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
@@ -57,19 +57,19 @@ public class BackgroundCMD implements Subcommand {
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        ((TextHologramData) copied.getTypeData()).setBackground(background);
+        final var copied = textData.copy(textData.getName());
+        copied.setBackground(background);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BACKGROUND)) {
             return false;
         }
 
-        if (Objects.equals(((TextHologramData) copied.getTypeData()).getBackground(), textData.getBackground())) {
+        if (Objects.equals(copied.getBackground(), textData.getBackground())) {
             MessageHelper.warning(player, "This hologram already has this background color");
             return false;
         }
 
-        textData.setBackground(((TextHologramData) copied.getTypeData()).getBackground());
+        textData.setBackground(copied.getBackground());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

@@ -3,7 +3,6 @@ package de.oliver.fancyholograms.commands.hologram;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.data.BlockHologramData;
-import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -24,7 +23,7 @@ public class BlockCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (!(hologram.getData().getTypeData() instanceof BlockHologramData blockData)) {
+        if (!(hologram.getData() instanceof BlockHologramData blockData)) {
             MessageHelper.error(player, "This command can only be used on item holograms");
             return false;
         }
@@ -40,14 +39,14 @@ public class BlockCMD implements Subcommand {
             return false;
         }
 
-        HologramData copied = hologram.getData().copy();
-        ((BlockHologramData) copied.getTypeData()).setBlock(block);
+        final var copied = blockData.copy(blockData.getName());
+        copied.setBlock(block);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BILLBOARD)) {
             return false;
         }
 
-        if (((BlockHologramData) copied.getTypeData()).getBlock() == blockData.getBlock()) {
+        if (copied.getBlock() == blockData.getBlock()) {
             MessageHelper.warning(player, "This block is already set");
             return false;
         }

@@ -142,28 +142,27 @@ public class FlatFileHologramStorage implements HologramStorage {
                     continue;
                 }
 
-                String typeName = holoSection.getString("type", "TEXT");
+                String typeName = holoSection.getString("type");
+                if (typeName == null) {
+                    FancyHolograms.get().getLogger().warning("HologramType was not saved");
+                    continue;
+                }
+
                 HologramType type = HologramType.getByName(typeName);
                 if (type == null) {
                     FancyHolograms.get().getLogger().warning("Could not parse HologramType");
                     continue;
                 }
 
-                DisplayHologramData displayData = new DisplayHologramData();
+                DisplayHologramData displayData = null;
+                switch (type) {
+                    case TEXT -> displayData = new TextHologramData(name, new Location(null, 0, 0, 0));
+                    case ITEM -> displayData = new ItemHologramData(name, new Location(null, 0, 0, 0));
+                    case BLOCK -> displayData = new BlockHologramData(name, new Location(null, 0, 0, 0));
+                }
                 displayData.read(holoSection, name);
 
-                Data typeData = null;
-                switch (type) {
-                    case TEXT -> typeData = new TextHologramData();
-                    case ITEM -> typeData = new ItemHologramData();
-                    case BLOCK -> typeData = new BlockHologramData();
-                }
-
-                typeData.read(holoSection, name);
-
-                HologramData data = new HologramData(name, displayData, type, typeData);
-
-                Hologram hologram = FancyHolograms.get().getHologramManager().create(data);
+                Hologram hologram = FancyHolograms.get().getHologramManager().create(displayData);
                 holograms.add(hologram);
             }
 
@@ -222,7 +221,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var textHasShadow = config.getBoolean("text_shadow", TextHologramData.DEFAULT_TEXT_SHADOW_STATE);
             final var isSeeThrough = config.getBoolean("see_through", TextHologramData.DEFAULT_SEE_THROUGH);
             final var textUpdateInterval = config.getInt("update_text_interval", TextHologramData.DEFAULT_TEXT_UPDATE_INTERVAL);
-            final var visibilityDistance = config.getInt("visibility_distance", DisplayHologramData.DEFAULT_VISIBILITY_DISTANCE);
+            final var visibilityDistance = config.getInt("visibility_distance", HologramData.DEFAULT_VISIBILITY_DISTANCE);
             final var scaleX = config.getDouble("scale_x", 1);
             final var scaleY = config.getDouble("scale_y", 1);
             final var scaleZ = config.getDouble("scale_z", 1);
@@ -232,7 +231,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var billboardName = config.getString("billboard", DisplayHologramData.DEFAULT_BILLBOARD.name());
             final var textAlignmentName = config.getString("text_alignment", TextHologramData.DEFAULT_TEXT_ALIGNMENT.name());
             final var linkedNpc = config.getString("linkedNpc");
-            final var visibleByDefault = config.getBoolean("visible_by_default", DisplayHologramData.DEFAULT_IS_VISIBLE);
+            final var visibleByDefault = config.getBoolean("visible_by_default", HologramData.DEFAULT_IS_VISIBLE);
 
             final var billboard = switch (billboardName.toLowerCase(Locale.ROOT)) {
                 case "fixed" -> Display.Billboard.FIXED;
@@ -258,12 +257,23 @@ public class FlatFileHologramStorage implements HologramStorage {
                 }
             }
 
+            TextHologramData textHologramData = new TextHologramData(name, location);
+            textHologramData
+                .setText(text)
+                .setBackground(background)
+                .setTextAlignment(textAlignment)
+                .setTextShadow(textHasShadow)
+                .setSeeThrough(isSeeThrough)
+                .setTextUpdateInterval(textUpdateInterval)
+                .setScale(new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ))
+                .setShadowRadius((float) shadowRadius)
+                .setShadowStrength((float) shadowStrength)
+                .setBillboard(billboard)
+                .setVisibilityDistance(visibilityDistance)
+                .setVisibleByDefault(visibleByDefault)
+                .setLinkedNpcName(linkedNpc);
 
-            DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc, visibleByDefault);
-
-            TextHologramData textData = new TextHologramData(text, background, textAlignment, textHasShadow, isSeeThrough, textUpdateInterval);
-
-            return new HologramData(name, displayData, HologramType.TEXT, textData);
+            return textHologramData;
         }
     }
 }

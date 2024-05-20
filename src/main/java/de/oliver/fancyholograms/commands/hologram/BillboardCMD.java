@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.commands.hologram;
 import com.google.common.base.Enums;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -32,24 +33,29 @@ public class BillboardCMD implements Subcommand {
             return false;
         }
 
-        if (billboard == hologram.getData().getDisplayData().getBillboard()) {
+        if (!(hologram.getData() instanceof DisplayHologramData displayData)) {
+            MessageHelper.error(player, "This command can only be used on display holograms");
+            return false;
+        }
+
+        if (billboard == displayData.getBillboard()) {
             MessageHelper.warning(player, "This billboard is already set");
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        copied.getDisplayData().setBillboard(billboard);
+        final var copied = displayData.copy(displayData.getName());
+        copied.setBillboard(billboard);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BILLBOARD)) {
             return false;
         }
 
-        if (copied.getDisplayData().getBillboard() == hologram.getData().getDisplayData().getBillboard()) {
+        if (copied.getBillboard() == displayData.getBillboard()) {
             MessageHelper.warning(player, "This billboard is already set");
             return false;
         }
 
-        hologram.getData().getDisplayData().setBillboard(copied.getDisplayData().getBillboard());
+        displayData.setBillboard(copied.getBillboard());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

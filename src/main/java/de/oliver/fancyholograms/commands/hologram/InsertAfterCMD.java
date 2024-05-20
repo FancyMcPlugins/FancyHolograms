@@ -24,7 +24,7 @@ public class InsertAfterCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
@@ -49,14 +49,14 @@ public class InsertAfterCMD implements Subcommand {
         final var lines = new ArrayList<>(textData.getText());
         lines.add(Math.min(index, lines.size()), text);
 
-        final var copied = hologram.getData().copy();
-        ((TextHologramData) copied.getTypeData()).setText(lines);
+        final var copied = textData.copy(textData.getName());
+        copied.setText(lines);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.TEXT)) {
             return false;
         }
 
-        textData.setText(((TextHologramData) copied.getTypeData()).getText());
+        textData.setText(copied.getText());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

@@ -53,26 +53,20 @@ public class CreateCMD implements Subcommand {
             return false;
         }
 
-        DisplayHologramData displayData = DisplayHologramData.getDefault(player.getLocation().clone());
-
-        Data typeData = null;
+        DisplayHologramData displayData = null;
         switch (type) {
-            case TEXT -> typeData = TextHologramData.getDefault(name);
+            case TEXT -> displayData = TextHologramData.getDefault(name, player.getLocation());
             case ITEM -> {
-                typeData = ItemHologramData.getDefault();
+                displayData = ItemHologramData.getDefault(name, player.getLocation());
                 displayData.setBillboard(Display.Billboard.FIXED);
             }
             case BLOCK -> {
-                typeData = BlockHologramData.getDefault();
+                displayData = BlockHologramData.getDefault(name, player.getLocation());
                 displayData.setBillboard(Display.Billboard.FIXED);
             }
         }
 
-
-        final var data = new HologramData(name, displayData, type, typeData);
-
-        final var holo = FancyHolograms.get().getHologramsManager().create(data);
-
+        final var holo = FancyHolograms.get().getHologramsManager().create(displayData);
         if (!new HologramCreateEvent(holo, player).callEvent()) {
             MessageHelper.error(player, "Creating the hologram was cancelled");
             return false;

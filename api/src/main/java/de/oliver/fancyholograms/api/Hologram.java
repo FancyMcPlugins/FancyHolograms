@@ -31,17 +31,19 @@ public abstract class Hologram {
     public static final TextColor TRANSPARENT = () -> 0;
     protected static final int MINIMUM_PROTOCOL_VERSION = 762;
 
-    @NotNull
-    protected final HologramData data;
+    protected final @NotNull HologramData data;
     /**
      * Set of UUIDs of players to whom the hologram is currently shown.
      */
-    @NotNull
-    protected final Set<UUID> shown = new HashSet<>();
-
+    protected final @NotNull Set<UUID> viewers = new HashSet<>();
 
     protected Hologram(@NotNull final HologramData data) {
         this.data = data;
+    }
+
+    @NotNull
+    public String getName() {
+        return data.getName();
     }
 
     public final @NotNull HologramData getData() {
@@ -123,11 +125,11 @@ public abstract class Hologram {
     }
 
     public final @NotNull @UnmodifiableView Set<UUID> getShownToPlayers() {
-        return Collections.unmodifiableSet(this.shown);
+        return Collections.unmodifiableSet(this.viewers);
     }
 
     public final boolean isShown(@NotNull final UUID player) {
-        return this.shown.contains(player);
+        return this.viewers.contains(player);
     }
 
     public final boolean isShown(@NotNull final Player player) {
@@ -135,7 +137,7 @@ public abstract class Hologram {
     }
 
     protected boolean shouldHologramBeShown(@NotNull final Player player) {
-        final var location = getData().getDisplayData().getLocation();
+        final var location = getData().getLocation();
         if (location == null) {
             return false;
         }
@@ -144,11 +146,11 @@ public abstract class Hologram {
             return false;
         }
 
-        if (!getData().getDisplayData().isVisibleByDefault() && !player.hasPermission("fancyholograms.viewhologram." + data.getName())) {
+        if (!getData().isVisibleByDefault() && !player.hasPermission("fancyholograms.viewhologram." + data.getName())) {
             return false;
         }
 
-        int visibilityDistance = data.getDisplayData().getVisibilityDistance();
+        int visibilityDistance = data.getVisibilityDistance();
         double distanceSquared = location.distanceSquared(player.getLocation());
 
         return distanceSquared <= visibilityDistance * visibilityDistance;
@@ -182,7 +184,7 @@ public abstract class Hologram {
      * @return the text shown in the hologram
      */
     public final Component getShownText(@Nullable final Player player) {
-        if (!(getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(getData() instanceof TextHologramData textData)) {
             return null;
         }
 

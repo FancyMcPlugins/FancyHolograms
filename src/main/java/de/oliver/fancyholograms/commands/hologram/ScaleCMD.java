@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.commands.hologram;
 import com.google.common.primitives.Floats;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -32,31 +33,36 @@ public class ScaleCMD implements Subcommand {
             return false;
         }
 
-        if (Float.compare(scaleX, hologram.getData().getDisplayData().getScale().x()) == 0 &&
-                Float.compare(scaleY, hologram.getData().getDisplayData().getScale().y()) == 0 &&
-                Float.compare(scaleZ, hologram.getData().getDisplayData().getScale().z()) == 0) {
+        if (!(hologram.getData() instanceof DisplayHologramData displayData)) {
+            MessageHelper.error(player, "This command can only be used on display holograms");
+            return false;
+        }
+
+        if (Float.compare(scaleX, displayData.getScale().x()) == 0 &&
+                Float.compare(scaleY, displayData.getScale().y()) == 0 &&
+                Float.compare(scaleZ, displayData.getScale().z()) == 0) {
             MessageHelper.warning(player, "This hologram is already at this scale");
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        copied.getDisplayData().setScale(new Vector3f(scaleX, scaleY, scaleZ));
+        final var copied = displayData.copy(displayData.getName());
+        copied.setScale(new Vector3f(scaleX, scaleY, scaleZ));
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.SCALE)) {
             return false;
         }
 
-        if (Float.compare(copied.getDisplayData().getScale().x(), hologram.getData().getDisplayData().getScale().x()) == 0 &&
-                Float.compare(copied.getDisplayData().getScale().y(), hologram.getData().getDisplayData().getScale().y()) == 0 &&
-                Float.compare(copied.getDisplayData().getScale().z(), hologram.getData().getDisplayData().getScale().z()) == 0) {
+        if (Float.compare(copied.getScale().x(), displayData.getScale().x()) == 0 &&
+                Float.compare(copied.getScale().y(), displayData.getScale().y()) == 0 &&
+                Float.compare(copied.getScale().z(), displayData.getScale().z()) == 0) {
             MessageHelper.warning(player, "This hologram is already at this scale");
             return false;
         }
 
-        hologram.getData().getDisplayData().setScale(new Vector3f(
-                copied.getDisplayData().getScale().x(),
-                copied.getDisplayData().getScale().y(),
-                copied.getDisplayData().getScale().z()));
+        displayData.setScale(new Vector3f(
+                copied.getScale().x(),
+                copied.getScale().y(),
+                copied.getScale().z()));
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

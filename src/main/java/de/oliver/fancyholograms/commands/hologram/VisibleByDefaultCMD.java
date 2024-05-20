@@ -24,16 +24,15 @@ public class VisibleByDefaultCMD implements Subcommand {
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        copied.getDisplayData().setVisibleByDefault(visibleByDefault);
+        final var copied = hologram.getData().copy(hologram.getName());
+        copied.setVisibleByDefault(visibleByDefault);
 
-
-        if (hologram.getData().getDisplayData().isVisibleByDefault() == copied.getDisplayData().isVisibleByDefault()) {
+        if (hologram.getData().isVisibleByDefault() == copied.isVisibleByDefault()) {
             MessageHelper.warning(player, "This hologram already has visibility by default set to " + visibleByDefault);
             return false;
         }
 
-        hologram.getData().getDisplayData().setVisibleByDefault(copied.getDisplayData().isVisibleByDefault());
+        hologram.getData().setVisibleByDefault(copied.isVisibleByDefault());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

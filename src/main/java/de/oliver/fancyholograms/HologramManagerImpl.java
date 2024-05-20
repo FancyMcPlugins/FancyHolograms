@@ -162,7 +162,7 @@ public final class HologramManagerImpl implements HologramManager {
             final var time = System.currentTimeMillis();
 
             for (final var hologram : getHolograms()) {
-                if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+                if (!(hologram.getData() instanceof TextHologramData textData)) {
                     continue;
                 }
 
@@ -220,7 +220,7 @@ public final class HologramManagerImpl implements HologramManager {
      * @param hologram The hologram to sync.
      */
     public void syncHologramWithNpc(@NotNull final Hologram hologram) {
-        final var linkedNpcName = hologram.getData().getDisplayData().getLinkedNpcName();
+        final var linkedNpcName = hologram.getData().getLinkedNpcName();
         if (linkedNpcName == null) {
             return;
         }
@@ -235,7 +235,7 @@ public final class HologramManagerImpl implements HologramManager {
         npc.updateForAll();
 
         final var location = npc.getData().getLocation().clone().add(0, npc.getEyeHeight() + 0.5, 0);
-        hologram.getData().getDisplayData().setLocation(location);
+        hologram.getData().setLocation(location);
     }
 
     /**
@@ -244,7 +244,7 @@ public final class HologramManagerImpl implements HologramManager {
      * @param hologram The hologram to refresh.
      */
     public void refreshHologramForPlayersInWorld(@NotNull final Hologram hologram) {
-        final var players = ofNullable(hologram.getData().getDisplayData().getLocation())
+        final var players = ofNullable(hologram.getData().getLocation())
                 .map(Location::getWorld)
                 .map(World::getPlayers)
                 .orElse(Collections.emptyList());

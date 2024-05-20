@@ -49,7 +49,7 @@ public class ListCMD implements Subcommand {
                     .skip((page - 1) * 10)
                     .limit(10)
                     .forEach(holo -> {
-                        final var location = holo.getData().getDisplayData().getLocation();
+                        final var location = holo.getData().getLocation();
                         if (location == null || location.getWorld() == null) {
                             return;
                         }

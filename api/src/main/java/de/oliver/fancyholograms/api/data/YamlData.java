@@ -2,10 +2,9 @@ package de.oliver.fancyholograms.api.data;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-public interface Data {
-    void write(ConfigurationSection section, String name);
+public interface YamlData {
 
     void read(ConfigurationSection section, String name);
 
-    Data copy();
+    void write(ConfigurationSection section, String name);
 }

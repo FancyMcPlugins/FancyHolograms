@@ -1,34 +1,18 @@
 package de.oliver.fancyholograms.api.data;
 
+import de.oliver.fancyholograms.api.HologramType;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class BlockHologramData implements Data {
+public class BlockHologramData extends DisplayHologramData {
 
     public static Material DEFAULT_BLOCK = Material.GRASS_BLOCK;
 
     private Material block;
 
-    public BlockHologramData(Material block) {
-        this.block = block;
-    }
-
-    public BlockHologramData() {
-    }
-
-    public static BlockHologramData getDefault() {
-        return new BlockHologramData(DEFAULT_BLOCK);
-    }
-
-    @Override
-    public void read(ConfigurationSection section, String name) {
-        String blockStr = section.getString("block", "GRASS_BLOCK");
-        block = Material.getMaterial(blockStr.toUpperCase());
-    }
-
-    @Override
-    public void write(ConfigurationSection section, String name) {
-        section.set("block", block.name());
+    public BlockHologramData(String name, Location location) {
+        super(name, HologramType.BLOCK, location);
     }
 
     public Material getBlock() {
@@ -41,7 +25,46 @@ public class BlockHologramData implements Data {
     }
 
     @Override
-    public Data copy() {
-        return new BlockHologramData();
+    public void read(ConfigurationSection section, String name) {
+        super.read(section, name);
+        block = Material.getMaterial(section.getString("block", "GRASS_BLOCK").toUpperCase());
+    }
+
+    @Override
+    public void write(ConfigurationSection section, String name) {
+        super.write(section, name);
+        section.set("block", block.name());
+    }
+
+    public static BlockHologramData getDefault(String name, Location location) {
+        BlockHologramData blockHologramData = new BlockHologramData(name, location);
+        blockHologramData
+            .setBlock(DEFAULT_BLOCK)
+            .setScale(DEFAULT_SCALE)
+            .setShadowRadius(DEFAULT_SHADOW_RADIUS)
+            .setShadowStrength(DEFAULT_SHADOW_STRENGTH)
+            .setBillboard(DEFAULT_BILLBOARD)
+            .setVisibilityDistance(DEFAULT_VISIBILITY_DISTANCE)
+            .setVisibleByDefault(DEFAULT_IS_VISIBLE);
+
+        return blockHologramData;
+    }
+
+    @Override
+    public BlockHologramData copy(String name) {
+        BlockHologramData blockHologramData = new BlockHologramData(name, getLocation());
+        blockHologramData
+            .setBlock(this.getBlock())
+            .setScale(this.getScale())
+            .setShadowRadius(this.getShadowRadius())
+            .setShadowStrength(this.getShadowStrength())
+            .setBillboard(this.getBillboard())
+            .setTranslation(this.getTranslation())
+            .setBrightness(this.getBrightness())
+            .setVisibilityDistance(getVisibilityDistance())
+            .setVisibleByDefault(isVisibleByDefault())
+            .setLinkedNpcName(getLinkedNpcName());
+
+        return blockHologramData;
     }
 }

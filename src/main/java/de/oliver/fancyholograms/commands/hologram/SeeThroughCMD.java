@@ -23,11 +23,10 @@ public class SeeThroughCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
-
 
         final var enabled = switch (args[3].toLowerCase(Locale.ROOT)) {
             case "true" -> true;
@@ -45,8 +44,8 @@ public class SeeThroughCMD implements Subcommand {
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        ((TextHologramData) copied.getTypeData()).setSeeThrough(enabled);
+        final var copied = textData.copy(textData.getName());
+        copied.setSeeThrough(enabled);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.SEE_THROUGH)) {
             return false;
@@ -57,7 +56,7 @@ public class SeeThroughCMD implements Subcommand {
             return false;
         }
 
-        textData.setSeeThrough(((TextHologramData) copied.getTypeData()).isSeeThrough());
+        textData.setSeeThrough(copied.isSeeThrough());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

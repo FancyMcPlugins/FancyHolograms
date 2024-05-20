@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.api.events;
 
 import de.oliver.fancyholograms.api.Hologram;
 import de.oliver.fancyholograms.api.HologramEvent;
-import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.data.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -14,13 +14,9 @@ public final class HologramUpdateEvent extends HologramEvent {
 
     private static final HandlerList handlerList = new HandlerList();
 
-
-    @NotNull
-    private final CommandSender player;
-    @NotNull
-    private final HologramData updatedData;
-    @NotNull
-    private final HologramModification modification;
+    private final @NotNull CommandSender player;
+    private final @NotNull HologramData updatedData;
+    private final @NotNull HologramModification modification;
 
     public HologramUpdateEvent(@NotNull final Hologram hologram, @NotNull final CommandSender player, @NotNull final HologramData updatedData, @NotNull final HologramModification modification) {
         super(hologram, false);
@@ -76,7 +72,7 @@ public final class HologramUpdateEvent extends HologramEvent {
      */
     public enum HologramModification {
         /**
-         * @see HologramData#getText()
+         * @see TextHologramData#getText()
          */
         TEXT,
         /**
@@ -84,36 +80,39 @@ public final class HologramUpdateEvent extends HologramEvent {
          */
         POSITION,
         /**
-         * @see HologramData#getScale()
+         * @see DisplayHologramData#getScale()
          */
         SCALE,
         /**
-         * @see HologramData#getBillboard()
+         * @see TextHologramData#getBillboard()
          */
         BILLBOARD,
         /**
-         * @see HologramData#getBackground()
+         * @see TextHologramData#getBackground()
          */
         BACKGROUND,
         /**
-         * @see HologramData#isTextHasShadow()
+         * @see TextHologramData#hasTextShadow()
          */
         TEXT_SHADOW,
         /**
-         * @see HologramData#getTextAlignment()
+         * @see TextHologramData#getTextAlignment()
          */
         TEXT_ALIGNMENT,
+        /**
+         * @see TextHologramData#isSeeThrough()
+         */
         SEE_THROUGH,
         /**
-         * @see HologramData#getShadowRadius()
+         * @see DisplayHologramData#getShadowRadius()
          */
         SHADOW_RADIUS,
         /**
-         * @see HologramData#getShadowStrength()
+         * @see DisplayHologramData#getShadowStrength()
          */
         SHADOW_STRENGTH,
         /**
-         * @see HologramData#getTextUpdateInterval()
+         * @see TextHologramData#getTextUpdateInterval()
          */
         UPDATE_TEXT_INTERVAL,
         /**

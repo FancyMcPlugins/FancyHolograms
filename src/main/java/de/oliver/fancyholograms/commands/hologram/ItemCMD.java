@@ -30,7 +30,7 @@ public class ItemCMD implements Subcommand {
             return false;
         }
 
-        if (!(hologram.getData().getTypeData() instanceof ItemHologramData itemData)) {
+        if (!(hologram.getData() instanceof ItemHologramData itemData)) {
             MessageHelper.error(player, "This command can only be used on item holograms");
             return false;
         }
@@ -42,24 +42,24 @@ public class ItemCMD implements Subcommand {
         }
 
 
-        if (item == itemData.getItem()) {
+        if (item == itemData.getItemStack()) {
             MessageHelper.warning(player, "This item is already set");
             return false;
         }
 
-        HologramData copied = hologram.getData().copy();
-        ((ItemHologramData) copied.getTypeData()).setItem(item);
+        final var copied = itemData.copy(itemData.getName());
+        copied.setItemStack(item);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BILLBOARD)) {
             return false;
         }
 
-        if (((ItemHologramData) copied.getTypeData()).getItem() == itemData.getItem()) {
+        if (copied.getItemStack() == itemData.getItemStack()) {
             MessageHelper.warning(player, "This item is already set");
             return false;
         }
 
-        itemData.setItem(item);
+        itemData.setItemStack(item);
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);
