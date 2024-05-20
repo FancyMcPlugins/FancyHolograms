@@ -39,10 +39,8 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 public final class FancyHolograms extends JavaPlugin implements FancyHologramsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6"};
+    private static @Nullable FancyHolograms INSTANCE;
 
-
-    @Nullable
-    private static FancyHolograms INSTANCE;
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
@@ -56,8 +54,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     );
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private HologramStorage hologramStorage = new FlatFileHologramStorage();
-    @Nullable
-    private HologramManagerImpl hologramsManager;
+    private @Nullable HologramManagerImpl hologramsManager;
     private boolean isUsingViaVersion;
 
     public static @NotNull FancyHolograms get() {

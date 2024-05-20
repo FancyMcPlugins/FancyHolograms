@@ -10,13 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 public final class PlayerListener implements Listener {
 
-    @NotNull
-    private final FancyHolograms plugin;
+    private final @NotNull FancyHolograms plugin;
 
     public PlayerListener(@NotNull final FancyHolograms plugin) {
         this.plugin = plugin;
     }
-
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(@NotNull final PlayerJoinEvent event) {

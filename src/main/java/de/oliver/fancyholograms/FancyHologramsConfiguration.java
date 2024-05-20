@@ -17,34 +17,28 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
      * Indicates whether version notifications are muted.
      */
     private boolean versionNotifsMuted;
-
     /**
      * Indicates whether autosave is enabled.
      */
     private boolean autosaveEnabled;
-
     /**
      * The interval at which autosave is performed.
      */
     private int autosaveInterval;
-
     /**
      * Indicates whether the plugin should save holograms when they are changed.
      */
     private boolean saveOnChangedEnabled;
-
     /**
      * The default visibility distance for holograms.
      */
     private int defaultVisibilityDistance;
-
     /**
      * Indicates whether commands should be registered.
      * <p>
      * This is useful for users who want to use the plugin's API only.
      */
     private boolean registerCommands;
-
     /**
      * Indicates whether errors should be reported to Sentry.
      */
@@ -85,7 +79,6 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
             pluginImpl.saveConfig();
         }
     }
-
 
     @Override
     public boolean areVersionNotificationsMuted() {

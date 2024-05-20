@@ -14,13 +14,11 @@ import org.jetbrains.annotations.NotNull;
 
 public final class NpcListener implements Listener {
 
-    @NotNull
-    private final FancyHolograms plugin;
+    private final @NotNull FancyHolograms plugin;
 
     public NpcListener(@NotNull final FancyHolograms plugin) {
         this.plugin = plugin;
     }
-
 
     @EventHandler
     public void onRemove(@NotNull final NpcRemoveEvent event) {

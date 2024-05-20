@@ -26,42 +26,32 @@ import static java.util.Optional.ofNullable;
  */
 public final class HologramManagerImpl implements HologramManager {
 
-    @NotNull
-    private final FancyHolograms plugin;
+    private final @NotNull FancyHolograms plugin;
     /**
      * The adapter function used to create holograms from hologram data.
      */
-    @NotNull
-    private final Function<HologramData, Hologram> adapter;
-
+    private final @NotNull Function<HologramData, Hologram> adapter;
     /**
      * A map of hologram names to their corresponding hologram instances.
      */
     private final Map<String, Hologram> holograms = new ConcurrentHashMap<>();
-
-    /*+
-        If the holograms are loaded or not
+    /**
+        Whether holograms are loaded or not
      */
     private boolean isLoaded = false;
-
 
     HologramManagerImpl(@NotNull final FancyHolograms plugin, @NotNull final Function<HologramData, Hologram> adapter) {
         this.plugin = plugin;
         this.adapter = adapter;
     }
 
-
     /**
-     * Returns a read-only view of the currently loaded holograms.
-     *
-     * @return A read-only collection of holograms.
+     * @return A read-only collection of loaded holograms.
      */
     @Override
-    public @NotNull
-    @UnmodifiableView Collection<Hologram> getHolograms() {
+    public @NotNull @UnmodifiableView Collection<Hologram> getHolograms() {
         return Collections.unmodifiableCollection(this.holograms.values());
     }
-
 
     /**
      * Finds a hologram by name.
@@ -112,7 +102,6 @@ public final class HologramManagerImpl implements HologramManager {
         return optionalHologram;
     }
 
-
     /**
      * Creates a new hologram with the specified hologram data.
      *
@@ -136,7 +125,6 @@ public final class HologramManagerImpl implements HologramManager {
         isLoaded = true;
     }
 
-
     /**
      * Initializes tasks for managing holograms, such as loading and refreshing them.
      *
@@ -152,7 +140,6 @@ public final class HologramManagerImpl implements HologramManager {
                 }
             }
         });
-
 
         final var updateTimes = CacheBuilder.newBuilder()
                 .expireAfterAccess(Duration.ofMinutes(5))
@@ -200,7 +187,6 @@ public final class HologramManagerImpl implements HologramManager {
         loadHolograms();
     }
 
-
     private void clearHolograms() {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
 
@@ -212,7 +198,6 @@ public final class HologramManagerImpl implements HologramManager {
             FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> hologram.hideHologram(online));
         }
     }
-
 
     /**
      * Syncs a hologram with its linked NPC, if any.
@@ -265,5 +250,4 @@ public final class HologramManagerImpl implements HologramManager {
 
         hologram.refreshHologram(players);
     }
-
 }
