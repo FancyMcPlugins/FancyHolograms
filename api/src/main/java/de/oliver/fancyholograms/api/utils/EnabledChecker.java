@@ -1,25 +1,29 @@
 package de.oliver.fancyholograms.api.utils;
 
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
 public class EnabledChecker {
 
-    private static Boolean isEnabled;
-    private static Plugin plugin;
+    private static Boolean enabled;
+    private static FancyHologramsPlugin plugin;
 
     public static Boolean isFancyHologramsEnabled() {
-        if (isEnabled == null) {
-            isEnabled = Bukkit.getPluginManager().isPluginEnabled("FancyHolograms");
-            if (isEnabled) {
-                plugin = Bukkit.getPluginManager().getPlugin("FancyHolograms");
+        if (enabled == null) {
+            enabled = Bukkit.getPluginManager().isPluginEnabled("FancyHolograms");
+            if (enabled) {
+                try {
+                    plugin = (FancyHologramsPlugin) Bukkit.getPluginManager().getPlugin("FancyHolograms");
+                } catch (ClassCastException e) {
+                    throw new IllegalStateException("API failed to access plugin, if using the FancyHolograms API make sure to set the dependency to compile only.");
+                }
             }
         }
 
-        return isEnabled;
+        return enabled;
     }
 
-    public static Plugin getPlugin() {
+    public static FancyHologramsPlugin getPlugin() {
         return plugin;
     }
 }
