@@ -1,17 +1,21 @@
 package de.oliver.fancyholograms.api;
 
-import de.oliver.fancyholograms.api.utils.EnabledChecker;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public interface FancyHologramsPlugin {
 
     static FancyHologramsPlugin get() {
-        if (EnabledChecker.isFancyHologramsEnabled()) {
-            return (FancyHologramsPlugin) EnabledChecker.getPlugin();
+        if (isEnabled()) {
+            return EnabledChecker.getPlugin();
         }
 
         throw new NullPointerException("Plugin is not enabled");
+    }
+
+    static boolean isEnabled() {
+        return EnabledChecker.isFancyHologramsEnabled();
     }
 
     JavaPlugin getPlugin();
@@ -51,4 +55,29 @@ public interface FancyHologramsPlugin {
      * @param reload  Whether the current hologram cache should be reloaded.
      */
     void setHologramStorage(HologramStorage storage, boolean reload);
+
+    class EnabledChecker {
+
+        private static Boolean enabled;
+        private static FancyHologramsPlugin plugin;
+
+        public static Boolean isFancyHologramsEnabled() {
+            if (enabled == null) {
+                enabled = Bukkit.getPluginManager().isPluginEnabled("FancyHolograms");
+                if (enabled) {
+                    try {
+                        plugin = (FancyHologramsPlugin) Bukkit.getPluginManager().getPlugin("FancyHolograms");
+                    } catch (ClassCastException e) {
+                        throw new IllegalStateException("API failed to access plugin, if using the FancyHolograms API make sure to set the dependency to compile only.");
+                    }
+                }
+            }
+
+            return enabled;
+        }
+
+        public static FancyHologramsPlugin getPlugin() {
+            return plugin;
+        }
+    }
 }
