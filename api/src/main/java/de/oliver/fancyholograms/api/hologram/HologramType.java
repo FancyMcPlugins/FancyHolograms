@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms.api;
+package de.oliver.fancyholograms.api.hologram;
 
 import java.util.Arrays;
 import java.util.List;

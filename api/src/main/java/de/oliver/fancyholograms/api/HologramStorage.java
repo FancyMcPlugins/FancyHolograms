@@ -1,5 +1,7 @@
 package de.oliver.fancyholograms.api;
 
+import de.oliver.fancyholograms.api.hologram.Hologram;
+
 import java.util.Collection;
 
 public interface HologramStorage {

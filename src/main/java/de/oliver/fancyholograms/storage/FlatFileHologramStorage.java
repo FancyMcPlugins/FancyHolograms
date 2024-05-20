@@ -1,9 +1,9 @@
 package de.oliver.fancyholograms.storage;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.HologramStorage;
-import de.oliver.fancyholograms.api.HologramType;
+import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.api.data.*;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;

@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancylib.MessageHelper;
 import net.kyori.adventure.text.format.TextColor;

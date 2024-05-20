@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.api.data;
 
-import de.oliver.fancyholograms.api.HologramType;
+import de.oliver.fancyholograms.api.hologram.HologramType;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Display;

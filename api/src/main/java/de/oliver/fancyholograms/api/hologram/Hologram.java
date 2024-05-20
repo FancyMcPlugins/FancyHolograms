@@ -1,5 +1,6 @@
-package de.oliver.fancyholograms.api;
+package de.oliver.fancyholograms.api.hologram;
 
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import me.dave.chatcolorhandler.ModernChatColorHandler;

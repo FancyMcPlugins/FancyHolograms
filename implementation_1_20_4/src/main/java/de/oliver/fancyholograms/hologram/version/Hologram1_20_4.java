@@ -1,9 +1,9 @@
-package de.oliver.fancyholograms.version;
+package de.oliver.fancyholograms.hologram.version;
 
 import com.mojang.math.Transformation;
 import com.viaversion.viaversion.api.Via;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.events.HologramHideEvent;
 import de.oliver.fancyholograms.api.events.HologramShowEvent;

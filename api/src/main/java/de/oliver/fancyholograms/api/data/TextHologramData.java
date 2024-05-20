@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.api.data;
 
-import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramType;
+import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.hologram.HologramType;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Location;
