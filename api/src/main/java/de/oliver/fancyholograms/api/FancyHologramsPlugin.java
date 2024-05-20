@@ -4,6 +4,8 @@ import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 public interface FancyHologramsPlugin {
 
     static FancyHologramsPlugin get() {
@@ -42,11 +44,14 @@ public interface FancyHologramsPlugin {
     void setHologramConfiguration(HologramConfiguration configuration, boolean reload);
 
     /**
-     * Returns the hologram storage.
-     *
      * @return The hologram storage.
      */
     HologramStorage getHologramStorage();
+
+    /**
+     * @return The hologram thread
+     */
+    ScheduledExecutorService getHologramThread();
 
     /**
      * Sets the hologram storage.

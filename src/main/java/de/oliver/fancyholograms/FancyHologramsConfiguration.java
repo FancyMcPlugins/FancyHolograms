@@ -73,7 +73,7 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         config.setInlineComments("report_errors_to_sentry", List.of("Whether the plugin should report errors to Sentry."));
 
         if (pluginImpl.isEnabled()) {
-            plugin.getScheduler().runTaskAsynchronously(pluginImpl::saveConfig);
+            plugin.getHologramThread().submit(pluginImpl::saveConfig);
         } else {
             // Can't dispatch task if plugin is disabled
             pluginImpl.saveConfig();

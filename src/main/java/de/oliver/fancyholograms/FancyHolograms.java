@@ -33,6 +33,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -46,12 +48,17 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
     private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
+    private final ScheduledExecutorService hologramThread = Executors.newSingleThreadScheduledExecutor(
+        new ThreadFactoryBuilder()
+            .setNameFormat("FancyHolograms-Holograms")
+            .build()
+    );
     private final ExecutorService fileStorageExecutor = Executors.newSingleThreadExecutor(
-            new ThreadFactoryBuilder()
-                    .setDaemon(true)
-                    .setPriority(Thread.MIN_PRIORITY + 1)
-                    .setNameFormat("FancyHolograms-FileStorageExecutor")
-                    .build()
+        new ThreadFactoryBuilder()
+            .setDaemon(true)
+            .setPriority(Thread.MIN_PRIORITY + 1)
+            .setNameFormat("FancyHolograms-FileStorageExecutor")
+            .build()
     );
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private HologramStorage hologramStorage = new FlatFileHologramStorage();
@@ -79,13 +86,13 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         if (adapter == null) {
             getLogger().warning("""
-                                                    
-                    --------------------------------------------------
-                    Unsupported minecraft server version.
-                    Please update the server to one of (%s).
-                    Disabling the FancyHolograms plugin.
-                    --------------------------------------------------
-                    """.formatted(String.join(" / ", SUPPORTED_VERSIONS)));
+                                                
+                --------------------------------------------------
+                Unsupported minecraft server version.
+                Please update the server to one of (%s).
+                Disabling the FancyHolograms plugin.
+                --------------------------------------------------
+                """.formatted(String.join(" / ", SUPPORTED_VERSIONS)));
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -101,13 +108,13 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("""
-                                                    
-                    --------------------------------------------------
-                    It is recommended to use Paper as server software.
-                    Because you are not using paper, the plugin
-                    might not work correctly.
-                    --------------------------------------------------
-                    """);
+                                                
+                --------------------------------------------------
+                It is recommended to use Paper as server software.
+                Because you are not using paper, the plugin
+                might not work correctly.
+                --------------------------------------------------
+                """);
         }
 
 
@@ -127,13 +134,18 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         isUsingViaVersion = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
 
         if (getHologramConfiguration().isAutosaveEnabled()) {
-            getScheduler().runTaskTimerAsynchronously(getHologramConfiguration().getAutosaveInterval() * 20L, 20L * 60L * getHologramConfiguration().getAutosaveInterval(), hologramsManager::saveHolograms);
+            getHologramThread().scheduleAtFixedRate(() -> {
+                if (hologramsManager != null) {
+                    hologramsManager.saveHolograms();
+                }
+            }, getHologramConfiguration().getAutosaveInterval(), getHologramConfiguration().getAutosaveInterval() * 60L, TimeUnit.SECONDS);
         }
     }
 
     @Override
     public void onDisable() {
         hologramsManager.saveHolograms();
+        hologramThread.shutdown();
         fileStorageExecutor.shutdown();
         INSTANCE = null;
     }
@@ -194,6 +206,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         }
     }
 
+    public ScheduledExecutorService getHologramThread() {
+        return hologramThread;
+    }
+
     public ExecutorService getFileStorageExecutor() {
         return this.fileStorageExecutor;
     }
@@ -216,7 +232,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             commands.forEach(command -> getServer().getCommandMap().register("fancyholograms", command));
         } else {
             commands.stream().filter(Command::isRegistered).forEach(command ->
-                    command.unregister(getServer().getCommandMap()));
+                command.unregister(getServer().getCommandMap()));
         }
 
         if (false) {
@@ -242,13 +258,13 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             }
 
             getLogger().warning("""
-                                                            
-                    -------------------------------------------------------
-                    You are not using the latest version the FancyHolograms plugin.
-                    Please update to the newest version (%s).
-                    %s
-                    -------------------------------------------------------
-                    """.formatted(newest, getVersionFetcher().getDownloadUrl()));
+                                                        
+                -------------------------------------------------------
+                You are not using the latest version the FancyHolograms plugin.
+                Please update to the newest version (%s).
+                %s
+                -------------------------------------------------------
+                """.formatted(newest, getVersionFetcher().getDownloadUrl()));
         });
     }
 

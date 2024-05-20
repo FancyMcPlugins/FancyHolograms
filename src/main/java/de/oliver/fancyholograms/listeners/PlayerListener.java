@@ -23,7 +23,7 @@ public final class PlayerListener implements Listener {
         }
 
         if (!this.plugin.getHologramConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
-            FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
+            FancyHolograms.get().getHologramThread().submit(() -> {
                 FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true);
             });
         }
@@ -31,7 +31,7 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(@NotNull final PlayerQuitEvent event) {
-        FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
+        FancyHolograms.get().getHologramThread().submit(() -> {
             for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
                 hologram.hideHologram(event.getPlayer());
             }

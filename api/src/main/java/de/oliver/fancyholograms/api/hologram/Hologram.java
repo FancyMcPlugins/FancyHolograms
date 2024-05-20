@@ -80,32 +80,20 @@ public abstract class Hologram {
         delete();
     }
 
-    /**
-     * Must be called asynchronously
-     */
     public final void showHologram(Player player) {
-        show(player);
+        FancyHologramsPlugin.get().getHologramThread().submit(() -> show(player));
     }
 
-    /**
-     * Must be called asynchronously
-     */
     public final void showHologram(Collection<? extends Player> players) {
-        players.forEach(this::showHologram);
+        FancyHologramsPlugin.get().getHologramThread().submit(() -> players.forEach(this::showHologram));
     }
 
-    /**
-     * Must be called asynchronously
-     */
     public final void hideHologram(Player player) {
-        hide(player);
+        FancyHologramsPlugin.get().getHologramThread().submit(() -> hide(player));
     }
 
-    /**
-     * Must be called asynchronously
-     */
     public final void hideHologram(Collection<? extends Player> players) {
-        players.forEach(this::hideHologram);
+        FancyHologramsPlugin.get().getHologramThread().submit(() -> players.forEach(this::hideHologram));
     }
 
     public final void updateHologram() {
@@ -139,10 +127,6 @@ public abstract class Hologram {
 
     protected boolean shouldHologramBeShown(@NotNull final Player player) {
         final var location = getData().getLocation();
-        if (location == null) {
-            return false;
-        }
-
         if (!location.getWorld().equals(player.getWorld())) {
             return false;
         }
@@ -165,7 +149,7 @@ public abstract class Hologram {
      * @param player the player to check and update the shown state for
      */
     public void checkAndUpdateShownStateForPlayer(Player player) {
-        FancyHologramsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
+        FancyHologramsPlugin.get().getHologramThread().submit(() -> {
             boolean isShown = isShown(player);
             boolean shouldHologramBeShown = shouldHologramBeShown(player);
 

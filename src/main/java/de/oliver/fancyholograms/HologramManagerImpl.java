@@ -16,6 +16,7 @@ import org.jetbrains.annotations.UnmodifiableView;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static java.util.Optional.ofNullable;
@@ -36,7 +37,7 @@ public final class HologramManagerImpl implements HologramManager {
      */
     private final Map<String, Hologram> holograms = new ConcurrentHashMap<>();
     /**
-        Whether holograms are loaded or not
+     * Whether holograms are loaded or not
      */
     private boolean isLoaded = false;
 
@@ -91,12 +92,12 @@ public final class HologramManagerImpl implements HologramManager {
         Optional<Hologram> optionalHologram = ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
 
         optionalHologram.ifPresent(hologram ->
-                FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
-                    final var online = List.copyOf(Bukkit.getOnlinePlayers());
+            FancyHolograms.get().getHologramThread().submit(() -> {
+                final var online = List.copyOf(Bukkit.getOnlinePlayers());
 
-                    hologram.hideHologram(online);
-                    plugin.getHologramStorage().delete(hologram);
-                })
+                hologram.hideHologram(online);
+                plugin.getHologramStorage().delete(hologram);
+            })
         );
 
         return optionalHologram;
@@ -142,10 +143,10 @@ public final class HologramManagerImpl implements HologramManager {
         });
 
         final var updateTimes = CacheBuilder.newBuilder()
-                .expireAfterAccess(Duration.ofMinutes(5))
-                .<String, Long>build();
+            .expireAfterAccess(Duration.ofMinutes(5))
+            .<String, Long>build();
 
-        this.plugin.getScheduler().runTaskTimerAsynchronously(20L, 1L, () -> {
+        this.plugin.getHologramThread().scheduleAtFixedRate(() -> {
             final var time = System.currentTimeMillis();
 
             for (final var hologram : getHolograms()) {
@@ -168,15 +169,15 @@ public final class HologramManagerImpl implements HologramManager {
 
                 updateTimes.put(hologram.getData().getName(), time);
             }
-        });
+        }, 50, 1000, TimeUnit.MILLISECONDS);
 
-        this.plugin.getScheduler().runTaskTimerAsynchronously(20L, 20L, () -> {
+        plugin.getHologramThread().scheduleAtFixedRate(() -> {
             for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
                 for (final Player player : Bukkit.getOnlinePlayers()) {
                     hologram.checkAndUpdateShownStateForPlayer(player);
                 }
             }
-        });
+        }, 1, 1, TimeUnit.SECONDS);
     }
 
     /**
@@ -195,7 +196,7 @@ public final class HologramManagerImpl implements HologramManager {
         this.holograms.clear();
 
         for (final var hologram : holograms.values()) {
-            FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> hologram.hideHologram(online));
+            FancyHolograms.get().getHologramThread().submit(() -> hologram.hideHologram(online));
         }
     }
 
@@ -230,9 +231,9 @@ public final class HologramManagerImpl implements HologramManager {
      */
     public void refreshHologramForPlayersInWorld(@NotNull final Hologram hologram) {
         final var players = ofNullable(hologram.getData().getLocation())
-                .map(Location::getWorld)
-                .map(World::getPlayers)
-                .orElse(Collections.emptyList());
+            .map(Location::getWorld)
+            .map(World::getPlayers)
+            .orElse(Collections.emptyList());
 
         hologram.refreshHologram(players);
     }
@@ -244,9 +245,9 @@ public final class HologramManagerImpl implements HologramManager {
      */
     public void refreshHologramForPlayersShownTo(@NotNull final Hologram hologram) {
         final var players = hologram.getShownToPlayers()
-                .stream()
-                .map(Bukkit::getPlayer)
-                .toList();
+            .stream()
+            .map(Bukkit::getPlayer)
+            .toList();
 
         hologram.refreshHologram(players);
     }
