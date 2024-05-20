@@ -1,5 +1,6 @@
-package de.oliver.fancyholograms.api;
+package de.oliver.fancyholograms.api.events;
 
+import de.oliver.fancyholograms.api.Hologram;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
