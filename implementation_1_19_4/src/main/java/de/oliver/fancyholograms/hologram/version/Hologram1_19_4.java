@@ -48,9 +48,8 @@ public final class Hologram1_19_4 extends Hologram {
     }
 
     @Override
-    public org.bukkit.entity.@Nullable Display getDisplayEntity() {
-        if (display == null) return null;
-        return (org.bukkit.entity.Display) display.getBukkitEntity();
+    public @Nullable org.bukkit.entity.Display getDisplayEntity() {
+        return display != null ? (org.bukkit.entity.Display) display.getBukkitEntity() : null;
     }
 
     @Override
@@ -91,7 +90,7 @@ public final class Hologram1_19_4 extends Hologram {
 
         // location data
         final var location = data.getLocation();
-        if (location.getWorld() == null || !location.isWorldLoaded()) {
+        if (!location.isWorldLoaded()) {
             return;
         } else {
             display.setPosRaw(location.x(), location.y(), location.z());
