@@ -143,6 +143,13 @@ public final class Hologram1_20_2 extends Hologram {
                 textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_ALIGN_LEFT));
             }
 
+            // see through
+            if (textData.isSeeThrough()) {
+                textDisplay.setFlags((byte) (textDisplay.getFlags() | TextDisplay.FLAG_SEE_THROUGH));
+            } else {
+                textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_SEE_THROUGH));
+            }
+
             if (textData.getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.RIGHT) {
                 textDisplay.setFlags((byte) (textDisplay.getFlags() | TextDisplay.FLAG_ALIGN_RIGHT));
             } else {
