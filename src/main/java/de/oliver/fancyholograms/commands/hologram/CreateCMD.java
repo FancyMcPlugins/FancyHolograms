@@ -55,13 +55,13 @@ public class CreateCMD implements Subcommand {
 
         DisplayHologramData displayData = null;
         switch (type) {
-            case TEXT -> displayData = TextHologramData.getDefault(name, player.getLocation());
+            case TEXT -> displayData = new TextHologramData(name, player.getLocation());
             case ITEM -> {
-                displayData = ItemHologramData.getDefault(name, player.getLocation());
+                displayData = new ItemHologramData(name, player.getLocation());
                 displayData.setBillboard(Display.Billboard.FIXED);
             }
             case BLOCK -> {
-                displayData = BlockHologramData.getDefault(name, player.getLocation());
+                displayData = new BlockHologramData(name, player.getLocation());
                 displayData.setBillboard(Display.Billboard.FIXED);
             }
         }

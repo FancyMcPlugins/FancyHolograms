@@ -24,6 +24,12 @@ public class HologramData implements YamlData {
     private boolean visibleByDefault = DEFAULT_IS_VISIBLE;
     private String linkedNpcName;
 
+    /**
+     * @param name Name of hologram
+     * @param type Type of hologram
+     * @param location Location of hologram
+     * @apiNote Default values are already set
+     */
     public HologramData(String name, HologramType type, Location location) {
         this.name = name;
         this.type = type;
@@ -135,16 +141,6 @@ public class HologramData implements YamlData {
         section.set("visibility_distance", visibilityDistance);
         section.set("visible_by_default", visibleByDefault);
         section.set("linkedNpc", linkedNpcName);
-    }
-
-    public static HologramData getDefault(String name, Location location) {
-        return getDefault(name, HologramType.TEXT, location);
-    }
-
-    public static HologramData getDefault(String name, HologramType type, Location location) {
-        return new HologramData(name, type, location)
-            .setVisibilityDistance(DEFAULT_VISIBILITY_DISTANCE)
-            .setVisibleByDefault(DEFAULT_IS_VISIBLE);
     }
 
     public HologramData copy(String name) {

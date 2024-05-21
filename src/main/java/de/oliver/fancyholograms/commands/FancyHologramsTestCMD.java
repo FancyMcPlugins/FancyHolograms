@@ -52,7 +52,7 @@ public class FancyHologramsTestCMD extends Command {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     int n = (i * 10 + j) + 1;
-                    TextHologramData textData = TextHologramData.getDefault("holo-" + n, p.getLocation().clone().add(5 * i + 1, 0, 5 * j + 1));
+                    TextHologramData textData = new TextHologramData("holo-" + n, p.getLocation().clone().add(5 * i + 1, 0, 5 * j + 1));
                     textData.setText(Arrays.asList(
                             "<rainbow><b>This is a test hologram! (#" + n + ")</b></rainbow>",
                             "<red>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.",
@@ -73,7 +73,7 @@ public class FancyHologramsTestCMD extends Command {
 
             return true;
         } else if (args.length == 1 && args[0].equalsIgnoreCase("test1")) {
-            TextHologramData textData = TextHologramData.getDefault("holo-test1", p.getLocation());
+            TextHologramData textData = new TextHologramData("holo-test1", p.getLocation());
             textData.setText(Arrays.asList(
                     "<rainbow><b>This is a test hologram!</b></rainbow>",
                     "<red>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.",

@@ -21,13 +21,19 @@ public class TextHologramData extends DisplayHologramData {
 
     private List<String> text;
     private TextColor background;
-    private TextDisplay.TextAlignment textAlignment;
-    private boolean textShadow;
-    private boolean seeThrough;
-    private int textUpdateInterval;
+    private TextDisplay.TextAlignment textAlignment = DEFAULT_TEXT_ALIGNMENT;
+    private boolean textShadow = DEFAULT_TEXT_SHADOW_STATE;
+    private boolean seeThrough = DEFAULT_SEE_THROUGH;
+    private int textUpdateInterval = DEFAULT_TEXT_UPDATE_INTERVAL;
 
+    /**
+     * @param name Name of hologram
+     * @param location Location of hologram
+     * @apiNote Default values are already set
+     */
     public TextHologramData(String name, Location location) {
         super(name, HologramType.TEXT, location);
+        text = new ArrayList<>(List.of("Edit this line with /hologram edit " + name));
     }
 
     public List<String> getText() {
@@ -152,24 +158,6 @@ public class TextHologramData extends DisplayHologramData {
         }
 
         section.set("background", color);
-    }
-
-    public static TextHologramData getDefault(String name, Location location) {
-        TextHologramData textHologramData = new TextHologramData(name, location);
-        textHologramData
-            .setText(new ArrayList<>(List.of("Edit this line with /hologram edit " + name)))
-            .setTextAlignment(DEFAULT_TEXT_ALIGNMENT)
-            .setTextShadow(DEFAULT_TEXT_SHADOW_STATE)
-            .setSeeThrough(DEFAULT_SEE_THROUGH)
-            .setTextUpdateInterval(DEFAULT_TEXT_UPDATE_INTERVAL)
-            .setScale(DEFAULT_SCALE)
-            .setShadowRadius(DEFAULT_SHADOW_RADIUS)
-            .setShadowStrength(DEFAULT_SHADOW_STRENGTH)
-            .setBillboard(DEFAULT_BILLBOARD)
-            .setVisibilityDistance(DEFAULT_VISIBILITY_DISTANCE)
-            .setVisibleByDefault(DEFAULT_IS_VISIBLE);
-
-        return textHologramData;
     }
 
     @Override

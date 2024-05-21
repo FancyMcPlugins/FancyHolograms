@@ -9,8 +9,13 @@ public class BlockHologramData extends DisplayHologramData {
 
     public static Material DEFAULT_BLOCK = Material.GRASS_BLOCK;
 
-    private Material block;
+    private Material block = DEFAULT_BLOCK;
 
+    /**
+     * @param name Name of hologram
+     * @param location Location of hologram
+     * @apiNote Default values are already set
+     */
     public BlockHologramData(String name, Location location) {
         super(name, HologramType.BLOCK, location);
     }
@@ -35,20 +40,6 @@ public class BlockHologramData extends DisplayHologramData {
     public void write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("block", block.name());
-    }
-
-    public static BlockHologramData getDefault(String name, Location location) {
-        BlockHologramData blockHologramData = new BlockHologramData(name, location);
-        blockHologramData
-            .setBlock(DEFAULT_BLOCK)
-            .setScale(DEFAULT_SCALE)
-            .setShadowRadius(DEFAULT_SHADOW_RADIUS)
-            .setShadowStrength(DEFAULT_SHADOW_STRENGTH)
-            .setBillboard(DEFAULT_BILLBOARD)
-            .setVisibilityDistance(DEFAULT_VISIBILITY_DISTANCE)
-            .setVisibleByDefault(DEFAULT_IS_VISIBLE);
-
-        return blockHologramData;
     }
 
     @Override

@@ -10,8 +10,13 @@ public class ItemHologramData extends DisplayHologramData {
 
     public static final ItemStack DEFAULT_ITEM = new ItemStack(Material.APPLE);
 
-    private ItemStack item;
+    private ItemStack item = DEFAULT_ITEM;
 
+    /**
+     * @param name Name of hologram
+     * @param location Location of hologram
+     * @apiNote Default values are already set
+     */
     public ItemHologramData(String name, Location location) {
         super(name, HologramType.ITEM, location);
     }
@@ -36,20 +41,6 @@ public class ItemHologramData extends DisplayHologramData {
     public void write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("item", item);
-    }
-
-    public static ItemHologramData getDefault(String name, Location location) {
-        ItemHologramData itemHologramData = new ItemHologramData(name, location);
-        itemHologramData
-            .setItemStack(DEFAULT_ITEM)
-            .setScale(DEFAULT_SCALE)
-            .setShadowRadius(DEFAULT_SHADOW_RADIUS)
-            .setShadowStrength(DEFAULT_SHADOW_STRENGTH)
-            .setBillboard(DEFAULT_BILLBOARD)
-            .setVisibilityDistance(DEFAULT_VISIBILITY_DISTANCE)
-            .setVisibleByDefault(DEFAULT_IS_VISIBLE);
-
-        return itemHologramData;
     }
 
     @Override

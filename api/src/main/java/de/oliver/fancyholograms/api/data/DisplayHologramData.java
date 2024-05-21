@@ -23,6 +23,12 @@ public class DisplayHologramData extends HologramData {
     private float shadowRadius = DEFAULT_SHADOW_RADIUS;
     private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
 
+    /**
+     * @param name Name of hologram
+     * @param type Type of hologram
+     * @param location Location of hologram
+     * @apiNote Default values are already set
+     */
     public DisplayHologramData(String name, HologramType type, Location location) {
         super(name, type, location);
     }
@@ -117,20 +123,6 @@ public class DisplayHologramData extends HologramData {
         section.set("shadow_radius", shadowRadius);
         section.set("shadow_strength", shadowStrength);
         section.set("billboard", billboard != Display.Billboard.CENTER ? billboard.name().toLowerCase(Locale.ROOT) : null);
-    }
-
-    // TODO: Discuss alternative ways to handle
-    public static DisplayHologramData getDefault(String name, HologramType type, Location location) {
-        DisplayHologramData displayHologramData = new DisplayHologramData(name, type, location);
-        displayHologramData
-            .setScale(DEFAULT_SCALE)
-            .setShadowRadius(DEFAULT_SHADOW_RADIUS)
-            .setShadowStrength(DEFAULT_SHADOW_STRENGTH)
-            .setBillboard(DEFAULT_BILLBOARD)
-            .setVisibilityDistance(DEFAULT_VISIBILITY_DISTANCE)
-            .setVisibleByDefault(DEFAULT_IS_VISIBLE);
-
-        return displayHologramData;
     }
 
     @Override
