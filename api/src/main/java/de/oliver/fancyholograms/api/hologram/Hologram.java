@@ -81,18 +81,30 @@ public abstract class Hologram {
         delete();
     }
 
+    /**
+     * Must be called asynchronously
+     */
     public final void showHologram(Player player) {
         show(player);
     }
 
+    /**
+     * Must be called asynchronously
+     */
     public final void showHologram(Collection<? extends Player> players) {
         players.forEach(this::showHologram);
     }
 
+    /**
+     * Must be called asynchronously
+     */
     public final void hideHologram(Player player) {
         hide(player);
     }
 
+    /**
+     * Must be called asynchronously
+     */
     public final void hideHologram(Collection<? extends Player> players) {
          players.forEach(this::hideHologram);
     }
