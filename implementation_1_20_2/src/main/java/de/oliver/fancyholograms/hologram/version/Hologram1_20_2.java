@@ -56,7 +56,7 @@ public final class Hologram1_20_2 extends Hologram {
     @Override
     public void create() {
         final var location = data.getLocation();
-        if (location == null || location.getWorld() == null) {
+        if (location.getWorld() == null) {
             return; // no location data, cannot be created
         }
 
@@ -91,7 +91,7 @@ public final class Hologram1_20_2 extends Hologram {
 
         // location data
         final var location = data.getLocation();
-        if (location == null || location.getWorld() == null || !location.isWorldLoaded()) {
+        if (location.getWorld() == null || !location.isWorldLoaded()) {
             return;
         } else {
             display.setPosRaw(location.x(), location.y(), location.z());
