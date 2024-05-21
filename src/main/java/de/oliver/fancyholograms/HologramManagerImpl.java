@@ -58,8 +58,19 @@ public final class HologramManagerImpl implements HologramManager {
      */
     @Override
     public @NotNull
-    @UnmodifiableView Collection<Hologram> getHolograms() {
+    @UnmodifiableView Collection<Hologram> getAllHolograms() {
         return Collections.unmodifiableCollection(this.holograms.values());
+    }
+
+    /**
+     * Returns a read-only view of the currently loaded persistent holograms.
+     *
+     * @return A read-only collection of holograms.
+     */
+    @Override
+    public @NotNull
+    @UnmodifiableView Collection<Hologram> getHolograms() {
+        return this.holograms.values().stream().filter(hologram -> hologram.getData().isPersistent()).toList();
     }
 
 
@@ -147,7 +158,7 @@ public final class HologramManagerImpl implements HologramManager {
             loadHolograms();
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                for (final Hologram hologram : getHolograms()) {
+                for (final Hologram hologram : getAllHolograms()) {
                     hologram.checkAndUpdateShownStateForPlayer(onlinePlayer);
                 }
             }
@@ -161,7 +172,7 @@ public final class HologramManagerImpl implements HologramManager {
         this.plugin.getScheduler().runTaskTimerAsynchronously(20L, 1L, () -> {
             final var time = System.currentTimeMillis();
 
-            for (final var hologram : getHolograms()) {
+            for (final var hologram : getAllHolograms()) {
                 if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
                     continue;
                 }
@@ -184,7 +195,7 @@ public final class HologramManagerImpl implements HologramManager {
         });
 
         this.plugin.getScheduler().runTaskTimerAsynchronously(20L, 20L, () -> {
-            for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
+            for (final Hologram hologram : this.plugin.getHologramsManager().getAllHolograms()) {
                 for (final Player player : Bukkit.getOnlinePlayers()) {
                     hologram.checkAndUpdateShownStateForPlayer(player);
                 }

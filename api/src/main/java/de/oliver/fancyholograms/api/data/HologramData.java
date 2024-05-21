@@ -21,17 +21,20 @@ public final class HologramData implements Data {
     @NotNull
     private final Data typeData;
 
+    private final boolean persistent;
+
 
     /**
      * Constructs a new HologramData with the given name.
      *
      * @param name the name of the hologram
      */
-    public HologramData(@NotNull String name, @NotNull DisplayHologramData displayData, @NotNull HologramType type, @NotNull Data typeData) {
+    public HologramData(@NotNull String name, @NotNull DisplayHologramData displayData, @NotNull HologramType type, @NotNull Data typeData, boolean persistent) {
         this.name = name;
         this.displayData = displayData;
         this.type = type;
         this.typeData = typeData;
+        this.persistent = persistent;
     }
 
 
@@ -46,6 +49,7 @@ public final class HologramData implements Data {
         this.displayData = (DisplayHologramData) other.getDisplayData().copy();
         this.type = other.getType();
         this.typeData = other.getTypeData().copy();
+        this.persistent = other.isPersistent();
     }
 
     @Override
@@ -76,6 +80,10 @@ public final class HologramData implements Data {
 
     public @NotNull Data getTypeData() {
         return typeData;
+    }
+
+    public boolean isPersistent() {
+        return persistent;
     }
 
     /**

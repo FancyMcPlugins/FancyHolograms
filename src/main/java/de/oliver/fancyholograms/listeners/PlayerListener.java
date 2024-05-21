@@ -20,7 +20,7 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(@NotNull final PlayerJoinEvent event) {
-        for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
+        for (final var hologram : this.plugin.getHologramsManager().getAllHolograms()) {
             hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
         }
 
@@ -34,7 +34,7 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(@NotNull final PlayerQuitEvent event) {
         FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
-            for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
+            for (final var hologram : this.plugin.getHologramsManager().getAllHolograms()) {
                 hologram.hideHologram(event.getPlayer());
             }
         });
@@ -42,14 +42,14 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onTeleport(@NotNull final PlayerTeleportEvent event) {
-        for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
+        for (final Hologram hologram : this.plugin.getHologramsManager().getAllHolograms()) {
             hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(@NotNull final PlayerChangedWorldEvent event) {
-        for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
+        for (final Hologram hologram : this.plugin.getHologramsManager().getAllHolograms()) {
             hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
         }
     }

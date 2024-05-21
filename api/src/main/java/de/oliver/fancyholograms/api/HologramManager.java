@@ -11,6 +11,8 @@ public interface HologramManager {
 
     Collection<Hologram> getHolograms();
 
+    Collection<Hologram> getAllHolograms();
+
     void addHologram(Hologram hologram);
 
     void removeHologram(Hologram hologram);
