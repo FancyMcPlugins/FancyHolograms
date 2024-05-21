@@ -88,13 +88,12 @@ public final class HologramManagerImpl implements HologramManager {
     public @NotNull Optional<Hologram> removeHologram(@NotNull final String name) {
         Optional<Hologram> optionalHologram = Optional.ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
 
-        optionalHologram.ifPresent(hologram ->
-            FancyHolograms.get().getHologramThread().submit(() -> {
+        optionalHologram.ifPresent(hologram -> {
                 final var online = List.copyOf(Bukkit.getOnlinePlayers());
-
                 hologram.hideHologram(online);
-                plugin.getHologramStorage().delete(hologram);
-            })
+
+                FancyHolograms.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram));
+            }
         );
 
         return optionalHologram;
