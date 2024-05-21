@@ -138,7 +138,7 @@ public final class HologramManagerImpl implements HologramManager {
             hologramThread.scheduleAtFixedRate(() -> {
                 for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
                     for (final Player player : Bukkit.getOnlinePlayers()) {
-                        hologram.checkShownStateFor(player);
+                        hologram.forceUpdateShownStateFor(player);
                     }
                 }
             }, 0, 1, TimeUnit.SECONDS);

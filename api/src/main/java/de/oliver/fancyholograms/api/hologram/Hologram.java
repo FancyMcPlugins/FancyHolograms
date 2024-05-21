@@ -81,32 +81,20 @@ public abstract class Hologram {
         delete();
     }
 
-    /**
-     * Must be called asynchronously
-     */
-    public final void showHologram(Player player) {
-        show(player);
-    }
-
-    /**
-     * Must be called asynchronously
-     */
     public final void showHologram(Collection<? extends Player> players) {
         players.forEach(this::showHologram);
     }
 
-    /**
-     * Must be called asynchronously
-     */
-    public final void hideHologram(Player player) {
-        hide(player);
+    public final void showHologram(Player player) {
+        viewers.add(player.getUniqueId());
     }
 
-    /**
-     * Must be called asynchronously
-     */
     public final void hideHologram(Collection<? extends Player> players) {
-         players.forEach(this::hideHologram);
+        players.forEach(this::hideHologram);
+    }
+
+    public final void hideHologram(Player player) {
+        viewers.remove(player.getUniqueId());
     }
 
     @Deprecated(forRemoval = true)
@@ -202,7 +190,7 @@ public abstract class Hologram {
      *
      * @param player the player to check and update the shown state for
      */
-    public void checkShownStateFor(Player player) {
+    public void updateShownStateFor(Player player) {
         boolean isShown = isViewer(player);
         boolean shouldBeShown = shouldShowTo(player);
 
@@ -210,6 +198,24 @@ public abstract class Hologram {
             hideHologram(player);
         } else if (!isShown && shouldBeShown) {
             showHologram(player);
+        }
+    }
+
+    /**
+     * Checks and forcefully updates the shown state for a player.
+     * If the hologram is shown and should not be, it hides it.
+     * If the hologram is not shown and should be, it shows it.
+     *
+     * @param player the player to check and update the shown state for
+     */
+    public void forceUpdateShownStateFor(Player player) {
+        boolean isShown = isViewer(player);
+        boolean shouldBeShown = shouldShowTo(player);
+
+        if (isShown && !shouldBeShown) {
+            show(player);
+        } else if (!isShown && shouldBeShown) {
+            hide(player);
         }
     }
 

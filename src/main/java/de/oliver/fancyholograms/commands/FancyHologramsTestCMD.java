@@ -67,7 +67,7 @@ public class FancyHologramsTestCMD extends Command {
 
                     Hologram hologram = this.plugin.getHologramsManager().create(textData);
                     hologram.createHologram();
-                    hologram.checkShownStateFor(p);
+                    hologram.updateShownStateFor(p);
                 }
             }
 
@@ -95,7 +95,7 @@ public class FancyHologramsTestCMD extends Command {
 
             Hologram hologram = this.plugin.getHologramsManager().create(textData);
             hologram.createHologram();
-            hologram.checkShownStateFor(p);
+            hologram.updateShownStateFor(p);
         }
 
         return false;

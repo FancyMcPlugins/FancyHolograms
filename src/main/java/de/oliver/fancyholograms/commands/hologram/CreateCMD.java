@@ -74,7 +74,7 @@ public class CreateCMD implements Subcommand {
 
         holo.createHologram();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            holo.checkShownStateFor(onlinePlayer);
+            holo.updateShownStateFor(onlinePlayer);
         }
 
         FancyHolograms.get().getHologramsManager().addHologram(holo);

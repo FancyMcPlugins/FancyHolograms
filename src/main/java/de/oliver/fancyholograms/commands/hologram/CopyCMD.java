@@ -61,7 +61,7 @@ public class CopyCMD implements Subcommand {
 
         copy.createHologram();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            copy.checkShownStateFor(onlinePlayer);
+            copy.updateShownStateFor(onlinePlayer);
         }
 
         FancyHolograms.get().getHologramsManager().addHologram(copy);
