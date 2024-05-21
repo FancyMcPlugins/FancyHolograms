@@ -50,6 +50,7 @@ public class InfoCMD implements Subcommand {
             }
 
             MessageHelper.info(player, "Text alignment: <gray>" + textData.getTextAlignment().name());
+            MessageHelper.info(player, "See through: <gray>" + (textData.isSeeThrough() ? "enabled" : "disabled"));
             MessageHelper.info(player, "Text shadow: <gray>" + (textData.isTextShadow() ? "enabled" : "disabled"));
             if (textData.getTextUpdateInterval() == -1) {
                 MessageHelper.info(player, "Update text interval: <gray>not updating");

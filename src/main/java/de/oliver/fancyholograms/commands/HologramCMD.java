@@ -209,7 +209,7 @@ public final class HologramCMD extends Command {
                     yield FancyNpcsPlugin.get().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
                 case "block" -> Arrays.stream(Material.values()).filter(Material::isBlock).map(Enum::name);
-                case "visiblebydefault" -> Stream.of("true", "false");
+                case "seethrough", "visiblebydefault" -> Stream.of("true", "false");
 
                 default -> null;
             };
@@ -311,6 +311,7 @@ public final class HologramCMD extends Command {
             case "insertafter" -> new InsertAfterCMD().run(player, hologram, args);
             case "textshadow" -> new TextShadowCMD().run(player, hologram, args);
             case "textalignment" -> new TextAlignmentCMD().run(player, hologram, args);
+            case "seethrough" -> new SeeThroughCMD().run(player, hologram, args);
 
             // block data
             case "block" -> new BlockCMD().run(player, hologram, args);

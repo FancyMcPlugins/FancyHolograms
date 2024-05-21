@@ -23,22 +23,24 @@ public class ScaleCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        final var scale = Floats.tryParse(args[3]);
+        final var scaleX = Floats.tryParse(args[3]);
+        final var scaleY = args.length >= 6 ? Floats.tryParse(args[4]) : scaleX;
+        final var scaleZ = args.length >= 6 ? Floats.tryParse(args[5]) : scaleX;
 
-        if (scale == null) {
+        if (scaleX == null || scaleY == null || scaleZ == null) {
             MessageHelper.error(player, "Could not parse scale");
             return false;
         }
 
-        if (Float.compare(scale, hologram.getData().getDisplayData().getScale().x()) == 0 &&
-                Float.compare(scale, hologram.getData().getDisplayData().getScale().y()) == 0 &&
-                Float.compare(scale, hologram.getData().getDisplayData().getScale().z()) == 0) {
+        if (Float.compare(scaleX, hologram.getData().getDisplayData().getScale().x()) == 0 &&
+                Float.compare(scaleY, hologram.getData().getDisplayData().getScale().y()) == 0 &&
+                Float.compare(scaleZ, hologram.getData().getDisplayData().getScale().z()) == 0) {
             MessageHelper.warning(player, "This hologram is already at this scale");
             return false;
         }
 
         final var copied = hologram.getData().copy();
-        copied.getDisplayData().setScale(new Vector3f(scale, scale, scale));
+        copied.getDisplayData().setScale(new Vector3f(scaleX, scaleY, scaleZ));
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.SCALE)) {
             return false;
@@ -60,7 +62,7 @@ public class ScaleCMD implements Subcommand {
             FancyHolograms.get().getHologramStorage().save(hologram);
         }
 
-        MessageHelper.success(player, "Changed scale to " + scale);
+        MessageHelper.success(player, "Changed scale to " + scaleX + ", " + scaleY + ", " + scaleZ);
         return true;
     }
 }

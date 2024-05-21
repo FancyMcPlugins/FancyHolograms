@@ -4,7 +4,9 @@ plugins {
 }
 
 
-val minecraftVersion = "1.20.1"
+val minecraftVersion = "1.20.6"
+
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
 
 
 dependencies {
@@ -28,6 +30,6 @@ tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
 
-        options.release.set(17)
+        options.release.set(21)
     }
 }

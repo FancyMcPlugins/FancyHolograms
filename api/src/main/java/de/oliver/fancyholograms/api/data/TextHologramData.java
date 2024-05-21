@@ -14,19 +14,22 @@ public class TextHologramData implements Data {
 
     public static final TextDisplay.TextAlignment DEFAULT_TEXT_ALIGNMENT = TextDisplay.TextAlignment.CENTER;
     public static final boolean DEFAULT_TEXT_SHADOW_STATE = false;
+    public static final boolean DEFAULT_SEE_THROUGH = false;
     public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
 
     private List<String> text;
     private TextColor background;
     private TextDisplay.TextAlignment textAlignment;
     private boolean textShadow;
+    private boolean seeThrough;
     private int textUpdateInterval;
 
-    public TextHologramData(List<String> text, TextColor background, TextDisplay.TextAlignment textAlignment, boolean textShadow, int textUpdateInterval) {
+    public TextHologramData(List<String> text, TextColor background, TextDisplay.TextAlignment textAlignment, boolean textShadow, boolean seeThrough, int textUpdateInterval) {
         this.text = text;
         this.background = background;
         this.textAlignment = textAlignment;
         this.textShadow = textShadow;
+        this.seeThrough = seeThrough;
         this.textUpdateInterval = textUpdateInterval;
     }
 
@@ -42,6 +45,7 @@ public class TextHologramData implements Data {
                 null,
                 DEFAULT_TEXT_ALIGNMENT,
                 DEFAULT_TEXT_SHADOW_STATE,
+                DEFAULT_SEE_THROUGH,
                 DEFAULT_TEXT_UPDATE_INTERVAL
         );
     }
@@ -80,6 +84,7 @@ public class TextHologramData implements Data {
     public void write(ConfigurationSection section, String name) {
         section.set("text", text);
         section.set("text_shadow", textShadow);
+        section.set("see_through", seeThrough);
         section.set("text_alignment", textAlignment.name().toLowerCase(Locale.ROOT));
         section.set("update_text_interval", textUpdateInterval);
 
@@ -141,6 +146,15 @@ public class TextHologramData implements Data {
         return this;
     }
 
+    public boolean isSeeThrough() {
+        return seeThrough;
+    }
+
+    public TextHologramData setSeeThrough(boolean seeThrough) {
+        this.seeThrough = seeThrough;
+        return this;
+    }
+
     public int getTextUpdateInterval() {
         return textUpdateInterval;
     }
@@ -157,6 +171,7 @@ public class TextHologramData implements Data {
                 background,
                 textAlignment,
                 textShadow,
+                seeThrough,
                 textUpdateInterval
         );
     }
