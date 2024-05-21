@@ -19,6 +19,7 @@ public class HologramData implements YamlData {
     private final String name;
     private final HologramType type;
     private Location location;
+    private boolean hasChanges;
     private int visibilityDistance = DEFAULT_VISIBILITY_DISTANCE;
     private boolean visibleByDefault = DEFAULT_IS_VISIBLE;
     private String linkedNpcName;
@@ -43,7 +44,22 @@ public class HologramData implements YamlData {
 
     public HologramData setLocation(@Nullable Location location) {
         this.location = location;
+        setHasChanges(true);
         return this;
+    }
+
+    /**
+     * @return Whether the hologram needs to send an update to players
+     */
+    public final boolean hasChanges() {
+        return hasChanges;
+    }
+
+    /**
+     * @param hasChanges Whether the hologram needs to send an update to players
+     */
+    public final void setHasChanges(boolean hasChanges) {
+        this.hasChanges = hasChanges;
     }
 
     public int getVisibilityDistance() {
@@ -56,6 +72,7 @@ public class HologramData implements YamlData {
 
     public HologramData setVisibilityDistance(int visibilityDistance) {
         this.visibilityDistance = visibilityDistance;
+        setHasChanges(true);
         return this;
     }
 
@@ -65,6 +82,7 @@ public class HologramData implements YamlData {
 
     public HologramData setVisibleByDefault(boolean visibleByDefault) {
         this.visibleByDefault = visibleByDefault;
+        setHasChanges(true);
         return this;
     }
 
@@ -74,6 +92,7 @@ public class HologramData implements YamlData {
 
     public HologramData setLinkedNpcName(String linkedNpcName) {
         this.linkedNpcName = linkedNpcName;
+        setHasChanges(true);
         return this;
     }
 

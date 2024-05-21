@@ -97,9 +97,7 @@ public final class HologramCMD extends Command {
                 final var updated = edit(sender, hologram, args);
 
                 if (updated) {
-                    hologram.updateHologram();
-
-                    this.plugin.getHologramsManager().refreshHologramForPlayersInWorld(hologram);
+                    hologram.queueUpdate();
                 }
 
                 yield updated;

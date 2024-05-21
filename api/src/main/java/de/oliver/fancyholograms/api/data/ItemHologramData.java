@@ -22,6 +22,7 @@ public class ItemHologramData extends DisplayHologramData {
 
     public ItemHologramData setItemStack(ItemStack item) {
         this.item = item;
+        setHasChanges(true);
         return this;
     }
 

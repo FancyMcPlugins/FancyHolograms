@@ -6,7 +6,6 @@ import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,16 +38,7 @@ public final class NpcListener implements Listener {
                         .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getLinkedNpcName()))
                         .toList();
 
-                this.plugin.getScheduler()
-                        .runTaskLater(null, 1L, () -> {
-                            final var players = Bukkit.getOnlinePlayers();
-
-                            needsToBeUpdated.forEach(this.plugin.getHologramsManager()::syncHologramWithNpc);
-                            needsToBeUpdated.forEach(hologram -> {
-                                hologram.updateHologram();
-                                hologram.refreshHologram(players);
-                            });
-                        });
+                this.plugin.getScheduler().runTaskLater(null, 1L, () -> needsToBeUpdated.forEach(this.plugin.getHologramsManager()::syncHologramWithNpc));
             }
             case DISPLAY_NAME, SHOW_IN_TAB -> {
                 final var isLinked = holograms.stream()

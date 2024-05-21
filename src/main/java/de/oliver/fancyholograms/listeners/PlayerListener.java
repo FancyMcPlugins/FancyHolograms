@@ -19,13 +19,11 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(@NotNull final PlayerJoinEvent event) {
         for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
-            hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
+            hologram.checkShownStateFor(event.getPlayer());
         }
 
         if (!this.plugin.getHologramConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
-            FancyHolograms.get().getHologramThread().submit(() -> {
-                FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true);
-            });
+            FancyHolograms.get().getHologramThread().submit(() -> FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true));
         }
     }
 
@@ -41,14 +39,14 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onTeleport(@NotNull final PlayerTeleportEvent event) {
         for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
-            hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
+            hologram.checkShownStateFor(event.getPlayer());
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(@NotNull final PlayerChangedWorldEvent event) {
         for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
-            hologram.checkAndUpdateShownStateForPlayer(event.getPlayer());
+            hologram.checkShownStateFor(event.getPlayer());
         }
     }
 

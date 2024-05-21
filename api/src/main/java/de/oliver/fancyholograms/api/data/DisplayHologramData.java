@@ -33,6 +33,7 @@ public class DisplayHologramData extends HologramData {
 
     public DisplayHologramData setBillboard(Display.Billboard billboard) {
         this.billboard = billboard;
+        setHasChanges(true);
         return this;
     }
 
@@ -42,6 +43,7 @@ public class DisplayHologramData extends HologramData {
 
     public DisplayHologramData setScale(Vector3f scale) {
         this.scale = scale;
+        setHasChanges(true);
         return this;
     }
 
@@ -51,6 +53,7 @@ public class DisplayHologramData extends HologramData {
 
     public DisplayHologramData setTranslation(Vector3f translation) {
         this.translation = translation;
+        setHasChanges(true);
         return this;
     }
 
@@ -60,6 +63,7 @@ public class DisplayHologramData extends HologramData {
 
     public DisplayHologramData setBrightness(Display.Brightness brightness) {
         this.brightness = brightness;
+        setHasChanges(true);
         return this;
     }
 
@@ -69,6 +73,7 @@ public class DisplayHologramData extends HologramData {
 
     public DisplayHologramData setShadowRadius(float shadowRadius) {
         this.shadowRadius = shadowRadius;
+        setHasChanges(true);
         return this;
     }
 
@@ -78,6 +83,7 @@ public class DisplayHologramData extends HologramData {
 
     public DisplayHologramData setShadowStrength(float shadowStrength) {
         this.shadowStrength = shadowStrength;
+        setHasChanges(true);
         return this;
     }
 

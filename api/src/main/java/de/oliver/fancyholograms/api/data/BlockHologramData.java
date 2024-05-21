@@ -21,6 +21,7 @@ public class BlockHologramData extends DisplayHologramData {
 
     public BlockHologramData setBlock(Material block) {
         this.block = block;
+        setHasChanges(true);
         return this;
     }
 

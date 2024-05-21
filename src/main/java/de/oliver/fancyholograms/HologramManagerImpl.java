@@ -7,8 +7,6 @@ import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -16,10 +14,9 @@ import org.jetbrains.annotations.UnmodifiableView;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * The FancyHologramsManager class is responsible for managing holograms in the FancyHolograms plugin.
@@ -89,7 +86,7 @@ public final class HologramManagerImpl implements HologramManager {
      * @return An optional containing the removed hologram, or empty if not found.
      */
     public @NotNull Optional<Hologram> removeHologram(@NotNull final String name) {
-        Optional<Hologram> optionalHologram = ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
+        Optional<Hologram> optionalHologram = Optional.ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
 
         optionalHologram.ifPresent(hologram ->
             FancyHolograms.get().getHologramThread().submit(() -> {
@@ -110,7 +107,9 @@ public final class HologramManagerImpl implements HologramManager {
      * @return The created hologram.
      */
     public @NotNull Hologram create(@NotNull final HologramData data) {
-        return this.adapter.apply(data);
+        Hologram hologram = this.adapter.apply(data);
+        hologram.createHologram();
+        return hologram;
     }
 
     public void saveHolograms() {
@@ -132,52 +131,55 @@ public final class HologramManagerImpl implements HologramManager {
      * @apiNote This method is intended to be called internally by the plugin.
      */
     void initializeTasks() {
-        this.plugin.getScheduler().runTaskLater(null, 20L * 6, () -> {
+        ScheduledExecutorService hologramThread = plugin.getHologramThread();
+        hologramThread.schedule(() -> {
             loadHolograms();
 
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                for (final Hologram hologram : getHolograms()) {
-                    hologram.checkAndUpdateShownStateForPlayer(onlinePlayer);
+            hologramThread.scheduleAtFixedRate(() -> {
+                for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
+                    for (final Player player : Bukkit.getOnlinePlayers()) {
+                        hologram.checkShownStateFor(player);
+                    }
                 }
-            }
-        });
+            }, 0, 1, TimeUnit.SECONDS);
+        }, 6, TimeUnit.SECONDS);
 
         final var updateTimes = CacheBuilder.newBuilder()
             .expireAfterAccess(Duration.ofMinutes(5))
             .<String, Long>build();
 
-        this.plugin.getHologramThread().scheduleAtFixedRate(() -> {
+        hologramThread.scheduleAtFixedRate(() -> {
             final var time = System.currentTimeMillis();
 
             for (final var hologram : getHolograms()) {
-                if (!(hologram.getData() instanceof TextHologramData textData)) {
-                    continue;
+                HologramData data = hologram.getData();
+                if (data.hasChanges()) {
+                    hologram.forceUpdate();
+                    hologram.refreshForViewersInWorld();
+                    data.setHasChanges(false);
+
+                    if (data instanceof TextHologramData) {
+                        updateTimes.put(hologram.getData().getName(), time);
+                    }
                 }
+                else if (data instanceof TextHologramData textData) {
+                    final var interval = textData.getTextUpdateInterval();
+                    if (interval < 1) {
+                        continue; // doesn't update
+                    }
 
-                final var interval = textData.getTextUpdateInterval();
-                if (interval < 1) {
-                    continue; // doesn't update
+                    final var lastUpdate = updateTimes.asMap().get(data.getName());
+                    if (lastUpdate != null && time < (lastUpdate + interval)) {
+                        continue;
+                    }
+
+                    if (lastUpdate == null || time > (lastUpdate + interval)) {
+                        hologram.refreshForViewersInWorld();
+                        updateTimes.put(data.getName(), time);
+                    }
                 }
-
-                final var lastUpdate = updateTimes.asMap().get(hologram.getData().getName());
-
-                if (lastUpdate != null && time < (lastUpdate + interval)) {
-                    continue;
-                }
-
-                refreshHologramForPlayersInWorld(hologram);
-
-                updateTimes.put(hologram.getData().getName(), time);
             }
         }, 50, 1000, TimeUnit.MILLISECONDS);
-
-        plugin.getHologramThread().scheduleAtFixedRate(() -> {
-            for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
-                for (final Player player : Bukkit.getOnlinePlayers()) {
-                    hologram.checkAndUpdateShownStateForPlayer(player);
-                }
-            }
-        }, 1, 1, TimeUnit.SECONDS);
     }
 
     /**
@@ -190,13 +192,12 @@ public final class HologramManagerImpl implements HologramManager {
 
     private void clearHolograms() {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
-
         final var holograms = Map.copyOf(this.holograms);
 
         this.holograms.clear();
 
         for (final var hologram : holograms.values()) {
-            FancyHolograms.get().getHologramThread().submit(() -> hologram.hideHologram(online));
+            hologram.hideHologram(online);
         }
     }
 
@@ -222,33 +223,5 @@ public final class HologramManagerImpl implements HologramManager {
 
         final var location = npc.getData().getLocation().clone().add(0, npc.getEyeHeight() + 0.5, 0);
         hologram.getData().setLocation(location);
-    }
-
-    /**
-     * Refreshes the hologram for players in the world associated with the hologram's location.
-     *
-     * @param hologram The hologram to refresh.
-     */
-    public void refreshHologramForPlayersInWorld(@NotNull final Hologram hologram) {
-        final var players = ofNullable(hologram.getData().getLocation())
-            .map(Location::getWorld)
-            .map(World::getPlayers)
-            .orElse(Collections.emptyList());
-
-        hologram.refreshHologram(players);
-    }
-
-    /**
-     * Refreshes the hologram for the players it is currently shown to.
-     *
-     * @param hologram The hologram to refresh.
-     */
-    public void refreshHologramForPlayersShownTo(@NotNull final Hologram hologram) {
-        final var players = hologram.getShownToPlayers()
-            .stream()
-            .map(Bukkit::getPlayer)
-            .toList();
-
-        hologram.refreshHologram(players);
     }
 }

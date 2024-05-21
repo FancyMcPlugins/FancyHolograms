@@ -36,15 +36,18 @@ public class TextHologramData extends DisplayHologramData {
 
     public TextHologramData setText(List<String> text) {
         this.text = text;
+        setHasChanges(true);
         return this;
     }
 
     public void addLine(String line) {
         text.add(line);
+        setHasChanges(true);
     }
 
     public void removeLine(int index) {
         text.remove(index);
+        setHasChanges(true);
     }
 
     public TextColor getBackground() {
@@ -53,6 +56,7 @@ public class TextHologramData extends DisplayHologramData {
 
     public TextHologramData setBackground(TextColor background) {
         this.background = background;
+        setHasChanges(true);
         return this;
     }
 
@@ -62,6 +66,7 @@ public class TextHologramData extends DisplayHologramData {
 
     public TextHologramData setTextAlignment(TextDisplay.TextAlignment textAlignment) {
         this.textAlignment = textAlignment;
+        setHasChanges(true);
         return this;
     }
 
@@ -71,6 +76,7 @@ public class TextHologramData extends DisplayHologramData {
 
     public TextHologramData setTextShadow(boolean textShadow) {
         this.textShadow = textShadow;
+        setHasChanges(true);
         return this;
     }
 
@@ -80,6 +86,7 @@ public class TextHologramData extends DisplayHologramData {
 
     public TextHologramData setSeeThrough(boolean seeThrough) {
         this.seeThrough = seeThrough;
+        setHasChanges(true);
         return this;
     }
 
@@ -89,6 +96,7 @@ public class TextHologramData extends DisplayHologramData {
 
     public TextHologramData setTextUpdateInterval(int textUpdateInterval) {
         this.textUpdateInterval = textUpdateInterval;
+        setHasChanges(true);
         return this;
     }
 
