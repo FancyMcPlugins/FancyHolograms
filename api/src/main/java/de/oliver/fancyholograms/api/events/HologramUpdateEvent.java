@@ -75,50 +75,17 @@ public final class HologramUpdateEvent extends HologramEvent {
      * Represents the various types of modifications that can be made to a Hologram.
      */
     public enum HologramModification {
-        /**
-         * @see HologramData#getText()
-         */
         TEXT,
-        /**
-         * @see HologramData#getLocation()
-         */
         POSITION,
-        /**
-         * @see HologramData#getScale()
-         */
         SCALE,
-        /**
-         * @see HologramData#getBillboard()
-         */
         BILLBOARD,
-        /**
-         * @see HologramData#getBackground()
-         */
         BACKGROUND,
-        /**
-         * @see HologramData#isTextHasShadow()
-         */
         TEXT_SHADOW,
-        /**
-         * @see HologramData#getTextAlignment()
-         */
         TEXT_ALIGNMENT,
         SEE_THROUGH,
-        /**
-         * @see HologramData#getShadowRadius()
-         */
         SHADOW_RADIUS,
-        /**
-         * @see HologramData#getShadowStrength()
-         */
         SHADOW_STRENGTH,
-        /**
-         * @see HologramData#getTextUpdateInterval()
-         */
         UPDATE_TEXT_INTERVAL,
-        /**
-         * @see HologramData#getVisibilityDistance()
-         */
         UPDATE_VISIBILITY_DISTANCE;
     }
 
