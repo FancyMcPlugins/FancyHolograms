@@ -36,6 +36,7 @@ public final class PlayerListener implements Listener {
         FancyHolograms.get().getScheduler().runTaskAsynchronously(() -> {
             for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
                 hologram.hideHologram(event.getPlayer());
+                hologram.removeViewer(event.getPlayer().getUniqueId());
             }
         });
     }
