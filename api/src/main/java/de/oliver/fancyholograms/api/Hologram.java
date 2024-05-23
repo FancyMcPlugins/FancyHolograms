@@ -39,11 +39,6 @@ public abstract class Hologram {
     @NotNull
     protected final Set<UUID> shown = new HashSet<>();
 
-    /**
-     * Set of UUIDs of player to whom the hologram will show without any checking.
-     */
-    private final Set<UUID> viewers = new HashSet<>();
-
 
     protected Hologram(@NotNull final HologramData data) {
         this.data = data;
@@ -97,16 +92,6 @@ public abstract class Hologram {
     }
 
     /**
-     * Add player to permanent view of this hologram.
-     *
-     * @param playerId id of the player.
-     * @see #viewers
-     */
-    public final void addViewer(UUID playerId) {
-        this.viewers.add(playerId);
-    }
-
-    /**
      * Must be called asynchronously
      */
     public final void hideHologram(Player player) {
@@ -118,16 +103,6 @@ public abstract class Hologram {
      */
     public final void hideHologram(Collection<? extends Player> players) {
         players.forEach(this::hideHologram);
-    }
-
-    /**
-     * Remove player from a list of viewers this hologram.
-     *
-     * @param playerId id of the player.
-     * @see #viewers
-     */
-    public final void removeViewer(UUID playerId) {
-        this.viewers.remove(playerId);
     }
 
     public final void updateHologram() {
@@ -169,10 +144,7 @@ public abstract class Hologram {
             return false;
         }
 
-        if (!this.viewers.contains(player.getUniqueId()) &&
-                !getData().getDisplayData().isVisibleByDefault() &&
-                !player.hasPermission("fancyholograms.viewhologram." + data.getName())
-        ) {
+        if (!getData().getDisplayData().isVisibleByDefault() && !player.hasPermission("fancyholograms.viewhologram." + data.getName())) {
             return false;
         }
 
