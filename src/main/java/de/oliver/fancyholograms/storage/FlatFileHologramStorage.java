@@ -23,6 +23,8 @@ import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import static de.oliver.fancyholograms.api.data.DisplayHologramData.DEFAULT_IS_VISIBLE;
+
 public class FlatFileHologramStorage implements HologramStorage {
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
@@ -233,9 +235,21 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var billboardName = config.getString("billboard", DisplayHologramData.DEFAULT_BILLBOARD.name());
             final var textAlignmentName = config.getString("text_alignment", TextHologramData.DEFAULT_TEXT_ALIGNMENT.name());
             final var linkedNpc = config.getString("linkedNpc");
-            final var visibleByDefault = Optional.of(config.getString(
-                    "visible_by_default", DisplayHologramData.DEFAULT_IS_VISIBLE.toString())
-            ).map(Visibility::byString).orElse(DisplayHologramData.DEFAULT_IS_VISIBLE);
+
+
+            final var visibility = Optional.ofNullable(config.getString("visibility"))
+                    .flatMap(Visibility::byString)
+                    .orElseGet(() -> {
+                        final var visibleByDefault = config.getBoolean("visible_by_default", DEFAULT_IS_VISIBLE);
+                        if (config.contains("visible_by_default")) {
+                            config.set("visible_by_default", null);
+                        }
+                        if (visibleByDefault) {
+                            return Visibility.ALL;
+                        } else {
+                            return Visibility.PERMISSION_REQUIRED;
+                        }
+                    });
 
             final var billboard = switch (billboardName.toLowerCase(Locale.ROOT)) {
                 case "fixed" -> Display.Billboard.FIXED;
@@ -262,7 +276,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             }
 
 
-            DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc, visibleByDefault);
+            DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc, visibility);
 
             TextHologramData textData = new TextHologramData(text, background, textAlignment, textHasShadow, isSeeThrough, textUpdateInterval);
 

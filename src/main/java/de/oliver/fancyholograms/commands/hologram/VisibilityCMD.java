@@ -13,7 +13,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class VisibleByDefaultCMD implements Subcommand {
+public class VisibilityCMD implements Subcommand {
+
+    public static final String VISIBILITY_COMMAND = "visibility";
+
 
     @Override
     public List<String> tabcompletion(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
@@ -24,27 +27,28 @@ public class VisibleByDefaultCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        var visibleByDefault = Visibility.byString(args[3]);
-        if (hologram == null) {
+        final var optionalVisibility = Visibility.byString(args[3]);
+        if (hologram == null || optionalVisibility.isEmpty()) {
             return false;
         }
+        final var visibility = optionalVisibility.get();
 
         final var copied = hologram.getData().copy();
-        copied.getDisplayData().setVisibleByDefault(visibleByDefault);
+        copied.getDisplayData().setVisibility(visibility);
 
 
-        if (hologram.getData().getDisplayData().getVisibleByDefault() == copied.getDisplayData().getVisibleByDefault()) {
-            MessageHelper.warning(player, "This hologram already has visibility by default set to " + visibleByDefault);
+        if (hologram.getData().getDisplayData().getVisibility() == copied.getDisplayData().getVisibility()) {
+            MessageHelper.warning(player, "This hologram already has visibility by default set to " + visibility);
             return false;
         }
 
-        hologram.getData().getDisplayData().setVisibleByDefault(copied.getDisplayData().getVisibleByDefault());
+        hologram.getData().getDisplayData().setVisibility(copied.getDisplayData().getVisibility());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);
         }
 
-        MessageHelper.success(player, "Changed visibility by default to " + visibleByDefault);
+        MessageHelper.success(player, "Changed visibility by default to " + visibility);
         return true;
     }
 }

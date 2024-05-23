@@ -3,8 +3,8 @@ package de.oliver.fancyholograms.api.data.property.visibility;
 import de.oliver.fancyholograms.api.Hologram;
 import org.bukkit.entity.Player;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
+import java.util.Optional;
 
 public enum Visibility {
     ALL((player, hologram) -> true),
@@ -26,11 +26,11 @@ public enum Visibility {
         return this.predicate.canSee(player, hologram);
     }
 
-    @Nullable
-    public static Visibility byString(String value) {
+
+    public static Optional<Visibility> byString(String value) {
         return Arrays.stream(Visibility.values())
                 .filter(visibility -> visibility.toString().equalsIgnoreCase(value))
-                .findFirst().orElse(null);
+                .findFirst();
     }
 
     public interface VisibilityPredicate {
