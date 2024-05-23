@@ -9,8 +9,9 @@ import java.util.Arrays;
 public enum Visibility {
     ALL((player, hologram) -> true),
     MANUAL((player, hologram) -> hologram.isShown(player)),
-    PERMISSION_REQUIRED(new PermissionRequiredVisibilityPredicate()),
-    ;
+    PERMISSION_REQUIRED(
+            (player, hologram) -> player.hasPermission("fancyholograms.viewhologram." + hologram.getData().getName())
+    );
 
 
     private final VisibilityPredicate predicate;
@@ -30,5 +31,10 @@ public enum Visibility {
         return Arrays.stream(Visibility.values())
                 .filter(visibility -> visibility.toString().equalsIgnoreCase(value))
                 .findFirst().orElse(null);
+    }
+
+    public interface VisibilityPredicate {
+
+        boolean canSee(Player player, Hologram hologram);
     }
 }
