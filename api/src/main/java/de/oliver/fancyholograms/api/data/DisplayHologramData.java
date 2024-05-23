@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.api.data;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
 import de.oliver.fancylib.FancyLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Display;
 import org.joml.Vector3f;
 
 import java.util.Locale;
+import java.util.Optional;
 
 public class DisplayHologramData implements Data {
 
@@ -20,7 +22,7 @@ public class DisplayHologramData implements Data {
     public static final float DEFAULT_SHADOW_RADIUS = 0.0f;
     public static final float DEFAULT_SHADOW_STRENGTH = 1.0f;
     public static final int DEFAULT_VISIBILITY_DISTANCE = -1;
-    public static final boolean DEFAULT_IS_VISIBLE = true;
+    public static final Visibility DEFAULT_IS_VISIBLE = Visibility.ALL;
 
     private Location location;
     private Display.Billboard billboard = DEFAULT_BILLBOARD;
@@ -30,12 +32,12 @@ public class DisplayHologramData implements Data {
     private float shadowRadius = DEFAULT_SHADOW_RADIUS;
     private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
     private int visibilityDistance = DEFAULT_VISIBILITY_DISTANCE;
-    private boolean visibleByDefault = DEFAULT_IS_VISIBLE;
+    private Visibility visibleByDefault = DEFAULT_IS_VISIBLE;
     private String linkedNpcName;
 
     public DisplayHologramData(Location location, Display.Billboard billboard, Vector3f scale, Vector3f translation,
                                Display.Brightness brightness, float shadowRadius, float shadowStrength,
-                               int visibilityDistance, String linkedNpcName, boolean visibleByDefault) {
+                               int visibilityDistance, String linkedNpcName, Visibility visibleByDefault) {
         this.location = location;
         this.billboard = billboard;
         this.scale = scale;
@@ -81,7 +83,7 @@ public class DisplayHologramData implements Data {
         section.set("shadow_radius", shadowRadius);
         section.set("shadow_strength", shadowStrength);
         section.set("visibility_distance", visibilityDistance);
-        section.set("visible_by_default", visibleByDefault);
+        section.set("visible_by_default", visibleByDefault.toString());
 
 
         if (billboard == Display.Billboard.CENTER) {
@@ -126,7 +128,9 @@ public class DisplayHologramData implements Data {
         shadowStrength = (float) section.getDouble("shadow_strength", DEFAULT_SHADOW_STRENGTH);
         visibilityDistance = section.getInt("visibility_distance", DEFAULT_VISIBILITY_DISTANCE);
         linkedNpcName = section.getString("linkedNpc");
-        visibleByDefault = section.getBoolean("visible_by_default", DEFAULT_IS_VISIBLE);
+        visibleByDefault = Optional.of(section.getString("visible_by_default",  DEFAULT_IS_VISIBLE.toString()))
+                .map(Visibility::byString)
+                .orElse(DEFAULT_IS_VISIBLE);
 
         String billboardStr = section.getString("billboard", DisplayHologramData.DEFAULT_BILLBOARD.name());
         billboard = switch (billboardStr.toLowerCase()) {
@@ -213,11 +217,11 @@ public class DisplayHologramData implements Data {
         return this;
     }
 
-    public boolean isVisibleByDefault() {
+    public Visibility getVisibleByDefault() {
         return visibleByDefault;
     }
 
-    public void setVisibleByDefault(boolean visibleByDefault) {
+    public void setVisibleByDefault(Visibility visibleByDefault) {
         this.visibleByDefault = visibleByDefault;
     }
 

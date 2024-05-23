@@ -144,7 +144,7 @@ public abstract class Hologram {
             return false;
         }
 
-        if (!getData().getDisplayData().isVisibleByDefault() && !player.hasPermission("fancyholograms.viewhologram." + data.getName())) {
+        if (!this.getData().getDisplayData().getVisibleByDefault().canSee(player, this)) {
             return false;
         }
 
