@@ -131,7 +131,7 @@ public final class HologramCMD extends Command {
                 return Collections.emptyList();
             }
 
-            return this.plugin.getHologramsManager().getHolograms().stream().map(hologram -> hologram.getData().getName()).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
+            return this.plugin.getHologramsManager().getPersistentHolograms().stream().map(hologram -> hologram.getData().getName()).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
         }
 
         final var hologram = this.plugin.getHologramsManager().getHologram(args[1]).orElse(null);

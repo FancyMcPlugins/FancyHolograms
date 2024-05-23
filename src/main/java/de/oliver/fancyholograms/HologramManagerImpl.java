@@ -58,7 +58,7 @@ public final class HologramManagerImpl implements HologramManager {
      */
     @Override
     public @NotNull
-    @UnmodifiableView Collection<Hologram> getAllHolograms() {
+    @UnmodifiableView Collection<Hologram> getHolograms() {
         return Collections.unmodifiableCollection(this.holograms.values());
     }
 
@@ -69,7 +69,7 @@ public final class HologramManagerImpl implements HologramManager {
      */
     @Override
     public @NotNull
-    @UnmodifiableView Collection<Hologram> getHolograms() {
+    @UnmodifiableView Collection<Hologram> getPersistentHolograms() {
         return this.holograms.values().stream().filter(hologram -> hologram.getData().isPersistent()).toList();
     }
 
@@ -139,7 +139,7 @@ public final class HologramManagerImpl implements HologramManager {
             return;
         }
 
-        plugin.getHologramStorage().saveBatch(getHolograms(), true);
+        plugin.getHologramStorage().saveBatch(getPersistentHolograms(), true);
     }
 
     public void loadHolograms() {
@@ -158,7 +158,7 @@ public final class HologramManagerImpl implements HologramManager {
             loadHolograms();
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                for (final Hologram hologram : getAllHolograms()) {
+                for (final Hologram hologram : getHolograms()) {
                     hologram.checkAndUpdateShownStateForPlayer(onlinePlayer);
                 }
             }
@@ -172,7 +172,7 @@ public final class HologramManagerImpl implements HologramManager {
         this.plugin.getScheduler().runTaskTimerAsynchronously(20L, 1L, () -> {
             final var time = System.currentTimeMillis();
 
-            for (final var hologram : getAllHolograms()) {
+            for (final var hologram : getHolograms()) {
                 if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
                     continue;
                 }
@@ -195,7 +195,7 @@ public final class HologramManagerImpl implements HologramManager {
         });
 
         this.plugin.getScheduler().runTaskTimerAsynchronously(20L, 20L, () -> {
-            for (final Hologram hologram : this.plugin.getHologramsManager().getAllHolograms()) {
+            for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
                 for (final Player player : Bukkit.getOnlinePlayers()) {
                     hologram.checkAndUpdateShownStateForPlayer(player);
                 }
@@ -215,7 +215,7 @@ public final class HologramManagerImpl implements HologramManager {
     private void clearHolograms() {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
 
-        final var holograms = getHolograms();
+        final var holograms = getPersistentHolograms();
 
         for (final var hologram : holograms) {
             this.holograms.remove(hologram.getData().getName());

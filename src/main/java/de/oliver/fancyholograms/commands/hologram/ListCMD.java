@@ -21,7 +21,7 @@ public class ListCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        final var holograms = FancyHolograms.get().getHologramsManager().getHolograms();
+        final var holograms = FancyHolograms.get().getHologramsManager().getPersistentHolograms();
 
         if (holograms.isEmpty()) {
             MessageHelper.warning(player, "There are no holograms. Use '/hologram create' to create one");

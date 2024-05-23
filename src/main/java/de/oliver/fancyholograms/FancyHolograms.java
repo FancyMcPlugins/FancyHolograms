@@ -258,7 +258,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         boolean isDevelopmentBuild = !versionConfig.getBuild().equalsIgnoreCase("undefined");
 
         Metrics metrics = new Metrics(this, 17990);
-        metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> hologramsManager.getAllHolograms().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> hologramsManager.getHolograms().size()));
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsMuted() ? "No" : "Yes"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
     }
