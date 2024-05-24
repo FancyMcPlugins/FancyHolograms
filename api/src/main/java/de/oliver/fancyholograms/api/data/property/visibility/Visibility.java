@@ -7,8 +7,17 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum Visibility {
+    /**
+     * Everybody can see a hologram.
+     */
     ALL((player, hologram) -> true),
+    /**
+     * Manual control.
+     */
     MANUAL((player, hologram) -> hologram.isShown(player)),
+    /**
+     * The player needs permission to see a specific hologram.
+     */
     PERMISSION_REQUIRED(
             (player, hologram) -> player.hasPermission("fancyholograms.viewhologram." + hologram.getData().getName())
     );

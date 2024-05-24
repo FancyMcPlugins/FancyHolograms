@@ -233,10 +233,38 @@ public class DisplayHologramData implements Data {
         return this;
     }
 
+    /**
+     * Returns to the default state of visibility.
+     * This method is deprecated, to control the visibility of the hologram, use {@link #getVisibility()}.
+     *
+     * @return {@code true} if hologram can see all players, else {@code false}.
+     */
+    @Deprecated(forRemoval = true)
+    public boolean isVisibleByDefault() {
+        return this.getVisibility() == Visibility.ALL;
+    }
+
+    /**
+     * Set the default state of visibility.
+     * This method is deprecated, to control the visibility of the hologram, use {@link #setVisibility(Visibility)}.
+     */
+    @Deprecated(forRemoval = true)
+    public void setVisibleByDefault(boolean visibleByDefault) {
+        this.setVisibility(visibleByDefault ? Visibility.ALL : Visibility.PERMISSION_REQUIRED);
+    }
+
+    /**
+     * Get the type of visibility for the hologram.
+     *
+     * @return type of visibility.
+     */
     public Visibility getVisibility() {
         return this.visibility;
     }
 
+    /**
+     * Set the type of visibility for the hologram.
+     */
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
     }
