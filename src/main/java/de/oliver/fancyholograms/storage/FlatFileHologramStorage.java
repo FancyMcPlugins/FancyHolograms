@@ -23,7 +23,6 @@ import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static de.oliver.fancyholograms.api.data.DisplayHologramData.DEFAULT_IS_VISIBLE;
 
 public class FlatFileHologramStorage implements HologramStorage {
 
@@ -240,7 +239,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var visibility = Optional.ofNullable(config.getString("visibility"))
                     .flatMap(Visibility::byString)
                     .orElseGet(() -> {
-                        final var visibleByDefault = config.getBoolean("visible_by_default", DEFAULT_IS_VISIBLE);
+                        final var visibleByDefault = config.getBoolean("visible_by_default", DisplayHologramData.DEFAULT_IS_VISIBLE);
                         if (config.contains("visible_by_default")) {
                             config.set("visible_by_default", null);
                         }

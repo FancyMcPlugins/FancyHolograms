@@ -15,9 +15,6 @@ import java.util.Objects;
 
 public class VisibilityCMD implements Subcommand {
 
-    public static final String VISIBILITY_COMMAND = "visibility";
-
-
     @Override
     public List<String> tabcompletion(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
         return Arrays.stream(
@@ -38,7 +35,7 @@ public class VisibilityCMD implements Subcommand {
 
 
         if (hologram.getData().getDisplayData().getVisibility() == copied.getDisplayData().getVisibility()) {
-            MessageHelper.warning(player, "This hologram already has visibility by default set to " + visibility);
+            MessageHelper.warning(player, "This hologram already has visibility set to " + visibility);
             return false;
         }
 
@@ -48,7 +45,7 @@ public class VisibilityCMD implements Subcommand {
             FancyHolograms.get().getHologramStorage().save(hologram);
         }
 
-        MessageHelper.success(player, "Changed visibility by default to " + visibility);
+        MessageHelper.success(player, "Changed visibility to " + visibility);
         return true;
     }
 }
