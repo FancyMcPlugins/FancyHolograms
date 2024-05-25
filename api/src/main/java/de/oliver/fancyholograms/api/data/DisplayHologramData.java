@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.api.data;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
 import de.oliver.fancylib.FancyLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Display;
 import org.joml.Vector3f;
 
 import java.util.Locale;
+import java.util.Optional;
 
 public class DisplayHologramData implements Data {
 
@@ -21,6 +23,7 @@ public class DisplayHologramData implements Data {
     public static final float DEFAULT_SHADOW_STRENGTH = 1.0f;
     public static final int DEFAULT_VISIBILITY_DISTANCE = -1;
     public static final boolean DEFAULT_IS_VISIBLE = true;
+    public static final Visibility DEFAULT_VISIBILITY = Visibility.ALL;
 
     private Location location;
     private Display.Billboard billboard = DEFAULT_BILLBOARD;
@@ -30,12 +33,12 @@ public class DisplayHologramData implements Data {
     private float shadowRadius = DEFAULT_SHADOW_RADIUS;
     private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
     private int visibilityDistance = DEFAULT_VISIBILITY_DISTANCE;
-    private boolean visibleByDefault = DEFAULT_IS_VISIBLE;
+    private Visibility visibility = DEFAULT_VISIBILITY;
     private String linkedNpcName;
 
     public DisplayHologramData(Location location, Display.Billboard billboard, Vector3f scale, Vector3f translation,
                                Display.Brightness brightness, float shadowRadius, float shadowStrength,
-                               int visibilityDistance, String linkedNpcName, boolean visibleByDefault) {
+                               int visibilityDistance, String linkedNpcName, Visibility visibility) {
         this.location = location;
         this.billboard = billboard;
         this.scale = scale;
@@ -45,7 +48,7 @@ public class DisplayHologramData implements Data {
         this.shadowStrength = shadowStrength;
         this.visibilityDistance = visibilityDistance;
         this.linkedNpcName = linkedNpcName;
-        this.visibleByDefault = visibleByDefault;
+        this.visibility = visibility;
     }
 
     public DisplayHologramData() {
@@ -62,7 +65,7 @@ public class DisplayHologramData implements Data {
                 DEFAULT_SHADOW_STRENGTH,
                 DEFAULT_VISIBILITY_DISTANCE,
                 null,
-                DEFAULT_IS_VISIBLE
+                DEFAULT_VISIBILITY
         );
     }
 
@@ -81,7 +84,7 @@ public class DisplayHologramData implements Data {
         section.set("shadow_radius", shadowRadius);
         section.set("shadow_strength", shadowStrength);
         section.set("visibility_distance", visibilityDistance);
-        section.set("visible_by_default", visibleByDefault);
+        section.set("visibility", visibility.toString());
 
 
         if (billboard == Display.Billboard.CENTER) {
@@ -126,7 +129,24 @@ public class DisplayHologramData implements Data {
         shadowStrength = (float) section.getDouble("shadow_strength", DEFAULT_SHADOW_STRENGTH);
         visibilityDistance = section.getInt("visibility_distance", DEFAULT_VISIBILITY_DISTANCE);
         linkedNpcName = section.getString("linkedNpc");
-        visibleByDefault = section.getBoolean("visible_by_default", DEFAULT_IS_VISIBLE);
+
+        visibility = Optional.ofNullable(section.getString("visibility"))
+                .flatMap(Visibility::byString)
+                .orElseGet(() -> {
+                    final var visibleByDefault = section.getBoolean("visible_by_default", DEFAULT_IS_VISIBLE);
+                    if (section.contains("visible_by_default")) {
+                        section.set("visible_by_default", null);
+                    }
+                    if (visibleByDefault) {
+                        return Visibility.ALL;
+                    } else {
+                        return Visibility.PERMISSION_REQUIRED;
+                    }
+                });
+
+        if (section.contains("visible_by_default")) {
+            section.set("visible_by_default", null);
+        }
 
         String billboardStr = section.getString("billboard", DisplayHologramData.DEFAULT_BILLBOARD.name());
         billboard = switch (billboardStr.toLowerCase()) {
@@ -213,12 +233,40 @@ public class DisplayHologramData implements Data {
         return this;
     }
 
+    /**
+     * Returns to the default state of visibility.
+     * This method is deprecated, to control the visibility of the hologram, use {@link #getVisibility()}.
+     *
+     * @return {@code true} if hologram can see all players, else {@code false}.
+     */
+    @Deprecated(forRemoval = true)
     public boolean isVisibleByDefault() {
-        return visibleByDefault;
+        return this.getVisibility() == Visibility.ALL;
     }
 
+    /**
+     * Set the default state of visibility.
+     * This method is deprecated, to control the visibility of the hologram, use {@link #setVisibility(Visibility)}.
+     */
+    @Deprecated(forRemoval = true)
     public void setVisibleByDefault(boolean visibleByDefault) {
-        this.visibleByDefault = visibleByDefault;
+        this.setVisibility(visibleByDefault ? Visibility.ALL : Visibility.PERMISSION_REQUIRED);
+    }
+
+    /**
+     * Get the type of visibility for the hologram.
+     *
+     * @return type of visibility.
+     */
+    public Visibility getVisibility() {
+        return this.visibility;
+    }
+
+    /**
+     * Set the type of visibility for the hologram.
+     */
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
 
     public String getLinkedNpcName() {
@@ -242,7 +290,7 @@ public class DisplayHologramData implements Data {
                 shadowStrength,
                 visibilityDistance,
                 linkedNpcName,
-                visibleByDefault
+                visibility
         );
     }
 }
