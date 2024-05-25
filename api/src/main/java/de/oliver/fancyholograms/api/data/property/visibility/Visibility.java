@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 
 public enum Visibility {
     /**
@@ -13,12 +12,9 @@ public enum Visibility {
      */
     ALL((player, hologram) -> true),
     /**
-     * Only players from the list {@link Hologram#manualViewer} can see a hologram.
-     *
-     * @see Hologram#addManualViewer(UUID) to add player
-     * @see Hologram#removeManualViewer(UUID)  to remote player
+     * Manual control.
      */
-    MANUAL_VIEWER((player, hologram) -> hologram.getManualViewer().contains(player.getUniqueId())),
+    MANUAL((player, hologram) -> hologram.isShown(player)),
     /**
      * The player needs permission to see a specific hologram.
      */

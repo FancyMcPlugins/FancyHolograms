@@ -39,13 +39,6 @@ public abstract class Hologram {
     @NotNull
     protected final Set<UUID> shown = new HashSet<>();
 
-    /**
-     * Set of UUIDs of players to whom the hologram needs to show.
-     * Used for {@link de.oliver.fancyholograms.api.data.property.visibility.Visibility#MANUAL_VIEWER} visibility.
-     */
-    @NotNull
-    private final Set<UUID> manualViewer = new HashSet<>();
-
 
     protected Hologram(@NotNull final HologramData data) {
         this.data = data;
@@ -99,15 +92,6 @@ public abstract class Hologram {
     }
 
     /**
-     * Add manual viewer.
-     *
-     * @param playerId target player id.
-     */
-    public final void addManualViewer(@NotNull UUID playerId) {
-        this.manualViewer.add(playerId);
-    }
-
-    /**
      * Must be called asynchronously
      */
     public final void hideHologram(Player player) {
@@ -119,15 +103,6 @@ public abstract class Hologram {
      */
     public final void hideHologram(Collection<? extends Player> players) {
         players.forEach(this::hideHologram);
-    }
-
-    /**
-     * Remove manual viewer.
-     *
-     * @param playerId target player id.
-     */
-    public final void removeManualViewer(@NotNull UUID playerId) {
-        this.manualViewer.remove(playerId);
     }
 
     public final void updateHologram() {
@@ -149,10 +124,6 @@ public abstract class Hologram {
 
     public final @NotNull @UnmodifiableView Set<UUID> getShownToPlayers() {
         return Collections.unmodifiableSet(this.shown);
-    }
-
-    public final @NotNull @UnmodifiableView Set<UUID> getManualViewer() {
-        return Collections.unmodifiableSet(this.manualViewer);
     }
 
     public final boolean isShown(@NotNull final UUID player) {
