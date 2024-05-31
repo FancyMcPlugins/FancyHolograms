@@ -1,3 +1,4 @@
+import net.minecrell.pluginyml.paper.PaperPluginDescription
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -7,6 +8,9 @@ plugins {
 
     id("xyz.jpenilla.run-paper") version "2.2.4"
     id("io.github.goooler.shadow") version "8.1.7"
+    id("net.minecrell.plugin-yml.paper") version "0.6.0"
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 runPaper.folia.registerTask()
@@ -17,14 +21,15 @@ allprojects {
     version = "2.1.0" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
-
     repositories {
+        mavenLocal()
         mavenCentral()
 
         maven(url = "https://repo.papermc.io/repository/maven-public/")
         maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
 
         maven(url = "https://repo.fancyplugins.de/snapshots")
+        maven(url = "https://repo.fancyplugins.de/releases")
         maven(url = "https://repo.smrt-1.com/releases")
         maven(url = "https://repo.viaversion.com/")
     }
@@ -34,43 +39,54 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-    implementation(project(":implementation_1_20_6", configuration = "reobf"))
+    implementation(project(":implementation_1_20_6"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-
     compileOnly("de.oliver:FancyNpcs:${findProperty("fancyNpcsVersion")}")
+    compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+//    implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
+//    implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
+//    implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
+//    implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
+//    annotationProcessor("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
+}
+
+paper {
+    main = "de.oliver.fancyholograms.FancyHolograms"
+    bootstrapper = "de.oliver.fancyholograms.loaders.FancyHologramsBootstrapper"
+    loader = "de.oliver.fancyholograms.loaders.FancyHologramsLoader"
+    foliaSupported = true
+    version = rootProject.version.toString()
+    description = "Simple, lightweight and fast hologram plugin using display entities"
+    apiVersion = "1.19"
+    serverDependencies {
+        register("PlaceholderAPI") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+    }
 }
 
 tasks {
-    assemble {
-        dependsOn(shadowJar)
+    runServer {
+        minecraftVersion(findProperty("minecraftVersion").toString())
+//        minecraftVersion("1.19.4")
+
+        downloadPlugins {
+//            hangar("ViaVersion", "4.10.2-SNAPSHOT+347")
+//            hangar("ViaBackwards", "4.10.2-SNAPSHOT+208")
+//            hangar("PlaceholderAPI", "2.11.5")
+        }
     }
 
     shadowJar {
-        dependsOn(":api:shadowJar")
-        relocate("io.sentry", "de.oliver.fancyholograms.libs.sentry")
-        minimize()
-
-        archiveBaseName.set(rootProject.name)
         archiveClassifier.set("")
-    }
 
-    runServer {
-//        minecraftVersion(findProperty("minecraftVersion").toString())
-        minecraftVersion("1.20.6")
-
-        downloadPlugins {
-//            hangar("FancyNpcs", findProperty("fancyNpcsVersion").toString())
-//            hangar("PlaceholderAPI", "2.11.5")
-//            modrinth("miniplaceholders", "M6gjRuIx")
-//
-//            hangar("ViaVersion", "4.9.3-SNAPSHOT+216")
-//            hangar("ViaBackwards", "4.9.2-SNAPSHOT+131")
-        }
+        dependsOn(":api:shadowJar")
     }
 
     publishing {
@@ -97,14 +113,24 @@ tasks {
         }
         publications {
             create<MavenPublication>("maven") {
-                groupId = rootProject.group.toString()
-                artifactId = rootProject.name
-                version = rootProject.version.toString()
+                groupId = project.group.toString()
+                artifactId = project.name
+                version = project.version.toString()
                 from(project.components["java"])
             }
         }
     }
 
+    compileJava {
+        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+        options.release = 21
+        // For cloud-annotations, see https://cloud.incendo.org/annotations/#command-components
+        options.compilerArgs.add("-parameters")
+    }
+
+    javadoc {
+        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+    }
 
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
@@ -118,7 +144,7 @@ tasks {
 
         inputs.properties(props)
 
-        filesMatching("plugin.yml") {
+        filesMatching("paper-plugin.yml") {
             expand(props)
         }
 
@@ -126,18 +152,18 @@ tasks {
             expand(props)
         }
     }
+}
 
-    compileJava {
-        options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
-        options.release = 21
-    }
+tasks.publishAllPublicationsToHangar {
+    dependsOn("shadowJar")
+}
 
+tasks.modrinth {
+    dependsOn("shadowJar")
 }
 
 java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
-    }
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 fun getCurrentCommitHash(): String {
@@ -151,4 +177,31 @@ fun getCurrentCommitHash(): String {
     } else {
         throw IllegalStateException("Failed to retrieve the commit hash.")
     }
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version = project.version as String
+        id = "FancyHolograms"
+        channel = "Alpha"
+
+        apiKey.set(System.getenv("HANGAR_PUBLISH_API_TOKEN"))
+
+        platforms {
+            paper {
+                jar = tasks.shadowJar.flatMap { it.archiveFile }
+                platformVersions = listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6")
+            }
+        }
+    }
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_PUBLISH_API_TOKEN"))
+    projectId.set("fancyholograms")
+    versionNumber.set(project.version.toString())
+    versionType.set("alpha")
+    uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
+    gameVersions.addAll(listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6"))
+    loaders.add("paper")
 }
