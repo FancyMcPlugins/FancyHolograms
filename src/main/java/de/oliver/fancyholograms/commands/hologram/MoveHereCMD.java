@@ -22,7 +22,7 @@ public class MoveHereCMD implements Subcommand {
 
     public static boolean setLocation(Player player, Hologram hologram, Location location) {
         final var copied = hologram.getData().copy();
-        copied.getDisplayData().setLocation(location);
+        copied.getDisplayData().getLocation().set(location.x(), location.y(), location.z());
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.POSITION)) {
             return false;
