@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.api;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.utils.FloodgateChecker;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
@@ -185,10 +186,11 @@ public abstract class Hologram {
         if (!(getData().getTypeData() instanceof TextHologramData textData)) {
             return null;
         }
-
-        var text = String.join("\n", textData.getText());
-
-        return ModernChatColorHandler.translate(text, player);
+        var text = textData.getText();
+        if (FloodgateChecker.isBedrockPlayer(player) && !textData.getBedrockText().isEmpty()) {
+            text = textData.getBedrockText();
+        }
+        return ModernChatColorHandler.translate(String.join("\n", text), player);
     }
 
     @Override

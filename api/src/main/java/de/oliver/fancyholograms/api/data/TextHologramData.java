@@ -18,14 +18,16 @@ public class TextHologramData implements Data {
     public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
 
     private List<String> text;
+    private List<String> bedrockText;
     private TextColor background;
     private TextDisplay.TextAlignment textAlignment;
     private boolean textShadow;
     private boolean seeThrough;
     private int textUpdateInterval;
 
-    public TextHologramData(List<String> text, TextColor background, TextDisplay.TextAlignment textAlignment, boolean textShadow, boolean seeThrough, int textUpdateInterval) {
+    public TextHologramData(List<String> text, List<String> bedrockText, TextColor background, TextDisplay.TextAlignment textAlignment, boolean textShadow, boolean seeThrough, int textUpdateInterval) {
         this.text = text;
+        this.bedrockText = bedrockText;
         this.background = background;
         this.textAlignment = textAlignment;
         this.textShadow = textShadow;
@@ -42,6 +44,7 @@ public class TextHologramData implements Data {
         
         return new TextHologramData(
                 text,
+                text,
                 null,
                 DEFAULT_TEXT_ALIGNMENT,
                 DEFAULT_TEXT_SHADOW_STATE,
@@ -56,7 +59,7 @@ public class TextHologramData implements Data {
         if (text.isEmpty()) {
             text = List.of("Could not load hologram text");
         }
-
+        bedrockText = section.getStringList("bedrock_text");
         textShadow = section.getBoolean("text_shadow", false);
         textUpdateInterval = section.getInt("update_text_interval", DEFAULT_TEXT_UPDATE_INTERVAL);
 
@@ -83,6 +86,7 @@ public class TextHologramData implements Data {
     @Override
     public void write(ConfigurationSection section, String name) {
         section.set("text", text);
+        section.set("bedrock_text", bedrockText);
         section.set("text_shadow", textShadow);
         section.set("see_through", seeThrough);
         section.set("text_alignment", textAlignment.name().toLowerCase(Locale.ROOT));
@@ -104,6 +108,10 @@ public class TextHologramData implements Data {
 
     public List<String> getText() {
         return text;
+    }
+
+    public List<String> getBedrockText() {
+        return bedrockText;
     }
 
     public TextHologramData setText(List<String> text) {
@@ -168,6 +176,7 @@ public class TextHologramData implements Data {
     public Data copy() {
         return new TextHologramData(
                 new ArrayList<>(text),
+                new ArrayList<>(bedrockText),
                 background,
                 textAlignment,
                 textShadow,

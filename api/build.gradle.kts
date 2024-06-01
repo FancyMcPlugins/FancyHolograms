@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
+    compileOnly("org.geysermc.floodgate:api:${findProperty("geyserVersion")}")
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 

@@ -5,8 +5,9 @@ import java.io.InputStreamReader
 plugins {
     id("java-library")
     id("maven-publish")
+    id("io.papermc.paperweight.userdev") version "1.7.1" apply false
 
-    id("xyz.jpenilla.run-paper") version "2.2.4"
+    id("xyz.jpenilla.run-paper") version "2.3.0"
     id("io.github.goooler.shadow") version "8.1.7"
     id("net.minecrell.plugin-yml.paper") version "0.6.0"
     id("io.papermc.hangar-publish-plugin") version "0.1.2"
@@ -32,6 +33,7 @@ allprojects {
         maven(url = "https://repo.fancyplugins.de/releases")
         maven(url = "https://repo.smrt-1.com/releases")
         maven(url = "https://repo.viaversion.com/")
+        maven(url = "https://repo.opencollab.dev/main/") // Floodgate
     }
 }
 
