@@ -163,7 +163,7 @@ public class FlatFileHologramStorage implements HologramStorage {
 
                 typeData.read(holoSection, name);
 
-                HologramData data = new HologramData(name, displayData, type, typeData);
+                HologramData data = new HologramData(name, displayData, type, typeData, true);
 
                 Hologram hologram = FancyHolograms.get().getHologramManager().create(data);
                 holograms.add(hologram);
@@ -279,7 +279,7 @@ public class FlatFileHologramStorage implements HologramStorage {
 
             TextHologramData textData = new TextHologramData(text, background, textAlignment, textHasShadow, isSeeThrough, textUpdateInterval);
 
-            return new HologramData(name, displayData, HologramType.TEXT, textData);
+            return new HologramData(name, displayData, HologramType.TEXT, textData, true);
         }
     }
 }
