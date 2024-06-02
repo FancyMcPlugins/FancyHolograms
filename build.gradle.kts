@@ -79,7 +79,7 @@ tasks {
         downloadPlugins {
 //            hangar("ViaVersion", "4.10.2-SNAPSHOT+347")
 //            hangar("ViaBackwards", "4.10.2-SNAPSHOT+208")
-//            hangar("PlaceholderAPI", "2.11.5")
+            hangar("PlaceholderAPI", "2.11.6")
         }
     }
 

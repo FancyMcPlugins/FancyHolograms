@@ -121,9 +121,9 @@ public abstract class Hologram {
      */
     public void refreshForViewers() {
         final var players = getViewers()
-            .stream()
-            .map(Bukkit::getPlayer)
-            .toList();
+                .stream()
+                .map(Bukkit::getPlayer)
+                .toList();
 
         refreshHologram(players);
     }
@@ -134,10 +134,10 @@ public abstract class Hologram {
     public void refreshForViewersInWorld() {
         World world = data.getLocation().getWorld();
         final var players = getViewers()
-            .stream()
-            .map(Bukkit::getPlayer)
-            .filter(player -> player != null && player.getWorld().equals(world))
-            .toList();
+                .stream()
+                .map(Bukkit::getPlayer)
+                .filter(player -> player != null && player.getWorld().equals(world))
+                .toList();
 
         refreshHologram(players);
     }
@@ -195,9 +195,9 @@ public abstract class Hologram {
         boolean shouldBeShown = shouldShowTo(player);
 
         if (isShown && !shouldBeShown) {
-            hideHologram(player);
-        } else if (!isShown && shouldBeShown) {
             showHologram(player);
+        } else if (!isShown && shouldBeShown) {
+            hideHologram(player);
         }
     }
 
@@ -213,9 +213,9 @@ public abstract class Hologram {
         boolean shouldBeShown = shouldShowTo(player);
 
         if (isShown && !shouldBeShown) {
-            show(player);
-        } else if (!isShown && shouldBeShown) {
             hide(player);
+        } else if (!isShown && shouldBeShown) {
+            show(player);
         }
     }
 
