@@ -12,10 +12,6 @@ public enum Visibility {
      */
     ALL((player, hologram) -> true),
     /**
-     * Manual control.
-     */
-    MANUAL((player, hologram) -> hologram.isShown(player)),
-    /**
      * The player needs permission to see a specific hologram.
      */
     PERMISSION_REQUIRED(
@@ -30,16 +26,14 @@ public enum Visibility {
         this.predicate = predicate;
     }
 
-
-    public boolean canSee(Player player, Hologram hologram) {
-        return this.predicate.canSee(player, hologram);
-    }
-
-
     public static Optional<Visibility> byString(String value) {
         return Arrays.stream(Visibility.values())
                 .filter(visibility -> visibility.toString().equalsIgnoreCase(value))
                 .findFirst();
+    }
+
+    public boolean canSee(Player player, Hologram hologram) {
+        return this.predicate.canSee(player, hologram);
     }
 
     public interface VisibilityPredicate {
