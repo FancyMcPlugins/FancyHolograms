@@ -41,13 +41,13 @@ public class BackgroundCMD implements Subcommand {
             if (color.equals("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (color.startsWith("#")) {
-                Color parsed = Color.fromARGB((int)Long.parseLong(color.substring(1), 16));
+                Color parsed = Color.fromARGB((int) Long.parseLong(color.substring(1), 16));
                 //make background solid color if RGB hex provided
                 if (color.length() == 7) background = parsed.setAlpha(255);
                 else background = parsed;
             } else {
                 NamedTextColor named = NamedTextColor.NAMES.value(color.replace(' ', '_'));
-                background = named == null ? null : Color.fromARGB(named.value());
+                background = named == null ? null : Color.fromARGB(named.value() | 0xC8000000);
             }
 
             if (background == null) {
