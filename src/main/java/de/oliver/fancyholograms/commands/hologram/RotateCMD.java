@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.commands.hologram;
 
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Location;
@@ -25,8 +25,8 @@ public class RotateCMD implements Subcommand {
             return false;
         }
 
-        final var yaw = MoveHereCMD.calculateCoordinate(args[3], hologram.getData().getDisplayData().getLocation(), player.getLocation(), loc -> loc.getYaw() + 180f);
-        Location location = hologram.getData().getDisplayData().getLocation().clone();
+        final var yaw = MoveHereCMD.calculateCoordinate(args[3], hologram.getData().getLocation(), player.getLocation(), loc -> loc.getYaw() + 180f);
+        Location location = hologram.getData().getLocation().clone();
         location.setYaw(yaw.floatValue() - 180f);
 
         return MoveHereCMD.setLocation(player, hologram, location);

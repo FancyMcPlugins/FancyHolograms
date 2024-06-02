@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.api;
 
 import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 
 import java.util.Collection;
 import java.util.Optional;

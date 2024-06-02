@@ -1,8 +1,8 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramType;
+import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.events.HologramCreateEvent;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -53,26 +53,20 @@ public class CreateCMD implements Subcommand {
             return false;
         }
 
-        DisplayHologramData displayData = DisplayHologramData.getDefault(player.getLocation().clone());
-
-        Data typeData = null;
+        DisplayHologramData displayData = null;
         switch (type) {
-            case TEXT -> typeData = TextHologramData.getDefault(name);
+            case TEXT -> displayData = new TextHologramData(name, player.getLocation());
             case ITEM -> {
-                typeData = ItemHologramData.getDefault();
+                displayData = new ItemHologramData(name, player.getLocation());
                 displayData.setBillboard(Display.Billboard.FIXED);
             }
             case BLOCK -> {
-                typeData = BlockHologramData.getDefault();
+                displayData = new BlockHologramData(name, player.getLocation());
                 displayData.setBillboard(Display.Billboard.FIXED);
             }
         }
 
-
-        final var data = new HologramData(name, displayData, type, typeData, true);
-
-        final var holo = FancyHolograms.get().getHologramsManager().create(data);
-
+        final var holo = FancyHolograms.get().getHologramsManager().create(displayData);
         if (!new HologramCreateEvent(holo, player).callEvent()) {
             MessageHelper.error(player, "Creating the hologram was cancelled");
             return false;
@@ -80,7 +74,7 @@ public class CreateCMD implements Subcommand {
 
         holo.createHologram();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            holo.checkAndUpdateShownStateForPlayer(onlinePlayer);
+            holo.updateShownStateFor(onlinePlayer);
         }
 
         FancyHolograms.get().getHologramsManager().addHologram(holo);

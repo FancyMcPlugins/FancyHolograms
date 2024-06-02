@@ -1,10 +1,12 @@
-package de.oliver.fancyholograms.api;
+package de.oliver.fancyholograms.api.hologram;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.World;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -31,17 +33,19 @@ public abstract class Hologram {
     public static final Color TRANSPARENT = Color.fromARGB(0);
     protected static final int MINIMUM_PROTOCOL_VERSION = 762;
 
-    @NotNull
-    protected final HologramData data;
+    protected final @NotNull HologramData data;
     /**
      * Set of UUIDs of players to whom the hologram is currently shown.
      */
-    @NotNull
-    protected final Set<UUID> shown = new HashSet<>();
-
+    protected final @NotNull Set<UUID> viewers = new HashSet<>();
 
     protected Hologram(@NotNull final HologramData data) {
         this.data = data;
+    }
+
+    @NotNull
+    public String getName() {
+        return data.getName();
     }
 
     public final @NotNull HologramData getData() {
@@ -77,36 +81,65 @@ public abstract class Hologram {
         delete();
     }
 
-    /**
-     * Must be called asynchronously
-     */
-    public final void showHologram(Player player) {
-        show(player);
-    }
-
-    /**
-     * Must be called asynchronously
-     */
     public final void showHologram(Collection<? extends Player> players) {
         players.forEach(this::showHologram);
     }
 
-    /**
-     * Must be called asynchronously
-     */
-    public final void hideHologram(Player player) {
-        hide(player);
+    public final void showHologram(Player player) {
+        viewers.add(player.getUniqueId());
     }
 
-    /**
-     * Must be called asynchronously
-     */
     public final void hideHologram(Collection<? extends Player> players) {
         players.forEach(this::hideHologram);
     }
 
+    public final void hideHologram(Player player) {
+        viewers.remove(player.getUniqueId());
+    }
+
+    @Deprecated(forRemoval = true)
     public final void updateHologram() {
+        queueUpdate();
+    }
+
+    /**
+     * Queues hologram to update and refresh for players
+     */
+    public final void queueUpdate() {
+        data.setHasChanges(true);
+    }
+
+    /**
+     * Forces hologram to update and refresh for players
+     */
+    public final void forceUpdate() {
         update();
+    }
+
+    /**
+     * Refreshes the hologram for the players it is currently shown to.
+     */
+    public void refreshForViewers() {
+        final var players = getViewers()
+            .stream()
+            .map(Bukkit::getPlayer)
+            .toList();
+
+        refreshHologram(players);
+    }
+
+    /**
+     * Refreshes the hologram for players in the world associated with the hologram's location.
+     */
+    public void refreshForViewersInWorld() {
+        World world = data.getLocation().getWorld();
+        final var players = getViewers()
+            .stream()
+            .map(Bukkit::getPlayer)
+            .filter(player -> player != null && player.getWorld().equals(world))
+            .toList();
+
+        refreshHologram(players);
     }
 
     /**
@@ -122,33 +155,29 @@ public abstract class Hologram {
         players.forEach(this::refreshHologram);
     }
 
-    public final @NotNull @UnmodifiableView Set<UUID> getShownToPlayers() {
-        return Collections.unmodifiableSet(this.shown);
+    public final @NotNull @UnmodifiableView Set<UUID> getViewers() {
+        return Collections.unmodifiableSet(this.viewers);
     }
 
-    public final boolean isShown(@NotNull final UUID player) {
-        return this.shown.contains(player);
+    public final boolean isViewer(@NotNull final Player player) {
+        return isViewer(player.getUniqueId());
     }
 
-    public final boolean isShown(@NotNull final Player player) {
-        return isShown(player.getUniqueId());
+    public final boolean isViewer(@NotNull final UUID player) {
+        return this.viewers.contains(player);
     }
 
-    protected boolean shouldHologramBeShown(@NotNull final Player player) {
-        final var location = getData().getDisplayData().getLocation();
-        if (location == null) {
-            return false;
-        }
-
+    protected boolean shouldShowTo(@NotNull final Player player) {
+        final var location = getData().getLocation();
         if (!location.getWorld().equals(player.getWorld())) {
             return false;
         }
 
-        if (!this.getData().getDisplayData().getVisibility().canSee(player, this)) {
+        if (!this.getData().getVisibility().canSee(player, this)) {
             return false;
         }
 
-        int visibilityDistance = data.getDisplayData().getVisibilityDistance();
+        int visibilityDistance = data.getVisibilityDistance();
         double distanceSquared = location.distanceSquared(player.getLocation());
 
         return distanceSquared <= visibilityDistance * visibilityDistance;
@@ -161,17 +190,33 @@ public abstract class Hologram {
      *
      * @param player the player to check and update the shown state for
      */
-    public void checkAndUpdateShownStateForPlayer(Player player) {
-        FancyHologramsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
-            boolean isShown = isShown(player);
-            boolean shouldHologramBeShown = shouldHologramBeShown(player);
+    public void updateShownStateFor(Player player) {
+        boolean isShown = isViewer(player);
+        boolean shouldBeShown = shouldShowTo(player);
 
-            if (isShown && !shouldHologramBeShown) {
-                hideHologram(player);
-            } else if (!isShown && shouldHologramBeShown) {
-                showHologram(player);
-            }
-        });
+        if (isShown && !shouldBeShown) {
+            hideHologram(player);
+        } else if (!isShown && shouldBeShown) {
+            showHologram(player);
+        }
+    }
+
+    /**
+     * Checks and forcefully updates the shown state for a player.
+     * If the hologram is shown and should not be, it hides it.
+     * If the hologram is not shown and should be, it shows it.
+     *
+     * @param player the player to check and update the shown state for
+     */
+    public void forceUpdateShownStateFor(Player player) {
+        boolean isShown = isViewer(player);
+        boolean shouldBeShown = shouldShowTo(player);
+
+        if (isShown && !shouldBeShown) {
+            show(player);
+        } else if (!isShown && shouldBeShown) {
+            hide(player);
+        }
     }
 
     /**
@@ -182,7 +227,7 @@ public abstract class Hologram {
      * @return the text shown in the hologram
      */
     public final Component getShownText(@Nullable final Player player) {
-        if (!(getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(getData() instanceof TextHologramData textData)) {
             return null;
         }
 
@@ -203,5 +248,4 @@ public abstract class Hologram {
     public final int hashCode() {
         return Objects.hash(this.getData());
     }
-
 }

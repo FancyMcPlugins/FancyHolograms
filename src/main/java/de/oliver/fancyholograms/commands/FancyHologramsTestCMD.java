@@ -1,10 +1,7 @@
 package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramType;
-import de.oliver.fancyholograms.api.data.DisplayHologramData;
-import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Color;
@@ -55,7 +52,7 @@ public class FancyHologramsTestCMD extends Command {
             for (int i = 0; i < 10; i++) {
                 for (int j = 0; j < 10; j++) {
                     int n = (i * 10 + j) + 1;
-                    TextHologramData textData = TextHologramData.getDefault("holo-" + n);
+                    TextHologramData textData = new TextHologramData("holo-" + n, p.getLocation().clone().add(5 * i + 1, 0, 5 * j + 1));
                     textData.setText(Arrays.asList(
                             "<rainbow><b>This is a test hologram! (#" + n + ")</b></rainbow>",
                             "<red>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.",
@@ -64,22 +61,19 @@ public class FancyHologramsTestCMD extends Command {
                             "<gradient:red:green>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.",
                             "<gradient:green:yellow>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris."
                     ));
-                    textData.setTextUpdateInterval(100);
+                    textData.setTextUpdateInterval(100)
+                        .setScale(new Vector3f(.5f, .5f, .5f))
+                        .setVisibilityDistance(100);
 
-                    DisplayHologramData displayData = DisplayHologramData.getDefault(p.getLocation().clone().add(5 * i + 1, 0, 5 * j + 1));
-                    displayData.setScale(new Vector3f(.5f, .5f, .5f));
-                    displayData.setVisibilityDistance(100);
-
-                    HologramData data = new HologramData("holo-" + n, displayData, HologramType.TEXT, textData, true);
-                    Hologram hologram = this.plugin.getHologramsManager().create(data);
+                    Hologram hologram = this.plugin.getHologramsManager().create(textData);
                     hologram.createHologram();
-                    hologram.checkAndUpdateShownStateForPlayer(p);
+                    hologram.updateShownStateFor(p);
                 }
             }
 
             return true;
         } else if (args.length == 1 && args[0].equalsIgnoreCase("test1")) {
-            TextHologramData textData = TextHologramData.getDefault("holo-test1");
+            TextHologramData textData = new TextHologramData("holo-test1", p.getLocation());
             textData.setText(Arrays.asList(
                     "<rainbow><b>This is a test hologram!</b></rainbow>",
                     "<red>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.",
@@ -87,24 +81,21 @@ public class FancyHologramsTestCMD extends Command {
                     "<yellow>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.",
                     "<gradient:red:green>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris.",
                     "<gradient:green:yellow>Lorem ipsum dolor sit amet, consec tetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris."
-            ));
-            textData.setTextUpdateInterval(100);
-            textData.setTextAlignment(TextDisplay.TextAlignment.CENTER);
-            textData.setBackground(Color.fromARGB(15, 78, 237, 176));
-            textData.setTextShadow(true);
+            ))
+                .setTextUpdateInterval(100)
+                .setTextAlignment(TextDisplay.TextAlignment.CENTER)
+                .setBackground(Color.fromARGB(15, 78, 237, 176))
+                .setTextShadow(true)
+                .setScale(new Vector3f(2, 2, 2))
+                .setBillboard(Display.Billboard.CENTER)
+                .setBrightness(new Display.Brightness(15, 15))
+                .setShadowRadius(3)
+                .setShadowStrength(3)
+                .setVisibilityDistance(100);
 
-            DisplayHologramData displayData = DisplayHologramData.getDefault(p.getLocation());
-            displayData.setScale(new Vector3f(2, 2, 2));
-            displayData.setBillboard(Display.Billboard.CENTER);
-            displayData.setBrightness(new Display.Brightness(15, 15));
-            displayData.setShadowRadius(3);
-            displayData.setShadowStrength(3);
-            displayData.setVisibilityDistance(100);
-
-            HologramData data = new HologramData("holo-test1", displayData, HologramType.TEXT, textData, true);
-            Hologram hologram = this.plugin.getHologramsManager().create(data);
+            Hologram hologram = this.plugin.getHologramsManager().create(textData);
             hologram.createHologram();
-            hologram.checkAndUpdateShownStateForPlayer(p);
+            hologram.updateShownStateFor(p);
         }
 
         return false;

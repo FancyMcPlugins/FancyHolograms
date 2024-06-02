@@ -1,8 +1,7 @@
 package de.oliver.fancyholograms.api.events;
 
-import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramEvent;
-import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.data.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -14,13 +13,9 @@ public final class HologramUpdateEvent extends HologramEvent {
 
     private static final HandlerList handlerList = new HandlerList();
 
-
-    @NotNull
-    private final CommandSender player;
-    @NotNull
-    private final HologramData updatedData;
-    @NotNull
-    private final HologramModification modification;
+    private final @NotNull CommandSender player;
+    private final @NotNull HologramData updatedData;
+    private final @NotNull HologramModification modification;
 
     public HologramUpdateEvent(@NotNull final Hologram hologram, @NotNull final CommandSender player, @NotNull final HologramData updatedData, @NotNull final HologramModification modification) {
         super(hologram, false);

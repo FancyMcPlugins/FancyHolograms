@@ -2,8 +2,9 @@ package de.oliver.fancyholograms.commands;
 
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.HologramType;
+import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.hologram.HologramType;
+import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
@@ -96,9 +97,7 @@ public final class HologramCMD extends Command {
                 final var updated = edit(sender, hologram, args);
 
                 if (updated) {
-                    hologram.updateHologram();
-
-                    this.plugin.getHologramsManager().refreshHologramForPlayersInWorld(hologram);
+                    hologram.queueUpdate();
                 }
 
                 yield updated;
@@ -165,12 +164,14 @@ public final class HologramCMD extends Command {
                 case "billboard" -> {
                     final var values = new ArrayList<>(List.of(Display.Billboard.values()));
 
-                    values.remove(hologram.getData().getDisplayData().getBillboard());
+                    if (hologram.getData() instanceof DisplayHologramData displayData) {
+                        values.remove(displayData.getBillboard());
+                    }
 
                     yield values.stream().map(Enum::name);
                 }
                 case "background" -> {
-                    TextHologramData textData = (TextHologramData) hologram.getData().getTypeData();
+                    TextHologramData textData = (TextHologramData) hologram.getData();
                     final var colors = new ArrayList<>(NamedTextColor.NAMES.keys());
 
                     colors.add("reset");
@@ -192,12 +193,12 @@ public final class HologramCMD extends Command {
                     yield colors.stream();
                 }
                 case "textshadow" -> {
-                    TextHologramData textData = (TextHologramData) hologram.getData().getTypeData();
-                    yield Stream.of(!textData.isTextShadow()).map(Object::toString);
+                    TextHologramData textData = (TextHologramData) hologram.getData();
+                    yield Stream.of(!textData.hasTextShadow()).map(Object::toString);
                 }
                 case "textalignment" -> Arrays.stream(TextDisplay.TextAlignment.values()).map(Enum::name);
                 case "setline", "removeline" -> {
-                    TextHologramData textData = (TextHologramData) hologram.getData().getTypeData();
+                    TextHologramData textData = (TextHologramData) hologram.getData();
                     yield IntStream.range(1, textData.getText().size() + 1).mapToObj(Integer::toString);
                 }
                 case "linkwithnpc" -> {
@@ -221,7 +222,7 @@ public final class HologramCMD extends Command {
 
         // /holo edit [hologram] setline [number] {tab:line_text}
         if (args[2].equalsIgnoreCase("setline")) {
-            TextHologramData textData = (TextHologramData) hologram.getData().getTypeData();
+            TextHologramData textData = (TextHologramData) hologram.getData();
 
             final var index = Ints.tryParse(args[3]);
             if (index == null || index < 1 || index > textData.getText().size()) {

@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -33,24 +33,24 @@ public class VisibilityDistanceCMD implements Subcommand {
             visibilityDistance = -1;
         }
 
-        if (Ints.compare(visibilityDistance, hologram.getData().getDisplayData().getVisibilityDistance()) == 0) {
+        if (Ints.compare(visibilityDistance, hologram.getData().getVisibilityDistance()) == 0) {
             MessageHelper.warning(player, "This hologram already has this visibility distance");
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        copied.getDisplayData().setVisibilityDistance(visibilityDistance);
+        final var copied = hologram.getData().copy(hologram.getName());
+        copied.setVisibilityDistance(visibilityDistance);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.UPDATE_VISIBILITY_DISTANCE)) {
             return false;
         }
 
-        if (Ints.compare(copied.getDisplayData().getVisibilityDistance(), hologram.getData().getDisplayData().getVisibilityDistance()) == 0) {
+        if (Ints.compare(copied.getVisibilityDistance(), hologram.getData().getVisibilityDistance()) == 0) {
             MessageHelper.warning(player, "This hologram already has this visibility distance");
             return false;
         }
 
-        hologram.getData().getDisplayData().setVisibilityDistance(copied.getDisplayData().getVisibilityDistance());
+        hologram.getData().setVisibilityDistance(copied.getVisibilityDistance());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

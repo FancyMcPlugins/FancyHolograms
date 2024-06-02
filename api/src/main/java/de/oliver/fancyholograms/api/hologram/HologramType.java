@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms.api;
+package de.oliver.fancyholograms.api.hologram;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,8 +6,7 @@ import java.util.List;
 public enum HologramType {
     TEXT(Arrays.asList("background", "textshadow", "textalignment", "seethrough", "setline", "removeline", "addline", "insertbefore", "insertafter", "updatetextinterval")),
     ITEM(List.of("item")),
-    BLOCK(List.of("block")),
-    ;
+    BLOCK(List.of("block"));
 
     private final List<String> commands;
 

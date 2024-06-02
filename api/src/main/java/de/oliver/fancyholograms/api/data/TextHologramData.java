@@ -1,10 +1,10 @@
 package de.oliver.fancyholograms.api.data;
 
-import de.oliver.fancyholograms.api.FancyHologramsPlugin;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.hologram.HologramType;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.TextDisplay;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class TextHologramData implements Data {
+public class TextHologramData extends DisplayHologramData {
 
     public static final TextDisplay.TextAlignment DEFAULT_TEXT_ALIGNMENT = TextDisplay.TextAlignment.CENTER;
     public static final boolean DEFAULT_TEXT_SHADOW_STATE = false;
@@ -21,39 +21,94 @@ public class TextHologramData implements Data {
 
     private List<String> text;
     private Color background;
-    private TextDisplay.TextAlignment textAlignment;
-    private boolean textShadow;
-    private boolean seeThrough;
-    private int textUpdateInterval;
+    private TextDisplay.TextAlignment textAlignment = DEFAULT_TEXT_ALIGNMENT;
+    private boolean textShadow = DEFAULT_TEXT_SHADOW_STATE;
+    private boolean seeThrough = DEFAULT_SEE_THROUGH;
+    private int textUpdateInterval = DEFAULT_TEXT_UPDATE_INTERVAL;
 
-    public TextHologramData(List<String> text, Color background, TextDisplay.TextAlignment textAlignment, boolean textShadow, boolean seeThrough, int textUpdateInterval) {
+    /**
+     * @param name Name of hologram
+     * @param location Location of hologram
+     * @apiNote Default values are already set
+     */
+    public TextHologramData(String name, Location location) {
+        super(name, HologramType.TEXT, location);
+        text = new ArrayList<>(List.of("Edit this line with /hologram edit " + name));
+    }
+
+    public List<String> getText() {
+        return text;
+    }
+
+    public TextHologramData setText(List<String> text) {
         this.text = text;
+        setHasChanges(true);
+        return this;
+    }
+
+    public void addLine(String line) {
+        text.add(line);
+        setHasChanges(true);
+    }
+
+    public void removeLine(int index) {
+        text.remove(index);
+        setHasChanges(true);
+    }
+
+    public Color getBackground() {
+        return background;
+    }
+
+    public TextHologramData setBackground(Color background) {
         this.background = background;
+        setHasChanges(true);
+        return this;
+    }
+
+    public TextDisplay.TextAlignment getTextAlignment() {
+        return textAlignment;
+    }
+
+    public TextHologramData setTextAlignment(TextDisplay.TextAlignment textAlignment) {
         this.textAlignment = textAlignment;
+        setHasChanges(true);
+        return this;
+    }
+
+    public boolean hasTextShadow() {
+        return textShadow;
+    }
+
+    public TextHologramData setTextShadow(boolean textShadow) {
         this.textShadow = textShadow;
+        setHasChanges(true);
+        return this;
+    }
+
+    public boolean isSeeThrough() {
+        return seeThrough;
+    }
+
+    public TextHologramData setSeeThrough(boolean seeThrough) {
         this.seeThrough = seeThrough;
+        setHasChanges(true);
+        return this;
+    }
+
+    public int getTextUpdateInterval() {
+        return textUpdateInterval;
+    }
+
+    public TextHologramData setTextUpdateInterval(int textUpdateInterval) {
         this.textUpdateInterval = textUpdateInterval;
-    }
-
-    public TextHologramData() {
-    }
-
-    public static TextHologramData getDefault(String name) {
-        List<String> text = new ArrayList<>();
-        text.add("Edit this line with /hologram edit " + name);
-        
-        return new TextHologramData(
-                text,
-                null,
-                DEFAULT_TEXT_ALIGNMENT,
-                DEFAULT_TEXT_SHADOW_STATE,
-                DEFAULT_SEE_THROUGH,
-                DEFAULT_TEXT_UPDATE_INTERVAL
-        );
+        setHasChanges(true);
+        return this;
     }
 
     @Override
     public void read(ConfigurationSection section, String name) {
+        super.read(section, name);
         text = section.getStringList("text");
         if (text.isEmpty()) {
             text = List.of("Could not load hologram text");
@@ -86,6 +141,7 @@ public class TextHologramData implements Data {
 
     @Override
     public void write(ConfigurationSection section, String name) {
+        super.write(section, name);
         section.set("text", text);
         section.set("text_shadow", textShadow);
         section.set("see_through", seeThrough);
@@ -105,77 +161,27 @@ public class TextHologramData implements Data {
         section.set("background", color);
     }
 
-    public List<String> getText() {
-        return text;
-    }
-
-    public TextHologramData setText(List<String> text) {
-        this.text = text;
-        return this;
-    }
-
-    public void addLine(String line) {
-        text.add(line);
-    }
-
-    public void removeLine(int index) {
-        text.remove(index);
-    }
-
-    public Color getBackground() {
-        return background;
-    }
-
-    public TextHologramData setBackground(Color background) {
-        this.background = background;
-        return this;
-    }
-
-    public TextDisplay.TextAlignment getTextAlignment() {
-        return textAlignment;
-    }
-
-    public TextHologramData setTextAlignment(TextDisplay.TextAlignment textAlignment) {
-        this.textAlignment = textAlignment;
-        return this;
-    }
-
-    public boolean isTextShadow() {
-        return textShadow;
-    }
-
-    public TextHologramData setTextShadow(boolean textShadow) {
-        this.textShadow = textShadow;
-        return this;
-    }
-
-    public boolean isSeeThrough() {
-        return seeThrough;
-    }
-
-    public TextHologramData setSeeThrough(boolean seeThrough) {
-        this.seeThrough = seeThrough;
-        return this;
-    }
-
-    public int getTextUpdateInterval() {
-        return textUpdateInterval;
-    }
-
-    public TextHologramData setTextUpdateInterval(int textUpdateInterval) {
-        this.textUpdateInterval = textUpdateInterval;
-        return this;
-    }
-
     @Override
-    public Data copy() {
-        return new TextHologramData(
-                new ArrayList<>(text),
-                background,
-                textAlignment,
-                textShadow,
-                seeThrough,
-                textUpdateInterval
-        );
+    public TextHologramData copy(String name) {
+        TextHologramData textHologramData = new TextHologramData(name, getLocation());
+        textHologramData
+            .setText(this.getText())
+            .setBackground(this.getBackground())
+            .setTextAlignment(this.getTextAlignment())
+            .setTextShadow(this.hasTextShadow())
+            .setSeeThrough(this.isSeeThrough())
+            .setTextUpdateInterval(this.getTextUpdateInterval())
+            .setScale(this.getScale())
+            .setShadowRadius(this.getShadowRadius())
+            .setShadowStrength(this.getShadowStrength())
+            .setBillboard(this.getBillboard())
+            .setTranslation(this.getTranslation())
+            .setBrightness(this.getBrightness())
+            .setVisibilityDistance(this.getVisibilityDistance())
+            .setVisibility(this.getVisibility())
+            .setPersistent(this.isPersistent())
+            .setLinkedNpcName(this.getLinkedNpcName());
+
+        return textHologramData;
     }
 }

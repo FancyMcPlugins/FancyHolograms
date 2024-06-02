@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
@@ -28,7 +28,7 @@ public class LinkWithNpcCMD implements Subcommand {
 
         String name = args[3];
 
-        if (hologram.getData().getDisplayData().getLinkedNpcName() != null) {
+        if (hologram.getData().getLinkedNpcName() != null) {
             MessageHelper.error(player, "This hologram is already linked with an NPC");
             return false;
         }
@@ -39,7 +39,7 @@ public class LinkWithNpcCMD implements Subcommand {
             return false;
         }
 
-        hologram.getData().getDisplayData().setLinkedNpcName(npc.getData().getName());
+        hologram.getData().setLinkedNpcName(npc.getData().getName());
 
         FancyHolograms.get().getHologramsManager().syncHologramWithNpc(hologram);
 

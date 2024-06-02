@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
@@ -26,14 +26,14 @@ public class UnlinkWithNpcCMD implements Subcommand {
             return false;
         }
 
-        if (hologram.getData().getDisplayData().getLinkedNpcName() == null) {
+        if (hologram.getData().getLinkedNpcName() == null) {
             MessageHelper.error(player, "This hologram is not linked with an NPC");
             return false;
         }
 
-        final var npc = FancyNpcsPlugin.get().getNpcManager().getNpc(hologram.getData().getDisplayData().getLinkedNpcName());
+        final var npc = FancyNpcsPlugin.get().getNpcManager().getNpc(hologram.getData().getLinkedNpcName());
 
-        hologram.getData().getDisplayData().setLinkedNpcName(null);
+        hologram.getData().setLinkedNpcName(null);
 
         if (npc != null) {
             npc.getData().setDisplayName(npc.getData().getName());

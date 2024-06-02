@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
@@ -24,7 +24,7 @@ public class UpdateTextIntervalCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
@@ -67,19 +67,19 @@ public class UpdateTextIntervalCMD implements Subcommand {
 
         interval = Math.max(-1, interval);
 
-        final var copied = hologram.getData().copy();
-        ((TextHologramData) copied.getTypeData()).setTextUpdateInterval(interval);
+        final var copied = textData.copy(textData.getName());
+        copied.setTextUpdateInterval(interval);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.UPDATE_TEXT_INTERVAL)) {
             return false;
         }
 
-        if (((TextHologramData) copied.getTypeData()).getTextUpdateInterval() == textData.getTextUpdateInterval()) {
+        if (copied.getTextUpdateInterval() == textData.getTextUpdateInterval()) {
             MessageHelper.warning(player, "This hologram already has this text update interval");
             return false;
         }
 
-        textData.setTextUpdateInterval(((TextHologramData) copied.getTypeData()).getTextUpdateInterval());
+        textData.setTextUpdateInterval(copied.getTextUpdateInterval());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);
