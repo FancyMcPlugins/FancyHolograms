@@ -1,8 +1,10 @@
 package de.oliver.fancyholograms.api.data;
 
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.Hologram;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.TextDisplay;
 
@@ -18,13 +20,13 @@ public class TextHologramData implements Data {
     public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
 
     private List<String> text;
-    private TextColor background;
+    private Color background;
     private TextDisplay.TextAlignment textAlignment;
     private boolean textShadow;
     private boolean seeThrough;
     private int textUpdateInterval;
 
-    public TextHologramData(List<String> text, TextColor background, TextDisplay.TextAlignment textAlignment, boolean textShadow, boolean seeThrough, int textUpdateInterval) {
+    public TextHologramData(List<String> text, Color background, TextDisplay.TextAlignment textAlignment, boolean textShadow, boolean seeThrough, int textUpdateInterval) {
         this.text = text;
         this.background = background;
         this.textAlignment = textAlignment;
@@ -73,9 +75,11 @@ public class TextHologramData implements Data {
             if (backgroundStr.equalsIgnoreCase("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (backgroundStr.startsWith("#")) {
-                background = TextColor.fromHexString(backgroundStr);
+                background = Color.fromARGB((int)Long.parseLong(backgroundStr.substring(1), 16));
+                //backwards compatibility, make rgb hex colors solid color -their alpha is 0 by default-
+                if (backgroundStr.length() == 7) background = background.setAlpha(255);
             } else {
-                background = NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                background = Color.fromRGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value());
             }
         }
     }
@@ -93,10 +97,9 @@ public class TextHologramData implements Data {
             color = null;
         } else if (background == Hologram.TRANSPARENT) {
             color = "transparent";
-        } else if (background instanceof NamedTextColor named) {
-            color = named.toString();
         } else {
-            color = background.asHexString();
+            NamedTextColor named = background.getAlpha() == 255 ? NamedTextColor.namedColor(background.asRGB()) : null;
+            color = named != null ? named.toString() : '#' + Integer.toHexString(background.asARGB());
         }
 
         section.set("background", color);
@@ -119,11 +122,11 @@ public class TextHologramData implements Data {
         text.remove(index);
     }
 
-    public TextColor getBackground() {
+    public Color getBackground() {
         return background;
     }
 
-    public TextHologramData setBackground(TextColor background) {
+    public TextHologramData setBackground(Color background) {
         this.background = background;
         return this;
     }

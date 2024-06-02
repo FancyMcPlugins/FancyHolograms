@@ -44,7 +44,7 @@ public class InfoCMD implements Subcommand {
             }
 
             if (textData.getBackground() != null) {
-                MessageHelper.info(player, "Background: <gray>" + textData.getBackground().asHexString());
+                MessageHelper.info(player, "Background: <gray>" + '#' + Integer.toHexString(textData.getBackground().asARGB()));
             } else {
                 MessageHelper.info(player, "Background: <gray>default");
             }

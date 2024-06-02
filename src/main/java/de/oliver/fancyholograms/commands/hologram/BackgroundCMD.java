@@ -8,7 +8,7 @@ import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Color;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +33,7 @@ public class BackgroundCMD implements Subcommand {
 
         final var color = args[3].toLowerCase(Locale.ROOT);
 
-        final TextColor background;
+        final Color background;
 
         if (color.equals("reset") || color.equals("default")) {
             background = null;
@@ -41,9 +41,13 @@ public class BackgroundCMD implements Subcommand {
             if (color.equals("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (color.startsWith("#")) {
-                background = TextColor.fromHexString(color);
+                Color parsed = Color.fromARGB((int)Long.parseLong(color.substring(1), 16));
+                //make background solid color if RGB hex provided
+                if (color.length() == 7) background = parsed.setAlpha(255);
+                else background = parsed;
             } else {
-                background = NamedTextColor.NAMES.value(color.replace(' ', '_'));
+                NamedTextColor named = NamedTextColor.NAMES.value(color.replace(' ', '_'));
+                background = named == null ? null : Color.fromARGB(named.value());
             }
 
             if (background == null) {
