@@ -203,9 +203,8 @@ public final class HologramManagerImpl implements HologramManager {
 
     private void clearHolograms() {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
-        final var holograms = Map.copyOf(getPersistentHolograms());
 
-        for (final var hologram : holograms.values()) {
+        for (final var hologram : this.getPersistentHolograms()) {
             this.holograms.remove(hologram.getName());
             hologram.hideHologram(online);
         }

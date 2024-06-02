@@ -173,7 +173,7 @@ public abstract class Hologram {
             return false;
         }
 
-        if (!this.getData().getDisplayData().getVisibility().canSee(player, this)) {
+        if (!this.getData().getVisibility().canSee(player, this)) {
             return false;
         }
 

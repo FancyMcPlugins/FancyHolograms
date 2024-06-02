@@ -54,9 +54,10 @@ public class ItemHologramData extends DisplayHologramData {
             .setBillboard(this.getBillboard())
             .setTranslation(this.getTranslation())
             .setBrightness(this.getBrightness())
-            .setVisibilityDistance(getVisibilityDistance())
-            .setVisibleByDefault(isVisibleByDefault())
-            .setLinkedNpcName(getLinkedNpcName());
+            .setVisibilityDistance(this.getVisibilityDistance())
+            .setVisibility(this.getVisibility())
+            .setPersistent(this.isPersistent())
+            .setLinkedNpcName(this.getLinkedNpcName());
 
         return itemHologramData;
     }

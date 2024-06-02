@@ -20,7 +20,7 @@ public class TextHologramData extends DisplayHologramData {
     public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
 
     private List<String> text;
-    private TextColor background;
+    private Color background;
     private TextDisplay.TextAlignment textAlignment = DEFAULT_TEXT_ALIGNMENT;
     private boolean textShadow = DEFAULT_TEXT_SHADOW_STATE;
     private boolean seeThrough = DEFAULT_SEE_THROUGH;
@@ -177,9 +177,10 @@ public class TextHologramData extends DisplayHologramData {
             .setBillboard(this.getBillboard())
             .setTranslation(this.getTranslation())
             .setBrightness(this.getBrightness())
-            .setVisibilityDistance(getVisibilityDistance())
-            .setVisibleByDefault(isVisibleByDefault())
-            .setLinkedNpcName(getLinkedNpcName());
+            .setVisibilityDistance(this.getVisibilityDistance())
+            .setVisibility(this.getVisibility())
+            .setPersistent(this.isPersistent())
+            .setLinkedNpcName(this.getLinkedNpcName());
 
         return textHologramData;
     }

@@ -136,7 +136,8 @@ public class DisplayHologramData extends HologramData {
             .setTranslation(this.getTranslation())
             .setBrightness(this.getBrightness())
             .setVisibilityDistance(this.getVisibilityDistance())
-            .setVisibleByDefault(this.isVisibleByDefault())
+            .setVisibility(this.getVisibility())
+            .setPersistent(this.isPersistent())
             .setLinkedNpcName(this.getLinkedNpcName());
 
         return displayHologramData;

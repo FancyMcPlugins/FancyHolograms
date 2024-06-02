@@ -157,9 +157,9 @@ public class FlatFileHologramStorage implements HologramStorage {
 
                 DisplayHologramData displayData = null;
                 switch (type) {
-                    case TEXT -> typeData = new TextHologramData();
-                    case ITEM -> typeData = new ItemHologramData();
-                    case BLOCK -> typeData = new BlockHologramData();
+                    case TEXT -> displayData = new TextHologramData(name, new Location(null, 0, 0, 0));
+                    case ITEM -> displayData = new ItemHologramData(name, new Location(null, 0, 0, 0));
+                    case BLOCK -> displayData = new BlockHologramData(name, new Location(null, 0, 0, 0));
                 }
                 displayData.read(holoSection, name);
 
@@ -286,7 +286,7 @@ public class FlatFileHologramStorage implements HologramStorage {
                 .setShadowStrength((float) shadowStrength)
                 .setBillboard(billboard)
                 .setVisibilityDistance(visibilityDistance)
-                .setVisibleByDefault(visibleByDefault)
+                .setVisibility(visibility)
                 .setLinkedNpcName(linkedNpc);
 
             return textHologramData;

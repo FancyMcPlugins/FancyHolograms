@@ -54,7 +54,8 @@ public class BlockHologramData extends DisplayHologramData {
             .setTranslation(this.getTranslation())
             .setBrightness(this.getBrightness())
             .setVisibilityDistance(getVisibilityDistance())
-            .setVisibleByDefault(isVisibleByDefault())
+            .setVisibility(this.getVisibility())
+            .setPersistent(this.isPersistent())
             .setLinkedNpcName(getLinkedNpcName());
 
         return blockHologramData;
