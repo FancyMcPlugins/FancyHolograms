@@ -130,7 +130,7 @@ public final class HologramCMD extends Command {
                 return Collections.emptyList();
             }
 
-            return this.plugin.getHologramsManager().getHolograms().stream().map(hologram -> hologram.getData().getName()).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
+            return this.plugin.getHologramsManager().getPersistentHolograms().stream().map(hologram -> hologram.getData().getName()).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
         }
 
         final var hologram = this.plugin.getHologramsManager().getHologram(args[1]).orElse(null);
@@ -148,7 +148,7 @@ public final class HologramCMD extends Command {
 
             final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
 
-            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibleByDefault", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
+            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
             suggestions.addAll(type.getCommands());
 
             return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT))).toList();
@@ -185,10 +185,9 @@ public final class HologramCMD extends Command {
                         colors.remove("default");
                     } else if (current == Hologram.TRANSPARENT) {
                         colors.remove("transparent");
-                    } else if (current instanceof NamedTextColor named) {
-                        colors.remove(named.toString());
                     } else {
-                        colors.add(current.asHexString()); // suggest the current hex value for each of use...
+                        NamedTextColor named = current.getAlpha() == 255 ? NamedTextColor.namedColor(current.asRGB()) : null;
+                        colors.add(named != null ? named.toString() : '#' + Integer.toHexString(current.asARGB()));
                     }
 
                     yield colors.stream();
@@ -210,7 +209,8 @@ public final class HologramCMD extends Command {
                     yield FancyNpcsPlugin.get().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName());
                 }
                 case "block" -> Arrays.stream(Material.values()).filter(Material::isBlock).map(Enum::name);
-                case "seethrough", "visiblebydefault" -> Stream.of("true", "false");
+                case "seethrough" -> Stream.of("true", "false");
+                case "visibility" -> new VisibilityCMD().tabcompletion(sender, hologram, args).stream();
 
                 default -> null;
             };
@@ -298,7 +298,7 @@ public final class HologramCMD extends Command {
             case "scale" -> new ScaleCMD().run(player, hologram, args);
             case "updatetextinterval" -> new UpdateTextIntervalCMD().run(player, hologram, args);
             case "visibilitydistance" -> new VisibilityDistanceCMD().run(player, hologram, args);
-            case "visiblebydefault" -> new VisibleByDefaultCMD().run(player, hologram, args);
+            case "visibility" -> new VisibilityCMD().run(player, hologram, args);
             case "linkwithnpc" -> new LinkWithNpcCMD().run(player, hologram, args);
             case "shadowradius" -> new ShadowRadiusCMD().run(player, hologram, args);
             case "shadowstrength" -> new ShadowStrengthCMD().run(player, hologram, args);

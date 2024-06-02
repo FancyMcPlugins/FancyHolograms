@@ -4,8 +4,8 @@ import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ import java.util.*;
 public abstract class Hologram {
 
     public static final int LINE_WIDTH = 1000;
-    public static final TextColor TRANSPARENT = () -> 0;
+    public static final Color TRANSPARENT = Color.fromARGB(0);
     protected static final int MINIMUM_PROTOCOL_VERSION = 762;
 
     protected final @NotNull HologramData data;
@@ -173,7 +173,7 @@ public abstract class Hologram {
             return false;
         }
 
-        if (!getData().isVisibleByDefault() && !player.hasPermission("fancyholograms.viewhologram." + data.getName())) {
+        if (!this.getData().getDisplayData().getVisibility().canSee(player, this)) {
             return false;
         }
 

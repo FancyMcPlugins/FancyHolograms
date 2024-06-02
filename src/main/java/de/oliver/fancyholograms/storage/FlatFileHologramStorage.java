@@ -5,9 +5,10 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.api.data.*;
+import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -156,9 +157,9 @@ public class FlatFileHologramStorage implements HologramStorage {
 
                 DisplayHologramData displayData = null;
                 switch (type) {
-                    case TEXT -> displayData = new TextHologramData(name, new Location(null, 0, 0, 0));
-                    case ITEM -> displayData = new ItemHologramData(name, new Location(null, 0, 0, 0));
-                    case BLOCK -> displayData = new BlockHologramData(name, new Location(null, 0, 0, 0));
+                    case TEXT -> typeData = new TextHologramData();
+                    case ITEM -> typeData = new ItemHologramData();
+                    case BLOCK -> typeData = new BlockHologramData();
                 }
                 displayData.read(holoSection, name);
 
@@ -221,7 +222,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var textHasShadow = config.getBoolean("text_shadow", TextHologramData.DEFAULT_TEXT_SHADOW_STATE);
             final var isSeeThrough = config.getBoolean("see_through", TextHologramData.DEFAULT_SEE_THROUGH);
             final var textUpdateInterval = config.getInt("update_text_interval", TextHologramData.DEFAULT_TEXT_UPDATE_INTERVAL);
-            final var visibilityDistance = config.getInt("visibility_distance", HologramData.DEFAULT_VISIBILITY_DISTANCE);
+            final var visibilityDistance = config.getInt("visibility_distance", DisplayHologramData.DEFAULT_VISIBILITY_DISTANCE);
             final var scaleX = config.getDouble("scale_x", 1);
             final var scaleY = config.getDouble("scale_y", 1);
             final var scaleZ = config.getDouble("scale_z", 1);
@@ -231,7 +232,21 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var billboardName = config.getString("billboard", DisplayHologramData.DEFAULT_BILLBOARD.name());
             final var textAlignmentName = config.getString("text_alignment", TextHologramData.DEFAULT_TEXT_ALIGNMENT.name());
             final var linkedNpc = config.getString("linkedNpc");
-            final var visibleByDefault = config.getBoolean("visible_by_default", HologramData.DEFAULT_IS_VISIBLE);
+
+
+            final var visibility = Optional.ofNullable(config.getString("visibility"))
+                    .flatMap(Visibility::byString)
+                    .orElseGet(() -> {
+                        final var visibleByDefault = config.getBoolean("visible_by_default", HologramData.DEFAULT_IS_VISIBLE);
+                        if (config.contains("visible_by_default")) {
+                            config.set("visible_by_default", null);
+                        }
+                        if (visibleByDefault) {
+                            return Visibility.ALL;
+                        } else {
+                            return Visibility.PERMISSION_REQUIRED;
+                        }
+                    });
 
             final var billboard = switch (billboardName.toLowerCase(Locale.ROOT)) {
                 case "fixed" -> Display.Billboard.FIXED;
@@ -246,14 +261,15 @@ public class FlatFileHologramStorage implements HologramStorage {
                 default -> TextDisplay.TextAlignment.CENTER;
             };
 
-            TextColor background = null;
+            Color background = null;
             if (backgroundName != null) {
                 if (backgroundName.equalsIgnoreCase("transparent")) {
                     background = Hologram.TRANSPARENT;
                 } else if (backgroundName.startsWith("#")) {
-                    background = TextColor.fromHexString(backgroundName);
+                    background = Color.fromARGB((int)Long.parseLong(backgroundName.substring(1), 16));
                 } else {
-                    background = NamedTextColor.NAMES.value(backgroundName.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                    NamedTextColor named = NamedTextColor.NAMES.value(backgroundName.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                    background = named == null ? null : Color.fromARGB(named.value());
                 }
             }
 

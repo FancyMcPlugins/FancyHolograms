@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.api.data;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.TextDisplay;
@@ -56,11 +56,11 @@ public class TextHologramData extends DisplayHologramData {
         setHasChanges(true);
     }
 
-    public TextColor getBackground() {
+    public Color getBackground() {
         return background;
     }
 
-    public TextHologramData setBackground(TextColor background) {
+    public TextHologramData setBackground(Color background) {
         this.background = background;
         setHasChanges(true);
         return this;
@@ -130,9 +130,11 @@ public class TextHologramData extends DisplayHologramData {
             if (backgroundStr.equalsIgnoreCase("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (backgroundStr.startsWith("#")) {
-                background = TextColor.fromHexString(backgroundStr);
+                background = Color.fromARGB((int)Long.parseLong(backgroundStr.substring(1), 16));
+                //backwards compatibility, make rgb hex colors solid color -their alpha is 0 by default-
+                if (backgroundStr.length() == 7) background = background.setAlpha(255);
             } else {
-                background = NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                background = Color.fromRGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value());
             }
         }
     }
@@ -151,10 +153,9 @@ public class TextHologramData extends DisplayHologramData {
             color = null;
         } else if (background == Hologram.TRANSPARENT) {
             color = "transparent";
-        } else if (background instanceof NamedTextColor named) {
-            color = named.toString();
         } else {
-            color = background.asHexString();
+            NamedTextColor named = background.getAlpha() == 255 ? NamedTextColor.namedColor(background.asRGB()) : null;
+            color = named != null ? named.toString() : '#' + Integer.toHexString(background.asARGB());
         }
 
         section.set("background", color);

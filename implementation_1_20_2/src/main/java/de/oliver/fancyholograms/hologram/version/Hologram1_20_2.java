@@ -112,7 +112,7 @@ public final class Hologram1_20_2 extends Hologram {
             } else if (background == Hologram.TRANSPARENT) {
                 display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, 0);
             } else {
-                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.value() | 0xC8000000);
+                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.asARGB());
             }
 
             // text shadow

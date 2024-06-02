@@ -52,6 +52,18 @@ public final class HologramManagerImpl implements HologramManager {
     }
 
     /**
+     * Returns a read-only view of the currently loaded persistent holograms.
+     *
+     * @return A read-only collection of holograms.
+     */
+    @Override
+    public @NotNull
+    @UnmodifiableView Collection<Hologram> getPersistentHolograms() {
+        return this.holograms.values().stream().filter(hologram -> hologram.getData().isPersistent()).toList();
+    }
+
+
+    /**
      * Finds a hologram by name.
      *
      * @param name The name of the hologram to lookup.
@@ -116,7 +128,7 @@ public final class HologramManagerImpl implements HologramManager {
             return;
         }
 
-        plugin.getHologramStorage().saveBatch(getHolograms(), true);
+        plugin.getHologramStorage().saveBatch(getPersistentHolograms(), true);
     }
 
     public void loadHolograms() {
@@ -191,11 +203,10 @@ public final class HologramManagerImpl implements HologramManager {
 
     private void clearHolograms() {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
-        final var holograms = Map.copyOf(this.holograms);
-
-        this.holograms.clear();
+        final var holograms = Map.copyOf(getPersistentHolograms());
 
         for (final var hologram : holograms.values()) {
+            this.holograms.remove(hologram.getName());
             hologram.hideHologram(online);
         }
     }

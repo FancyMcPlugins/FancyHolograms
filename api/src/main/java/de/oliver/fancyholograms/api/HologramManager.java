@@ -10,6 +10,8 @@ public interface HologramManager {
 
     Optional<Hologram> getHologram(String name);
 
+    Collection<Hologram> getPersistentHolograms();
+
     Collection<Hologram> getHolograms();
 
     void addHologram(Hologram hologram);

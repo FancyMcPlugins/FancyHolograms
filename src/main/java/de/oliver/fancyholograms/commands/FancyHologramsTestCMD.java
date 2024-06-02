@@ -4,7 +4,7 @@ import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancylib.MessageHelper;
-import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Color;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Display;
@@ -84,7 +84,7 @@ public class FancyHologramsTestCMD extends Command {
             ))
                 .setTextUpdateInterval(100)
                 .setTextAlignment(TextDisplay.TextAlignment.CENTER)
-                .setBackground(TextColor.color(78, 237, 176))
+                .setBackground(Color.fromARGB(15, 78, 237, 176))
                 .setTextShadow(true)
                 .setScale(new Vector3f(2, 2, 2))
                 .setBillboard(Display.Billboard.CENTER)
@@ -95,7 +95,7 @@ public class FancyHologramsTestCMD extends Command {
 
             Hologram hologram = this.plugin.getHologramsManager().create(textData);
             hologram.createHologram();
-            hologram.updateShownStateFor(p);
+            hologram.checkAndUpdateShownStateForPlayer(p);
         }
 
         return false;

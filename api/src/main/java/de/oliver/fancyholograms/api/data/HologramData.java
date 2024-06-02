@@ -9,7 +9,6 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class HologramData implements YamlData {
 
@@ -22,6 +21,7 @@ public class HologramData implements YamlData {
     private boolean hasChanges;
     private int visibilityDistance = DEFAULT_VISIBILITY_DISTANCE;
     private boolean visibleByDefault = DEFAULT_IS_VISIBLE;
+    private boolean persistent;
     private String linkedNpcName;
 
     /**
@@ -92,6 +92,10 @@ public class HologramData implements YamlData {
         return this;
     }
 
+    public boolean isPersistent() {
+        return persistent;
+    }
+
     public String getLinkedNpcName() {
         return linkedNpcName;
     }
@@ -140,6 +144,7 @@ public class HologramData implements YamlData {
 
         section.set("visibility_distance", visibilityDistance);
         section.set("visible_by_default", visibleByDefault);
+        section.set("persistent", persistent);
         section.set("linkedNpc", linkedNpcName);
     }
 
