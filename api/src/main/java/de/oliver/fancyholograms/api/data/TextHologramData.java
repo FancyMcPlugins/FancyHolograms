@@ -27,7 +27,7 @@ public class TextHologramData extends DisplayHologramData {
     private int textUpdateInterval = DEFAULT_TEXT_UPDATE_INTERVAL;
 
     /**
-     * @param name Name of hologram
+     * @param name     Name of hologram
      * @param location Location of hologram
      * @apiNote Default values are already set
      */
@@ -130,11 +130,11 @@ public class TextHologramData extends DisplayHologramData {
             if (backgroundStr.equalsIgnoreCase("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (backgroundStr.startsWith("#")) {
-                background = Color.fromARGB((int)Long.parseLong(backgroundStr.substring(1), 16));
+                background = Color.fromARGB((int) Long.parseLong(backgroundStr.substring(1), 16));
                 //backwards compatibility, make rgb hex colors solid color -their alpha is 0 by default-
                 if (backgroundStr.length() == 7) background = background.setAlpha(255);
             } else {
-                background = Color.fromRGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value());
+                background = Color.fromRGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value() | 0xC8000000);
             }
         }
     }
@@ -165,22 +165,22 @@ public class TextHologramData extends DisplayHologramData {
     public TextHologramData copy(String name) {
         TextHologramData textHologramData = new TextHologramData(name, getLocation());
         textHologramData
-            .setText(this.getText())
-            .setBackground(this.getBackground())
-            .setTextAlignment(this.getTextAlignment())
-            .setTextShadow(this.hasTextShadow())
-            .setSeeThrough(this.isSeeThrough())
-            .setTextUpdateInterval(this.getTextUpdateInterval())
-            .setScale(this.getScale())
-            .setShadowRadius(this.getShadowRadius())
-            .setShadowStrength(this.getShadowStrength())
-            .setBillboard(this.getBillboard())
-            .setTranslation(this.getTranslation())
-            .setBrightness(this.getBrightness())
-            .setVisibilityDistance(this.getVisibilityDistance())
-            .setVisibility(this.getVisibility())
-            .setPersistent(this.isPersistent())
-            .setLinkedNpcName(this.getLinkedNpcName());
+                .setText(this.getText())
+                .setBackground(this.getBackground())
+                .setTextAlignment(this.getTextAlignment())
+                .setTextShadow(this.hasTextShadow())
+                .setSeeThrough(this.isSeeThrough())
+                .setTextUpdateInterval(this.getTextUpdateInterval())
+                .setScale(this.getScale())
+                .setShadowRadius(this.getShadowRadius())
+                .setShadowStrength(this.getShadowStrength())
+                .setBillboard(this.getBillboard())
+                .setTranslation(this.getTranslation())
+                .setBrightness(this.getBrightness())
+                .setVisibilityDistance(this.getVisibilityDistance())
+                .setVisibility(this.getVisibility())
+                .setPersistent(this.isPersistent())
+                .setLinkedNpcName(this.getLinkedNpcName());
 
         return textHologramData;
     }
