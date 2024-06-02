@@ -100,7 +100,6 @@ public final class HologramCMD extends Command {
                     if (sender instanceof Player p) {
                         hologram.forceUpdate();
                         hologram.refreshHologram(p);
-                        hologram.forceUpdateShownStateFor(p);
                     }
                     hologram.queueUpdate();
                 }
