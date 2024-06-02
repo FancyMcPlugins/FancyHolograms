@@ -134,7 +134,7 @@ public class TextHologramData extends DisplayHologramData {
                 //backwards compatibility, make rgb hex colors solid color -their alpha is 0 by default-
                 if (backgroundStr.length() == 7) background = background.setAlpha(255);
             } else {
-                background = Color.fromRGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value() | 0xC8000000);
+                background = Color.fromARGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value() | 0xC8000000);
             }
         }
     }
