@@ -1,12 +1,10 @@
 package de.oliver.fancyholograms.hologram.version;
 
 import com.mojang.math.Transformation;
-import com.viaversion.viaversion.api.Via;
-import de.oliver.fancyholograms.api.FancyHologramsPlugin;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.events.HologramHideEvent;
 import de.oliver.fancyholograms.api.events.HologramShowEvent;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancylib.ReflectionUtils;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -167,10 +165,10 @@ public final class Hologram1_20_2 extends Hologram {
 
             // entity scale AND MORE!
             display.setTransformation(new Transformation(
-                displayData.getTranslation(),
-                new Quaternionf(),
-                displayData.getScale(),
-                new Quaternionf())
+                    displayData.getTranslation(),
+                    new Quaternionf(),
+                    displayData.getScale(),
+                    new Quaternionf())
             );
 
             // entity shadow
@@ -202,10 +200,11 @@ public final class Hologram1_20_2 extends Hologram {
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         // TODO: cache player protocol version
-        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
-        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
-            return false;
-        }
+        // TODO: fix this
+//        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
+//        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
+//            return false;
+//        }
 
         serverPlayer.connection.send(new ClientboundAddEntityPacket(display));
         this.viewers.add(player.getUniqueId());
