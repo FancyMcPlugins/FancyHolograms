@@ -64,6 +64,11 @@ paper {
     description = "Simple, lightweight and fast hologram plugin using display entities"
     apiVersion = "1.19"
     serverDependencies {
+        register("FancyNpcs") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+
         register("PlaceholderAPI") {
             required = false
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
@@ -77,6 +82,7 @@ tasks {
 //        minecraftVersion("1.20.4")
 
         downloadPlugins {
+            modrinth("fancynpcs", "2.1.0")
             hangar("ViaVersion", "4.10.2")
             hangar("ViaBackwards", "4.10.2")
             hangar("PlaceholderAPI", "2.11.6")
