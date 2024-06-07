@@ -34,7 +34,7 @@ public class HologramData implements YamlData {
      * @param name     Name of hologram
      * @param type     Type of hologram
      * @param location Location of hologram
-     * @apiNote Default values are already set
+     *                 Default values are already set
      */
     public HologramData(String name, HologramType type, Location location) {
         this.name = name;

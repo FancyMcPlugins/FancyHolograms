@@ -29,7 +29,7 @@ public class TextHologramData extends DisplayHologramData {
     /**
      * @param name     Name of hologram
      * @param location Location of hologram
-     * @apiNote Default values are already set
+     *                 Default values are already set
      */
     public TextHologramData(String name, Location location) {
         super(name, HologramType.TEXT, location);

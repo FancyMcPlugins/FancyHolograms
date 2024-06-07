@@ -24,10 +24,10 @@ public class DisplayHologramData extends HologramData {
     private float shadowStrength = DEFAULT_SHADOW_STRENGTH;
 
     /**
-     * @param name Name of hologram
-     * @param type Type of hologram
+     * @param name     Name of hologram
+     * @param type     Type of hologram
      * @param location Location of hologram
-     * @apiNote Default values are already set
+     *                 Default values are already set
      */
     public DisplayHologramData(String name, HologramType type, Location location) {
         super(name, type, location);
@@ -97,9 +97,9 @@ public class DisplayHologramData extends HologramData {
     public void read(ConfigurationSection section, String name) {
         super.read(section, name);
         scale = new Vector3f(
-            (float) section.getDouble("scale_x", DEFAULT_SCALE.x),
-            (float) section.getDouble("scale_y", DEFAULT_SCALE.y),
-            (float) section.getDouble("scale_z", DEFAULT_SCALE.z)
+                (float) section.getDouble("scale_x", DEFAULT_SCALE.x),
+                (float) section.getDouble("scale_y", DEFAULT_SCALE.y),
+                (float) section.getDouble("scale_z", DEFAULT_SCALE.z)
         );
 
         shadowRadius = (float) section.getDouble("shadow_radius", DEFAULT_SHADOW_RADIUS);
@@ -129,16 +129,16 @@ public class DisplayHologramData extends HologramData {
     public DisplayHologramData copy(String name) {
         DisplayHologramData displayHologramData = new DisplayHologramData(name, getType(), getLocation());
         displayHologramData
-            .setScale(this.getScale())
-            .setShadowRadius(this.getShadowRadius())
-            .setShadowStrength(this.getShadowStrength())
-            .setBillboard(this.getBillboard())
-            .setTranslation(this.getTranslation())
-            .setBrightness(this.getBrightness())
-            .setVisibilityDistance(this.getVisibilityDistance())
-            .setVisibility(this.getVisibility())
-            .setPersistent(this.isPersistent())
-            .setLinkedNpcName(this.getLinkedNpcName());
+                .setScale(this.getScale())
+                .setShadowRadius(this.getShadowRadius())
+                .setShadowStrength(this.getShadowStrength())
+                .setBillboard(this.getBillboard())
+                .setTranslation(this.getTranslation())
+                .setBrightness(this.getBrightness())
+                .setVisibilityDistance(this.getVisibilityDistance())
+                .setVisibility(this.getVisibility())
+                .setPersistent(this.isPersistent())
+                .setLinkedNpcName(this.getLinkedNpcName());
 
         return displayHologramData;
     }

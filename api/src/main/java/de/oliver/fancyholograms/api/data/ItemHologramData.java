@@ -13,9 +13,9 @@ public class ItemHologramData extends DisplayHologramData {
     private ItemStack item = DEFAULT_ITEM;
 
     /**
-     * @param name Name of hologram
+     * @param name     Name of hologram
      * @param location Location of hologram
-     * @apiNote Default values are already set
+     *                 Default values are already set
      */
     public ItemHologramData(String name, Location location) {
         super(name, HologramType.ITEM, location);
@@ -47,17 +47,17 @@ public class ItemHologramData extends DisplayHologramData {
     public ItemHologramData copy(String name) {
         ItemHologramData itemHologramData = new ItemHologramData(name, getLocation());
         itemHologramData
-            .setItemStack(this.getItemStack())
-            .setScale(this.getScale())
-            .setShadowRadius(this.getShadowRadius())
-            .setShadowStrength(this.getShadowStrength())
-            .setBillboard(this.getBillboard())
-            .setTranslation(this.getTranslation())
-            .setBrightness(this.getBrightness())
-            .setVisibilityDistance(this.getVisibilityDistance())
-            .setVisibility(this.getVisibility())
-            .setPersistent(this.isPersistent())
-            .setLinkedNpcName(this.getLinkedNpcName());
+                .setItemStack(this.getItemStack())
+                .setScale(this.getScale())
+                .setShadowRadius(this.getShadowRadius())
+                .setShadowStrength(this.getShadowStrength())
+                .setBillboard(this.getBillboard())
+                .setTranslation(this.getTranslation())
+                .setBrightness(this.getBrightness())
+                .setVisibilityDistance(this.getVisibilityDistance())
+                .setVisibility(this.getVisibility())
+                .setPersistent(this.isPersistent())
+                .setLinkedNpcName(this.getLinkedNpcName());
 
         return itemHologramData;
     }

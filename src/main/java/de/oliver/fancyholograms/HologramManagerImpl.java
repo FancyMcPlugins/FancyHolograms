@@ -142,8 +142,8 @@ public final class HologramManagerImpl implements HologramManager {
 
     /**
      * Initializes tasks for managing holograms, such as loading and refreshing them.
-     *
-     * @apiNote This method is intended to be called internally by the plugin.
+     * <p>
+     * This method is intended to be called internally by the plugin.
      */
     void initializeTasks() {
         ScheduledExecutorService hologramThread = plugin.getHologramThread();

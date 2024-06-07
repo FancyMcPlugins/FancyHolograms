@@ -1,16 +1,19 @@
 package de.oliver.fancyholograms;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import de.oliver.fancyholograms.api.*;
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.HologramConfiguration;
+import de.oliver.fancyholograms.api.HologramManager;
+import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
 import de.oliver.fancyholograms.commands.FancyHologramsTestCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
+import de.oliver.fancyholograms.hologram.version.*;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
 import de.oliver.fancyholograms.storage.FlatFileHologramStorage;
-import de.oliver.fancyholograms.hologram.version.*;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
@@ -49,16 +52,16 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
     private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
     private final ScheduledExecutorService hologramThread = Executors.newSingleThreadScheduledExecutor(
-        new ThreadFactoryBuilder()
-            .setNameFormat("FancyHolograms-Holograms")
-            .build()
+            new ThreadFactoryBuilder()
+                    .setNameFormat("FancyHolograms-Holograms")
+                    .build()
     );
     private final ExecutorService fileStorageExecutor = Executors.newSingleThreadExecutor(
-        new ThreadFactoryBuilder()
-            .setDaemon(true)
-            .setPriority(Thread.MIN_PRIORITY + 1)
-            .setNameFormat("FancyHolograms-FileStorageExecutor")
-            .build()
+            new ThreadFactoryBuilder()
+                    .setDaemon(true)
+                    .setPriority(Thread.MIN_PRIORITY + 1)
+                    .setNameFormat("FancyHolograms-FileStorageExecutor")
+                    .build()
     );
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private HologramStorage hologramStorage = new FlatFileHologramStorage();
@@ -86,13 +89,13 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         if (adapter == null) {
             getLogger().warning("""
-                                                
-                --------------------------------------------------
-                Unsupported minecraft server version.
-                Please update the server to one of (%s).
-                Disabling the FancyHolograms plugin.
-                --------------------------------------------------
-                """.formatted(String.join(" / ", SUPPORTED_VERSIONS)));
+                                                    
+                    --------------------------------------------------
+                    Unsupported minecraft server version.
+                    Please update the server to one of (%s).
+                    Disabling the FancyHolograms plugin.
+                    --------------------------------------------------
+                    """.formatted(String.join(" / ", SUPPORTED_VERSIONS)));
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -108,13 +111,13 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("""
-                                                
-                --------------------------------------------------
-                It is recommended to use Paper as server software.
-                Because you are not using paper, the plugin
-                might not work correctly.
-                --------------------------------------------------
-                """);
+                                                    
+                    --------------------------------------------------
+                    It is recommended to use Paper as server software.
+                    Because you are not using paper, the plugin
+                    might not work correctly.
+                    --------------------------------------------------
+                    """);
         }
 
 
@@ -232,7 +235,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             commands.forEach(command -> getServer().getCommandMap().register("fancyholograms", command));
         } else {
             commands.stream().filter(Command::isRegistered).forEach(command ->
-                command.unregister(getServer().getCommandMap()));
+                    command.unregister(getServer().getCommandMap()));
         }
 
         if (false) {
@@ -258,13 +261,13 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             }
 
             getLogger().warning("""
-                                                        
-                -------------------------------------------------------
-                You are not using the latest version the FancyHolograms plugin.
-                Please update to the newest version (%s).
-                %s
-                -------------------------------------------------------
-                """.formatted(newest, getVersionFetcher().getDownloadUrl()));
+                                                            
+                    -------------------------------------------------------
+                    You are not using the latest version the FancyHolograms plugin.
+                    Please update to the newest version (%s).
+                    %s
+                    -------------------------------------------------------
+                    """.formatted(newest, getVersionFetcher().getDownloadUrl()));
         });
     }
 

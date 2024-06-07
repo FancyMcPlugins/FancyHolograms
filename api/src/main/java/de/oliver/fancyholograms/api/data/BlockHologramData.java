@@ -12,9 +12,9 @@ public class BlockHologramData extends DisplayHologramData {
     private Material block = DEFAULT_BLOCK;
 
     /**
-     * @param name Name of hologram
+     * @param name     Name of hologram
      * @param location Location of hologram
-     * @apiNote Default values are already set
+     *                 Default values are already set
      */
     public BlockHologramData(String name, Location location) {
         super(name, HologramType.BLOCK, location);
@@ -46,17 +46,17 @@ public class BlockHologramData extends DisplayHologramData {
     public BlockHologramData copy(String name) {
         BlockHologramData blockHologramData = new BlockHologramData(name, getLocation());
         blockHologramData
-            .setBlock(this.getBlock())
-            .setScale(this.getScale())
-            .setShadowRadius(this.getShadowRadius())
-            .setShadowStrength(this.getShadowStrength())
-            .setBillboard(this.getBillboard())
-            .setTranslation(this.getTranslation())
-            .setBrightness(this.getBrightness())
-            .setVisibilityDistance(getVisibilityDistance())
-            .setVisibility(this.getVisibility())
-            .setPersistent(this.isPersistent())
-            .setLinkedNpcName(getLinkedNpcName());
+                .setBlock(this.getBlock())
+                .setScale(this.getScale())
+                .setShadowRadius(this.getShadowRadius())
+                .setShadowStrength(this.getShadowStrength())
+                .setBillboard(this.getBillboard())
+                .setTranslation(this.getTranslation())
+                .setBrightness(this.getBrightness())
+                .setVisibilityDistance(getVisibilityDistance())
+                .setVisibility(this.getVisibility())
+                .setPersistent(this.isPersistent())
+                .setLinkedNpcName(getLinkedNpcName());
 
         return blockHologramData;
     }
