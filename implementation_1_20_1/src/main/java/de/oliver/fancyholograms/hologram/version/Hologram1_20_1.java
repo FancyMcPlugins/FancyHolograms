@@ -71,7 +71,7 @@ public final class Hologram1_20_1 extends Hologram {
         final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_1.DATA_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
 
-        queueUpdate();
+        update();
     }
 
     @Override
