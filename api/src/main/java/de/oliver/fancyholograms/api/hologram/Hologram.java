@@ -89,12 +89,20 @@ public abstract class Hologram {
         viewers.add(player.getUniqueId());
     }
 
+    public final void forceShowHologram(Player player) {
+        show(player);
+    }
+
     public final void hideHologram(Collection<? extends Player> players) {
         players.forEach(this::hideHologram);
     }
 
     public final void hideHologram(Player player) {
         viewers.remove(player.getUniqueId());
+    }
+
+    public final void forceHideHologram(Player player) {
+        hide(player);
     }
 
     @Deprecated(forRemoval = true)
