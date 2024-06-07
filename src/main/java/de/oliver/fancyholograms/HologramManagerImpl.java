@@ -1,10 +1,10 @@
 package de.oliver.fancyholograms;
 
 import com.google.common.cache.CacheBuilder;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -101,11 +101,15 @@ public final class HologramManagerImpl implements HologramManager {
         Optional<Hologram> optionalHologram = Optional.ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
 
         optionalHologram.ifPresent(hologram -> {
-                final var online = List.copyOf(Bukkit.getOnlinePlayers());
-                hologram.hideHologram(online);
+                    for (UUID viewer : hologram.getViewers()) {
+                        Player player = Bukkit.getPlayer(viewer);
+                        if (player != null) {
+                            FancyHolograms.get().getHologramThread().submit(() -> hologram.forceHideHologram(player));
+                        }
+                    }
 
-                FancyHolograms.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram));
-            }
+                    FancyHolograms.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram));
+                }
         );
 
         return optionalHologram;
@@ -156,8 +160,8 @@ public final class HologramManagerImpl implements HologramManager {
         }, 6, TimeUnit.SECONDS);
 
         final var updateTimes = CacheBuilder.newBuilder()
-            .expireAfterAccess(Duration.ofMinutes(5))
-            .<String, Long>build();
+                .expireAfterAccess(Duration.ofMinutes(5))
+                .<String, Long>build();
 
         hologramThread.scheduleAtFixedRate(() -> {
             final var time = System.currentTimeMillis();
@@ -172,8 +176,7 @@ public final class HologramManagerImpl implements HologramManager {
                     if (data instanceof TextHologramData) {
                         updateTimes.put(hologram.getData().getName(), time);
                     }
-                }
-                else if (data instanceof TextHologramData textData) {
+                } else if (data instanceof TextHologramData textData) {
                     final var interval = textData.getTextUpdateInterval();
                     if (interval < 1) {
                         continue; // doesn't update
