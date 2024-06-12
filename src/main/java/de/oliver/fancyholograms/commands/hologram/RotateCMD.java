@@ -29,6 +29,6 @@ public class RotateCMD implements Subcommand {
         Location location = hologram.getData().getLocation().clone();
         location.setYaw(yaw.floatValue() - 180f);
 
-        return MoveHereCMD.setLocation(player, hologram, location);
+        return MoveHereCMD.setLocation(player, hologram, location, true);
     }
 }

@@ -39,7 +39,7 @@ public class MoveToCMD implements Subcommand {
             return false;
         }
 
-        final var location = new Location(player.getWorld(), x, y, z);
+        final var location = new Location(player.getWorld(), x, y, z, hologram.getData().getLocation().getYaw(), hologram.getData().getLocation().getPitch());
 
         if (args.length > 6) {
             final var yaw = MoveHereCMD.calculateCoordinate(args[6], hologram.getData().getLocation(), player.getLocation(), loc -> loc.getYaw() + 180f);
@@ -63,6 +63,6 @@ public class MoveToCMD implements Subcommand {
             location.setPitch(pitch.floatValue());
         }
 
-        return MoveHereCMD.setLocation(player, hologram, location);
+        return MoveHereCMD.setLocation(player, hologram, location, true);
     }
 }

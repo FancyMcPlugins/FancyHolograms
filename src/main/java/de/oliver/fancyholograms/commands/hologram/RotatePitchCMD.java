@@ -29,6 +29,6 @@ public class RotatePitchCMD implements Subcommand {
         Location location = hologram.getData().getLocation().clone();
         location.setPitch(pitch.floatValue());
 
-        return MoveHereCMD.setLocation(player, hologram, location);
+        return MoveHereCMD.setLocation(player, hologram, location, true);
     }
 }
