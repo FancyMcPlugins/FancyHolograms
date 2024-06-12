@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
@@ -30,16 +30,15 @@ public class VisibilityCMD implements Subcommand {
         }
         final var visibility = optionalVisibility.get();
 
-        final var copied = hologram.getData().copy();
-        copied.getDisplayData().setVisibility(visibility);
+        final var copied = hologram.getData().copy(hologram.getName());
+        copied.setVisibility(visibility);
 
-
-        if (hologram.getData().getDisplayData().getVisibility() == copied.getDisplayData().getVisibility()) {
+        if (hologram.getData().getVisibility() == copied.getVisibility()) {
             MessageHelper.warning(player, "This hologram already has visibility set to " + visibility);
             return false;
         }
 
-        hologram.getData().getDisplayData().setVisibility(copied.getDisplayData().getVisibility());
+        hologram.getData().setVisibility(copied.getVisibility());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

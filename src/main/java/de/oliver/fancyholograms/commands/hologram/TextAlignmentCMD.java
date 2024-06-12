@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.base.Enums;
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
@@ -25,7 +25,7 @@ public class TextAlignmentCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
@@ -42,8 +42,8 @@ public class TextAlignmentCMD implements Subcommand {
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        ((TextHologramData) copied.getTypeData()).setTextAlignment(alignment);
+        final var copied = textData.copy(textData.getName());
+        copied.setTextAlignment(alignment);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.TEXT_ALIGNMENT)) {
             return false;
@@ -54,7 +54,7 @@ public class TextAlignmentCMD implements Subcommand {
             return false;
         }
 
-        textData.setTextAlignment(((TextHologramData) copied.getTypeData()).getTextAlignment());
+        textData.setTextAlignment(((TextHologramData) copied).getTextAlignment());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

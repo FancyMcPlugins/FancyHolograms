@@ -1,15 +1,19 @@
 package de.oliver.fancyholograms;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import de.oliver.fancyholograms.api.*;
+import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.HologramConfiguration;
+import de.oliver.fancyholograms.api.HologramManager;
+import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
 import de.oliver.fancyholograms.commands.FancyHologramsTestCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
+import de.oliver.fancyholograms.hologram.version.*;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
 import de.oliver.fancyholograms.storage.FlatFileHologramStorage;
-import de.oliver.fancyholograms.version.*;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
@@ -32,6 +36,8 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -39,14 +45,17 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 public final class FancyHolograms extends JavaPlugin implements FancyHologramsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6"};
+    private static @Nullable FancyHolograms INSTANCE;
 
-
-    @Nullable
-    private static FancyHolograms INSTANCE;
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final FancyScheduler scheduler = ServerSoftware.isFolia() ? new FoliaScheduler(this) : new BukkitScheduler(this);
     private final Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
+    private final ScheduledExecutorService hologramThread = Executors.newSingleThreadScheduledExecutor(
+            new ThreadFactoryBuilder()
+                    .setNameFormat("FancyHolograms-Holograms")
+                    .build()
+    );
     private final ExecutorService fileStorageExecutor = Executors.newSingleThreadExecutor(
             new ThreadFactoryBuilder()
                     .setDaemon(true)
@@ -56,8 +65,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     );
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private HologramStorage hologramStorage = new FlatFileHologramStorage();
-    @Nullable
-    private HologramManagerImpl hologramsManager;
+    private @Nullable HologramManagerImpl hologramsManager;
     private boolean isUsingViaVersion;
 
     public static @NotNull FancyHolograms get() {
@@ -129,13 +137,18 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         isUsingViaVersion = Bukkit.getPluginManager().getPlugin("ViaVersion") != null;
 
         if (getHologramConfiguration().isAutosaveEnabled()) {
-            getScheduler().runTaskTimerAsynchronously(getHologramConfiguration().getAutosaveInterval() * 20L, 20L * 60L * getHologramConfiguration().getAutosaveInterval(), hologramsManager::saveHolograms);
+            getHologramThread().scheduleAtFixedRate(() -> {
+                if (hologramsManager != null) {
+                    hologramsManager.saveHolograms();
+                }
+            }, getHologramConfiguration().getAutosaveInterval(), getHologramConfiguration().getAutosaveInterval() * 60L, TimeUnit.SECONDS);
         }
     }
 
     @Override
     public void onDisable() {
         hologramsManager.saveHolograms();
+        hologramThread.shutdown();
         fileStorageExecutor.shutdown();
         INSTANCE = null;
     }
@@ -194,6 +207,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         if (reload) {
             getHologramsManager().reloadHolograms();
         }
+    }
+
+    public ScheduledExecutorService getHologramThread() {
+        return hologramThread;
     }
 
     public ExecutorService getFileStorageExecutor() {

@@ -1,15 +1,10 @@
-package de.oliver.fancyholograms.version;
+package de.oliver.fancyholograms.hologram.version;
 
 import com.mojang.math.Transformation;
-import com.viaversion.viaversion.api.Via;
-import de.oliver.fancyholograms.api.FancyHologramsPlugin;
-import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.data.BlockHologramData;
-import de.oliver.fancyholograms.api.data.HologramData;
-import de.oliver.fancyholograms.api.data.ItemHologramData;
-import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.events.HologramHideEvent;
 import de.oliver.fancyholograms.api.events.HologramShowEvent;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancylib.ReflectionUtils;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -51,15 +46,14 @@ public final class Hologram1_20_1 extends Hologram {
     }
 
     @Override
-    public org.bukkit.entity.@Nullable Display getDisplayEntity() {
-        if (display == null) return null;
-        return (org.bukkit.entity.Display) display.getBukkitEntity();
+    public @Nullable org.bukkit.entity.Display getDisplayEntity() {
+        return display != null ? (org.bukkit.entity.Display) display.getBukkitEntity() : null;
     }
 
     @Override
     public void create() {
-        final var location = data.getDisplayData().getLocation();
-        if (location == null || location.getWorld() == null) {
+        final var location = data.getLocation();
+        if (!location.isWorldLoaded()) {
             return; // no location data, cannot be created
         }
 
@@ -77,7 +71,7 @@ public final class Hologram1_20_1 extends Hologram {
         final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_1.DATA_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
         display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
 
-        updateHologram();
+        update();
     }
 
     @Override
@@ -93,8 +87,8 @@ public final class Hologram1_20_1 extends Hologram {
         }
 
         // location data
-        final var location = data.getDisplayData().getLocation();
-        if (location == null || location.getWorld() == null || !location.isWorldLoaded()) {
+        final var location = data.getLocation();
+        if (location.getWorld() == null || !location.isWorldLoaded()) {
             return;
         } else {
             display.setPosRaw(location.x(), location.y(), location.z());
@@ -102,17 +96,7 @@ public final class Hologram1_20_1 extends Hologram {
             display.setXRot(location.getPitch());
         }
 
-
-        // billboard data
-        display.setBillboardConstraints(switch (data.getDisplayData().getBillboard()) {
-            case FIXED -> Display.BillboardConstraints.FIXED;
-            case VERTICAL -> Display.BillboardConstraints.VERTICAL;
-            case HORIZONTAL -> Display.BillboardConstraints.HORIZONTAL;
-            case CENTER -> Display.BillboardConstraints.CENTER;
-        });
-
-
-        if (display instanceof TextDisplay textDisplay && data.getTypeData() instanceof TextHologramData textData) {
+        if (display instanceof TextDisplay textDisplay && data instanceof TextHologramData textData) {
             // line width
             final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_1.DATA_LINE_WIDTH_ID.getMapping());
             display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
@@ -126,11 +110,11 @@ public final class Hologram1_20_1 extends Hologram {
             } else if (background == Hologram.TRANSPARENT) {
                 display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, 0);
             } else {
-                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.value() | 0xC8000000);
+                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.asARGB());
             }
 
             // text shadow
-            if (textData.isTextShadow()) {
+            if (textData.hasTextShadow()) {
                 textDisplay.setFlags((byte) (textDisplay.getFlags() | TextDisplay.FLAG_SHADOW));
             } else {
                 textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_SHADOW));
@@ -156,33 +140,41 @@ public final class Hologram1_20_1 extends Hologram {
                 textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_ALIGN_RIGHT));
             }
 
-        } else if (display instanceof Display.ItemDisplay itemDisplay && data.getTypeData() instanceof ItemHologramData itemData) {
+        } else if (display instanceof Display.ItemDisplay itemDisplay && data instanceof ItemHologramData itemData) {
             // item
-            itemDisplay.setItemStack(ItemStack.fromBukkitCopy(itemData.getItem()));
+            itemDisplay.setItemStack(ItemStack.fromBukkitCopy(itemData.getItemStack()));
 
-        } else if (display instanceof Display.BlockDisplay blockDisplay && data.getTypeData() instanceof BlockHologramData blockData) {
+        } else if (display instanceof Display.BlockDisplay blockDisplay && data instanceof BlockHologramData blockData) {
             Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.of("minecraft:" + blockData.getBlock().name().toLowerCase(), ':'));
             blockDisplay.setBlockState(block.defaultBlockState());
         }
 
-        // brightness
-        if (data.getDisplayData().getBrightness() != null) {
-            display.setBrightnessOverride(new Brightness(data.getDisplayData().getBrightness().getBlockLight(),
-                    data.getDisplayData().getBrightness().getSkyLight()));
+        if (data instanceof DisplayHologramData displayData) {
+            // billboard data
+            display.setBillboardConstraints(switch (displayData.getBillboard()) {
+                case FIXED -> Display.BillboardConstraints.FIXED;
+                case VERTICAL -> Display.BillboardConstraints.VERTICAL;
+                case HORIZONTAL -> Display.BillboardConstraints.HORIZONTAL;
+                case CENTER -> Display.BillboardConstraints.CENTER;
+            });
+
+            // brightness
+            if (displayData.getBrightness() != null) {
+                display.setBrightnessOverride(new Brightness(displayData.getBrightness().getBlockLight(), displayData.getBrightness().getSkyLight()));
+            }
+
+            // entity scale AND MORE!
+            display.setTransformation(new Transformation(
+                    displayData.getTranslation(),
+                    new Quaternionf(),
+                    displayData.getScale(),
+                    new Quaternionf())
+            );
+
+            // entity shadow
+            display.setShadowRadius(displayData.getShadowRadius());
+            display.setShadowStrength(displayData.getShadowStrength());
         }
-
-        // entity scale AND MORE!
-        display.setTransformation(new Transformation(
-                data.getDisplayData().getTranslation(),
-                new Quaternionf(),
-                data.getDisplayData().getScale(),
-                new Quaternionf())
-        );
-
-
-        // entity shadow
-        display.setShadowRadius(data.getDisplayData().getShadowRadius());
-        display.setShadowStrength(data.getDisplayData().getShadowStrength());
     }
 
 
@@ -201,20 +193,21 @@ public final class Hologram1_20_1 extends Hologram {
             return false; // could not be created, nothing to show
         }
 
-        if (!data.getDisplayData().getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
+        if (!data.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
             return false;
         }
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         // TODO: cache player protocol version
-        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
-        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
-            return false;
-        }
+        // TODO: fix this
+//        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
+//        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
+//            return false;
+//        }
 
         serverPlayer.connection.send(new ClientboundAddEntityPacket(display));
-        this.shown.add(player.getUniqueId());
+        this.viewers.add(player.getUniqueId());
         refreshHologram(player);
 
         return true;
@@ -225,7 +218,7 @@ public final class Hologram1_20_1 extends Hologram {
         if (!new HologramHideEvent(this, player).callEvent()) {
             return false;
         }
-        
+
         final var display = this.display;
         if (display == null) {
             return false; // doesn't exist, nothing to hide
@@ -233,7 +226,7 @@ public final class Hologram1_20_1 extends Hologram {
 
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(display.getId()));
 
-        this.shown.remove(player.getUniqueId());
+        this.viewers.remove(player.getUniqueId());
         return true;
     }
 
@@ -245,7 +238,7 @@ public final class Hologram1_20_1 extends Hologram {
             return; // doesn't exist, nothing to refresh
         }
 
-        if (!isShown(player)) {
+        if (!isViewer(player)) {
             return;
         }
 

@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
@@ -18,7 +18,7 @@ import java.util.List;
 public class SetLineCMD implements Subcommand {
 
     public static boolean setLine(CommandSender player, Hologram hologram, int index, String text) {
-        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
@@ -33,14 +33,14 @@ public class SetLineCMD implements Subcommand {
             lines.set(index, text);
         }
 
-        final var copied = hologram.getData().copy();
-        ((TextHologramData) copied.getTypeData()).setText(lines);
+        final var copied = textData.copy(textData.getName());
+        copied.setText(lines);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.TEXT)) {
             return false;
         }
 
-        textData.setText(((TextHologramData) copied.getTypeData()).getText());
+        textData.setText(copied.getText());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

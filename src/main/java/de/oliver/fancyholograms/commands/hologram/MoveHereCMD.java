@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Doubles;
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
@@ -21,16 +21,16 @@ import java.util.function.Function;
 public class MoveHereCMD implements Subcommand {
 
     public static boolean setLocation(Player player, Hologram hologram, Location location) {
-        final var copied = hologram.getData().copy();
-        copied.getDisplayData().getLocation().set(location.x(), location.y(), location.z());
-        copied.getDisplayData().getLocation().setWorld(location.getWorld());
+        final var copied = hologram.getData().copy(hologram.getName());
+        copied.getLocation().set(location.x(), location.y(), location.z());
+        copied.getLocation().setWorld(location.getWorld());
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.POSITION)) {
             return false;
         }
 
-        final var updatedLocation = copied.getDisplayData().getLocation() == null ? location : copied.getDisplayData().getLocation(); // note: maybe should fall back to original location?
-        hologram.getData().getDisplayData().setLocation(updatedLocation);
+        final var updatedLocation = copied.getLocation() == null ? location : copied.getLocation(); // note: maybe should fall back to original location?
+        hologram.getData().setLocation(updatedLocation);
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);
@@ -74,7 +74,7 @@ public class MoveHereCMD implements Subcommand {
             return false;
         }
 
-        if (hologram.getData().getDisplayData().getLinkedNpcName() != null) {
+        if (hologram.getData().getLinkedNpcName() != null) {
             MessageHelper.error(player, "This hologram is linked with an NPC");
             MessageHelper.error(player, "To unlink: /hologram edit " + hologram.getData().getName() + " unlinkWithNpc");
             return false;

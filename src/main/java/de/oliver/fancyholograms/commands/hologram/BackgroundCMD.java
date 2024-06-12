@@ -1,14 +1,14 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.Color;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,14 +26,14 @@ public class BackgroundCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (!(hologram.getData().getTypeData() instanceof TextHologramData textData)) {
+        if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;
         }
 
         final var color = args[3].toLowerCase(Locale.ROOT);
 
-        final TextColor background;
+        final Color background;
 
         if (color.equals("reset") || color.equals("default")) {
             background = null;
@@ -41,9 +41,13 @@ public class BackgroundCMD implements Subcommand {
             if (color.equals("transparent")) {
                 background = Hologram.TRANSPARENT;
             } else if (color.startsWith("#")) {
-                background = TextColor.fromHexString(color);
+                Color parsed = Color.fromARGB((int) Long.parseLong(color.substring(1), 16));
+                //make background solid color if RGB hex provided
+                if (color.length() == 7) background = parsed.setAlpha(255);
+                else background = parsed;
             } else {
-                background = NamedTextColor.NAMES.value(color.replace(' ', '_'));
+                NamedTextColor named = NamedTextColor.NAMES.value(color.replace(' ', '_'));
+                background = named == null ? null : Color.fromARGB(named.value() | 0xC8000000);
             }
 
             if (background == null) {
@@ -57,19 +61,19 @@ public class BackgroundCMD implements Subcommand {
             return false;
         }
 
-        final var copied = hologram.getData().copy();
-        ((TextHologramData) copied.getTypeData()).setBackground(background);
+        final var copied = textData.copy(textData.getName());
+        copied.setBackground(background);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BACKGROUND)) {
             return false;
         }
 
-        if (Objects.equals(((TextHologramData) copied.getTypeData()).getBackground(), textData.getBackground())) {
+        if (Objects.equals(copied.getBackground(), textData.getBackground())) {
             MessageHelper.warning(player, "This hologram already has this background color");
             return false;
         }
 
-        textData.setBackground(((TextHologramData) copied.getTypeData()).getBackground());
+        textData.setBackground(copied.getBackground());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

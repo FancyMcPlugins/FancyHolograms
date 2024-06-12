@@ -18,7 +18,7 @@ runPaper.folia.registerTask()
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.1.0" + (if (buildId != null) ".$buildId" else "")
+    version = "2.2.0" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
     repositories {
@@ -64,6 +64,11 @@ paper {
     description = "Simple, lightweight and fast hologram plugin using display entities"
     apiVersion = "1.19"
     serverDependencies {
+        register("FancyNpcs") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+
         register("PlaceholderAPI") {
             required = false
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
@@ -74,12 +79,13 @@ paper {
 tasks {
     runServer {
         minecraftVersion(findProperty("minecraftVersion").toString())
-//        minecraftVersion("1.19.4")
+//        minecraftVersion("1.20.4")
 
         downloadPlugins {
-//            hangar("ViaVersion", "4.10.2-SNAPSHOT+347")
-//            hangar("ViaBackwards", "4.10.2-SNAPSHOT+208")
-//            hangar("PlaceholderAPI", "2.11.5")
+            modrinth("fancynpcs", "2.1.0")
+            hangar("ViaVersion", "4.10.2")
+            hangar("ViaBackwards", "4.10.2")
+            hangar("PlaceholderAPI", "2.11.6")
         }
     }
 

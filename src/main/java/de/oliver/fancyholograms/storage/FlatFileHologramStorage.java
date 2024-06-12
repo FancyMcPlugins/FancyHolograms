@@ -1,14 +1,14 @@
 package de.oliver.fancyholograms.storage;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.HologramStorage;
-import de.oliver.fancyholograms.api.HologramType;
+import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 
 public class FlatFileHologramStorage implements HologramStorage {
 
@@ -144,28 +143,27 @@ public class FlatFileHologramStorage implements HologramStorage {
                     continue;
                 }
 
-                String typeName = holoSection.getString("type", "TEXT");
+                String typeName = holoSection.getString("type");
+                if (typeName == null) {
+                    FancyHolograms.get().getLogger().warning("HologramType was not saved");
+                    continue;
+                }
+
                 HologramType type = HologramType.getByName(typeName);
                 if (type == null) {
                     FancyHolograms.get().getLogger().warning("Could not parse HologramType");
                     continue;
                 }
 
-                DisplayHologramData displayData = new DisplayHologramData();
+                DisplayHologramData displayData = null;
+                switch (type) {
+                    case TEXT -> displayData = new TextHologramData(name, new Location(null, 0, 0, 0));
+                    case ITEM -> displayData = new ItemHologramData(name, new Location(null, 0, 0, 0));
+                    case BLOCK -> displayData = new BlockHologramData(name, new Location(null, 0, 0, 0));
+                }
                 displayData.read(holoSection, name);
 
-                Data typeData = null;
-                switch (type) {
-                    case TEXT -> typeData = new TextHologramData();
-                    case ITEM -> typeData = new ItemHologramData();
-                    case BLOCK -> typeData = new BlockHologramData();
-                }
-
-                typeData.read(holoSection, name);
-
-                HologramData data = new HologramData(name, displayData, type, typeData);
-
-                Hologram hologram = FancyHolograms.get().getHologramManager().create(data);
+                Hologram hologram = FancyHolograms.get().getHologramManager().create(displayData);
                 holograms.add(hologram);
             }
 
@@ -239,7 +237,7 @@ public class FlatFileHologramStorage implements HologramStorage {
             final var visibility = Optional.ofNullable(config.getString("visibility"))
                     .flatMap(Visibility::byString)
                     .orElseGet(() -> {
-                        final var visibleByDefault = config.getBoolean("visible_by_default", DisplayHologramData.DEFAULT_IS_VISIBLE);
+                        final var visibleByDefault = config.getBoolean("visible_by_default", HologramData.DEFAULT_IS_VISIBLE);
                         if (config.contains("visible_by_default")) {
                             config.set("visible_by_default", null);
                         }
@@ -263,23 +261,35 @@ public class FlatFileHologramStorage implements HologramStorage {
                 default -> TextDisplay.TextAlignment.CENTER;
             };
 
-            TextColor background = null;
+            Color background = null;
             if (backgroundName != null) {
                 if (backgroundName.equalsIgnoreCase("transparent")) {
                     background = Hologram.TRANSPARENT;
                 } else if (backgroundName.startsWith("#")) {
-                    background = TextColor.fromHexString(backgroundName);
+                    background = Color.fromARGB((int)Long.parseLong(backgroundName.substring(1), 16));
                 } else {
-                    background = NamedTextColor.NAMES.value(backgroundName.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                    NamedTextColor named = NamedTextColor.NAMES.value(backgroundName.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
+                    background = named == null ? null : Color.fromARGB(named.value());
                 }
             }
 
+            TextHologramData textHologramData = new TextHologramData(name, location);
+            textHologramData
+                .setText(text)
+                .setBackground(background)
+                .setTextAlignment(textAlignment)
+                .setTextShadow(textHasShadow)
+                .setSeeThrough(isSeeThrough)
+                .setTextUpdateInterval(textUpdateInterval)
+                .setScale(new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ))
+                .setShadowRadius((float) shadowRadius)
+                .setShadowStrength((float) shadowStrength)
+                .setBillboard(billboard)
+                .setVisibilityDistance(visibilityDistance)
+                .setVisibility(visibility)
+                .setLinkedNpcName(linkedNpc);
 
-            DisplayHologramData displayData = new DisplayHologramData(location, billboard, new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ), DisplayHologramData.DEFAULT_TRANSLATION, null, (float) shadowRadius, (float) shadowStrength, visibilityDistance, linkedNpc, visibility);
-
-            TextHologramData textData = new TextHologramData(text, background, textAlignment, textHasShadow, isSeeThrough, textUpdateInterval);
-
-            return new HologramData(name, displayData, HologramType.TEXT, textData);
+            return textHologramData;
         }
     }
 }

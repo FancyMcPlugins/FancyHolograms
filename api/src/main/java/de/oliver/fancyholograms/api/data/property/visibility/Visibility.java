@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.api.data.property.visibility;
 
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -11,10 +11,6 @@ public enum Visibility {
      * Everybody can see a hologram.
      */
     ALL((player, hologram) -> true),
-    /**
-     * Manual control.
-     */
-    MANUAL((player, hologram) -> hologram.isShown(player)),
     /**
      * The player needs permission to see a specific hologram.
      */
@@ -30,16 +26,14 @@ public enum Visibility {
         this.predicate = predicate;
     }
 
-
-    public boolean canSee(Player player, Hologram hologram) {
-        return this.predicate.canSee(player, hologram);
-    }
-
-
     public static Optional<Visibility> byString(String value) {
         return Arrays.stream(Visibility.values())
                 .filter(visibility -> visibility.toString().equalsIgnoreCase(value))
                 .findFirst();
+    }
+
+    public boolean canSee(Player player, Hologram hologram) {
+        return this.predicate.canSee(player, hologram);
     }
 
     public interface VisibilityPredicate {

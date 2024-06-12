@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms.version;
+package de.oliver.fancyholograms.hologram.version;
 
 public enum MappingKeys1_20_1 {
 

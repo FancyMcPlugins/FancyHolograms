@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
@@ -21,7 +21,7 @@ public class ListCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        final var holograms = FancyHolograms.get().getHologramsManager().getHolograms();
+        final var holograms = FancyHolograms.get().getHologramsManager().getPersistentHolograms();
 
         if (holograms.isEmpty()) {
             MessageHelper.warning(player, "There are no holograms. Use '/hologram create' to create one");
@@ -49,7 +49,7 @@ public class ListCMD implements Subcommand {
                     .skip((page - 1) * 10)
                     .limit(10)
                     .forEach(holo -> {
-                        final var location = holo.getData().getDisplayData().getLocation();
+                        final var location = holo.getData().getLocation();
                         if (location == null || location.getWorld() == null) {
                             return;
                         }

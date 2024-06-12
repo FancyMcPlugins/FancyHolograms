@@ -1,8 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.Hologram;
-import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.events.HologramCreateEvent;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
@@ -46,12 +45,12 @@ public class CopyCMD implements Subcommand {
             return false;
         }
 
-        final var data = new HologramData(name, hologram.getData());
-        Location originalLocation = data.getDisplayData().getLocation();
+        final var data = hologram.getData().copy(name);
+        Location originalLocation = data.getLocation();
         Location location = player.getLocation();
         location.setPitch(originalLocation.getPitch());
         location.setYaw(originalLocation.getYaw());
-        data.getDisplayData().setLocation(location);
+        data.setLocation(location);
 
         final var copy = FancyHolograms.get().getHologramsManager().create(data);
 
@@ -62,7 +61,7 @@ public class CopyCMD implements Subcommand {
 
         copy.createHologram();
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            copy.checkAndUpdateShownStateForPlayer(onlinePlayer);
+            copy.updateShownStateFor(onlinePlayer);
         }
 
         FancyHolograms.get().getHologramsManager().addHologram(copy);

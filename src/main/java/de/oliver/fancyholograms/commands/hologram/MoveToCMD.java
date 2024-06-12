@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.commands.hologram;
 
-import de.oliver.fancyholograms.api.Hologram;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Location;
@@ -30,9 +30,9 @@ public class MoveToCMD implements Subcommand {
             return false;
         }
 
-        final var x = MoveHereCMD.calculateCoordinate(args[3], hologram.getData().getDisplayData().getLocation(), player.getLocation(), Location::x);
-        final var y = MoveHereCMD.calculateCoordinate(args[4], hologram.getData().getDisplayData().getLocation(), player.getLocation(), Location::y);
-        final var z = MoveHereCMD.calculateCoordinate(args[5], hologram.getData().getDisplayData().getLocation(), player.getLocation(), Location::z);
+        final var x = MoveHereCMD.calculateCoordinate(args[3], hologram.getData().getLocation(), player.getLocation(), Location::x);
+        final var y = MoveHereCMD.calculateCoordinate(args[4], hologram.getData().getLocation(), player.getLocation(), Location::y);
+        final var z = MoveHereCMD.calculateCoordinate(args[5], hologram.getData().getLocation(), player.getLocation(), Location::z);
 
         if (x == null || y == null || z == null) {
             MessageHelper.error(player, "Could not parse position");
@@ -42,7 +42,7 @@ public class MoveToCMD implements Subcommand {
         final var location = new Location(player.getWorld(), x, y, z);
 
         if (args.length > 6) {
-            final var yaw = MoveHereCMD.calculateCoordinate(args[6], hologram.getData().getDisplayData().getLocation(), player.getLocation(), loc -> loc.getYaw() + 180f);
+            final var yaw = MoveHereCMD.calculateCoordinate(args[6], hologram.getData().getLocation(), player.getLocation(), loc -> loc.getYaw() + 180f);
 
             if (yaw == null) {
                 MessageHelper.error(player, "Could not parse yaw");
@@ -53,7 +53,7 @@ public class MoveToCMD implements Subcommand {
         }
 
         if (args.length > 7) {
-            final var pitch = MoveHereCMD.calculateCoordinate(args[7], hologram.getData().getDisplayData().getLocation(), player.getLocation(), Location::getPitch);
+            final var pitch = MoveHereCMD.calculateCoordinate(args[7], hologram.getData().getLocation(), player.getLocation(), Location::getPitch);
 
             if (pitch == null) {
                 MessageHelper.error(player, "Could not parse pitch");

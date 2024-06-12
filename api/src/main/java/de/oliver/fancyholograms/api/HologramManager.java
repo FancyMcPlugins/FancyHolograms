@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.api;
 
 import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -8,6 +9,8 @@ import java.util.Optional;
 public interface HologramManager {
 
     Optional<Hologram> getHologram(String name);
+
+    Collection<Hologram> getPersistentHolograms();
 
     Collection<Hologram> getHolograms();
 
