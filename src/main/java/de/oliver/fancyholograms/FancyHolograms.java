@@ -44,7 +44,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public final class FancyHolograms extends JavaPlugin implements FancyHologramsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6"};
+    public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21"};
     private static @Nullable FancyHolograms INSTANCE;
 
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
@@ -221,6 +221,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         final var version = Bukkit.getMinecraftVersion();
 
         return switch (version) {
+            case "1.21" -> Hologram1_21::new;
             case "1.20.5", "1.20.6" -> Hologram1_20_6::new;
             case "1.20.3", "1.20.4" -> Hologram1_20_4::new;
             case "1.20.2" -> Hologram1_20_2::new;
