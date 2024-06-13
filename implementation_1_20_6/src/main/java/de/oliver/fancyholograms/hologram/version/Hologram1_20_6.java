@@ -85,34 +85,17 @@ public final class Hologram1_20_6 extends Hologram {
             }
 
             textDisplay.setStyleFlags((byte) 0);
+            textDisplay.setShadow(textData.hasTextShadow());
+            textDisplay.setSeeThrough(textData.isSeeThrough());
 
-            // text shadow
-            if (textData.hasTextShadow()) {
-                textDisplay.setStyleFlags((byte) (textDisplay.getStyleFlags() | TextDisplay.FLAG_SHADOW));
-            } else {
-                textDisplay.setStyleFlags((byte) (textDisplay.getStyleFlags() & ~TextDisplay.FLAG_SHADOW));
+            switch (textData.getTextAlignment()) {
+                case LEFT -> textDisplay.setAlignLeft(true);
+                case RIGHT -> textDisplay.setAlignRight(true);
+                case CENTER -> {
+                    textDisplay.setAlignLeft(false);
+                    textDisplay.setAlignRight(false);
+                }
             }
-
-            // see through
-            if (textData.isSeeThrough()) {
-                textDisplay.setStyleFlags((byte) (textDisplay.getStyleFlags() | TextDisplay.FLAG_SEE_THROUGH));
-            } else {
-                textDisplay.setStyleFlags((byte) (textDisplay.getStyleFlags() & ~TextDisplay.FLAG_SEE_THROUGH));
-            }
-
-            // text alignment
-            if (textData.getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.LEFT) {
-                textDisplay.setStyleFlags((byte) (textDisplay.getStyleFlags() | TextDisplay.FLAG_ALIGN_LEFT));
-            } else {
-                textDisplay.setStyleFlags((byte) (textDisplay.getStyleFlags() & ~TextDisplay.FLAG_ALIGN_LEFT));
-            }
-
-            if (textData.getTextAlignment() == org.bukkit.entity.TextDisplay.TextAlignment.RIGHT) {
-                textDisplay.setStyleFlags((byte) (textDisplay.getStyleFlags() | TextDisplay.FLAG_ALIGN_RIGHT));
-            } else {
-                textDisplay.setStyleFlags((byte) (textDisplay.getStyleFlags() & ~TextDisplay.FLAG_ALIGN_RIGHT));
-            }
-
         }
 //        else if (display instanceof Display.ItemDisplay itemDisplay && data instanceof ItemHologramData itemData) {
 //            // item
@@ -125,12 +108,7 @@ public final class Hologram1_20_6 extends Hologram {
 
         if (data instanceof DisplayHologramData displayData) {
             // billboard data
-            fsDisplay.setBillboardRenderConstraints(switch (displayData.getBillboard()) {
-                case FIXED -> (byte) 0;
-                case VERTICAL -> (byte) 1;
-                case HORIZONTAL -> (byte) 2;
-                case CENTER -> (byte) 3;
-            });
+            fsDisplay.setBillboard(FS_Display.Billboard.valueOf(displayData.getBillboard().name()));
 
             // brightness
             if (displayData.getBrightness() != null) {
