@@ -12,8 +12,9 @@ paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArt
 dependencies {
     paperweight.paperDevBundle("$minecraftVersion-R0.1-SNAPSHOT")
 
-    implementation(project(":api"))
-    implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    compileOnly(project(":api"))
+    compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    compileOnly("de.oliver:FancySitula:${findProperty("fancySitulaVersion")}")
     compileOnly("com.viaversion:viaversion-api:${findProperty("viaversionVersion")}")
 }
 
