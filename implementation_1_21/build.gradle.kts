@@ -4,7 +4,7 @@ plugins {
 }
 
 
-val minecraftVersion = "1.20.6"
+val minecraftVersion = "1.21"
 
 paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
 

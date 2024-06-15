@@ -16,6 +16,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.network.syncher.SynchedEntityData.DataValue;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Brightness;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import static de.oliver.fancylib.ReflectionUtils.getValue;
 
@@ -144,7 +146,7 @@ public final class Hologram1_21 extends Hologram {
             itemDisplay.setItemStack(ItemStack.fromBukkitCopy(itemData.getItemStack()));
 
         } else if (display instanceof Display.BlockDisplay blockDisplay && data instanceof BlockHologramData blockData) {
-            Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.of("minecraft:" + blockData.getBlock().name().toLowerCase(), ':'));
+            Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockData.getBlock().name().toLowerCase()));
             blockDisplay.setBlockState(block.defaultBlockState());
         }
 
@@ -205,7 +207,9 @@ public final class Hologram1_21 extends Hologram {
 //            return false;
 //        }
 
-        serverPlayer.connection.send(new ClientboundAddEntityPacket(display));
+        ServerEntity serverEntity = new ServerEntity(serverPlayer.serverLevel(), display, 0, false, packet -> {
+        }, Set.of());
+        serverPlayer.connection.send(new ClientboundAddEntityPacket(display, serverEntity));
         this.viewers.add(player.getUniqueId());
         refreshHologram(player);
 
