@@ -51,7 +51,7 @@ public class HologramData implements YamlData {
     }
 
     public @NotNull Location getLocation() {
-        return location;
+        return location.clone();
     }
 
     public HologramData setLocation(@Nullable Location location) {
@@ -173,7 +173,7 @@ public class HologramData implements YamlData {
     }
 
     public HologramData copy(String name) {
-        return new HologramData(name, type, location)
+        return new HologramData(name, type, this.getLocation())
                 .setVisibilityDistance(this.getVisibilityDistance())
                 .setVisibility(this.getVisibility())
                 .setPersistent(this.isPersistent())

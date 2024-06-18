@@ -20,27 +20,29 @@ import java.util.function.Function;
 
 public class MoveHereCMD implements Subcommand {
 
-    public static boolean setLocation(Player player, Hologram hologram, Location location) {
+    public static boolean setLocation(Player player, Hologram hologram, Location location, boolean applyRotation) {
         final var copied = hologram.getData().copy(hologram.getName());
-        copied.setLocation(location);
+        final Location newLocation = (applyRotation)
+                ? location
+                : new Location(location.getWorld(), location.x(), location.y(), location.z(), copied.getLocation().getYaw(), copied.getLocation().getPitch());
+        copied.setLocation(newLocation);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.POSITION)) {
             return false;
         }
 
-        final var updatedLocation = copied.getLocation() == null ? location : copied.getLocation(); // note: maybe should fall back to original location?
-        hologram.getData().setLocation(updatedLocation);
+        hologram.getData().setLocation(copied.getLocation());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);
         }
 
         MessageHelper.success(player, "Moved the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
-                Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.x()),
-                Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.y()),
-                Constants.COORDINATES_DECIMAL_FORMAT.format(updatedLocation.z()),
-                Constants.COORDINATES_DECIMAL_FORMAT.format((updatedLocation.getYaw() + 180f) % 360f),
-                Constants.COORDINATES_DECIMAL_FORMAT.format((updatedLocation.getPitch()) % 360f)
+                Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.x()),
+                Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.y()),
+                Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.z()),
+                Constants.COORDINATES_DECIMAL_FORMAT.format((newLocation.getYaw() + 180f) % 360f),
+                Constants.COORDINATES_DECIMAL_FORMAT.format((newLocation.getPitch()) % 360f)
         ));
 
         return true;
@@ -81,6 +83,6 @@ public class MoveHereCMD implements Subcommand {
 
         final var location = player.getLocation();
 
-        return setLocation(player, hologram, location);
+        return setLocation(player, hologram, location, false);
     }
 }
