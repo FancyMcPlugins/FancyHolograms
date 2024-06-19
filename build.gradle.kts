@@ -85,7 +85,7 @@ tasks {
 //        minecraftVersion("1.20.4")
 
         downloadPlugins {
-//            modrinth("fancynpcs", "2.1.0")
+            modrinth("fancynpcs", "2.2.0")
             hangar("ViaVersion", "5.0.0")
             hangar("ViaBackwards", "5.0.0")
 //            hangar("PlaceholderAPI", "2.11.6")
