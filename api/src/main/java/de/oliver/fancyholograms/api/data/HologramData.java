@@ -55,7 +55,7 @@ public class HologramData implements YamlData {
     }
 
     public HologramData setLocation(@Nullable Location location) {
-        this.location = location;
+        this.location = location != null ? location.clone() : null;
         setHasChanges(true);
         return this;
     }
@@ -101,8 +101,11 @@ public class HologramData implements YamlData {
      * Set the type of visibility for the hologram.
      */
     public HologramData setVisibility(Visibility visibility) {
-        this.visibility = visibility;
-        setHasChanges(true);
+        if (!this.visibility.equals(visibility)) {
+            this.visibility = visibility;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -120,8 +123,11 @@ public class HologramData implements YamlData {
     }
 
     public HologramData setLinkedNpcName(String linkedNpcName) {
-        this.linkedNpcName = linkedNpcName;
-        setHasChanges(true);
+        if (!this.linkedNpcName.equals(linkedNpcName)) {
+            this.linkedNpcName = linkedNpcName;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
