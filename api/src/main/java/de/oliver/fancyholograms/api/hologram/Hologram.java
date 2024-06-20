@@ -73,38 +73,78 @@ public abstract class Hologram {
 
     protected abstract void refresh(@NotNull final Player player);
 
+    /**
+     * Create the hologram entity.
+     * Only run this if creating custom Hologram implementations as this is run in
+     * {@link de.oliver.fancyholograms.api.HologramManager#create(HologramData)}.
+     */
     public final void createHologram() {
         create();
     }
 
+    /**
+     * Deletes the hologram entity.
+     */
     public final void deleteHologram() {
         delete();
     }
 
+    /**
+     * Shows the hologram to a collection of players.
+     * Use {@link #forceShowHologram(Player)} if this hologram is not registered to the HologramManager.
+     * @param players The players to show the hologram to
+     */
     public final void showHologram(Collection<? extends Player> players) {
         players.forEach(this::showHologram);
     }
 
+    /**
+     * Shows the hologram to a player.
+     * Use {@link #forceShowHologram(Player)} if this hologram is not registered to the HologramManager.
+     * @param player The player to show the hologram to
+     */
     public final void showHologram(Player player) {
         viewers.add(player.getUniqueId());
     }
 
+    /**
+     * Forcefully shows the hologram to a player.
+     * @param player The player to show the hologram to
+     */
     public final void forceShowHologram(Player player) {
         show(player);
     }
 
+    /**
+     * Hides the hologram from a collection of players.
+     * Use {@link #forceHideHologram(Player)} if this hologram is not registered to the HologramManager.
+     * @param players The players to hide the hologram from
+     */
     public final void hideHologram(Collection<? extends Player> players) {
         players.forEach(this::hideHologram);
     }
 
+    /**
+     * Hides the hologram from a player.
+     * Use {@link #forceHideHologram(Player)} if this hologram is not registered to the HologramManager.
+     * @param player The player to hide the hologram from
+     */
     public final void hideHologram(Player player) {
         viewers.remove(player.getUniqueId());
     }
 
+    /**
+     * Forcefully hides the hologram from a player.
+     * @param player The player to show the hologram to
+     */
     public final void forceHideHologram(Player player) {
         hide(player);
     }
 
+    /**
+     * Queues hologram to update and refresh for players.
+     * @deprecated in favour of {@link #queueUpdate()}
+     */
     @Deprecated(forRemoval = true)
     public final void updateHologram() {
         queueUpdate();
@@ -112,65 +152,80 @@ public abstract class Hologram {
 
     /**
      * Queues hologram to update and refresh for players
+     * Use {@link #forceUpdate()} if this hologram is not registered to the HologramManager.
      */
     public final void queueUpdate() {
         data.setHasChanges(true);
     }
 
     /**
-     * Forces hologram to update and refresh for players
+     * Forcefully updates and refreshes hologram for players.
      */
     public final void forceUpdate() {
         update();
     }
 
     /**
-     * Refreshes the hologram for the players it is currently shown to.
+     * Refreshes the hologram for the players currently viewing it.
      */
     public void refreshForViewers() {
         final var players = getViewers()
-                .stream()
-                .map(Bukkit::getPlayer)
-                .toList();
+            .stream()
+            .map(Bukkit::getPlayer)
+            .toList();
 
         refreshHologram(players);
     }
 
     /**
-     * Refreshes the hologram for players in the world associated with the hologram's location.
+     * Refreshes the hologram for players currently viewing it in the same world as the hologram.
      */
     public void refreshForViewersInWorld() {
         World world = data.getLocation().getWorld();
         final var players = getViewers()
-                .stream()
-                .map(Bukkit::getPlayer)
-                .filter(player -> player != null && player.getWorld().equals(world))
-                .toList();
+            .stream()
+            .map(Bukkit::getPlayer)
+            .filter(player -> player != null && player.getWorld().equals(world))
+            .toList();
 
         refreshHologram(players);
     }
 
     /**
-     * Refreshes the hologram for the specified player by resending its location and entity data
-     *
-     * @param player the player to refresh the hologram for
+     * Refreshes the hologram's data for a player.
+     * @param player the player to refresh for
      */
     public final void refreshHologram(@NotNull final Player player) {
         refresh(player);
     }
 
+    /**
+     * Refreshes the hologram's data for a collection of players.
+     * @param players the collection of players to refresh for
+     */
     public final void refreshHologram(@NotNull final Collection<? extends Player> players) {
         players.forEach(this::refreshHologram);
     }
 
+    /**
+     * @return an unmodifiable set of current viewers
+     */
     public final @NotNull @UnmodifiableView Set<UUID> getViewers() {
         return Collections.unmodifiableSet(this.viewers);
     }
 
+    /**
+     * @param player the player to check for
+     * @return whether the player is currently viewing the hologram
+     */
     public final boolean isViewer(@NotNull final Player player) {
         return isViewer(player.getUniqueId());
     }
 
+    /**
+     * @param player the uuid of the player to check for
+     * @return whether the player is currently viewing the hologram
+     */
     public final boolean isViewer(@NotNull final UUID player) {
         return this.viewers.contains(player);
     }
@@ -195,6 +250,7 @@ public abstract class Hologram {
      * Checks and updates the shown state for a player.
      * If the hologram is shown and should not be, it hides it.
      * If the hologram is not shown and should be, it shows it.
+     * Use {@link #forceUpdateShownStateFor(Player)} if this hologram is not registered to the HologramManager.
      *
      * @param player the player to check and update the shown state for
      */
