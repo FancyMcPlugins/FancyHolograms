@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.api.data.DroppedItemHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
@@ -29,39 +30,61 @@ public class ItemCMD implements Subcommand {
             return false;
         }
 
-        if (!(hologram.getData() instanceof ItemHologramData itemData)) {
-            MessageHelper.error(player, "This command can only be used on item holograms");
-            return false;
-        }
-
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() == Material.AIR || item.getAmount() < 1) {
             MessageHelper.error(player, "You need to hold an item in your hand");
             return false;
         }
 
+        if (hologram.getData() instanceof ItemHologramData itemData) {
+            if (item == itemData.getItemStack()) {
+                MessageHelper.warning(player, "This item is already set");
+                return false;
+            }
 
-        if (item == itemData.getItemStack()) {
-            MessageHelper.warning(player, "This item is already set");
+            final var copied = itemData.copy(itemData.getName());
+            copied.setItemStack(item);
+
+            if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BILLBOARD)) {
+                return false;
+            }
+
+            if (copied.getItemStack() == itemData.getItemStack()) {
+                MessageHelper.warning(player, "This item is already set");
+                return false;
+            }
+
+            itemData.setItemStack(item);
+
+            if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+                FancyHolograms.get().getHologramStorage().save(hologram);
+            }
+        } else if (hologram.getData() instanceof DroppedItemHologramData itemData) {
+            if (item == itemData.getItemStack()) {
+                MessageHelper.warning(player, "This item is already set");
+                return false;
+            }
+
+            final var copied = itemData.copy(itemData.getName());
+            copied.setItemStack(item);
+
+            if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BILLBOARD)) {
+                return false;
+            }
+
+            if (copied.getItemStack() == itemData.getItemStack()) {
+                MessageHelper.warning(player, "This item is already set");
+                return false;
+            }
+
+            itemData.setItemStack(item);
+
+            if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+                FancyHolograms.get().getHologramStorage().save(hologram);
+            }
+        } else {
+            MessageHelper.error(player, "This command can only be used on item holograms");
             return false;
-        }
-
-        final var copied = itemData.copy(itemData.getName());
-        copied.setItemStack(item);
-
-        if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.BILLBOARD)) {
-            return false;
-        }
-
-        if (copied.getItemStack() == itemData.getItemStack()) {
-            MessageHelper.warning(player, "This item is already set");
-            return false;
-        }
-
-        itemData.setItemStack(item);
-
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
         }
 
         MessageHelper.success(player, "Set the item to '" + item.getType().name() + "'");

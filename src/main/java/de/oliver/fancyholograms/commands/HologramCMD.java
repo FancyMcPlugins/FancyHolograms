@@ -123,7 +123,7 @@ public final class HologramCMD extends Command {
 
         // /holo create {tab:type}
         if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
-            return Arrays.asList("text", "item", "block");
+            return Arrays.asList("text", "item", "block", "dropped_item");
         }
 
         // /holo [action] {tab:hologram}

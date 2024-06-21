@@ -22,7 +22,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Brightness;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Display.TextDisplay;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
@@ -39,15 +41,15 @@ import static de.oliver.fancylib.ReflectionUtils.getValue;
 public final class Hologram1_20_2 extends Hologram {
 
     @Nullable
-    private Display display;
+    private Entity entity;
 
     public Hologram1_20_2(@NotNull final HologramData data) {
         super(data);
     }
 
     @Override
-    public @Nullable org.bukkit.entity.Display getDisplayEntity() {
-        return display != null ? (org.bukkit.entity.Display) display.getBukkitEntity() : null;
+    public @Nullable org.bukkit.entity.Entity getEntity() {
+        return entity != null ? entity.getBukkitEntity() : null;
     }
 
     @Override
@@ -60,29 +62,32 @@ public final class Hologram1_20_2 extends Hologram {
         ServerLevel world = ((CraftWorld) location.getWorld()).getHandle();
 
         switch (data.getType()) {
-            case TEXT -> this.display = new Display.TextDisplay(EntityType.TEXT_DISPLAY, world);
-            case BLOCK -> this.display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, world);
-            case ITEM -> this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, world);
+            case TEXT -> this.entity = new Display.TextDisplay(EntityType.TEXT_DISPLAY, world);
+            case BLOCK -> this.entity = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, world);
+            case ITEM -> this.entity = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, world);
+            case DROPPED_ITEM -> {
+                this.entity = new ItemEntity(EntityType.ITEM, world);
+                this.entity.setNoGravity(true);
+            }
         }
 
-        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_2.DATA_INTERPOLATION_DURATION_ID.getMapping());
-        display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_DURATION_ID, 1);
-
-        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_2.DATA_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
-        display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
+        if (this.entity instanceof Display display) {
+            display.setTransformationInterpolationDuration(1);
+            display.setTransformationInterpolationDelay(0);
+        }
 
         update();
     }
 
     @Override
     public void delete() {
-        this.display = null;
+        this.entity = null;
     }
 
     @Override
     public void update() {
-        final var display = this.display;
-        if (display == null) {
+        final var entity = this.entity;
+        if (entity == null) {
             return; // doesn't exist, nothing to update
         }
 
@@ -91,26 +96,26 @@ public final class Hologram1_20_2 extends Hologram {
         if (location.getWorld() == null || !location.isWorldLoaded()) {
             return;
         } else {
-            display.setPosRaw(location.x(), location.y(), location.z());
-            display.setYRot(location.getYaw());
-            display.setXRot(location.getPitch());
+            entity.setPosRaw(location.x(), location.y(), location.z());
+            entity.setYRot(location.getYaw());
+            entity.setXRot(location.getPitch());
         }
 
-        if (display instanceof TextDisplay textDisplay && data instanceof TextHologramData textData) {
+        if (entity instanceof TextDisplay textDisplay && data instanceof TextHologramData textData) {
             // line width
             final var DATA_LINE_WIDTH_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_2.DATA_LINE_WIDTH_ID.getMapping());
-            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
+            entity.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
 
             // background
             final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_2.DATA_BACKGROUND_COLOR_ID.getMapping());
 
             final var background = textData.getBackground();
             if (background == null) {
-                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, TextDisplay.INITIAL_BACKGROUND);
+                entity.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, TextDisplay.INITIAL_BACKGROUND);
             } else if (background == Hologram.TRANSPARENT) {
-                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, 0);
+                entity.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, 0);
             } else {
-                display.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.asARGB());
+                entity.getEntityData().set((EntityDataAccessor<Integer>) DATA_BACKGROUND_COLOR_ID, background.asARGB());
             }
 
             // text shadow
@@ -140,16 +145,16 @@ public final class Hologram1_20_2 extends Hologram {
                 textDisplay.setFlags((byte) (textDisplay.getFlags() & ~TextDisplay.FLAG_ALIGN_RIGHT));
             }
 
-        } else if (display instanceof Display.ItemDisplay itemDisplay && data instanceof ItemHologramData itemData) {
+        } else if (entity instanceof Display.ItemDisplay itemDisplay && data instanceof ItemHologramData itemData) {
             // item
             itemDisplay.setItemStack(ItemStack.fromBukkitCopy(itemData.getItemStack()));
 
-        } else if (display instanceof Display.BlockDisplay blockDisplay && data instanceof BlockHologramData blockData) {
+        } else if (entity instanceof Display.BlockDisplay blockDisplay && data instanceof BlockHologramData blockData) {
             Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.of("minecraft:" + blockData.getBlock().name().toLowerCase(), ':'));
             blockDisplay.setBlockState(block.defaultBlockState());
         }
 
-        if (data instanceof DisplayHologramData displayData) {
+        if (entity instanceof Display display && data instanceof DisplayHologramData displayData) {
             // billboard data
             display.setBillboardConstraints(switch (displayData.getBillboard()) {
                 case FIXED -> Display.BillboardConstraints.FIXED;
@@ -184,12 +189,12 @@ public final class Hologram1_20_2 extends Hologram {
             return false;
         }
 
-        if (this.display == null) {
+        if (this.entity == null) {
             create(); // try to create it if it doesn't exist every time
         }
 
-        final var display = this.display;
-        if (display == null) {
+        final var entity = this.entity;
+        if (entity == null) {
             return false; // could not be created, nothing to show
         }
 
@@ -206,7 +211,7 @@ public final class Hologram1_20_2 extends Hologram {
 //            return false;
 //        }
 
-        serverPlayer.connection.send(new ClientboundAddEntityPacket(display));
+        serverPlayer.connection.send(new ClientboundAddEntityPacket(entity));
         this.viewers.add(player.getUniqueId());
         refreshHologram(player);
 
@@ -219,12 +224,12 @@ public final class Hologram1_20_2 extends Hologram {
             return false;
         }
 
-        final var display = this.display;
-        if (display == null) {
+        final var entity = this.entity;
+        if (entity == null) {
             return false; // doesn't exist, nothing to hide
         }
 
-        ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(display.getId()));
+        ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(entity.getId()));
 
         this.viewers.remove(player.getUniqueId());
         return true;
@@ -233,8 +238,8 @@ public final class Hologram1_20_2 extends Hologram {
 
     @Override
     public void refresh(@NotNull final Player player) {
-        final var display = this.display;
-        if (display == null) {
+        final var entity = this.entity;
+        if (entity == null) {
             return; // doesn't exist, nothing to refresh
         }
 
@@ -242,20 +247,20 @@ public final class Hologram1_20_2 extends Hologram {
             return;
         }
 
-        ((CraftPlayer) player).getHandle().connection.send(new ClientboundTeleportEntityPacket(display));
+        ((CraftPlayer) player).getHandle().connection.send(new ClientboundTeleportEntityPacket(entity));
 
-        if (display instanceof TextDisplay textDisplay) {
+        if (entity instanceof TextDisplay textDisplay) {
             textDisplay.setText(PaperAdventure.asVanilla(getShownText(player)));
         }
 
         final var values = new ArrayList<DataValue<?>>();
 
         //noinspection unchecked
-        for (final var item : ((Int2ObjectMap<DataItem<?>>) getValue(display.getEntityData(), "e")).values()) {
+        for (final var item : ((Int2ObjectMap<DataItem<?>>) getValue(entity.getEntityData(), "e")).values()) {
             values.add(item.value());
         }
 
-        ((CraftPlayer) player).getHandle().connection.send(new ClientboundSetEntityDataPacket(display.getId(), values));
+        ((CraftPlayer) player).getHandle().connection.send(new ClientboundSetEntityDataPacket(entity.getId(), values));
     }
 
 }
