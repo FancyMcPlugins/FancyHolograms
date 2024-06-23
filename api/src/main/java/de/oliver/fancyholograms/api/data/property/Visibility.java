@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms.api.data.property.visibility;
+package de.oliver.fancyholograms.api.data.property;
 
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import org.bukkit.entity.Player;

@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.api.data;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
-import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
+import de.oliver.fancyholograms.api.data.property.Visibility;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancylib.FancyLib;
 import org.bukkit.Bukkit;
