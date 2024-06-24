@@ -40,13 +40,15 @@ public enum Visibility {
         return this.predicate.canSee(player, hologram);
     }
 
+    @FunctionalInterface
     public interface VisibilityPredicate {
-
         boolean canSee(Player player, Hologram hologram);
     }
 
     /**
      * Handling of Visibility.MANUAL
+     * <br>
+     * TODO: Discussion needed - Potentially condense this into one singular multimap within the enum?
      */
     public static class ManualVisibility {
         private static final HashMultimap<String, UUID> distantViewers = HashMultimap.create();
