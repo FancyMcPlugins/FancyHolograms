@@ -101,8 +101,15 @@ public class HologramData implements YamlData {
      * Set the type of visibility for the hologram.
      */
     public HologramData setVisibility(Visibility visibility) {
+        if (this.visibility != visibility) {
+            if (this.visibility.equals(Visibility.MANUAL)) {
+                Visibility.ManualVisibility.clear();
+            }
+        }
+
         this.visibility = visibility;
         setHasChanges(true);
+
         return this;
     }
 

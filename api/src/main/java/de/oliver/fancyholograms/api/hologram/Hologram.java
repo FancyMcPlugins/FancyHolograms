@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.api.hologram;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.data.property.Visibility;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -113,6 +114,10 @@ public abstract class Hologram {
      */
     public final void forceShowHologram(Player player) {
         show(player);
+
+        if (this.getData().getVisibility().equals(Visibility.MANUAL)) {
+            Visibility.ManualVisibility.removeDistantViewer(this, player.getUniqueId());
+        }
     }
 
     /**
@@ -139,6 +144,10 @@ public abstract class Hologram {
      */
     public final void forceHideHologram(Player player) {
         hide(player);
+
+        if (this.getData().getVisibility().equals(Visibility.MANUAL)) {
+            Visibility.ManualVisibility.removeDistantViewer(this, player.getUniqueId());
+        }
     }
 
     /**
@@ -231,12 +240,20 @@ public abstract class Hologram {
     }
 
     protected boolean shouldShowTo(@NotNull final Player player) {
-        final var location = getData().getLocation();
-        if (!location.getWorld().equals(player.getWorld())) {
+        if (!meetsVisibilityConditions(player)) {
             return false;
         }
 
-        if (!this.getData().getVisibility().canSee(player, this)) {
+        return isWithinVisibilityDistance(player);
+    }
+
+    public boolean meetsVisibilityConditions(@NotNull final Player player) {
+        return this.getData().getVisibility().canSee(player, this);
+    }
+
+    public boolean isWithinVisibilityDistance(@NotNull final Player player) {
+        final var location = getData().getLocation();
+        if (!location.getWorld().equals(player.getWorld())) {
             return false;
         }
 
@@ -274,12 +291,32 @@ public abstract class Hologram {
      */
     public void forceUpdateShownStateFor(Player player) {
         boolean isShown = isViewer(player);
-        boolean shouldBeShown = shouldShowTo(player);
 
-        if (isShown && !shouldBeShown) {
-            hide(player);
-        } else if (!isShown && shouldBeShown) {
-            show(player);
+        if (meetsVisibilityConditions(player)) {
+            if (isWithinVisibilityDistance(player)) {
+                // Ran if the player meets the visibility conditions and is within visibility distance
+                if (!isShown) {
+                    show(player);
+
+                    if (getData().getVisibility().equals(Visibility.MANUAL)) {
+                        Visibility.ManualVisibility.removeDistantViewer(this, player.getUniqueId());
+                    }
+                }
+            } else {
+                // Ran if the player meets the visibility conditions but is not within visibility distance
+                if (isShown) {
+                    hide(player);
+
+                    if (getData().getVisibility().equals(Visibility.MANUAL)) {
+                        Visibility.ManualVisibility.addDistantViewer(this, player.getUniqueId());
+                    }
+                }
+            }
+        } else {
+            // Ran if the player does not meet visibility conditions
+            if (isShown) {
+                hide(player);
+            }
         }
     }
 
