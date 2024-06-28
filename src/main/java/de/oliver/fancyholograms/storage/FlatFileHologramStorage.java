@@ -130,7 +130,7 @@ public class FlatFileHologramStorage implements HologramStorage {
                     continue;
                 }
 
-                if (world != null && !holoSection.getString("world").equals(world)) {
+                if (world != null && !holoSection.getString("location.world").equals(world)) {
                     continue;
                 }
 
@@ -152,7 +152,7 @@ public class FlatFileHologramStorage implements HologramStorage {
                     case ITEM -> displayData = new ItemHologramData(name, new Location(null, 0, 0, 0));
                     case BLOCK -> displayData = new BlockHologramData(name, new Location(null, 0, 0, 0));
                 }
-                
+
                 if (!displayData.read(holoSection, name)) {
                     FancyHolograms.get().getLogger().warning("Could not read hologram data - skipping hologram");
                     continue;
