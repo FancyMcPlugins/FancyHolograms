@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,10 +94,18 @@ public class FlatFileHologramStorage implements HologramStorage {
 
     @Override
     public Collection<Hologram> loadAll() {
-        return readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE);
+        return readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE, null);
     }
 
-    private List<Hologram> readHolograms(File configFile) {
+    @Override
+    public Collection<Hologram> loadAll(String world) {
+        return readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE, world);
+    }
+
+    /**
+     * @param world The world to load the holograms from. (null for all worlds)
+     */
+    private List<Hologram> readHolograms(@NotNull File configFile, @Nullable String world) {
         lock.readLock().lock();
         try {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -118,6 +127,10 @@ public class FlatFileHologramStorage implements HologramStorage {
                 ConfigurationSection holoSection = hologramsSection.getConfigurationSection(name);
                 if (holoSection == null) {
                     FancyHolograms.get().getLogger().warning("Could not load hologram section in config");
+                    continue;
+                }
+
+                if (world != null && !holoSection.getString("world").equals(world)) {
                     continue;
                 }
 
