@@ -152,7 +152,11 @@ public class FlatFileHologramStorage implements HologramStorage {
                     case ITEM -> displayData = new ItemHologramData(name, new Location(null, 0, 0, 0));
                     case BLOCK -> displayData = new BlockHologramData(name, new Location(null, 0, 0, 0));
                 }
-                displayData.read(holoSection, name);
+                
+                if (!displayData.read(holoSection, name)) {
+                    FancyHolograms.get().getLogger().warning("Could not read hologram data - skipping hologram");
+                    continue;
+                }
 
                 Hologram hologram = FancyHolograms.get().getHologramManager().create(displayData);
                 holograms.add(hologram);

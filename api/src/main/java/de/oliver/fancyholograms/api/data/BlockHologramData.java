@@ -31,15 +31,19 @@ public class BlockHologramData extends DisplayHologramData {
     }
 
     @Override
-    public void read(ConfigurationSection section, String name) {
+    public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         block = Material.getMaterial(section.getString("block", "GRASS_BLOCK").toUpperCase());
+
+        return true;
     }
 
     @Override
-    public void write(ConfigurationSection section, String name) {
+    public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("block", block.name());
+
+        return true;
     }
 
     @Override

@@ -94,7 +94,7 @@ public class DisplayHologramData extends HologramData {
     }
 
     @Override
-    public void read(ConfigurationSection section, String name) {
+    public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         scale = new Vector3f(
                 (float) section.getDouble("scale_x", DEFAULT_SCALE.x),
@@ -112,10 +112,12 @@ public class DisplayHologramData extends HologramData {
             case "horizontal" -> Display.Billboard.HORIZONTAL;
             default -> Display.Billboard.CENTER;
         };
+
+        return true;
     }
 
     @Override
-    public void write(ConfigurationSection section, String name) {
+    public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("scale_x", scale.x);
         section.set("scale_y", scale.y);
@@ -123,6 +125,8 @@ public class DisplayHologramData extends HologramData {
         section.set("shadow_radius", shadowRadius);
         section.set("shadow_strength", shadowStrength);
         section.set("billboard", billboard != Display.Billboard.CENTER ? billboard.name().toLowerCase(Locale.ROOT) : null);
+
+        return true;
     }
 
     @Override
