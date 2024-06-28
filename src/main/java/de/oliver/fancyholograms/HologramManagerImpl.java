@@ -135,8 +135,14 @@ public final class HologramManagerImpl implements HologramManager {
         plugin.getHologramStorage().saveBatch(getPersistentHolograms(), true);
     }
 
+    @Override
     public void loadHolograms() {
         plugin.getHologramStorage().loadAll().forEach(this::addHologram);
+        isLoaded = true;
+    }
+
+    public void loadHolograms(String world) {
+        plugin.getHologramStorage().loadAll(world).forEach(this::addHologram);
         isLoaded = true;
     }
 
@@ -200,17 +206,30 @@ public final class HologramManagerImpl implements HologramManager {
      * Reloads holograms by clearing the existing holograms and loading them again from the plugin's configuration.
      */
     public void reloadHolograms() {
-        clearHolograms();
+        unloadHolograms();
         loadHolograms();
     }
 
-    private void clearHolograms() {
+    public void unloadHolograms() {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
 
         FancyHolograms.get().getHologramThread().submit(() -> {
             for (final var hologram : this.getPersistentHolograms()) {
                 this.holograms.remove(hologram.getName());
                 online.forEach(hologram::forceHideHologram);
+            }
+        });
+    }
+
+    public void unloadHolograms(String world) {
+        final var online = List.copyOf(Bukkit.getOnlinePlayers());
+
+        FancyHolograms.get().getHologramThread().submit(() -> {
+            for (final var hologram : this.getPersistentHolograms()) {
+                if (hologram.getData().getLocation().getWorld().getName().equals(world)) {
+                    this.holograms.remove(hologram.getName());
+                    online.forEach(hologram::forceHideHologram);
+                }
             }
         });
     }
