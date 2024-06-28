@@ -160,6 +160,7 @@ public class FlatFileHologramStorage implements HologramStorage {
 
                 Hologram hologram = FancyHolograms.get().getHologramManager().create(displayData);
                 holograms.add(hologram);
+                System.out.println("Loaded hologram " + hologram.getData().getName());
             }
 
             return holograms;

@@ -7,6 +7,7 @@ import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -137,7 +138,9 @@ public final class HologramManagerImpl implements HologramManager {
 
     @Override
     public void loadHolograms() {
-        plugin.getHologramStorage().loadAll().forEach(this::addHologram);
+        for (World world : Bukkit.getWorlds()) {
+            plugin.getHologramStorage().loadAll(world.getName()).forEach(this::addHologram);
+        }
         isLoaded = true;
     }
 
@@ -225,11 +228,15 @@ public final class HologramManagerImpl implements HologramManager {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
 
         FancyHolograms.get().getHologramThread().submit(() -> {
-            for (final var hologram : this.getPersistentHolograms()) {
-                if (hologram.getData().getLocation().getWorld().getName().equals(world)) {
-                    this.holograms.remove(hologram.getName());
-                    online.forEach(hologram::forceHideHologram);
-                }
+            List<Hologram> h = getPersistentHolograms().stream()
+                    .filter(hologram -> hologram.getData().getLocation().getWorld().getName().equals(world))
+                    .toList();
+
+            FancyHolograms.get().getHologramStorage().saveBatch(h, true);
+
+            for (final Hologram hologram : h) {
+                this.holograms.remove(hologram.getName());
+                online.forEach(hologram::forceHideHologram);
             }
         });
     }
