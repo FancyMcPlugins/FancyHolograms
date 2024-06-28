@@ -5,7 +5,7 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.api.data.*;
-import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
+import de.oliver.fancyholograms.api.data.property.Visibility;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
