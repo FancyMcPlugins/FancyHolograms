@@ -55,12 +55,14 @@ public class ListCMD implements Subcommand {
                         }
 
                         MessageHelper.info(player,
-                                "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'%s'> - %s (%s/%s/%s)</click></hover>"
+                                "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'%s'> - %s (%s/%s/%s in %s)</click></hover>"
                                         .formatted("/hologram teleport " + holo.getData().getName(),
                                                 holo.getData().getName(),
                                                 Constants.DECIMAL_FORMAT.format(location.x()),
                                                 Constants.DECIMAL_FORMAT.format(location.y()),
-                                                Constants.DECIMAL_FORMAT.format(location.z())));
+                                                Constants.DECIMAL_FORMAT.format(location.z()),
+                                                location.getWorld().getName()
+                                        ));
                     });
 
         }
