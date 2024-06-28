@@ -1,32 +1,30 @@
 package de.oliver.fancyholograms.storage;
 
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.HologramStorage;
+import de.oliver.fancyholograms.api.data.BlockHologramData;
+import de.oliver.fancyholograms.api.data.DisplayHologramData;
+import de.oliver.fancyholograms.api.data.ItemHologramData;
+import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
-import de.oliver.fancyholograms.api.data.*;
-import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Display;
-import org.bukkit.entity.TextDisplay;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class FlatFileHologramStorage implements HologramStorage {
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private static final File DEPRECATED_CONFIG_FILE = new File("plugins/FancyHolograms/config.yml");
     private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
 
     @Override
@@ -95,24 +93,7 @@ public class FlatFileHologramStorage implements HologramStorage {
 
     @Override
     public Collection<Hologram> loadAll() {
-        // try to load holograms from config.yml but then remove from there
-        final List<Hologram> holograms = new LinkedList<>();
-
-        YamlConfiguration pluginConfig = YamlConfiguration.loadConfiguration(FlatFileHologramStorage.DEPRECATED_CONFIG_FILE);
-        if (pluginConfig.isConfigurationSection("holograms")) {
-            holograms.addAll(readHolograms(FlatFileHologramStorage.DEPRECATED_CONFIG_FILE));
-            pluginConfig.set("holograms", null);
-
-            try {
-                pluginConfig.save(FlatFileHologramStorage.DEPRECATED_CONFIG_FILE);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        holograms.addAll(readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE));
-
-        return holograms;
+        return readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE);
     }
 
     private List<Hologram> readHolograms(File configFile) {
@@ -125,6 +106,10 @@ public class FlatFileHologramStorage implements HologramStorage {
             }
 
             int configVersion = config.getInt("version", 1);
+            if (configVersion != 2) {
+                FancyHolograms.get().getLogger().warning("Config version is not 2, skipping loading holograms");
+                return new ArrayList<>(0);
+            }
 
             List<Hologram> holograms = new ArrayList<>();
 
@@ -133,13 +118,6 @@ public class FlatFileHologramStorage implements HologramStorage {
                 ConfigurationSection holoSection = hologramsSection.getConfigurationSection(name);
                 if (holoSection == null) {
                     FancyHolograms.get().getLogger().warning("Could not load hologram section in config");
-                    continue;
-                }
-
-                if (configVersion == 1) {
-                    HologramData data = Legacy.readHologram(name, holoSection);
-                    Hologram hologram = FancyHolograms.get().getHologramManager().create(data);
-                    holograms.add(hologram);
                     continue;
                 }
 
@@ -205,91 +183,5 @@ public class FlatFileHologramStorage implements HologramStorage {
                 lock.writeLock().unlock();
             }
         });
-    }
-
-    static class Legacy {
-        public static HologramData readHologram(String name, ConfigurationSection config) {
-            final var world = config.getString("location.world", "world");
-            final var x = config.getDouble("location.x", 0.0);
-            final var y = config.getDouble("location.y", 0.0);
-            final var z = config.getDouble("location.z", 0.0);
-            final var yaw = config.getDouble("location.yaw", 0.0);
-            final var pitch = config.getDouble("location.pitch", 0.0);
-
-            final var location = new Location(Bukkit.getWorld(world), x, y, z, ((float) yaw), ((float) pitch));
-
-            final var text = config.getStringList("text");
-            final var textHasShadow = config.getBoolean("text_shadow", TextHologramData.DEFAULT_TEXT_SHADOW_STATE);
-            final var isSeeThrough = config.getBoolean("see_through", TextHologramData.DEFAULT_SEE_THROUGH);
-            final var textUpdateInterval = config.getInt("update_text_interval", TextHologramData.DEFAULT_TEXT_UPDATE_INTERVAL);
-            final var visibilityDistance = config.getInt("visibility_distance", DisplayHologramData.DEFAULT_VISIBILITY_DISTANCE);
-            final var scaleX = config.getDouble("scale_x", 1);
-            final var scaleY = config.getDouble("scale_y", 1);
-            final var scaleZ = config.getDouble("scale_z", 1);
-            final var shadowRadius = config.getDouble("shadow_radius", DisplayHologramData.DEFAULT_SHADOW_RADIUS);
-            final var shadowStrength = config.getDouble("shadow_strength", DisplayHologramData.DEFAULT_SHADOW_STRENGTH);
-            final var backgroundName = config.getString("background");
-            final var billboardName = config.getString("billboard", DisplayHologramData.DEFAULT_BILLBOARD.name());
-            final var textAlignmentName = config.getString("text_alignment", TextHologramData.DEFAULT_TEXT_ALIGNMENT.name());
-            final var linkedNpc = config.getString("linkedNpc");
-
-
-            final var visibility = Optional.ofNullable(config.getString("visibility"))
-                    .flatMap(Visibility::byString)
-                    .orElseGet(() -> {
-                        final var visibleByDefault = config.getBoolean("visible_by_default", HologramData.DEFAULT_IS_VISIBLE);
-                        if (config.contains("visible_by_default")) {
-                            config.set("visible_by_default", null);
-                        }
-                        if (visibleByDefault) {
-                            return Visibility.ALL;
-                        } else {
-                            return Visibility.PERMISSION_REQUIRED;
-                        }
-                    });
-
-            final var billboard = switch (billboardName.toLowerCase(Locale.ROOT)) {
-                case "fixed" -> Display.Billboard.FIXED;
-                case "vertical" -> Display.Billboard.VERTICAL;
-                case "horizontal" -> Display.Billboard.HORIZONTAL;
-                default -> Display.Billboard.CENTER;
-            };
-
-            final var textAlignment = switch (textAlignmentName.toLowerCase(Locale.ROOT)) {
-                case "right" -> TextDisplay.TextAlignment.RIGHT;
-                case "left" -> TextDisplay.TextAlignment.LEFT;
-                default -> TextDisplay.TextAlignment.CENTER;
-            };
-
-            Color background = null;
-            if (backgroundName != null) {
-                if (backgroundName.equalsIgnoreCase("transparent")) {
-                    background = Hologram.TRANSPARENT;
-                } else if (backgroundName.startsWith("#")) {
-                    background = Color.fromARGB((int)Long.parseLong(backgroundName.substring(1), 16));
-                } else {
-                    NamedTextColor named = NamedTextColor.NAMES.value(backgroundName.toLowerCase(Locale.ROOT).trim().replace(' ', '_'));
-                    background = named == null ? null : Color.fromARGB(named.value());
-                }
-            }
-
-            TextHologramData textHologramData = new TextHologramData(name, location);
-            textHologramData
-                .setText(text)
-                .setBackground(background)
-                .setTextAlignment(textAlignment)
-                .setTextShadow(textHasShadow)
-                .setSeeThrough(isSeeThrough)
-                .setTextUpdateInterval(textUpdateInterval)
-                .setScale(new Vector3f((float) scaleX, (float) scaleY, (float) scaleZ))
-                .setShadowRadius((float) shadowRadius)
-                .setShadowStrength((float) shadowStrength)
-                .setBillboard(billboard)
-                .setVisibilityDistance(visibilityDistance)
-                .setVisibility(visibility)
-                .setLinkedNpcName(linkedNpc);
-
-            return textHologramData;
-        }
     }
 }
