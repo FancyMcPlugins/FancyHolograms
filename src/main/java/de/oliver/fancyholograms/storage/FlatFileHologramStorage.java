@@ -133,15 +133,22 @@ public class FlatFileHologramStorage implements HologramStorage {
                     continue;
                 }
 
-                DisplayHologramData displayData = null;
+                HologramData hologramData;
                 switch (type) {
-                    case TEXT -> displayData = new TextHologramData(name, new Location(null, 0, 0, 0));
-                    case ITEM -> displayData = new ItemHologramData(name, new Location(null, 0, 0, 0));
-                    case BLOCK -> displayData = new BlockHologramData(name, new Location(null, 0, 0, 0));
+                    case TEXT -> hologramData = new TextHologramData(name, new Location(null, 0, 0, 0));
+                    case ITEM -> hologramData = new ItemHologramData(name, new Location(null, 0, 0, 0));
+                    case BLOCK -> hologramData = new BlockHologramData(name, new Location(null, 0, 0, 0));
+                    case DROPPED_ITEM -> hologramData = new DroppedItemHologramData(name, new Location(null, 0, 0, 0));
+                    default -> hologramData = null;
                 }
-                displayData.read(holoSection, name);
 
-                Hologram hologram = FancyHolograms.get().getHologramManager().create(displayData);
+                if (hologramData == null) {
+                    continue;
+                }
+
+                hologramData.read(holoSection, name);
+
+                Hologram hologram = FancyHolograms.get().getHologramManager().create(hologramData);
                 holograms.add(hologram);
             }
 
