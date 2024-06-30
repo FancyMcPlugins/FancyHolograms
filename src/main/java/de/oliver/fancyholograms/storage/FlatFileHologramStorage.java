@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -93,10 +94,18 @@ public class FlatFileHologramStorage implements HologramStorage {
 
     @Override
     public Collection<Hologram> loadAll() {
-        return readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE);
+        return readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE, null);
     }
 
-    private List<Hologram> readHolograms(File configFile) {
+    @Override
+    public Collection<Hologram> loadAll(String world) {
+        return readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE, world);
+    }
+
+    /**
+     * @param world The world to load the holograms from. (null for all worlds)
+     */
+    private List<Hologram> readHolograms(@NotNull File configFile, @Nullable String world) {
         lock.readLock().lock();
         try {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -121,6 +130,10 @@ public class FlatFileHologramStorage implements HologramStorage {
                     continue;
                 }
 
+                if (world != null && !holoSection.getString("location.world").equals(world)) {
+                    continue;
+                }
+
                 String typeName = holoSection.getString("type");
                 if (typeName == null) {
                     FancyHolograms.get().getLogger().warning("HologramType was not saved");
@@ -139,7 +152,11 @@ public class FlatFileHologramStorage implements HologramStorage {
                     case ITEM -> displayData = new ItemHologramData(name, new Location(null, 0, 0, 0));
                     case BLOCK -> displayData = new BlockHologramData(name, new Location(null, 0, 0, 0));
                 }
-                displayData.read(holoSection, name);
+
+                if (!displayData.read(holoSection, name)) {
+                    FancyHolograms.get().getLogger().warning("Could not read hologram data - skipping hologram");
+                    continue;
+                }
 
                 Hologram hologram = FancyHolograms.get().getHologramManager().create(displayData);
                 holograms.add(hologram);

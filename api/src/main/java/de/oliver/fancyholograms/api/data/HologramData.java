@@ -7,7 +7,6 @@ import de.oliver.fancylib.FancyLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.WorldCreator;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -126,7 +125,7 @@ public class HologramData implements YamlData {
     }
 
     @Override
-    public void read(ConfigurationSection section, String name) {
+    public boolean read(ConfigurationSection section, String name) {
         String worldName = section.getString("location.world", "world");
         float x = (float) section.getDouble("location.x", 0);
         float y = (float) section.getDouble("location.y", 0);
@@ -136,13 +135,8 @@ public class HologramData implements YamlData {
 
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
-            FancyLib.getPlugin().getLogger().info("Trying to load the world: '" + worldName + "'");
-            world = new WorldCreator(worldName).createWorld();
-        }
-
-        if (world == null) {
             FancyLib.getPlugin().getLogger().info("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
-            return;
+            return false;
         }
 
         location = new Location(world, x, y, z, yaw, pitch);
@@ -154,10 +148,12 @@ public class HologramData implements YamlData {
                     return visibleByDefault ? Visibility.ALL : Visibility.PERMISSION_REQUIRED;
                 });
         linkedNpcName = section.getString("linkedNpc");
+
+        return true;
     }
 
     @Override
-    public void write(ConfigurationSection section, String name) {
+    public boolean write(ConfigurationSection section, String name) {
         section.set("type", type.name());
         section.set("location.world", location.getWorld().getName());
         section.set("location.x", location.x());
@@ -170,6 +166,8 @@ public class HologramData implements YamlData {
         section.set("visibility", visibility.name());
         section.set("persistent", persistent);
         section.set("linkedNpc", linkedNpcName);
+
+        return true;
     }
 
     public HologramData copy(String name) {

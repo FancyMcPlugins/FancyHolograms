@@ -13,6 +13,7 @@ import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.hologram.version.*;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
+import de.oliver.fancyholograms.listeners.WorldListener;
 import de.oliver.fancyholograms.storage.FlatFileHologramStorage;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
@@ -247,6 +248,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new WorldListener(), this);
 
         if (isUsingFancyNpcs()) {
             getServer().getPluginManager().registerEvents(new NpcListener(this), this);

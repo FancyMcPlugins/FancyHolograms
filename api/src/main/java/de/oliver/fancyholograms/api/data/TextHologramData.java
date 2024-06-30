@@ -107,11 +107,12 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     @Override
-    public void read(ConfigurationSection section, String name) {
+    public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         text = section.getStringList("text");
         if (text.isEmpty()) {
             text = List.of("Could not load hologram text");
+            //TODO: maybe return false here?
         }
 
         textShadow = section.getBoolean("text_shadow", DEFAULT_TEXT_SHADOW_STATE);
@@ -138,10 +139,12 @@ public class TextHologramData extends DisplayHologramData {
                 background = Color.fromARGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value() | 0xC8000000);
             }
         }
+
+        return true;
     }
 
     @Override
-    public void write(ConfigurationSection section, String name) {
+    public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("text", text);
         section.set("text_shadow", textShadow);
@@ -160,6 +163,8 @@ public class TextHologramData extends DisplayHologramData {
         }
 
         section.set("background", color);
+
+        return true;
     }
 
     @Override

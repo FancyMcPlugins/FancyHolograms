@@ -32,15 +32,19 @@ public class ItemHologramData extends DisplayHologramData {
     }
 
     @Override
-    public void read(ConfigurationSection section, String name) {
+    public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         item = section.getItemStack("item", DEFAULT_ITEM);
+
+        return true;
     }
 
     @Override
-    public void write(ConfigurationSection section, String name) {
+    public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("item", item);
+
+        return true;
     }
 
     @Override
