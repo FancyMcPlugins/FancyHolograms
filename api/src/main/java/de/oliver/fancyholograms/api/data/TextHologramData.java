@@ -41,8 +41,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setText(List<String> text) {
-        this.text = text;
-        setHasChanges(true);
+        if (!this.text.equals(text)) {
+            this.text = text;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -61,8 +64,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setBackground(Color background) {
-        this.background = background;
-        setHasChanges(true);
+        if (!this.background.equals(background)) {
+            this.background = background;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -71,8 +77,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setTextAlignment(TextDisplay.TextAlignment textAlignment) {
-        this.textAlignment = textAlignment;
-        setHasChanges(true);
+        if (!this.textAlignment.equals(textAlignment)) {
+            this.textAlignment = textAlignment;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -81,8 +90,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setTextShadow(boolean textShadow) {
-        this.textShadow = textShadow;
-        setHasChanges(true);
+        if (this.textShadow != textShadow) {
+            this.textShadow = textShadow;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -91,8 +103,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setSeeThrough(boolean seeThrough) {
-        this.seeThrough = seeThrough;
-        setHasChanges(true);
+        if (this.seeThrough != seeThrough) {
+            this.seeThrough = seeThrough;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -101,8 +116,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setTextUpdateInterval(int textUpdateInterval) {
-        this.textUpdateInterval = textUpdateInterval;
-        setHasChanges(true);
+        if (this.textUpdateInterval != textUpdateInterval) {
+            this.textUpdateInterval = textUpdateInterval;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
