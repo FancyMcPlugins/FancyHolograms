@@ -142,11 +142,15 @@ public final class HologramManagerImpl implements HologramManager {
             plugin.getHologramStorage().loadAll(world.getName()).forEach(this::addHologram);
         }
         isLoaded = true;
+
+        FancyHolograms.get().getLogger().info("Loaded holograms for all worlds");
     }
 
     public void loadHolograms(String world) {
         plugin.getHologramStorage().loadAll(world).forEach(this::addHologram);
         isLoaded = true;
+
+        FancyHolograms.get().getLogger().info("Loaded holograms for world " + world);
     }
 
     /**
