@@ -11,6 +11,7 @@ import org.bukkit.entity.TextDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class TextHologramData extends DisplayHologramData {
 
@@ -41,7 +42,7 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setText(List<String> text) {
-        if (!this.text.equals(text)) {
+        if (!Objects.equals(this.text, text)) {
             this.text = text;
             setHasChanges(true);
         }
@@ -64,7 +65,7 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setBackground(Color background) {
-        if (!this.background.equals(background)) {
+        if (!Objects.equals(this.background, background)) {
             this.background = background;
             setHasChanges(true);
         }
@@ -77,7 +78,7 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setTextAlignment(TextDisplay.TextAlignment textAlignment) {
-        if (!this.textAlignment.equals(textAlignment)) {
+        if (!Objects.equals(this.textAlignment, textAlignment)) {
             this.textAlignment = textAlignment;
             setHasChanges(true);
         }
