@@ -48,7 +48,8 @@ public final class HologramManagerImpl implements HologramManager {
      * @return A read-only collection of loaded holograms.
      */
     @Override
-    public @NotNull @UnmodifiableView Collection<Hologram> getHolograms() {
+    public @NotNull
+    @UnmodifiableView Collection<Hologram> getHolograms() {
         return Collections.unmodifiableCollection(this.holograms.values());
     }
 
@@ -102,15 +103,15 @@ public final class HologramManagerImpl implements HologramManager {
         Optional<Hologram> optionalHologram = Optional.ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
 
         optionalHologram.ifPresent(hologram -> {
-                    for (UUID viewer : hologram.getViewers()) {
-                        Player player = Bukkit.getPlayer(viewer);
-                        if (player != null) {
-                            FancyHolograms.get().getHologramThread().submit(() -> hologram.forceHideHologram(player));
-                        }
+                for (UUID viewer : hologram.getViewers()) {
+                    Player player = Bukkit.getPlayer(viewer);
+                    if (player != null) {
+                        FancyHolograms.get().getHologramThread().submit(() -> hologram.forceHideHologram(player));
                     }
-
-                    FancyHolograms.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram));
                 }
+
+                FancyHolograms.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram));
+            }
         );
 
         return optionalHologram;
@@ -160,7 +161,7 @@ public final class HologramManagerImpl implements HologramManager {
      */
     void initializeTasks() {
         ScheduledExecutorService hologramThread = plugin.getHologramThread();
-        hologramThread.schedule(() -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             loadHolograms();
 
             hologramThread.scheduleAtFixedRate(() -> {
@@ -170,11 +171,11 @@ public final class HologramManagerImpl implements HologramManager {
                     }
                 }
             }, 0, 1, TimeUnit.SECONDS);
-        }, 6, TimeUnit.SECONDS);
+        });
 
         final var updateTimes = CacheBuilder.newBuilder()
-                .expireAfterAccess(Duration.ofMinutes(5))
-                .<String, Long>build();
+            .expireAfterAccess(Duration.ofMinutes(5))
+            .<String, Long>build();
 
         hologramThread.scheduleAtFixedRate(() -> {
             final var time = System.currentTimeMillis();
@@ -233,8 +234,8 @@ public final class HologramManagerImpl implements HologramManager {
 
         FancyHolograms.get().getHologramThread().submit(() -> {
             List<Hologram> h = getPersistentHolograms().stream()
-                    .filter(hologram -> hologram.getData().getLocation().getWorld().getName().equals(world))
-                    .toList();
+                .filter(hologram -> hologram.getData().getLocation().getWorld().getName().equals(world))
+                .toList();
 
             FancyHolograms.get().getHologramStorage().saveBatch(h, true);
 
