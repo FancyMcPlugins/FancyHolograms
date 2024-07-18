@@ -116,7 +116,7 @@ public abstract class Hologram {
         show(player);
 
         if (this.getData().getVisibility().equals(Visibility.MANUAL)) {
-            Visibility.ManualVisibility.removeDistantViewer(this, player.getUniqueId());
+            Visibility.ManualVisibility.addDistantViewer(this, player.getUniqueId());
         }
     }
 
