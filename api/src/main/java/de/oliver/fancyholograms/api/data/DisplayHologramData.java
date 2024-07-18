@@ -7,6 +7,7 @@ import org.bukkit.entity.Display;
 import org.joml.Vector3f;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class DisplayHologramData extends HologramData {
 
@@ -38,7 +39,7 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setBillboard(Display.Billboard billboard) {
-        if (!this.billboard.equals(billboard)) {
+        if (!Objects.equals(this.billboard, billboard)) {
             this.billboard = billboard;
             setHasChanges(true);
         }
@@ -51,7 +52,7 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setScale(Vector3f scale) {
-        if (!this.scale.equals(scale)) {
+        if (!Objects.equals(this.scale, scale)) {
             this.scale = scale;
             setHasChanges(true);
         }
@@ -64,7 +65,7 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setTranslation(Vector3f translation) {
-        if (!this.translation.equals(translation)) {
+        if (!Objects.equals(this.translation, translation)) {
             this.translation = translation;
             setHasChanges(true);
         }
@@ -77,7 +78,7 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setBrightness(Display.Brightness brightness) {
-        if (!this.brightness.equals(brightness)) {
+        if (!Objects.equals(this.brightness, brightness)) {
             this.brightness = brightness;
             setHasChanges(true);
         }

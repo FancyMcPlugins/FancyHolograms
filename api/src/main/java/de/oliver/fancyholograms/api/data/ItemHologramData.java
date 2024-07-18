@@ -6,6 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
+
 public class ItemHologramData extends DisplayHologramData {
 
     public static final ItemStack DEFAULT_ITEM = new ItemStack(Material.APPLE);
@@ -26,7 +28,7 @@ public class ItemHologramData extends DisplayHologramData {
     }
 
     public ItemHologramData setItemStack(ItemStack item) {
-        if (!this.item.equals(item)) {
+        if (!Objects.equals(this.item, item)) {
             this.item = item;
             setHasChanges(true);
         }

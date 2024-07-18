@@ -11,6 +11,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class HologramData implements YamlData {
@@ -100,7 +101,7 @@ public class HologramData implements YamlData {
      * Set the type of visibility for the hologram.
      */
     public HologramData setVisibility(Visibility visibility) {
-        if (!this.visibility.equals(visibility)) {
+        if (!Objects.equals(this.visibility, visibility)) {
             this.visibility = visibility;
             setHasChanges(true);
         }
@@ -122,7 +123,7 @@ public class HologramData implements YamlData {
     }
 
     public HologramData setLinkedNpcName(String linkedNpcName) {
-        if (!this.linkedNpcName.equals(linkedNpcName)) {
+        if (!Objects.equals(this.linkedNpcName, linkedNpcName)) {
             this.linkedNpcName = linkedNpcName;
             setHasChanges(true);
         }
