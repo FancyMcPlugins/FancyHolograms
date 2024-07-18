@@ -29,9 +29,17 @@ public interface HologramStorage {
     void delete(Hologram hologram);
 
     /**
-     * Loads all holograms.
+     * Loads all holograms from all worlds
      *
      * @return A collection of all loaded holograms.
      */
     Collection<Hologram> loadAll();
+
+    /**
+     * Loads all holograms from a specific world
+     *
+     * @param world The world to load the holograms from.
+     * @return A collection of all loaded holograms.
+     */
+    Collection<Hologram> loadAll(String world);
 }

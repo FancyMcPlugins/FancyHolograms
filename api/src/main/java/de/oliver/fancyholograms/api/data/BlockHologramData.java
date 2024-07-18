@@ -5,6 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Objects;
+
 public class BlockHologramData extends DisplayHologramData {
 
     public static Material DEFAULT_BLOCK = Material.GRASS_BLOCK;
@@ -25,21 +27,28 @@ public class BlockHologramData extends DisplayHologramData {
     }
 
     public BlockHologramData setBlock(Material block) {
-        this.block = block;
-        setHasChanges(true);
+        if (!Objects.equals(this.block, block)) {
+            this.block = block;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
     @Override
-    public void read(ConfigurationSection section, String name) {
+    public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         block = Material.getMaterial(section.getString("block", "GRASS_BLOCK").toUpperCase());
+
+        return true;
     }
 
     @Override
-    public void write(ConfigurationSection section, String name) {
+    public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("block", block.name());
+
+        return true;
     }
 
     @Override

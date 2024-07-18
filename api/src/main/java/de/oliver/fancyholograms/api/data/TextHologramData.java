@@ -11,6 +11,7 @@ import org.bukkit.entity.TextDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class TextHologramData extends DisplayHologramData {
 
@@ -41,8 +42,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setText(List<String> text) {
-        this.text = text;
-        setHasChanges(true);
+        if (!Objects.equals(this.text, text)) {
+            this.text = text;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -61,8 +65,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setBackground(Color background) {
-        this.background = background;
-        setHasChanges(true);
+        if (!Objects.equals(this.background, background)) {
+            this.background = background;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -71,8 +78,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setTextAlignment(TextDisplay.TextAlignment textAlignment) {
-        this.textAlignment = textAlignment;
-        setHasChanges(true);
+        if (!Objects.equals(this.textAlignment, textAlignment)) {
+            this.textAlignment = textAlignment;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -81,8 +91,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setTextShadow(boolean textShadow) {
-        this.textShadow = textShadow;
-        setHasChanges(true);
+        if (this.textShadow != textShadow) {
+            this.textShadow = textShadow;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -91,8 +104,11 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setSeeThrough(boolean seeThrough) {
-        this.seeThrough = seeThrough;
-        setHasChanges(true);
+        if (this.seeThrough != seeThrough) {
+            this.seeThrough = seeThrough;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -101,20 +117,25 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     public TextHologramData setTextUpdateInterval(int textUpdateInterval) {
-        this.textUpdateInterval = textUpdateInterval;
-        setHasChanges(true);
+        if (this.textUpdateInterval != textUpdateInterval) {
+            this.textUpdateInterval = textUpdateInterval;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
     @Override
-    public void read(ConfigurationSection section, String name) {
+    public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         text = section.getStringList("text");
         if (text.isEmpty()) {
             text = List.of("Could not load hologram text");
+            //TODO: maybe return false here?
         }
 
-        textShadow = section.getBoolean("text_shadow", false);
+        textShadow = section.getBoolean("text_shadow", DEFAULT_TEXT_SHADOW_STATE);
+        seeThrough = section.getBoolean("see_through", DEFAULT_SEE_THROUGH);
         textUpdateInterval = section.getInt("update_text_interval", DEFAULT_TEXT_UPDATE_INTERVAL);
 
         String textAlignmentStr = section.getString("text_alignment", DEFAULT_TEXT_ALIGNMENT.name().toLowerCase());
@@ -137,10 +158,12 @@ public class TextHologramData extends DisplayHologramData {
                 background = Color.fromARGB(NamedTextColor.NAMES.value(backgroundStr.toLowerCase(Locale.ROOT).trim().replace(' ', '_')).value() | 0xC8000000);
             }
         }
+
+        return true;
     }
 
     @Override
-    public void write(ConfigurationSection section, String name) {
+    public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("text", text);
         section.set("text_shadow", textShadow);
@@ -159,6 +182,8 @@ public class TextHologramData extends DisplayHologramData {
         }
 
         section.set("background", color);
+
+        return true;
     }
 
     @Override

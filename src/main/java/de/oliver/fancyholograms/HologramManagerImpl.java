@@ -7,6 +7,7 @@ import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
@@ -135,9 +136,21 @@ public final class HologramManagerImpl implements HologramManager {
         plugin.getHologramStorage().saveBatch(getPersistentHolograms(), true);
     }
 
+    @Override
     public void loadHolograms() {
-        plugin.getHologramStorage().loadAll().forEach(this::addHologram);
+        for (World world : Bukkit.getWorlds()) {
+            plugin.getHologramStorage().loadAll(world.getName()).forEach(this::addHologram);
+        }
         isLoaded = true;
+
+        FancyHolograms.get().getLogger().info("Loaded holograms for all worlds");
+    }
+
+    public void loadHolograms(String world) {
+        plugin.getHologramStorage().loadAll(world).forEach(this::addHologram);
+        isLoaded = true;
+
+        FancyHolograms.get().getLogger().info("Loaded holograms for world " + world);
     }
 
     /**
@@ -200,17 +213,36 @@ public final class HologramManagerImpl implements HologramManager {
      * Reloads holograms by clearing the existing holograms and loading them again from the plugin's configuration.
      */
     public void reloadHolograms() {
-        clearHolograms();
+        unloadHolograms();
         loadHolograms();
     }
 
-    private void clearHolograms() {
+    public void unloadHolograms() {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
 
-        for (final var hologram : this.getPersistentHolograms()) {
-            this.holograms.remove(hologram.getName());
-            hologram.hideHologram(online);
-        }
+        FancyHolograms.get().getHologramThread().submit(() -> {
+            for (final var hologram : this.getPersistentHolograms()) {
+                this.holograms.remove(hologram.getName());
+                online.forEach(hologram::forceHideHologram);
+            }
+        });
+    }
+
+    public void unloadHolograms(String world) {
+        final var online = List.copyOf(Bukkit.getOnlinePlayers());
+
+        FancyHolograms.get().getHologramThread().submit(() -> {
+            List<Hologram> h = getPersistentHolograms().stream()
+                    .filter(hologram -> hologram.getData().getLocation().getWorld().getName().equals(world))
+                    .toList();
+
+            FancyHolograms.get().getHologramStorage().saveBatch(h, true);
+
+            for (final Hologram hologram : h) {
+                this.holograms.remove(hologram.getName());
+                online.forEach(hologram::forceHideHologram);
+            }
+        });
     }
 
     /**

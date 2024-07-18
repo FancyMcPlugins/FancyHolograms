@@ -7,6 +7,7 @@ import org.bukkit.entity.Display;
 import org.joml.Vector3f;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class DisplayHologramData extends HologramData {
 
@@ -38,8 +39,11 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setBillboard(Display.Billboard billboard) {
-        this.billboard = billboard;
-        setHasChanges(true);
+        if (!Objects.equals(this.billboard, billboard)) {
+            this.billboard = billboard;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -48,8 +52,11 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setScale(Vector3f scale) {
-        this.scale = scale;
-        setHasChanges(true);
+        if (!Objects.equals(this.scale, scale)) {
+            this.scale = scale;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -58,8 +65,11 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setTranslation(Vector3f translation) {
-        this.translation = translation;
-        setHasChanges(true);
+        if (!Objects.equals(this.translation, translation)) {
+            this.translation = translation;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -68,8 +78,11 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setBrightness(Display.Brightness brightness) {
-        this.brightness = brightness;
-        setHasChanges(true);
+        if (!Objects.equals(this.brightness, brightness)) {
+            this.brightness = brightness;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -78,8 +91,11 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setShadowRadius(float shadowRadius) {
-        this.shadowRadius = shadowRadius;
-        setHasChanges(true);
+        if (this.shadowRadius != shadowRadius) {
+            this.shadowRadius = shadowRadius;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
@@ -88,13 +104,16 @@ public class DisplayHologramData extends HologramData {
     }
 
     public DisplayHologramData setShadowStrength(float shadowStrength) {
-        this.shadowStrength = shadowStrength;
-        setHasChanges(true);
+        if (this.shadowStrength != shadowStrength) {
+            this.shadowStrength = shadowStrength;
+            setHasChanges(true);
+        }
+
         return this;
     }
 
     @Override
-    public void read(ConfigurationSection section, String name) {
+    public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         scale = new Vector3f(
                 (float) section.getDouble("scale_x", DEFAULT_SCALE.x),
@@ -112,10 +131,12 @@ public class DisplayHologramData extends HologramData {
             case "horizontal" -> Display.Billboard.HORIZONTAL;
             default -> Display.Billboard.CENTER;
         };
+
+        return true;
     }
 
     @Override
-    public void write(ConfigurationSection section, String name) {
+    public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("scale_x", scale.x);
         section.set("scale_y", scale.y);
@@ -123,6 +144,8 @@ public class DisplayHologramData extends HologramData {
         section.set("shadow_radius", shadowRadius);
         section.set("shadow_strength", shadowStrength);
         section.set("billboard", billboard != Display.Billboard.CENTER ? billboard.name().toLowerCase(Locale.ROOT) : null);
+
+        return true;
     }
 
     @Override

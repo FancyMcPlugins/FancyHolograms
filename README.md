@@ -14,8 +14,8 @@
 
 <br />
 
-Simple, lightweight and feature-rich hologram plugin for **[Paper](https://papermc.io/software/paper)** (and *
-*[Folia](https://papermc.io/software/folia)**) servers using **[display entities](https://minecraft.wiki/w/Display)**
+Simple, lightweight and feature-rich hologram plugin for **[Paper](https://papermc.io/software/paper)** (
+and [Folia](https://papermc.io/software/folia)) servers using [display entities](https://minecraft.wiki/w/Display)
 and packets.
 
 </div>
@@ -29,9 +29,9 @@ With this plugin you can create holograms with customizable properties like:
 - **Text Alignment**, **Background Color** and **Shadow**.
 - **Billboard** (fixed, center, horizontal, vertical)
 - **MiniMessage** formatting.
-- Placeholders support through **[PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)** and *
-  *[MiniPlaceholders](https://github.com/MiniPlaceholders/MiniPlaceholders)** integration.
-- **[FancyNpcs](ttps://github.com/FancyMcPlugins/FancyNpcs)** integration.
+- Placeholders support through [PlaceholderAPI](https://github.com/PlaceholderAPI/PlaceholderAPI)
+  and [MiniPlaceholders](https://github.com/MiniPlaceholders/MiniPlaceholders) integration.
+- [FancyNpcs](ttps://github.com/FancyMcPlugins/FancyNpcs) integration.
 - ...and much more!
 
 Check out **[images section](#images)** down below.
@@ -71,8 +71,8 @@ Official documentation is hosted **[here](https://fancyplugins.de/docs/fancyholo
 
 ## Developer API
 
-More information can be found in **[Documentation](https://fancyplugins.de/docs/fh-api.html)** and *
-*[Javadocs](https://fancyplugins.de/javadocs/fancyholograms/)**.
+More information can be found in **[Documentation](https://fancyplugins.de/docs/fh-api.html)**
+and [Javadocs](https://fancyplugins.de/javadocs/fancyholograms/).
 
 ### Maven
 
