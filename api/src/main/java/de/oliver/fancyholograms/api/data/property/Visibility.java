@@ -58,7 +58,7 @@ public enum Visibility {
         }
 
         public static void addDistantViewer(Hologram hologram, UUID uuid) {
-            addDistantViewer(hologram, uuid);
+            addDistantViewer(hologram.getName(), uuid);
         }
 
         public static void addDistantViewer(String hologramName, UUID uuid) {
