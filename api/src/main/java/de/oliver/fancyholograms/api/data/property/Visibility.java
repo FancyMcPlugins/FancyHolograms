@@ -66,7 +66,7 @@ public enum Visibility {
         }
 
         public static void removeDistantViewer(Hologram hologram, UUID uuid) {
-            removeDistantViewer(hologram, uuid);
+            removeDistantViewer(hologram.getName(), uuid);
         }
 
         public static void removeDistantViewer(String hologramName, UUID uuid) {
