@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
+import de.oliver.fancyholograms.api.data.property.Visibility;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;

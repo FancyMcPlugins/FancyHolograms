@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.api.data;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
-import de.oliver.fancyholograms.api.data.property.visibility.Visibility;
+import de.oliver.fancyholograms.api.data.property.Visibility;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancylib.FancyLib;
 import org.bukkit.Bukkit;
@@ -100,10 +100,14 @@ public class HologramData implements YamlData {
     /**
      * Set the type of visibility for the hologram.
      */
-    public HologramData setVisibility(Visibility visibility) {
+    public HologramData setVisibility(@NotNull Visibility visibility) {
         if (!Objects.equals(this.visibility, visibility)) {
             this.visibility = visibility;
             setHasChanges(true);
+          
+            if (this.visibility.equals(Visibility.MANUAL)) {
+                Visibility.ManualVisibility.clear();
+            }
         }
 
         return this;
