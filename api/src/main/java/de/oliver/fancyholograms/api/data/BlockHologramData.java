@@ -5,6 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Objects;
+
 public class BlockHologramData extends DisplayHologramData {
 
     public static Material DEFAULT_BLOCK = Material.GRASS_BLOCK;
@@ -25,7 +27,7 @@ public class BlockHologramData extends DisplayHologramData {
     }
 
     public BlockHologramData setBlock(Material block) {
-        if (!this.block.equals(block)) {
+        if (!Objects.equals(this.block, block)) {
             this.block = block;
             setHasChanges(true);
         }
