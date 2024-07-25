@@ -15,7 +15,7 @@ public final class HologramsLoadedEvent extends Event {
     private final HologramManager manager;
 
     public HologramsLoadedEvent(@NotNull final HologramManager manager) {
-        super(Bukkit.isPrimaryThread());
+        super(!Bukkit.isPrimaryThread());
 
         this.manager = manager;
     }

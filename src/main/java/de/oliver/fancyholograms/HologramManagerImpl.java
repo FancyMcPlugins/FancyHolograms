@@ -144,7 +144,7 @@ public final class HologramManagerImpl implements HologramManager {
         for (World world : Bukkit.getWorlds()) {
             Collection<Hologram> loaded = plugin.getHologramStorage().loadAll(world.getName());
             loaded.forEach(this::addHologram);
-            numLoaded = loaded.size();
+            numLoaded += loaded.size();
         }
         isLoaded = true;
 
