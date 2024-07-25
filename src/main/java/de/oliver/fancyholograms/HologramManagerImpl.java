@@ -139,12 +139,15 @@ public final class HologramManagerImpl implements HologramManager {
 
     @Override
     public void loadHolograms() {
+        int numLoaded = 0;
         for (World world : Bukkit.getWorlds()) {
-            plugin.getHologramStorage().loadAll(world.getName()).forEach(this::addHologram);
+            Collection<Hologram> loaded = plugin.getHologramStorage().loadAll(world.getName());
+            loaded.forEach(this::addHologram);
+            numLoaded = loaded.size();
         }
         isLoaded = true;
 
-        FancyHolograms.get().getLogger().info("Loaded holograms for all worlds");
+        FancyHolograms.get().getLogger().info(String.format("Loaded %s holograms for all worlds", numLoaded));
     }
 
     public void loadHolograms(String world) {

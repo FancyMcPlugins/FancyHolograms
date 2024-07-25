@@ -20,8 +20,8 @@ public class CenterCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-
         Location cloned = hologram.getData().getLocation().clone();
+
         cloned.set(
             Math.floor(cloned.x()) + 0.5,
             cloned.y(),
