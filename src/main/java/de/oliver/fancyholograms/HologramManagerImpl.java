@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms;
 
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.ImmutableList;
 import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
@@ -140,24 +141,30 @@ public final class HologramManagerImpl implements HologramManager {
 
     @Override
     public void loadHolograms() {
-        int numLoaded = 0;
+        List<Hologram> allLoaded = new ArrayList<>();
+
         for (World world : Bukkit.getWorlds()) {
             Collection<Hologram> loaded = plugin.getHologramStorage().loadAll(world.getName());
             loaded.forEach(this::addHologram);
-            numLoaded += loaded.size();
+
+            allLoaded.addAll(loaded);
         }
         isLoaded = true;
 
-        FancyHolograms.get().getLogger().info(String.format("Loaded %s holograms for all worlds", numLoaded));
+        Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(allLoaded)));
 
-        Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(this));
+        FancyHolograms.get().getLogger().info(String.format("Loaded %d holograms for all worlds", allLoaded.size()));
     }
 
     public void loadHolograms(String world) {
-        plugin.getHologramStorage().loadAll(world).forEach(this::addHologram);
+        ImmutableList<Hologram> loaded = ImmutableList.copyOf(plugin.getHologramStorage().loadAll(world));
+        loaded.forEach(this::addHologram);
+
         isLoaded = true;
 
-        FancyHolograms.get().getLogger().info("Loaded holograms for world " + world);
+        Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(loaded)));
+
+        FancyHolograms.get().getLogger().info(String.format("Loaded %d holograms for world %s", loaded.size(), world));
     }
 
     /**
@@ -168,7 +175,10 @@ public final class HologramManagerImpl implements HologramManager {
     void initializeTasks() {
         ScheduledExecutorService hologramThread = plugin.getHologramThread();
         Bukkit.getScheduler().runTask(plugin, () -> {
-            loadHolograms();
+
+            if (!Bukkit.isTickingWorlds()) {
+                loadHolograms();
+            }
 
             hologramThread.scheduleAtFixedRate(() -> {
                 for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
