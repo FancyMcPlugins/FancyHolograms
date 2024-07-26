@@ -18,7 +18,7 @@ public final class HologramsLoadedEvent extends Event {
     private final ImmutableList<Hologram> holograms;
 
     public HologramsLoadedEvent(@NotNull final ImmutableList<Hologram> holograms) {
-        super(!Bukkit.isPrimaryThread());
+        super(true);
 
         this.holograms = holograms;
     }
