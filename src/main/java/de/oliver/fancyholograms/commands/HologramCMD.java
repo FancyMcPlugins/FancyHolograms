@@ -152,7 +152,7 @@ public final class HologramCMD extends Command {
 
             final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
 
-            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "centre", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
+            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
             suggestions.addAll(type.getCommands());
 
             return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT))).toList();
@@ -280,7 +280,7 @@ public final class HologramCMD extends Command {
             case "position", "movehere" -> {
                 return new MoveHereCMD().run(player, hologram, args);
             }
-            case "center", "centre" -> {
+            case "center" -> {
                 return new CenterCMD().run(player, hologram, args);
             }
             case "unlinkwithnpc" -> {
