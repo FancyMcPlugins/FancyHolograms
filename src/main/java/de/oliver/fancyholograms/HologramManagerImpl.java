@@ -175,10 +175,7 @@ public final class HologramManagerImpl implements HologramManager {
     void initializeTasks() {
         ScheduledExecutorService hologramThread = plugin.getHologramThread();
         Bukkit.getScheduler().runTask(plugin, () -> {
-
-            if (!Bukkit.isTickingWorlds()) {
-                loadHolograms();
-            }
+            loadHolograms();
 
             hologramThread.scheduleAtFixedRate(() -> {
                 for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
