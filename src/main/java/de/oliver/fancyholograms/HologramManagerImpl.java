@@ -6,6 +6,7 @@ import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramsLoadedEvent;
+import de.oliver.fancyholograms.api.events.HologramsUnloadedEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
@@ -235,10 +236,15 @@ public final class HologramManagerImpl implements HologramManager {
         final var online = List.copyOf(Bukkit.getOnlinePlayers());
 
         FancyHolograms.get().getHologramThread().submit(() -> {
+            List<Hologram> unloaded = new ArrayList<>();
+
             for (final var hologram : this.getPersistentHolograms()) {
                 this.holograms.remove(hologram.getName());
+                unloaded.add(hologram);
                 online.forEach(hologram::forceHideHologram);
             }
+
+            Bukkit.getPluginManager().callEvent(new HologramsUnloadedEvent(ImmutableList.copyOf(unloaded)));
         });
     }
 
@@ -256,6 +262,8 @@ public final class HologramManagerImpl implements HologramManager {
                 this.holograms.remove(hologram.getName());
                 online.forEach(hologram::forceHideHologram);
             }
+
+            Bukkit.getPluginManager().callEvent(new HologramsUnloadedEvent(ImmutableList.copyOf(h)));
         });
     }
 
