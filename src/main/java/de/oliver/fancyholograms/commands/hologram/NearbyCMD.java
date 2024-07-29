@@ -32,27 +32,28 @@ public class NearbyCMD implements Subcommand {
             return false;
         }
 
-        if (args.length <= 1) {
+
+        if (args.length < 2) {
             MessageHelper.error(player, Constants.INVALID_NEARBY_RANGE);
             return false;
         }
 
-        Optional<Integer> range = NumberHelper.parseInt(args[0]);
+        Optional<Integer> range = NumberHelper.parseInt(args[1]);
 
         if (range.isEmpty()) {
             MessageHelper.error(player, Constants.INVALID_NEARBY_RANGE);
             return false;
         }
 
-        int rangeSquared = range.get() ^ 2;
         Location playerLocation = ((Player) player).getLocation().clone();
 
         List<Map.Entry<Hologram, Double>> nearby = FancyHolograms.get()
             .getHologramsManager()
             .getPersistentHolograms()
             .stream()
+            .filter((holo) -> holo.getData().getLocation().getWorld() == playerLocation.getWorld())
             .map((holo) -> Map.entry(holo, holo.getData().getLocation().distance(playerLocation)))
-            .filter((entry) -> entry.getValue() <= rangeSquared)
+            .filter((entry) -> entry.getValue() <= range.get())
             .sorted(Comparator.comparingInt(a -> a.getValue().intValue()))
             .toList();
 
