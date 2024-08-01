@@ -44,4 +44,6 @@ public enum Constants {
             <%primary_color%>- /hologram edit <hologram> unlinkWithNpc <dark_gray>- <white>Unlinks the hologram with an NPC
             """.replace("%primary_color%", MessageHelper.getPrimaryColor());
 
+    public static final String INVALID_NEARBY_RANGE = "Provide an integer radius to search for holograms nearby.";
+
 }
