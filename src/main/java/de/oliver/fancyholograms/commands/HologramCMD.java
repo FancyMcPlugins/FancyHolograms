@@ -75,7 +75,7 @@ public final class HologramCMD extends Command {
             return new CreateCMD().run(sender, null, args);
         }
 
-        if (args[0].equalsIgnoreCase("near")) {
+        if (args[0].equalsIgnoreCase("nearby")) {
             return new NearbyCMD().run(sender, null, args);
         }
 
@@ -121,7 +121,7 @@ public final class HologramCMD extends Command {
 
         // /holo {tab:action}
         if (args.length == 1) {
-            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy", "info", "near").filter(input -> input.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();
+            return Stream.of("help", "list", "teleport", "create", "remove", "edit", "copy", "info", "nearby").filter(input -> input.startsWith(args[0].toLowerCase(Locale.ROOT))).toList();
         }
 
         // /holo create {tab:type}
