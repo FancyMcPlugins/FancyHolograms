@@ -2,8 +2,8 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Doubles;
 import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancyholograms.util.Constants;
@@ -20,14 +20,14 @@ import java.util.function.Function;
 
 public class MoveHereCMD implements Subcommand {
 
-    public static boolean setLocation(CommandSender sender, Hologram hologram, Location location, boolean applyRotation) {
+    public static boolean setLocation(Player player, Hologram hologram, Location location, boolean applyRotation) {
         final var copied = hologram.getData().copy(hologram.getName());
         final Location newLocation = (applyRotation)
                 ? location
                 : new Location(location.getWorld(), location.x(), location.y(), location.z(), copied.getLocation().getYaw(), copied.getLocation().getPitch());
         copied.setLocation(newLocation);
 
-        if (!HologramCMD.callModificationEvent(hologram, sender, copied, HologramUpdateEvent.HologramModification.POSITION)) {
+        if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.POSITION)) {
             return false;
         }
 
@@ -37,7 +37,7 @@ public class MoveHereCMD implements Subcommand {
             FancyHolograms.get().getHologramStorage().save(hologram);
         }
 
-        MessageHelper.success(sender, "Moved the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
+        MessageHelper.success(player, "Moved the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
                 Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.x()),
                 Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.y()),
                 Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.z()),
