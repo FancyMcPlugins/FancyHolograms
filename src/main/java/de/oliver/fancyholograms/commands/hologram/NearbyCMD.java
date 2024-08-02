@@ -1,6 +1,5 @@
 package de.oliver.fancyholograms.commands.hologram;
 
-import com.mojang.brigadier.Message;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
