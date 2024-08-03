@@ -10,8 +10,6 @@ import de.oliver.fancysitula.api.entities.FS_Display;
 import de.oliver.fancysitula.api.entities.FS_RealPlayer;
 import de.oliver.fancysitula.api.entities.FS_TextDisplay;
 import de.oliver.fancysitula.factories.FancySitula;
-import net.minecraft.util.Brightness;
-import net.minecraft.world.entity.Display.TextDisplay;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,7 +75,7 @@ public final class Hologram1_20_6 extends Hologram {
             // background
             final var background = textData.getBackground();
             if (background == null) {
-                textDisplay.setBackground(TextDisplay.INITIAL_BACKGROUND);
+                textDisplay.setBackground(1073741824); // default background
             } else if (background == Hologram.TRANSPARENT) {
                 textDisplay.setBackground(0);
             } else {
@@ -112,8 +110,7 @@ public final class Hologram1_20_6 extends Hologram {
 
             // brightness
             if (displayData.getBrightness() != null) {
-                Brightness brightness = new Brightness(displayData.getBrightness().getBlockLight(), displayData.getBrightness().getSkyLight());
-                fsDisplay.setBrightnessOverride(brightness.pack());
+                fsDisplay.setBrightnessOverride(displayData.getBrightness().getBlockLight() << 4 | displayData.getBrightness().getSkyLight() << 20);
             }
 
             // entity transformation
