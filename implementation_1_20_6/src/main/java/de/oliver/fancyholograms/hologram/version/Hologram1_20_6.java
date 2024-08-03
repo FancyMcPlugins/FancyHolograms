@@ -1,14 +1,10 @@
 package de.oliver.fancyholograms.hologram.version;
 
-import de.oliver.fancyholograms.api.data.DisplayHologramData;
-import de.oliver.fancyholograms.api.data.HologramData;
-import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.events.HologramHideEvent;
 import de.oliver.fancyholograms.api.events.HologramShowEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import de.oliver.fancysitula.api.entities.FS_Display;
-import de.oliver.fancysitula.api.entities.FS_RealPlayer;
-import de.oliver.fancysitula.api.entities.FS_TextDisplay;
+import de.oliver.fancysitula.api.entities.*;
 import de.oliver.fancysitula.factories.FancySitula;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +33,8 @@ public final class Hologram1_20_6 extends Hologram {
 
         switch (data.getType()) {
             case TEXT -> this.fsDisplay = new FS_TextDisplay();
-//            case BLOCK -> this.display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, world);
-//            case ITEM -> this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, world);
+            case ITEM -> this.fsDisplay = new FS_ItemDisplay();
+            case BLOCK -> this.fsDisplay = new FS_BlockDisplay();
         }
 
         fsDisplay.setTransformationInterpolationDuration(1);
@@ -94,15 +90,15 @@ public final class Hologram1_20_6 extends Hologram {
                     textDisplay.setAlignRight(false);
                 }
             }
+        } else if (fsDisplay instanceof FS_ItemDisplay itemDisplay && data instanceof ItemHologramData itemData) {
+            // item
+            itemDisplay.setItem(itemData.getItemStack());
+        } else if (fsDisplay instanceof FS_BlockDisplay blockDisplay && data instanceof BlockHologramData blockData) {
+            // block
+
+//            BlockType blockType = RegistryAccess.registryAccess().getRegistry(RegistryKey.BLOCK).get(blockData.getBlock().getKey());
+            blockDisplay.setBlock(blockData.getBlock().createBlockData().createBlockState());
         }
-//        else if (display instanceof Display.ItemDisplay itemDisplay && data instanceof ItemHologramData itemData) {
-//            // item
-//            itemDisplay.setItemStack(ItemStack.fromBukkitCopy(itemData.getItemStack()));
-//
-//        } else if (display instanceof Display.BlockDisplay blockDisplay && data instanceof BlockHologramData blockData) {
-//            Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.of("minecraft:" + blockData.getBlock().name().toLowerCase(), ':'));
-//            blockDisplay.setBlockState(block.defaultBlockState());
-//        }
 
         if (data instanceof DisplayHologramData displayData) {
             // billboard data
