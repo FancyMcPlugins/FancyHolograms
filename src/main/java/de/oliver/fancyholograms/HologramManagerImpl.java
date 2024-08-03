@@ -106,15 +106,15 @@ public final class HologramManagerImpl implements HologramManager {
         Optional<Hologram> optionalHologram = Optional.ofNullable(this.holograms.remove(name.toLowerCase(Locale.ROOT)));
 
         optionalHologram.ifPresent(hologram -> {
-                for (UUID viewer : hologram.getViewers()) {
-                    Player player = Bukkit.getPlayer(viewer);
-                    if (player != null) {
-                        FancyHolograms.get().getHologramThread().submit(() -> hologram.forceHideHologram(player));
+                    for (UUID viewer : hologram.getViewers()) {
+                        Player player = Bukkit.getPlayer(viewer);
+                        if (player != null) {
+                            FancyHolograms.get().getHologramThread().submit(() -> hologram.forceHideHologram(player));
+                        }
                     }
-                }
 
-                FancyHolograms.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram));
-            }
+                    FancyHolograms.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram));
+                }
         );
 
         return optionalHologram;
@@ -152,7 +152,7 @@ public final class HologramManagerImpl implements HologramManager {
         }
         isLoaded = true;
 
-        Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(allLoaded)));
+        FancyHolograms.get().getHologramThread().submit(() -> Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(allLoaded))));
 
         FancyHolograms.get().getLogger().info(String.format("Loaded %d holograms for all loaded worlds", allLoaded.size()));
     }
@@ -188,8 +188,8 @@ public final class HologramManagerImpl implements HologramManager {
         });
 
         final var updateTimes = CacheBuilder.newBuilder()
-            .expireAfterAccess(Duration.ofMinutes(5))
-            .<String, Long>build();
+                .expireAfterAccess(Duration.ofMinutes(5))
+                .<String, Long>build();
 
         hologramThread.scheduleAtFixedRate(() -> {
             final var time = System.currentTimeMillis();
@@ -233,15 +233,19 @@ public final class HologramManagerImpl implements HologramManager {
     }
 
     public void unloadHolograms() {
-        final var online = List.copyOf(Bukkit.getOnlinePlayers());
-
         FancyHolograms.get().getHologramThread().submit(() -> {
             List<Hologram> unloaded = new ArrayList<>();
 
             for (final var hologram : this.getPersistentHolograms()) {
                 this.holograms.remove(hologram.getName());
                 unloaded.add(hologram);
-                online.forEach(hologram::forceHideHologram);
+
+                for (UUID viewer : hologram.getViewers()) {
+                    Player player = Bukkit.getPlayer(viewer);
+                    if (player != null) {
+                        hologram.forceHideHologram(player);
+                    }
+                }
             }
 
             Bukkit.getPluginManager().callEvent(new HologramsUnloadedEvent(ImmutableList.copyOf(unloaded)));
@@ -253,8 +257,8 @@ public final class HologramManagerImpl implements HologramManager {
 
         FancyHolograms.get().getHologramThread().submit(() -> {
             List<Hologram> h = getPersistentHolograms().stream()
-                .filter(hologram -> hologram.getData().getLocation().getWorld().getName().equals(world))
-                .toList();
+                    .filter(hologram -> hologram.getData().getLocation().getWorld().getName().equals(world))
+                    .toList();
 
             FancyHolograms.get().getHologramStorage().saveBatch(h, true);
 
