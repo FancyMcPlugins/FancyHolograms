@@ -108,7 +108,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     public void onEnable() {
         getHologramConfiguration().reload(this); // initialize configuration
 
-        FancyLib.setPlugin(this);
+        FancyLib.setPlugin(this, getFile());
 
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("""
