@@ -40,7 +40,6 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-    implementation(project(":implementation_1_21"))
     implementation(project(":implementation_1_20_6"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
@@ -48,6 +47,8 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    implementation("de.oliver:FancySitula:${findProperty("fancySitulaVersion")}")
+
     compileOnly("de.oliver:FancyNpcs:${findProperty("fancyNpcsVersion")}")
     compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 //    implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
