@@ -24,6 +24,7 @@ import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
 import de.oliver.fancylib.versionFetcher.MasterVersionFetcher;
 import de.oliver.fancylib.versionFetcher.VersionFetcher;
+import de.oliver.fancysitula.api.utils.ServerVersion;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -32,9 +33,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -45,7 +44,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public final class FancyHolograms extends JavaPlugin implements FancyHologramsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21"};
+    public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4"};
     private static @Nullable FancyHolograms INSTANCE;
 
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
@@ -89,14 +88,16 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         final var adapter = resolveHologramAdapter();
 
         if (adapter == null) {
+            List<String> supportedVersions = new ArrayList<>(Arrays.asList(SUPPORTED_VERSIONS));
+            supportedVersions.addAll(ServerVersion.getSupportedVersions());
+
             getLogger().warning("""
-                                                    
                     --------------------------------------------------
                     Unsupported minecraft server version.
                     Please update the server to one of (%s).
                     Disabling the FancyHolograms plugin.
                     --------------------------------------------------
-                    """.formatted(String.join(" / ", SUPPORTED_VERSIONS)));
+                    """.formatted(String.join(" / ", supportedVersions)));
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -112,7 +113,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("""
-                                                    
                     --------------------------------------------------
                     It is recommended to use Paper as server software.
                     Because you are not using paper, the plugin
@@ -221,8 +221,12 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     private @Nullable Function<HologramData, Hologram> resolveHologramAdapter() {
         final var version = Bukkit.getMinecraftVersion();
 
+        // check if the server version is supported by FancySitula
+        if (ServerVersion.isVersionSupported(version)) {
+            return Hologram1_20_6::new;
+        }
+
         return switch (version) {
-            case "1.20.5", "1.20.6", "1.21" -> Hologram1_20_6::new; // implemented by FancySitula
             case "1.20.3", "1.20.4" -> Hologram1_20_4::new;
             case "1.20.2" -> Hologram1_20_2::new;
             case "1.20", "1.20.1" -> Hologram1_20_1::new;
@@ -263,7 +267,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             }
 
             getLogger().warning("""
-                                                            
+                    
                     -------------------------------------------------------
                     You are not using the latest version the FancyHolograms plugin.
                     Please update to the newest version (%s).

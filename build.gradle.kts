@@ -16,6 +16,9 @@ plugins {
 
 runPaper.folia.registerTask()
 
+val supportedVersions =
+    listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1")
+
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
@@ -90,9 +93,10 @@ tasks {
 
         downloadPlugins {
             modrinth("fancynpcs", "2.2.1")
-            hangar("ViaVersion", "5.0.1")
-            hangar("ViaBackwards", "5.0.1")
-//            hangar("PlaceholderAPI", "2.11.6")
+            hangar("ViaVersion", "5.0.3")
+            hangar("ViaBackwards", "5.0.3")
+            modrinth("multiverse-core", "4.3.11")
+            hangar("PlaceholderAPI", "2.11.6")
         }
     }
 
@@ -203,8 +207,7 @@ hangarPublish {
         platforms {
             paper {
                 jar = tasks.shadowJar.flatMap { it.archiveFile }
-                platformVersions =
-                    listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21")
+                platformVersions = supportedVersions
             }
         }
     }
@@ -216,6 +219,6 @@ modrinth {
     versionNumber.set(project.version.toString())
     versionType.set("alpha")
     uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
-    gameVersions.addAll(listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21"))
+    gameVersions.addAll(supportedVersions)
     loaders.add("paper")
 }
