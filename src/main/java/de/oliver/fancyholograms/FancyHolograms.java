@@ -223,7 +223,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         // check if the server version is supported by FancySitula
         if (ServerVersion.isVersionSupported(version)) {
-            return Hologram1_20_6::new;
+            return HologramImpl::new;
         }
 
         return switch (version) {

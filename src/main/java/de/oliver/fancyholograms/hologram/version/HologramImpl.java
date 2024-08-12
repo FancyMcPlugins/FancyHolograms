@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
-public final class Hologram1_20_6 extends Hologram {
+public final class HologramImpl extends Hologram {
 
     private FS_Display fsDisplay;
 
-    public Hologram1_20_6(@NotNull final HologramData data) {
+    public HologramImpl(@NotNull final HologramData data) {
         super(data);
     }
 
