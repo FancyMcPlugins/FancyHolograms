@@ -65,7 +65,7 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onResourcePackStatus(@NotNull final PlayerResourcePackStatusEvent event) {
         final UUID playerUniqueId = event.getPlayer().getUniqueId();
-        final UUID packUniqueId = event.getID();
+        final UUID packUniqueId = getResourcePackID(event);
         // Adding accepted resource-pack to the list of currently loading resource-packs for that player.
         if (event.getStatus() == Status.ACCEPTED)
             loadingResourcePacks.computeIfAbsent(playerUniqueId, (___) -> new ArrayList<>()).add(packUniqueId);
@@ -81,6 +81,17 @@ public final class PlayerListener implements Listener {
                     hologram.refreshHologram(event.getPlayer());
                 }
             }
+        }
+    }
+
+    // For 1.20.2 and higher this method returns actual pack identifier, while for older versions, the identifier is a dummy UUID full of zeroes.
+    // Versions prior 1.20.2 supports sending and receiving only one resource-pack and a dummy, constant identifier can be used as a key.
+    private static @NotNull UUID getResourcePackID(final @NotNull PlayerResourcePackStatusEvent event) {
+        try {
+            event.getClass().getMethod("getID");
+            return event.getID();
+        } catch (final @NotNull NoSuchMethodException e) {
+            return new UUID(0,0);
         }
     }
 
