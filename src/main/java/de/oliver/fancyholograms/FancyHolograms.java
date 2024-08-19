@@ -269,7 +269,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             getLogger().warning("""
                     
                     -------------------------------------------------------
-                    You are not using the latest version the FancyHolograms plugin.
+                    You are not using the latest version of the FancyHolograms plugin.
                     Please update to the newest version (%s).
                     %s
                     -------------------------------------------------------
