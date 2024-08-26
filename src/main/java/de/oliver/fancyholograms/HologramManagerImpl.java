@@ -137,7 +137,7 @@ public final class HologramManagerImpl implements HologramManager {
             return;
         }
 
-        plugin.getHologramStorage().saveBatch(getPersistentHolograms(), true);
+        plugin.getHologramStorage().saveBatch(getPersistentHolograms(), false);
     }
 
     @Override
@@ -268,7 +268,7 @@ public final class HologramManagerImpl implements HologramManager {
                     .filter(hologram -> hologram.getData().getLocation().getWorld().getName().equals(world))
                     .toList();
 
-            FancyHolograms.get().getHologramStorage().saveBatch(h, true);
+            FancyHolograms.get().getHologramStorage().saveBatch(h, false);
 
             for (final Hologram hologram : h) {
                 this.holograms.remove(hologram.getName());
