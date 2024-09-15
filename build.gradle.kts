@@ -50,6 +50,7 @@ dependencies {
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     implementation("de.oliver:FancySitula:${findProperty("fancySitulaVersion")}")
+    implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
 
     compileOnly("de.oliver:FancyNpcs:${findProperty("fancyNpcsVersion")}")
     compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
@@ -91,7 +92,7 @@ tasks {
 //        minecraftVersion("1.20.4")
 
         downloadPlugins {
-            modrinth("fancynpcs", "2.2.1")
+            modrinth("fancynpcs", "2.2.2")
             hangar("ViaVersion", "5.0.3")
             hangar("ViaBackwards", "5.0.3")
             modrinth("multiverse-core", "4.3.11")

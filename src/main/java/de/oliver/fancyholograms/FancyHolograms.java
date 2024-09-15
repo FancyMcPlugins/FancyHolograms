@@ -84,6 +84,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     @Override
     public void onLoad() {
         INSTANCE = this;
+//        IFancySitula.LOGGER.setCurrentLevel(LogLevel.DEBUG);
 
         final var adapter = resolveHologramAdapter();
 
