@@ -12,7 +12,6 @@ import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.UnmodifiableView;
 
 import java.util.*;
 
@@ -93,6 +92,7 @@ public abstract class Hologram {
     /**
      * Shows the hologram to a collection of players.
      * Use {@link #forceShowHologram(Player)} if this hologram is not registered to the HologramManager.
+     *
      * @param players The players to show the hologram to
      */
     public final void showHologram(Collection<? extends Player> players) {
@@ -102,6 +102,7 @@ public abstract class Hologram {
     /**
      * Shows the hologram to a player.
      * Use {@link #forceShowHologram(Player)} if this hologram is not registered to the HologramManager.
+     *
      * @param player The player to show the hologram to
      */
     public final void showHologram(Player player) {
@@ -110,6 +111,7 @@ public abstract class Hologram {
 
     /**
      * Forcefully shows the hologram to a player.
+     *
      * @param player The player to show the hologram to
      */
     public final void forceShowHologram(Player player) {
@@ -123,6 +125,7 @@ public abstract class Hologram {
     /**
      * Hides the hologram from a collection of players.
      * Use {@link #forceHideHologram(Player)} if this hologram is not registered to the HologramManager.
+     *
      * @param players The players to hide the hologram from
      */
     public final void hideHologram(Collection<? extends Player> players) {
@@ -132,6 +135,7 @@ public abstract class Hologram {
     /**
      * Hides the hologram from a player.
      * Use {@link #forceHideHologram(Player)} if this hologram is not registered to the HologramManager.
+     *
      * @param player The player to hide the hologram from
      */
     public final void hideHologram(Player player) {
@@ -140,6 +144,7 @@ public abstract class Hologram {
 
     /**
      * Forcefully hides the hologram from a player.
+     *
      * @param player The player to show the hologram to
      */
     public final void forceHideHologram(Player player) {
@@ -152,6 +157,7 @@ public abstract class Hologram {
 
     /**
      * Queues hologram to update and refresh for players.
+     *
      * @deprecated in favour of {@link #queueUpdate()}
      */
     @Deprecated(forRemoval = true)
@@ -179,9 +185,9 @@ public abstract class Hologram {
      */
     public void refreshForViewers() {
         final var players = getViewers()
-            .stream()
-            .map(Bukkit::getPlayer)
-            .toList();
+                .stream()
+                .map(Bukkit::getPlayer)
+                .toList();
 
         refreshHologram(players);
     }
@@ -192,16 +198,17 @@ public abstract class Hologram {
     public void refreshForViewersInWorld() {
         World world = data.getLocation().getWorld();
         final var players = getViewers()
-            .stream()
-            .map(Bukkit::getPlayer)
-            .filter(player -> player != null && player.getWorld().equals(world))
-            .toList();
+                .stream()
+                .map(Bukkit::getPlayer)
+                .filter(player -> player != null && player.getWorld().equals(world))
+                .toList();
 
         refreshHologram(players);
     }
 
     /**
      * Refreshes the hologram's data for a player.
+     *
      * @param player the player to refresh for
      */
     public final void refreshHologram(@NotNull final Player player) {
@@ -210,6 +217,7 @@ public abstract class Hologram {
 
     /**
      * Refreshes the hologram's data for a collection of players.
+     *
      * @param players the collection of players to refresh for
      */
     public final void refreshHologram(@NotNull final Collection<? extends Player> players) {
@@ -217,10 +225,10 @@ public abstract class Hologram {
     }
 
     /**
-     * @return an unmodifiable set of current viewers
+     * @return a copy of the set of UUIDs of players currently viewing the hologram
      */
-    public final @NotNull @UnmodifiableView Set<UUID> getViewers() {
-        return Collections.unmodifiableSet(this.viewers);
+    public final @NotNull Set<UUID> getViewers() {
+        return new HashSet<>(this.viewers);
     }
 
     /**
