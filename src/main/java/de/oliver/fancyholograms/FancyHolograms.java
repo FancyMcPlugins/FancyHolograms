@@ -86,15 +86,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     @Override
     public void onLoad() {
         INSTANCE = this;
-
-        LogLevel logLevel;
-        try {
-            logLevel = LogLevel.valueOf(getHologramConfiguration().getLogLevel());
-        } catch (IllegalArgumentException e) {
-            logLevel = LogLevel.INFO;
-        }
-        IFancySitula.LOGGER.setCurrentLevel(logLevel);
-
         final var adapter = resolveHologramAdapter();
 
         if (adapter == null) {
@@ -130,6 +121,14 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
                     --------------------------------------------------
                     """);
         }
+
+        LogLevel logLevel;
+        try {
+            logLevel = LogLevel.valueOf(getHologramConfiguration().getLogLevel());
+        } catch (IllegalArgumentException e) {
+            logLevel = LogLevel.INFO;
+        }
+        IFancySitula.LOGGER.setCurrentLevel(logLevel);
 
 
         reloadCommands();

@@ -46,11 +46,6 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
     private boolean registerCommands;
 
     /**
-     * Indicates whether errors should be reported to Sentry.
-     */
-    private boolean reportErrorsToSentry;
-
-    /**
      * The log level for the plugin.
      */
     private String logLevel;
@@ -80,11 +75,11 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
         config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
 
-        reportErrorsToSentry = (boolean) ConfigHelper.getOrDefault(config, "report_errors_to_sentry", false);
-        config.setInlineComments("report_errors_to_sentry", List.of("Whether the plugin should report errors to Sentry."));
+        config.set("report_errors_to_sentry", null);
+        config.setInlineComments("report_errors_to_sentry", null);
 
-        logLevel = (String) ConfigHelper.getOrDefault(config, "log_level", "INFO");
         config.setInlineComments("log_level", List.of("The log level for the plugin (DEBUG, INFO, WARN, ERROR)."));
+        logLevel = (String) ConfigHelper.getOrDefault(config, "log_level", "INFO");
 
         if (pluginImpl.isEnabled()) {
             plugin.getHologramThread().submit(pluginImpl::saveConfig);
@@ -122,11 +117,6 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
     @Override
     public boolean isRegisterCommands() {
         return registerCommands;
-    }
-
-    @Override
-    public boolean reportErrorsToSentry() {
-        return reportErrorsToSentry;
     }
 
     public String getLogLevel() {
