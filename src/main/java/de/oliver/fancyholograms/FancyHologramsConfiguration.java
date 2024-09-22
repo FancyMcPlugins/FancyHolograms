@@ -17,32 +17,43 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
      * Indicates whether version notifications are muted.
      */
     private boolean versionNotifsMuted;
+
     /**
      * Indicates whether autosave is enabled.
      */
     private boolean autosaveEnabled;
+
     /**
      * The interval at which autosave is performed.
      */
     private int autosaveInterval;
+
     /**
      * Indicates whether the plugin should save holograms when they are changed.
      */
     private boolean saveOnChangedEnabled;
+
     /**
      * The default visibility distance for holograms.
      */
     private int defaultVisibilityDistance;
+
     /**
      * Indicates whether commands should be registered.
      * <p>
      * This is useful for users who want to use the plugin's API only.
      */
     private boolean registerCommands;
+
     /**
      * Indicates whether errors should be reported to Sentry.
      */
     private boolean reportErrorsToSentry;
+
+    /**
+     * The log level for the plugin.
+     */
+    private String logLevel;
 
     @Override
     public void reload(@NotNull FancyHologramsPlugin plugin) {
@@ -71,6 +82,9 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
 
         reportErrorsToSentry = (boolean) ConfigHelper.getOrDefault(config, "report_errors_to_sentry", false);
         config.setInlineComments("report_errors_to_sentry", List.of("Whether the plugin should report errors to Sentry."));
+
+        logLevel = (String) ConfigHelper.getOrDefault(config, "log_level", "INFO");
+        config.setInlineComments("log_level", List.of("The log level for the plugin (DEBUG, INFO, WARN, ERROR)."));
 
         if (pluginImpl.isEnabled()) {
             plugin.getHologramThread().submit(pluginImpl::saveConfig);
@@ -113,5 +127,9 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
     @Override
     public boolean reportErrorsToSentry() {
         return reportErrorsToSentry;
+    }
+
+    public String getLogLevel() {
+        return logLevel;
     }
 }

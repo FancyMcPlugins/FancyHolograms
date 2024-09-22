@@ -59,4 +59,11 @@ public interface HologramConfiguration {
      * @return {@code true} if the plugin should send errors to Sentry, {@code false} otherwise.
      */
     boolean reportErrorsToSentry();
+
+    /**
+     * Returns the log level for the plugin.
+     *
+     * @return The log level for the plugin.
+     */
+    String getLogLevel();
 }

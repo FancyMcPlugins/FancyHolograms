@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancyholograms.api.HologramManager;
@@ -24,6 +25,7 @@ import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
 import de.oliver.fancylib.versionFetcher.MasterVersionFetcher;
 import de.oliver.fancylib.versionFetcher.VersionFetcher;
+import de.oliver.fancysitula.api.IFancySitula;
 import de.oliver.fancysitula.api.utils.ServerVersion;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
@@ -84,7 +86,14 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     @Override
     public void onLoad() {
         INSTANCE = this;
-//        IFancySitula.LOGGER.setCurrentLevel(LogLevel.DEBUG);
+
+        LogLevel logLevel;
+        try {
+            logLevel = LogLevel.valueOf(getHologramConfiguration().getLogLevel());
+        } catch (IllegalArgumentException e) {
+            logLevel = LogLevel.INFO;
+        }
+        IFancySitula.LOGGER.setCurrentLevel(logLevel);
 
         final var adapter = resolveHologramAdapter();
 
