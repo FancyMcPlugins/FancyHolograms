@@ -94,7 +94,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             List<String> supportedVersions = new ArrayList<>(Arrays.asList(SUPPORTED_VERSIONS));
             supportedVersions.addAll(ServerVersion.getSupportedVersions());
 
-            getLogger().warning("""
+            LOGGER.warn("""
                     --------------------------------------------------
                     Unsupported minecraft server version.
                     Please update the server to one of (%s).
@@ -115,7 +115,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         FancyLib.setPlugin(this, getFile());
 
         if (!ServerSoftware.isPaper()) {
-            getLogger().warning("""
+            LOGGER.warn("""
                     --------------------------------------------------
                     It is recommended to use Paper as server software.
                     Because you are not using paper, the plugin
@@ -278,7 +278,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
                 return; // could not get the newest version or already on latest
             }
 
-            getLogger().warning("""
+            LOGGER.warn("""
                     
                     -------------------------------------------------------
                     You are not using the latest version of the FancyHolograms plugin.
