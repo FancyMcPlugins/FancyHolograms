@@ -104,7 +104,7 @@ public class HologramData implements YamlData {
         if (!Objects.equals(this.visibility, visibility)) {
             this.visibility = visibility;
             setHasChanges(true);
-          
+
             if (this.visibility.equals(Visibility.MANUAL)) {
                 Visibility.ManualVisibility.clear();
             }

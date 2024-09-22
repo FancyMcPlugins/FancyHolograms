@@ -11,7 +11,7 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onWorldLoad(WorldLoadEvent event) {
         FancyHolograms.get().getHologramThread().submit(() -> {
-            FancyHolograms.get().getLogger().info("Loading holograms for world " + event.getWorld().getName());
+            FancyHolograms.LOGGER.info("Loading holograms for world " + event.getWorld().getName());
             FancyHolograms.get().getHologramsManager().loadHolograms(event.getWorld().getName());
         });
     }
@@ -19,7 +19,7 @@ public class WorldListener implements Listener {
     @EventHandler
     public void onWorldUnload(WorldUnloadEvent event) {
         FancyHolograms.get().getHologramThread().submit(() -> {
-            FancyHolograms.get().getLogger().info("Unloading holograms for world " + event.getWorld().getName());
+            FancyHolograms.LOGGER.info("Unloading holograms for world " + event.getWorld().getName());
             FancyHolograms.get().getHologramsManager().unloadHolograms(event.getWorld().getName());
         });
     }

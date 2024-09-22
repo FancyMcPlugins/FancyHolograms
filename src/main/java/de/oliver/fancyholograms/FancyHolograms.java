@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.HologramConfiguration;
@@ -46,6 +47,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public final class FancyHolograms extends JavaPlugin implements FancyHologramsPlugin {
 
+    public static final ExtendedFancyLogger LOGGER = new ExtendedFancyLogger("FancyHolograms");
     public static final String[] SUPPORTED_VERSIONS = {"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4"};
     private static @Nullable FancyHolograms INSTANCE;
 
@@ -128,6 +130,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         } catch (IllegalArgumentException e) {
             logLevel = LogLevel.INFO;
         }
+        LOGGER.setCurrentLevel(logLevel);
         IFancySitula.LOGGER.setCurrentLevel(logLevel);
 
 
