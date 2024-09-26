@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.api.hologram;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.data.property.Visibility;
-import me.dave.chatcolorhandler.ModernChatColorHandler;
+import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
