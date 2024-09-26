@@ -34,7 +34,7 @@ allprojects {
 
         maven(url = "https://repo.fancyplugins.de/snapshots")
         maven(url = "https://repo.fancyplugins.de/releases")
-        maven(url = "https://repo.smrt-1.com/releases")
+        maven(url = "https://repo.lushplugins.org/releases")
         maven(url = "https://repo.viaversion.com/")
     }
 }
@@ -53,7 +53,7 @@ dependencies {
     implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
 
     compileOnly("de.oliver:FancyNpcs:${findProperty("fancyNpcsVersion")}")
-    compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 //    implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
 //    implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
 //    implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")

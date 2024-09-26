@@ -9,12 +9,12 @@ dependencies {
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
-    implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
 
 tasks {
     shadowJar {
-        relocate("me.dave.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
+        relocate("org.lushplugins.chatcolorhandler", "de.oliver.fancyholograms.libs.chatcolorhandler")
 
         archiveClassifier.set("")
     }
