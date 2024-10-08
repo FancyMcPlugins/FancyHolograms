@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms.api;
 
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,6 +21,8 @@ public interface FancyHologramsPlugin {
     }
 
     JavaPlugin getPlugin();
+
+    ExtendedFancyLogger getFancyLogger();
 
     HologramManager getHologramManager();
 

@@ -154,7 +154,7 @@ public final class HologramManagerImpl implements HologramManager {
 
         FancyHolograms.get().getHologramThread().submit(() -> Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(allLoaded))));
 
-        FancyHolograms.LOGGER.info(String.format("Loaded %d holograms for all loaded worlds", allLoaded.size()));
+        FancyHolograms.get().getFancyLogger().info(String.format("Loaded %d holograms for all loaded worlds", allLoaded.size()));
     }
 
     public void loadHolograms(String world) {
@@ -165,7 +165,7 @@ public final class HologramManagerImpl implements HologramManager {
 
         Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(loaded)));
 
-        FancyHolograms.LOGGER.info(String.format("Loaded %d holograms for world %s", loaded.size(), world));
+        FancyHolograms.get().getFancyLogger().info(String.format("Loaded %d holograms for world %s", loaded.size(), world));
     }
 
     /**

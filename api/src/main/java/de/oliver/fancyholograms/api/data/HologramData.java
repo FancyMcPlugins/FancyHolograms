@@ -145,7 +145,7 @@ public class HologramData implements YamlData {
 
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
-            FancyHologramsPlugin.get().getPlugin().getLogger().info("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
+            FancyHologramsPlugin.get().getFancyLogger().warn("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
             return false;
         }
 
