@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.api;
 
-import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,9 +22,7 @@ public interface FancyHologramsPlugin {
 
     JavaPlugin getPlugin();
 
-    boolean isUsingViaVersion();
-
-    FancyScheduler getScheduler();
+    ExtendedFancyLogger getFancyLogger();
 
     HologramManager getHologramManager();
 

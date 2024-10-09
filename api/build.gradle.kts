@@ -8,6 +8,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    compileOnly("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
 
     implementation("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }

@@ -3,7 +3,6 @@ package de.oliver.fancyholograms.api.data;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.data.property.Visibility;
 import de.oliver.fancyholograms.api.hologram.HologramType;
-import de.oliver.fancylib.FancyLib;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -146,7 +145,7 @@ public class HologramData implements YamlData {
 
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
-            FancyLib.getPlugin().getLogger().info("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
+            FancyHologramsPlugin.get().getFancyLogger().warn("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
             return false;
         }
 

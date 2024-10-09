@@ -36,6 +36,7 @@ allprojects {
         maven(url = "https://repo.fancyplugins.de/releases")
         maven(url = "https://repo.lushplugins.org/releases")
         maven(url = "https://repo.viaversion.com/")
+        maven(url = "https://repo.opencollab.dev/main/")
     }
 }
 
@@ -54,11 +55,7 @@ dependencies {
 
     compileOnly("de.oliver:FancyNpcs:${findProperty("fancyNpcsVersion")}")
     compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
-//    implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
-//    implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
-//    implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
-//    implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
-//    annotationProcessor("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
+    compileOnly("org.geysermc.floodgate:api:${findProperty("floodgateVersion")}")
 }
 
 paper {
@@ -83,6 +80,11 @@ paper {
             required = false
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
         }
+        register("floodgate") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            joinClasspath = true
+        }
     }
 }
 
@@ -92,7 +94,7 @@ tasks {
 //        minecraftVersion("1.20.4")
 
         downloadPlugins {
-            modrinth("fancynpcs", "2.2.2")
+            modrinth("fancynpcs", "2.3.0")
             hangar("ViaVersion", "5.0.3")
             hangar("ViaBackwards", "5.0.3")
 //            modrinth("multiverse-core", "4.3.11")

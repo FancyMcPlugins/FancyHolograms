@@ -10,6 +10,7 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.commands.hologram.*;
 import de.oliver.fancyholograms.util.Constants;
+import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -55,7 +56,7 @@ public final class HologramCMD extends Command {
         }
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-            MessageHelper.info(sender, Constants.HELP_TEXT + (!FancyHolograms.isUsingFancyNpcs() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
+            MessageHelper.info(sender, Constants.HELP_TEXT + (!PluginUtils.isFancyNpcsEnabled() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
             return true;
         }
 
@@ -153,7 +154,7 @@ public final class HologramCMD extends Command {
                 return Collections.emptyList();
             }
 
-            final var usingNpcs = FancyHolograms.isUsingFancyNpcs();
+            final var usingNpcs = PluginUtils.isFancyNpcsEnabled();
 
             List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
             suggestions.addAll(type.getCommands());
@@ -209,7 +210,7 @@ public final class HologramCMD extends Command {
                     yield IntStream.range(1, textData.getText().size() + 1).mapToObj(Integer::toString);
                 }
                 case "linkwithnpc" -> {
-                    if (!FancyHolograms.isUsingFancyNpcs()) {
+                    if (!PluginUtils.isFancyNpcsEnabled()) {
                         yield Stream.<String>empty();
                     }
 

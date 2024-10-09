@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.commands.hologram;
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.command.CommandSender;
@@ -20,7 +21,7 @@ public class LinkWithNpcCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
-        if (!FancyHolograms.isUsingFancyNpcs()) {
+        if (!PluginUtils.isFancyNpcsEnabled()) {
             MessageHelper.warning(player, "You need to install the FancyNpcs plugin for this functionality to work");
             MessageHelper.warning(player, "Download link: <click:open_url:'https://modrinth.com/plugin/fancynpcs/versions'><u>click here</u></click>.");
             return false;
