@@ -198,6 +198,19 @@ fun getCurrentCommitHash(): String {
     }
 }
 
+fun getLastCommitMessage(): String {
+    val process = ProcessBuilder("git", "log", "-1", "--pretty=%B").start()
+    val reader = BufferedReader(InputStreamReader(process.inputStream))
+    val commitMessage = reader.readLine()
+    reader.close()
+    process.waitFor()
+    if (process.exitValue() == 0) {
+        return commitMessage ?: ""
+    } else {
+        throw IllegalStateException("Failed to retrieve the commit message.")
+    }
+}
+
 hangarPublish {
     publications.register("plugin") {
         version = project.version as String
@@ -212,6 +225,8 @@ hangarPublish {
                 platformVersions = supportedVersions
             }
         }
+
+        changelog = getLastCommitMessage()
     }
 }
 
@@ -223,4 +238,6 @@ modrinth {
     uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
     gameVersions.addAll(supportedVersions)
     loaders.add("paper")
+    loaders.add("folia")
+    changelog.set(getLastCommitMessage())
 }
