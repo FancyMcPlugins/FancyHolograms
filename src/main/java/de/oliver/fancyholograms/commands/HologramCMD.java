@@ -156,7 +156,7 @@ public final class HologramCMD extends Command {
 
             final var usingNpcs = PluginUtils.isFancyNpcsEnabled();
 
-            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
+            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", "brightness", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
             suggestions.addAll(type.getCommands());
 
             return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT))).toList();
@@ -204,6 +204,7 @@ public final class HologramCMD extends Command {
                     TextHologramData textData = (TextHologramData) hologram.getData();
                     yield Stream.of(!textData.hasTextShadow()).map(Object::toString);
                 }
+                case "brightness" -> Stream.of("block", "sky");
                 case "textalignment" -> Arrays.stream(TextDisplay.TextAlignment.values()).map(Enum::name);
                 case "setline", "removeline" -> {
                     TextHologramData textData = (TextHologramData) hologram.getData();
@@ -273,6 +274,18 @@ public final class HologramCMD extends Command {
             return suggestions;
         }
 
+        if(args[2].equalsIgnoreCase("brightness")) {
+            if(args.length == 4) {
+                return List.of("block", "sky");
+            }
+
+            if(args.length > 5) {
+                return Collections.emptyList();
+            }
+
+            return List.of("0", "5", "10", "15");
+        }
+
         return Collections.emptyList();
     }
 
@@ -313,6 +326,7 @@ public final class HologramCMD extends Command {
             case "linkwithnpc" -> new LinkWithNpcCMD().run(player, hologram, args);
             case "shadowradius" -> new ShadowRadiusCMD().run(player, hologram, args);
             case "shadowstrength" -> new ShadowStrengthCMD().run(player, hologram, args);
+            case "brightness" -> new BrightnessCMD().run(player, hologram, args);
 
             // text data
             case "background" -> new BackgroundCMD().run(player, hologram, args);
