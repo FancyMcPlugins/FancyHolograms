@@ -54,8 +54,10 @@ public class BrightnessCMD implements Subcommand {
         }
 
         final var currentBrightness = displayData.getBrightness();
-        final var blockBrightness = brightnessType.equalsIgnoreCase("block") ? brightnessValue : currentBrightness.getBlockLight();
-        final var skyBrightness = brightnessType.equalsIgnoreCase("sky") ? brightnessValue : currentBrightness.getSkyLight();
+        final var blockBrightness = brightnessType.equalsIgnoreCase("block") ? brightnessValue :
+                currentBrightness == null ? 0 : currentBrightness.getBlockLight();
+        final var skyBrightness = brightnessType.equalsIgnoreCase("sky") ? brightnessValue :
+                currentBrightness == null ? 0 : currentBrightness.getSkyLight();
 
         displayData.setBrightness(new Display.Brightness(blockBrightness, skyBrightness));
 
