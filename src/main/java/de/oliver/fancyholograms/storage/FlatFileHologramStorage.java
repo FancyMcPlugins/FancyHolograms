@@ -213,6 +213,11 @@ public class FlatFileHologramStorage implements HologramStorage {
             } finally {
                 lock.writeLock().unlock();
             }
+
+            if(!FancyHolograms.canGet()) {
+                return;
+            }
+
             FancyHolograms.get().getFancyLogger().debug("Saved config to file");
         });
     }
