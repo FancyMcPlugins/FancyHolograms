@@ -59,10 +59,7 @@ public final class HologramImpl extends Hologram {
         if (location.getWorld() == null || !location.isWorldLoaded()) {
             return;
         }
-
-        fsDisplay.setLocation(location.x(), location.y(), location.z());
-        fsDisplay.setRotation(location.getYaw(), location.getPitch());
-
+        fsDisplay.setLocation(location);
 
         if (fsDisplay instanceof FS_TextDisplay textDisplay && data instanceof TextHologramData textData) {
             // line width
