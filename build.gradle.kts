@@ -17,12 +17,25 @@ plugins {
 runPaper.folia.registerTask()
 
 val supportedVersions =
-    listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1")
+    listOf(
+        "1.19.4",
+        "1.20",
+        "1.20.1",
+        "1.20.2",
+        "1.20.3",
+        "1.20.4",
+        "1.20.5",
+        "1.20.6",
+        "1.21",
+        "1.21.1",
+        "1.21.2",
+        "1.21.3"
+    )
 
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.3.3" + (if (buildId != null) ".$buildId" else "")
+    version = "2.4.0-SNAPSHOT-1" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
     repositories {
