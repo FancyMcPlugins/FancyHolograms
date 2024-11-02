@@ -21,6 +21,12 @@ import java.util.function.Function;
 public class MoveHereCMD implements Subcommand {
 
     public static boolean setLocation(Player player, Hologram hologram, Location location, boolean applyRotation) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.edit.move-here"))) {
+            MessageHelper.error(player, "You don't have the required permission to move a hologram");
+            return true;
+        }
+
         final var copied = hologram.getData().copy(hologram.getName());
         final Location newLocation = (applyRotation)
                 ? location

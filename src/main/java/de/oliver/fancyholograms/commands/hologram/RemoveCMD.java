@@ -21,6 +21,12 @@ public class RemoveCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.remove"))) {
+            MessageHelper.error(player, "You don't have the required permission to remove a hologram");
+            return true;
+        }
+
         if (!new HologramDeleteEvent(hologram, player).callEvent()) {
             MessageHelper.error(player, "Removing the hologram was cancelled");
             return false;

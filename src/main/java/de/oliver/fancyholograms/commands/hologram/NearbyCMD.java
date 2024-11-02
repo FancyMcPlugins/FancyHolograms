@@ -26,6 +26,12 @@ public class NearbyCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.nearby"))) {
+            MessageHelper.error(player, "You don't have the required permission to see nearby holograms");
+            return true;
+        }
+
         if (!(player instanceof Player)) {
             MessageHelper.error(player, "This is a player only command.");
             return false;

@@ -18,6 +18,12 @@ import java.util.List;
 public class SetLineCMD implements Subcommand {
 
     public static boolean setLine(CommandSender player, Hologram hologram, int index, String text) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.setline"))) {
+            MessageHelper.error(player, "You don't have the required permission to set a line to this hologram");
+            return true;
+        }
+
         if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;

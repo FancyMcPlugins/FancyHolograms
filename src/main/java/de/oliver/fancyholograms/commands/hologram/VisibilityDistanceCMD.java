@@ -22,6 +22,12 @@ public class VisibilityDistanceCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.edit.visibility-distance"))) {
+            MessageHelper.error(player, "You don't have the required permission to edit a hologram");
+            return true;
+        }
+
         var visibilityDistance = Ints.tryParse(args[3]);
 
         if (visibilityDistance == null) {

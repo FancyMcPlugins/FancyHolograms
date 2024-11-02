@@ -24,6 +24,12 @@ public class VisibilityCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.edit.visibility"))) {
+            MessageHelper.error(player, "You don't have the required permission to edit a hologram");
+            return true;
+        }
+
         final var optionalVisibility = Visibility.byString(args[3]);
         if (hologram == null || optionalVisibility.isEmpty()) {
             return false;

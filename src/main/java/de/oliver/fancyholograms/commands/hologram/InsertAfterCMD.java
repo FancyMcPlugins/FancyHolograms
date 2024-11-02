@@ -24,6 +24,12 @@ public class InsertAfterCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.edit.insert-after"))) {
+            MessageHelper.error(player, "You don't have the required permission to edit a hologram");
+            return true;
+        }
+
         if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;

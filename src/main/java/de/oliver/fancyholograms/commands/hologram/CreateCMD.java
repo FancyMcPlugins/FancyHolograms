@@ -30,6 +30,11 @@ public class CreateCMD implements Subcommand {
             return false;
         }
 
+        if (!(player.hasPermission("fancyholograms.hologram.create"))) {
+            MessageHelper.error(player, "You don't have the required permission to create a hologram");
+            return true;
+        }
+
         if (args.length < 3) {
             MessageHelper.error(player, "Wrong usage: /hologram help");
             return false;

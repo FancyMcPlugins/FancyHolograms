@@ -21,6 +21,12 @@ public class ListCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.list"))) {
+            MessageHelper.error(player, "You don't have the required permission to list the holograms");
+            return true;
+        }
+
         final var holograms = FancyHolograms.get().getHologramsManager().getPersistentHolograms();
 
         if (holograms.isEmpty()) {

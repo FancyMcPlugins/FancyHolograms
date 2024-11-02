@@ -28,6 +28,11 @@ public class CopyCMD implements Subcommand {
             return false;
         }
 
+        if (!(player.hasPermission("fancyholograms.hologram.copy"))) {
+            MessageHelper.error(sender, "You don't have the required permission to clone a hologram");
+            return true;
+        }
+
         if (args.length < 3) {
             MessageHelper.error(sender, "Wrong usage: /hologram help");
             return false;
