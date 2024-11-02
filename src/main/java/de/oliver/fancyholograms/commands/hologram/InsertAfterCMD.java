@@ -44,7 +44,17 @@ public class InsertAfterCMD implements Subcommand {
         for (int i = 4; i < args.length; i++) {
             text += args[i] + " ";
         }
-        text = text.substring(0, text.length() - 1);
+
+        // peaqe
+        if (text.isEmpty()) {
+            text = "§r";
+        } else {
+            text = text.substring(0, text.length() - 1);
+        }
+        // peaqe
+
+        // default
+        //text = text.substring(0, text.length() - 1);
 
         final var lines = new ArrayList<>(textData.getText());
         lines.add(Math.min(index, lines.size()), text);
