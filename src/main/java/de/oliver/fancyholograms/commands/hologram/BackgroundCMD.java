@@ -28,7 +28,7 @@ public class BackgroundCMD implements Subcommand {
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
         if (!(player.hasPermission("fancyholograms.hologram.edit.background"))) {
             MessageHelper.error(player, "You don't have the required permission to chnage the background of a hologram");
-            return true;
+            return false;
         }
 
         if (!(hologram.getData() instanceof TextHologramData textData)) {

@@ -24,7 +24,7 @@ public class LinkWithNpcCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.link"))) {
             MessageHelper.error(player, "You don't have the required permission to link a hologram");
-            return true;
+            return false;
         }
 
         if (!PluginUtils.isFancyNpcsEnabled()) {

@@ -23,7 +23,7 @@ public class CenterCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.edit.center"))) {
             MessageHelper.error(player, "You don't have the required permission to center a hologram");
-            return true;
+            return false;
         }
 
         Location location = hologram.getData().getLocation();

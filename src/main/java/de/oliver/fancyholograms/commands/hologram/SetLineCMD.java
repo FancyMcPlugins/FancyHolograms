@@ -21,7 +21,7 @@ public class SetLineCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.line.set"))) {
             MessageHelper.error(player, "You don't have the required permission to set a line to this hologram");
-            return true;
+            return false;
         }
 
         if (!(hologram.getData() instanceof TextHologramData textData)) {

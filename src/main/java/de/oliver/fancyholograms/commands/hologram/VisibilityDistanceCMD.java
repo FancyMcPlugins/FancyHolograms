@@ -25,7 +25,7 @@ public class VisibilityDistanceCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.edit.visibility_distance"))) {
             MessageHelper.error(player, "You don't have the required permission to edit a hologram");
-            return true;
+            return false;
         }
 
         var visibilityDistance = Ints.tryParse(args[3]);

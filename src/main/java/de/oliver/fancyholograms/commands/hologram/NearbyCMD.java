@@ -29,7 +29,7 @@ public class NearbyCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.nearby"))) {
             MessageHelper.error(player, "You don't have the required permission to see nearby holograms");
-            return true;
+            return false;
         }
 
         if (!(player instanceof Player)) {

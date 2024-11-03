@@ -24,7 +24,7 @@ public class MoveHereCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.edit.move_here"))) {
             MessageHelper.error(player, "You don't have the required permission to move a hologram");
-            return true;
+            return false;
         }
 
         final var copied = hologram.getData().copy(hologram.getName());

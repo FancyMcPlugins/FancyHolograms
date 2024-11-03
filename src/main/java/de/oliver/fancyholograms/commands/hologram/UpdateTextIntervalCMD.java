@@ -25,11 +25,10 @@ public class UpdateTextIntervalCMD implements Subcommand {
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
 
-        // TODO: Find a permission for this subcommand
-        //if (!(player.hasPermission("fancyholograms.hologram.edit.xxx"))) {
-        //    MessageHelper.error(player, "You don't have the required permission to move a hologram");
-        //    return true;
-        //}
+        if (!(player.hasPermission("fancyholograms.hologram.edit.text_interval"))) {
+            MessageHelper.error(player, "You don't have the required permission to edit a hologram");
+            return false;
+        }
 
         if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");

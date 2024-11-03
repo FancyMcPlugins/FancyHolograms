@@ -29,7 +29,7 @@ public class BillboardCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.edit.billboard"))) {
             MessageHelper.error(player, "You don't have the required permission to change the billboard of a hologram");
-            return true;
+            return false;
         }
 
         final var billboard = Enums.getIfPresent(Display.Billboard.class, args[3].toUpperCase(Locale.ROOT)).orNull();

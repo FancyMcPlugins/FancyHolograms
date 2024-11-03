@@ -23,7 +23,7 @@ public class RemoveLineCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.edit.line.remove"))) {
             MessageHelper.error(player, "You don't have the required permission to remove a line from a hologram");
-            return true;
+            return false;
         }
 
         if (!(hologram.getData() instanceof TextHologramData)) {

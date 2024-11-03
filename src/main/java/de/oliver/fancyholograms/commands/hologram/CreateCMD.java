@@ -28,7 +28,7 @@ public class CreateCMD implements Subcommand {
 
         if (!(sender.hasPermission("fancyholograms.hologram.create"))) {
             MessageHelper.error(sender, "You don't have the required permission to create a hologram");
-            return true;
+            return false;
         }
 
         if (!(sender instanceof Player player)) {

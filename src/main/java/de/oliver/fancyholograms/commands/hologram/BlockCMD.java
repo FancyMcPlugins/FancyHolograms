@@ -26,7 +26,7 @@ public class BlockCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.edit.block"))) {
             MessageHelper.error(player, "You don't have the required permission to change the block of this hologram");
-            return true;
+            return false;
         }
 
         if (!(hologram.getData() instanceof BlockHologramData blockData)) {

@@ -26,7 +26,7 @@ public class ShadowStrengthCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.edit.shadow_strength"))) {
             MessageHelper.error(player, "You don't have the required permission to edit a hologram");
-            return true;
+            return false;
         }
 
         final var strength = Floats.tryParse(args[3]);

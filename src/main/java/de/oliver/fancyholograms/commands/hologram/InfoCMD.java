@@ -23,7 +23,7 @@ public class InfoCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.info"))) {
             MessageHelper.error(player, "You don't have the required permission to view the info of a hologram");
-            return true;
+            return false;
         }
 
         HologramData data = hologram.getData();

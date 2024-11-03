@@ -27,7 +27,7 @@ public class ItemCMD implements Subcommand {
 
         if (!(sender.hasPermission("fancyholograms.hologram.edit.item"))) {
             MessageHelper.error(sender, "You don't have the required permission to edit a hologram");
-            return true;
+            return false;
         }
 
         if (!(sender instanceof Player player)) {

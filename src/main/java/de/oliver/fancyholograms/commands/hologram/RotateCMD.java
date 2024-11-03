@@ -23,7 +23,7 @@ public class RotateCMD implements Subcommand {
 
         if (!(sender.hasPermission("fancyholograms.hologram.edit.rotate"))) {
             MessageHelper.error(sender, "You don't have the required permission to rotate a hologram");
-            return true;
+            return false;
         }
 
         if (!(sender instanceof Player player)) {

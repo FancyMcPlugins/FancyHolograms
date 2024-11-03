@@ -27,7 +27,7 @@ public class InsertBeforeCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.edit.insert_before"))) {
             MessageHelper.error(player, "You don't have the required permission to edit a hologram");
-            return true;
+            return false;
         }
 
         if (!(hologram.getData() instanceof TextHologramData textData)) {

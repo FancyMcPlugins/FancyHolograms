@@ -22,7 +22,7 @@ public class TeleportCMD implements Subcommand {
 
         if (!(sender.hasPermission("fancyholograms.hologram.teleport"))) {
             MessageHelper.error(sender, "You don't have the required permission to teleport you to a hologram");
-            return true;
+            return false;
         }
 
         if (!(sender instanceof Player player)) {

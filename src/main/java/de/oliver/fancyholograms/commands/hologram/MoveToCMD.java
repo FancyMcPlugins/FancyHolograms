@@ -23,7 +23,7 @@ public class MoveToCMD implements Subcommand {
 
         if (!(sender.hasPermission("fancyholograms.hologram.edit.move_to"))) {
             MessageHelper.error(sender, "You don't have the required permission to move a hologram");
-            return true;
+            return false;
         }
         if (!(sender instanceof Player player)) {
             MessageHelper.error(sender, "You must be a sender to use this command");

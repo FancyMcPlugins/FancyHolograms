@@ -57,7 +57,7 @@ public final class HologramCMD extends Command {
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
             MessageHelper.info(sender, Constants.HELP_TEXT + (!PluginUtils.isFancyNpcsEnabled() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
-            return true;
+            return false;
         }
 
 

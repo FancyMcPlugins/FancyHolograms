@@ -24,7 +24,7 @@ public class UnlinkWithNpcCMD implements Subcommand {
 
         if (!(player.hasPermission("fancyholograms.hologram.unlink"))) {
             MessageHelper.error(player, "You don't have the required permission to unlink a hologram");
-            return true;
+            return false;
         }
 
         if (!PluginUtils.isFancyNpcsEnabled()) {
