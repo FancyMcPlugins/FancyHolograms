@@ -26,7 +26,7 @@ public class TextAlignmentCMD implements Subcommand {
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
 
-        if (!(player.hasPermission("fancyholograms.hologram.edit.move"))) {
+        if (!(player.hasPermission("fancyholograms.hologram.edit.text_alignment"))) {
             MessageHelper.error(player, "You don't have the required permission to edit a hologram");
             return true;
         }

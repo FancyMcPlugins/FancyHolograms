@@ -24,7 +24,7 @@ public class TextShadowCMD implements Subcommand {
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
 
-        if (!(player.hasPermission("fancyholograms.hologram.edit.textshadow"))) {
+        if (!(player.hasPermission("fancyholograms.hologram.edit.text_shadow"))) {
             MessageHelper.error(player, "You don't have the required permission to edit a hologram");
             return true;
         }

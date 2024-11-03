@@ -19,7 +19,7 @@ public class SetLineCMD implements Subcommand {
 
     public static boolean setLine(CommandSender player, Hologram hologram, int index, String text) {
 
-        if (!(player.hasPermission("fancyholograms.hologram.setline"))) {
+        if (!(player.hasPermission("fancyholograms.hologram.line.set"))) {
             MessageHelper.error(player, "You don't have the required permission to set a line to this hologram");
             return true;
         }

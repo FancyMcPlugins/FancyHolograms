@@ -21,7 +21,7 @@ public class RotatePitchCMD implements Subcommand {
     @Override
     public boolean run(@NotNull CommandSender sender, @Nullable Hologram hologram, @NotNull String[] args) {
 
-        if (!(sender.hasPermission("fancyholograms.hologram.edit.rotate-pitch"))) {
+        if (!(sender.hasPermission("fancyholograms.hologram.edit.rotate_pitch"))) {
             MessageHelper.error(sender, "You don't have the required permission to rotate a hologram");
             return true;
         }

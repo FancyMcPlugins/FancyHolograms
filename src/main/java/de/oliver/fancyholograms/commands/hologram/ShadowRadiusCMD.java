@@ -24,7 +24,7 @@ public class ShadowRadiusCMD implements Subcommand {
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
 
-        if (!(player.hasPermission("fancyholograms.hologram.edit.shadow-radius"))) {
+        if (!(player.hasPermission("fancyholograms.hologram.edit.shadow_radius"))) {
             MessageHelper.error(player, "You don't have the required permission to edit a hologram");
             return true;
         }

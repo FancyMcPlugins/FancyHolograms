@@ -23,15 +23,16 @@ public class CopyCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender sender, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(sender.hasPermission("fancyholograms.hologram.copy"))) {
+            MessageHelper.error(sender, "You don't have the required permission to clone a hologram");
+            return true;
+        }
+
         if (!(sender instanceof Player player)) {
             MessageHelper.error(sender, "You must be a sender to use this command");
             return false;
         }
 
-        if (!(player.hasPermission("fancyholograms.hologram.copy"))) {
-            MessageHelper.error(sender, "You don't have the required permission to clone a hologram");
-            return true;
-        }
 
         if (args.length < 3) {
             MessageHelper.error(sender, "Wrong usage: /hologram help");

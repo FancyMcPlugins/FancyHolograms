@@ -21,7 +21,7 @@ public class MoveToCMD implements Subcommand {
     @Override
     public boolean run(@NotNull CommandSender sender, @Nullable Hologram hologram, @NotNull String[] args) {
 
-        if (!(sender.hasPermission("fancyholograms.hologram.edit.move"))) {
+        if (!(sender.hasPermission("fancyholograms.hologram.edit.move_to"))) {
             MessageHelper.error(sender, "You don't have the required permission to move a hologram");
             return true;
         }

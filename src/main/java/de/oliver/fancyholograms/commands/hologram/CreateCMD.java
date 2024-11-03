@@ -25,16 +25,16 @@ public class CreateCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender sender, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(sender.hasPermission("fancyholograms.hologram.create"))) {
+            MessageHelper.error(sender, "You don't have the required permission to create a hologram");
+            return true;
+        }
+
         if (!(sender instanceof Player player)) {
             MessageHelper.error(sender, "You must be a sender to use this command");
             return false;
         }
-
-        if (!(player.hasPermission("fancyholograms.hologram.create"))) {
-            MessageHelper.error(player, "You don't have the required permission to create a hologram");
-            return true;
-        }
-
         if (args.length < 3) {
             MessageHelper.error(player, "Wrong usage: /hologram help");
             return false;
