@@ -46,6 +46,12 @@ public class InsertBeforeCMD implements Subcommand {
         for (int i = 4; i < args.length; i++) {
             text += args[i] + " ";
         }
+
+        if (text.isEmpty()) {
+            MessageHelper.error(player, "You need to provide a text to insert");
+            return true;
+        }
+
         text = text.substring(0, text.length() - 1);
 
         final var lines = new ArrayList<>(textData.getText());
