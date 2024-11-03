@@ -47,13 +47,13 @@ public class InsertAfterCMD implements Subcommand {
 
         // peaqe
         if (text.isEmpty()) {
-            text = "§r";
-        } else {
-            text = text.substring(0, text.length() - 1);
+            MessageHelper.error(player, "You need to provide a text to insert");
+            return true;
         }
+
+        text = text.substring(0, text.length() - 1);
         // peaqe
 
-        // default
         //text = text.substring(0, text.length() - 1);
 
         final var lines = new ArrayList<>(textData.getText());
