@@ -93,6 +93,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         return Objects.requireNonNull(INSTANCE, "plugin is not initialized");
     }
 
+    public static boolean canGet() {
+        return INSTANCE != null;
+    }
+
     @Override
     public void onLoad() {
         final var adapter = resolveHologramAdapter();

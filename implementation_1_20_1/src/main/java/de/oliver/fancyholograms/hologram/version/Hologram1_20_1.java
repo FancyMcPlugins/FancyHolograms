@@ -174,6 +174,9 @@ public final class Hologram1_20_1 extends Hologram {
             // entity shadow
             display.setShadowRadius(displayData.getShadowRadius());
             display.setShadowStrength(displayData.getShadowStrength());
+
+            // view range
+            display.setViewRange(displayData.getVisibilityDistance());
         }
     }
 

@@ -115,6 +115,8 @@ public final class HologramImpl extends Hologram {
             // entity shadow
             fsDisplay.setShadowRadius(displayData.getShadowRadius());
             fsDisplay.setShadowStrength(displayData.getShadowStrength());
+
+            fsDisplay.setViewRange(displayData.getVisibilityDistance());
         }
     }
 
