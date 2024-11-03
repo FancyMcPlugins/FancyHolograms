@@ -37,6 +37,7 @@ public enum Constants {
             <%primary_color%>- /hologram edit <hologram> seeThrough <true|false> <dark_gray>- <white>Enables/disables whether the text can be seen through blocks
             <%primary_color%>- /hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram
             <%primary_color%>- /hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram
+            <%primary_color%>- /hologram edit <hologram> brightness <block|sky> <0-15> <dark_gray>- <white>Changes the brightness of the hologram
             <%primary_color%>- /hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text
             """.replace("%primary_color%", MessageHelper.getPrimaryColor());
 
