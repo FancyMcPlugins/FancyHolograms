@@ -19,6 +19,11 @@ public class AddLineCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+        if (!(player.hasPermission("fancyholograms.hologram.edit.line.add"))) {
+            MessageHelper.error(player, "You don't have the required permission to add a line to this hologram");
+            return false;
+        }
+
         if (!(hologram.getData() instanceof TextHologramData textData)) {
             MessageHelper.error(player, "This command can only be used on text holograms");
             return false;

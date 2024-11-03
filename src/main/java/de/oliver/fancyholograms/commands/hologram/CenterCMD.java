@@ -20,6 +20,12 @@ public class CenterCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.edit.center"))) {
+            MessageHelper.error(player, "You don't have the required permission to center a hologram");
+            return false;
+        }
+
         Location location = hologram.getData().getLocation();
 
         location.set(

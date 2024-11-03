@@ -23,11 +23,16 @@ public class BlockCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.edit.block"))) {
+            MessageHelper.error(player, "You don't have the required permission to change the block of this hologram");
+            return false;
+        }
+
         if (!(hologram.getData() instanceof BlockHologramData blockData)) {
             MessageHelper.error(player, "This command can only be used on item holograms");
             return false;
         }
-
         Material block = Material.getMaterial(args[3]);
         if (block == null) {
             MessageHelper.error(player, "Could not find block type");

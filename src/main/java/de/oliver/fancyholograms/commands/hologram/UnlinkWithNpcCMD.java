@@ -21,6 +21,12 @@ public class UnlinkWithNpcCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.unlink"))) {
+            MessageHelper.error(player, "You don't have the required permission to unlink a hologram");
+            return false;
+        }
+
         if (!PluginUtils.isFancyNpcsEnabled()) {
             MessageHelper.warning(player, "You need to install the FancyNpcs plugin for this functionality to work");
             MessageHelper.warning(player, "Download link: <click:open_url:'https://modrinth.com/plugin/fancynpcs/versions'><u>click here</u></click>.");

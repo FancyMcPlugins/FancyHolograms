@@ -24,6 +24,12 @@ public class ScaleCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
+
+        if (!(player.hasPermission("fancyholograms.hologram.edit.scale"))) {
+            MessageHelper.error(player, "You don't have the required permission to change the scale of a hologram");
+            return false;
+        }
+
         final var scaleX = Floats.tryParse(args[3]);
         final var scaleY = args.length >= 6 ? Floats.tryParse(args[4]) : scaleX;
         final var scaleZ = args.length >= 6 ? Floats.tryParse(args[5]) : scaleX;
