@@ -3,6 +3,7 @@ package de.oliver.fancyholograms;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.ImmutableList;
 import de.oliver.fancyholograms.api.HologramManager;
+import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramsLoadedEvent;
@@ -14,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnmodifiableView;
+import org.joml.Vector3f;
 
 import java.time.Duration;
 import java.util.*;
@@ -299,7 +301,13 @@ public final class HologramManagerImpl implements HologramManager {
         npc.getData().setShowInTab(false);
         npc.updateForAll();
 
-        final var location = npc.getData().getLocation().clone().add(0, npc.getEyeHeight() + 0.5, 0);
+        final var npcScale = npc.getData().getScale();
+
+        if(hologram.getData() instanceof DisplayHologramData displayData) {
+            displayData.setScale(new Vector3f(npcScale));
+        }
+
+        final var location = npc.getData().getLocation().clone().add(0, (npc.getEyeHeight() * npcScale) + (0.5 * npcScale), 0);
         hologram.getData().setLocation(location);
     }
 }
