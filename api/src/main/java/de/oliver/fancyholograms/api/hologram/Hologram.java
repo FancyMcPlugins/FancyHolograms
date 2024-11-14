@@ -3,15 +3,16 @@ package de.oliver.fancyholograms.api.hologram;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.data.property.Visibility;
-import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 
 import java.util.*;
 
@@ -56,9 +57,13 @@ public abstract class Hologram {
      * Returns the Display entity of this Hologram object.
      * The entity is not registered in the world or server.
      * Only use this method if you know what you're doing.
+     * <p>
+     * This method will return <code>null</code> in 1.20.5 and newer versions
      *
      * @return the Display entity of this Hologram object
      */
+    @ApiStatus.Internal
+    @Deprecated(forRemoval = true, since = "2.4.1")
     public abstract @Nullable Display getDisplayEntity();
 
     protected abstract void create();
