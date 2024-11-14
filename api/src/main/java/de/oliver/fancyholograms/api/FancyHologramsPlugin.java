@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.api;
 
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.ScheduledExecutorService;
@@ -65,18 +66,22 @@ public interface FancyHologramsPlugin {
         private static FancyHologramsPlugin plugin;
 
         public static Boolean isFancyHologramsEnabled() {
-            if (enabled == null) {
-                enabled = Bukkit.getPluginManager().isPluginEnabled("FancyHolograms");
-                if (enabled) {
-                    try {
-                        plugin = (FancyHologramsPlugin) Bukkit.getPluginManager().getPlugin("FancyHolograms");
-                    } catch (ClassCastException e) {
-                        throw new IllegalStateException("API failed to access plugin, if using the FancyHolograms API make sure to set the dependency to compile only.");
-                    }
+            if (enabled != null) return enabled;
+
+            Plugin pl = Bukkit.getPluginManager().getPlugin("FancyHolograms");
+
+            if (pl != null && pl.isEnabled()) {
+                try {
+                    plugin = (FancyHologramsPlugin) pl;
+                } catch (ClassCastException e) {
+                    throw new IllegalStateException("API failed to access plugin, if using the FancyHolograms API make sure to set the dependency to compile only.");
                 }
+
+                enabled = true;
+                return true;
             }
 
-            return enabled;
+            return false;
         }
 
         public static FancyHologramsPlugin getPlugin() {
