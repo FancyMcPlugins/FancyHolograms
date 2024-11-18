@@ -91,7 +91,7 @@ and [Javadocs](https://fancyplugins.de/javadocs/fancyholograms/).
     <groupId>de.oliver</groupId>
     <artifactId>FancyHolograms</artifactId>
     <version>[VERSION]</version>
-    <scope>provided</version>
+    <scope>provided</scope>
 </dependency>
 ```
 
