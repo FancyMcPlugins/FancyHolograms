@@ -65,11 +65,13 @@ public final class Hologram1_19_4 extends Hologram {
             case ITEM -> this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, world);
         }
 
-        final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_19_4.DATA_INTERPOLATION_DURATION_ID.getMapping());
-        display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_DURATION_ID, 1);
+        if (data instanceof DisplayHologramData dd) {
+            final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_19_4.DATA_INTERPOLATION_DURATION_ID.getMapping());
+            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_DURATION_ID, dd.getInterpolationDuration());
 
-        final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_19_4.DATA_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
-        display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
+            final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_19_4.DATA_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
+            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
+        }
 
         update();
     }

@@ -37,8 +37,10 @@ public final class HologramImpl extends Hologram {
             case BLOCK -> this.fsDisplay = new FS_BlockDisplay();
         }
 
-        fsDisplay.setTransformationInterpolationDuration(1);
-        fsDisplay.setTransformationInterpolationStartDeltaTicks(0);
+        if (data instanceof DisplayHologramData dd) {
+            fsDisplay.setTransformationInterpolationDuration(dd.getInterpolationDuration());
+            fsDisplay.setTransformationInterpolationStartDeltaTicks(0);
+        }
 
         update();
     }
