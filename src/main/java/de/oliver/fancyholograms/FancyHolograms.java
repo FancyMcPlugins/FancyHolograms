@@ -1,6 +1,8 @@
 package de.oliver.fancyholograms;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
+import de.oliver.fancyanalytics.api.metrics.MetricSupplier;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyanalytics.logger.appender.Appender;
@@ -53,6 +55,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     private static @Nullable FancyHolograms INSTANCE;
     private final ExtendedFancyLogger fancyLogger;
+    private final FancyAnalyticsAPI fancyAnalytics;
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final ScheduledExecutorService hologramThread = Executors.newSingleThreadScheduledExecutor(
@@ -87,6 +90,8 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         }
         JsonAppender jsonAppender = new JsonAppender(false, false, true, logsFile.getPath());
         this.fancyLogger = new ExtendedFancyLogger("FancyHolograms", LogLevel.INFO, List.of(consoleAppender, jsonAppender), new ArrayList<>());
+        fancyAnalytics = new FancyAnalyticsAPI("", "");
+        fancyAnalytics.getConfig().setDisableLogging(true);
     }
 
     public static @NotNull FancyHolograms get() {
@@ -319,6 +324,54 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> hologramsManager.getHolograms().size()));
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsMuted() ? "No" : "Yes"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
+
+        fancyAnalytics.registerMinecraftPluginMetrics(INSTANCE);
+        fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
+        fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());
+        fancyAnalytics.getExceptionHandler().registerLogger(fancyLogger);
+
+        fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
+
+
+        fancyAnalytics.registerStringMetric(new MetricSupplier<>("server_size", () -> {
+            long onlinePlayers = Bukkit.getOnlinePlayers().size();
+
+            if (onlinePlayers == 0) {
+                return "empty";
+            }
+
+            if (onlinePlayers <= 25) {
+                return "small";
+            }
+
+            if (onlinePlayers <= 100) {
+                return "medium";
+            }
+
+            if (onlinePlayers <= 500) {
+                return "large";
+            }
+
+            return "very_large";
+        }));
+
+        fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_holograms", () -> (double) hologramsManager.getHolograms().size()));
+        fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> configuration.areVersionNotificationsMuted() ? "false" : "true"));
+        fancyAnalytics.registerStringMetric(new MetricSupplier<>("fflag_disable_holograms_for_bedrock_players", () -> FHFeatureFlags.DISABLE_HOLOGRAMS_FOR_BEDROCK_PLAYERS.isEnabled() ? "true" : "false"));
+        fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
+
+        fancyAnalytics.registerStringArrayMetric(new MetricSupplier<>("hologram_type", () -> {
+            if (hologramsManager == null) {
+                return new String[0];
+            }
+
+            return hologramsManager.getHolograms().stream()
+                    .map(h -> h.getData().getType().name())
+                    .toArray(String[]::new);
+        }));
+
+
+        fancyAnalytics.initialize();
     }
 
 }

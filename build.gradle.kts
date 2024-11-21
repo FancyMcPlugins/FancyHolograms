@@ -64,6 +64,7 @@ dependencies {
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     implementation("de.oliver:FancySitula:${findProperty("fancySitulaVersion")}")
+    implementation("de.oliver.FancyAnalytics:api:0.1.6")
     implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
 
     compileOnly("de.oliver:FancyNpcs:${findProperty("fancyNpcsVersion")}")
