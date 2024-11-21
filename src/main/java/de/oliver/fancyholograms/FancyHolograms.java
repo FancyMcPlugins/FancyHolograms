@@ -55,7 +55,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     private static @Nullable FancyHolograms INSTANCE;
     private final ExtendedFancyLogger fancyLogger;
-    private final FancyAnalyticsAPI fancyAnalytics;
     private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
     private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
     private final ScheduledExecutorService hologramThread = Executors.newSingleThreadScheduledExecutor(
@@ -70,6 +69,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
                     .setNameFormat("FancyHolograms-FileStorageExecutor")
                     .build()
     );
+    private FancyAnalyticsAPI fancyAnalytics;
     private HologramConfiguration configuration = new FancyHologramsConfiguration();
     private HologramStorage hologramStorage = new FlatFileHologramStorage();
     private @Nullable HologramManagerImpl hologramsManager;
@@ -90,8 +90,6 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         }
         JsonAppender jsonAppender = new JsonAppender(false, false, true, logsFile.getPath());
         this.fancyLogger = new ExtendedFancyLogger("FancyHolograms", LogLevel.INFO, List.of(consoleAppender, jsonAppender), new ArrayList<>());
-        fancyAnalytics = new FancyAnalyticsAPI("", "");
-        fancyAnalytics.getConfig().setDisableLogging(true);
     }
 
     public static @NotNull FancyHolograms get() {
@@ -325,13 +323,19 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsMuted() ? "No" : "Yes"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
+        if (!isDevelopmentBuild) {
+            return;
+        }
+
+        fancyAnalytics = new FancyAnalyticsAPI("3b77bd59-2b01-46f2-b3aa-a9584401797f", "E2gW5zc2ZTk1OGFkNGY2ZDQ0ODlM6San");
+        fancyAnalytics.getConfig().setDisableLogging(true);
+
         fancyAnalytics.registerMinecraftPluginMetrics(INSTANCE);
         fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
         fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());
         fancyAnalytics.getExceptionHandler().registerLogger(fancyLogger);
 
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
-
 
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("server_size", () -> {
             long onlinePlayers = Bukkit.getOnlinePlayers().size();
