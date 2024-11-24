@@ -54,7 +54,7 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))
@@ -62,14 +62,14 @@ dependencies {
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    implementation("de.oliver:FancySitula:${findProperty("fancySitulaVersion")}")
+    implementation("de.oliver:FancyLib:33")
+    implementation("de.oliver:FancySitula:0.0.12")
     implementation("de.oliver.FancyAnalytics:api:0.1.6")
-    implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
+    implementation("de.oliver.FancyAnalytics:logger:0.0.6")
 
-    compileOnly("de.oliver:FancyNpcs:${findProperty("fancyNpcsVersion")}")
-    compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
-    compileOnly("org.geysermc.floodgate:api:${findProperty("floodgateVersion")}")
+    compileOnly("de.oliver:FancyNpcs:2.4.0")
+    compileOnly("org.lushplugins:ChatColorHandler:5.1.0")
+    compileOnly("org.geysermc.floodgate:api:2.2.3-SNAPSHOT")
 }
 
 paper {
@@ -104,13 +104,12 @@ paper {
 
 tasks {
     runServer {
-        minecraftVersion(findProperty("minecraftVersion").toString())
-//        minecraftVersion("1.20.4")
+        minecraftVersion("1.21.3")
 
         downloadPlugins {
-            modrinth("fancynpcs", "2.3.0")
-            hangar("ViaVersion", "5.0.3")
-            hangar("ViaBackwards", "5.0.3")
+            modrinth("fancynpcs", "2.4.0")
+            hangar("ViaVersion", "5.1.1")
+            hangar("ViaBackwards", "5.1.1")
 //            modrinth("multiverse-core", "4.3.11")
             hangar("PlaceholderAPI", "2.11.6")
         }
