@@ -29,7 +29,8 @@ val supportedVersions =
         "1.21",
         "1.21.1",
         "1.21.2",
-        "1.21.3"
+        "1.21.3",
+        "1.21.4",
     )
 
 allprojects {
@@ -63,7 +64,7 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:33")
-    implementation("de.oliver:FancySitula:0.0.12")
+    implementation("de.oliver:FancySitula:0.0.13")
     implementation("de.oliver.FancyAnalytics:api:0.1.6")
     implementation("de.oliver.FancyAnalytics:logger:0.0.6")
 
@@ -104,7 +105,7 @@ paper {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.3")
+        minecraftVersion("1.21.4")
 
         downloadPlugins {
             modrinth("fancynpcs", "2.4.0")
