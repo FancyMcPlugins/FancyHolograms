@@ -36,7 +36,7 @@ val supportedVersions =
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.4.0" + (if (buildId != null) ".$buildId" else "")
+    version = "2.4.1" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast hologram plugin using display entities"
 
     repositories {
