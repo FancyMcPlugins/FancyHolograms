@@ -4,6 +4,7 @@ import de.oliver.fancyholograms.api.hologram.HologramType;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Display;
+import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3f;
 
 import java.util.Locale;
@@ -114,10 +115,12 @@ public class DisplayHologramData extends HologramData {
         return this;
     }
 
+    @ApiStatus.Experimental
     public int getInterpolationDuration() {
         return interpolationDuration;
     }
 
+    @ApiStatus.Experimental
     public DisplayHologramData setInterpolationDuration(int interpolationDuration) {
         if (this.interpolationDuration != interpolationDuration) {
             this.interpolationDuration = interpolationDuration;
