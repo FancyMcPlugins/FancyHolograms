@@ -1,6 +1,7 @@
 package de.oliver.fancyholograms.api.events;
 
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,7 @@ public final class HologramShowEvent extends HologramEvent {
     private final Player player;
 
     public HologramShowEvent(@NotNull final Hologram hologram, @NotNull final Player player) {
-        super(hologram, true);
+        super(hologram, !Bukkit.isPrimaryThread());
 
         this.player = player;
     }
