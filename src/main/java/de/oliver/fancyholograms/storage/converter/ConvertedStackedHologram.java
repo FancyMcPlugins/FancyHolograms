@@ -14,13 +14,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConvertedHologram {
+public class ConvertedStackedHologram {
     private final @NotNull String baseHologramId;
     private final @NotNull Location baseHologramLocation;
     private final @Nullable CommandSender audience;
     private final @NotNull List<HologramData> hologramParts = new ArrayList<>();
 
-    public ConvertedHologram(@NotNull String baseHologramId, @NotNull Location baseHologramLocation, @Nullable CommandSender audience) {
+    public ConvertedStackedHologram(@NotNull String baseHologramId, @NotNull Location baseHologramLocation, @Nullable CommandSender audience) {
         this.baseHologramId = baseHologramId;
         this.baseHologramLocation = baseHologramLocation;
         this.audience = audience;

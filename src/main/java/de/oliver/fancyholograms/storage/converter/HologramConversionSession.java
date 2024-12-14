@@ -8,13 +8,13 @@ import java.util.List;
 public class HologramConversionSession {
 
     private final @NotNull HologramConverter converter;
-    private final @NotNull List<ConvertedHologram> results = new ArrayList<>();
+    private final @NotNull List<ConvertedStackedHologram> results = new ArrayList<>();
 
     public HologramConversionSession(@NotNull HologramConverter converter) {
         this.converter = converter;
     }
 
     public void run() {
-        
+
     }
 }
