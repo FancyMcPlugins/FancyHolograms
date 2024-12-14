@@ -1,11 +1,16 @@
 package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
+import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.message.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -28,8 +33,8 @@ public final class FancyHologramsCMD extends Command {
             return false;
         }
 
-        if (args.length != 1) {
-            MessageHelper.info(sender, "/FancyHolograms <save|reload|version>");
+        if (args.length < 1) {
+            MessageHelper.info(sender, Constants.FH_COMMAND_USAGE);
             return false;
         }
 
@@ -50,8 +55,36 @@ public final class FancyHologramsCMD extends Command {
                     FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
                 });
             }
+            case "convert" -> {
+                if (args.length < 2) {
+                    MessageHelper.info(sender, "Usage: /fancyholograms convert <type> args[]");
+                    return false;
+                }
+
+                final String converterId = args[1];
+                FHConversionRegistry.getConverterById(converterId)
+                    .ifPresentOrElse((converter) -> {
+                        final String[] converterArgs = Arrays.asList(args)
+                            .subList(1, args.length)
+                            .toArray(String[]::new);
+
+                        try {
+                            final List<HologramData> holograms = converter.convert(converterArgs);
+
+                            for (final HologramData hologram : holograms) {
+                                this.plugin.getHologramsManager().create(hologram);
+                            }
+
+                            // TODO(matt): I think exact feedback is needed e.g. WHAT was converted and how (logger?)
+                            // TODO(matt): Give options to delete them or teleport and a list of IDs please
+                            MessageHelper.info(sender, String.format("Converted successfully, produced %s FancyHolograms!", holograms.size()));
+                        } catch (Exception error) {
+                            MessageHelper.warning(sender, error.getMessage());
+                        }
+                    }, () -> MessageHelper.warning(sender, "That converter is not registered. Look at the developer documentation if you are adding converters."));
+            }
             default -> {
-                MessageHelper.info(sender, "/FancyHolograms <save|reload|version>");
+                MessageHelper.info(sender, Constants.FH_COMMAND_USAGE);
                 return false;
             }
         }
@@ -65,8 +98,8 @@ public final class FancyHologramsCMD extends Command {
             return Collections.emptyList();
         }
 
-        return Stream.of("version", "reload", "save")
-                .filter(alias -> alias.startsWith(args[0].toLowerCase(Locale.ROOT)))
-                .toList();
+        return Stream.of("version", "reload", "save", "convert")
+            .filter(alias -> alias.startsWith(args[0].toLowerCase(Locale.ROOT)))
+            .toList();
     }
 }

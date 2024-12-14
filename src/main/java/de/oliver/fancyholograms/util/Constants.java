@@ -11,6 +11,7 @@ public enum Constants {
 
     public final static DecimalFormat COORDINATES_DECIMAL_FORMAT = new DecimalFormat("#########.##");
 
+    public static final String FH_COMMAND_USAGE = "/fancyholograms <save|reload|version|convert>";
 
     public static final String HELP_TEXT = """
             <%primary_color%><b>FancyHolograms commands help:<reset>
