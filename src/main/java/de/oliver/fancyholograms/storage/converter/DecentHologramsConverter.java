@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.storage.converter;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,6 +24,7 @@ public class DecentHologramsConverter implements HologramConverter {
     private static final float TEXT_DISPLAY_PIXEL = VANILLA_PIXEL_BLOCK_SIZE / 3;
     private static final float TEXT_DISPLAY_LINE_HEIGHT = TEXT_DISPLAY_PIXEL * 14;
     private static final String PROCESS_ICONS_FLAG = "--processIcons";
+    private static final String ICON_PREFIX = "#ICON: ";
     private static final File DECENT_HOLOGRAMS_DATA = new File("./plugins/DecentHolograms/holograms/");
 
     @Override
@@ -33,6 +35,18 @@ public class DecentHologramsConverter implements HologramConverter {
     @Override
     public @NotNull List<HologramData> convert(@NotNull HologramConversionSession spec) {
         boolean processIcons = Arrays.stream(spec.getAdditionalArguments()).anyMatch((arg) -> arg.equalsIgnoreCase(PROCESS_ICONS_FLAG));
+
+        if (processIcons) {
+            MessageHelper.warning(
+                spec.getInvoker(),
+                "--processIcons argument is experimental and may produce unexpected results."
+            );
+        } else {
+            MessageHelper.info(
+                spec.getInvoker(),
+                "Any lines containing an #ICON will be removed. You may run with --processIcons to attempt conversion, but this is experimental."
+            );
+        }
 
         final List<String> targetHolograms = getConvertableHolograms()
             .stream()
@@ -98,10 +112,16 @@ public class DecentHologramsConverter implements HologramConverter {
 
         final List<Map<String, ?>> firstPageSections = ((List<Map<String, ?>>) firstPage);
 
-        final List<String> lines = firstPageSections
+        List<String> lines = firstPageSections
             .stream()
             .map((line) -> (String) line.get("content"))
             .toList();
+
+        if (!processIcons) {
+            lines = lines.stream()
+                .map((line) -> line.startsWith(ICON_PREFIX) ? "" : line)
+                .toList();
+        }
 
         final TextHologramData hologram = new TextHologramData(hologramId, location);
 
@@ -140,8 +160,8 @@ public class DecentHologramsConverter implements HologramConverter {
 
             if (!(contentEntry instanceof String line)) continue;
 
-            if (line.startsWith("#ICON: ")) {
-                final String materialTypeString = line.replace("#ICON: ", "");
+            if (line.startsWith(ICON_PREFIX)) {
+                final String materialTypeString = line.replace(ICON_PREFIX, "");
                 final Material material = Material.valueOf(materialTypeString);
 
                 final String formattedId = String.format("%s_icon_%s", base.getName(), subTypes++);
