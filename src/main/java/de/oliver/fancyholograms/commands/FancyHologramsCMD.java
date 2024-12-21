@@ -2,7 +2,9 @@ package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.storage.converter.ConverterTarget;
 import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
+import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.translations.message.Message;
@@ -14,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public final class FancyHologramsCMD extends Command {
@@ -68,20 +71,29 @@ public final class FancyHologramsCMD extends Command {
                             .subList(1, args.length)
                             .toArray(String[]::new);
 
+                        final ConverterTarget target = ConverterTarget.ofStringNullable(args[0]);
+
+                        if (target == null) {
+                            MessageHelper.error(sender, "Invalid regex for your conversion target!");
+                            return;
+                        }
+
+                        final HologramConversionSession session = new HologramConversionSession(target, sender, converterArgs);
+
                         try {
-                            final List<HologramData> holograms = converter.convert(converterArgs);
+                            final List<HologramData> holograms = converter.convert(session);
 
                             for (final HologramData hologram : holograms) {
                                 this.plugin.getHologramsManager().create(hologram);
                             }
 
-                            // TODO(matt): I think exact feedback is needed e.g. WHAT was converted and how (logger?)
                             // TODO(matt): Give options to delete them or teleport and a list of IDs please
-                            MessageHelper.info(sender, String.format("Converted successfully, produced %s FancyHolograms!", holograms.size()));
+
+                            MessageHelper.info(sender, String.format("Converted successfully, produced %s total holograms!", holograms.size()));
                         } catch (Exception error) {
-                            MessageHelper.warning(sender, error.getMessage());
+                            MessageHelper.error(sender, error.getMessage());
                         }
-                    }, () -> MessageHelper.warning(sender, "That converter is not registered. Look at the developer documentation if you are adding converters."));
+                    }, () -> MessageHelper.error(sender, "That converter is not registered. Look at the developer documentation if you are adding converters."));
             }
             default -> {
                 MessageHelper.info(sender, Constants.FH_COMMAND_USAGE);

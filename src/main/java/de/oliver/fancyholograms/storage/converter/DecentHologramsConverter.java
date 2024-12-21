@@ -30,34 +30,47 @@ public class DecentHologramsConverter implements HologramConverter {
         return DECENT_HOLOGRAMS_DATA.exists();
     }
 
-    // TODO(Matt): Should this be replaced with an object builder instead of args from a command interface?
     @Override
-    public List<HologramData> convert(@NotNull String[] args) {
-        boolean processIcons = Arrays.stream(args).anyMatch((arg) -> arg.equalsIgnoreCase(PROCESS_ICONS_FLAG));
+    public @NotNull List<HologramData> convert(@NotNull HologramConversionSession spec) {
+        boolean processIcons = Arrays.stream(spec.getAdditionalArguments()).anyMatch((arg) -> arg.equalsIgnoreCase(PROCESS_ICONS_FLAG));
 
-        final String firstArg = Arrays.stream(args)
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("No arguments provided."));
+        final List<String> targetHolograms = getConvertableHolograms()
+            .stream()
+            .filter((id) -> spec.getTarget().matches(id))
+            .toList();
 
-        if (firstArg.equalsIgnoreCase(PROCESS_ICONS_FLAG)) {
-            throw new IllegalArgumentException("First argument must be a hologram to convert, not a flag.");
+        if (targetHolograms.isEmpty()) {
+            throw new RuntimeException("The provided target matches no holograms.");
         }
 
-        if (firstArg.equalsIgnoreCase("*")) {
-            // Convert all
-            final File[] files = DECENT_HOLOGRAMS_DATA.listFiles();
+        ArrayList<HologramData> converted = new ArrayList<>();
 
-            if (files == null || files.length == 0) {
-                throw new RuntimeException("DecentHolograms holograms folder doesn't exist or is empty.");
+        for (final String id : targetHolograms) {
+            final List<HologramData> results = convert(id, processIcons);
+
+            if (results.isEmpty()) {
+                spec.logUnsuccessfulConversion(id, "Unable to convert this hologram, there is no convertable content.");
+            } else {
+                spec.logSuccessfulConversion(id, results);
             }
 
-            return Arrays.stream(files)
-                .map((file) -> convert(file.getName(), processIcons))
-                .flatMap(List::stream)
-                .toList();
-        } else {
-            return convert(firstArg, processIcons);
+            converted.addAll(results);
         }
+
+        return converted;
+    }
+
+    @Override
+    public @NotNull List<String> getConvertableHolograms() {
+        final File[] files = DECENT_HOLOGRAMS_DATA.listFiles();
+
+        if (files == null || files.length == 0) {
+            throw new RuntimeException("DecentHolograms holograms folder doesn't exist or is empty.");
+        }
+
+        return Arrays.stream(files)
+            .map((file) -> file.getName().replace(".yml", ""))
+            .toList();
     }
 
     private @NotNull List<HologramData> convert(@NotNull String hologramId, boolean processIcons) {
@@ -76,7 +89,6 @@ public class DecentHologramsConverter implements HologramConverter {
         final double displayRange = data.getDouble("display-range");
         final int updateInterval = data.getInt("update-interval");
 
-        // TODO facing
         // TODO handle exceptions here
         final Object firstPage = data.getMapList("pages")
             .getFirst()
@@ -109,6 +121,7 @@ public class DecentHologramsConverter implements HologramConverter {
         return results;
     }
 
+    @Deprecated
     private @NotNull List<HologramData> convertSplitLines(@NotNull TextHologramData base, @NotNull List<Map<String, ?>> lines) {
         final List<HologramData> stack = new ArrayList<>();
         final List<String> finalBaseLines = new ArrayList<>();

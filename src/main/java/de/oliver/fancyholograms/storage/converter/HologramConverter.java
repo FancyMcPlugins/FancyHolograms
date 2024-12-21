@@ -11,9 +11,13 @@ public interface HologramConverter {
 
     /**
      * Returns a list of converted holograms
-     * @param args Arguments provided in the command invocation.
+     * @param spec Configuration of the hologram conversion
      * @return A list of converted holograms.
      */
-    List<HologramData> convert(@NotNull String[] args);
+    @NotNull List<HologramData> convert(@NotNull HologramConversionSession spec);
+
+    default @NotNull List<String> getConvertableHolograms() {
+        return List.of();
+    }
 
 }
