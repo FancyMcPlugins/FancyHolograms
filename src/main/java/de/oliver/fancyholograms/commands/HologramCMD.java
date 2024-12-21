@@ -156,7 +156,7 @@ public final class HologramCMD extends Command {
 
             final var usingNpcs = PluginUtils.isFancyNpcsEnabled();
 
-            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", "brightness", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
+            List<String> suggestions = new ArrayList<>(Arrays.asList("position", "moveHere", "center", "moveTo", "rotate", "rotatepitch", "billboard", "scale", "translate", "visibilityDistance", "visibility", "shadowRadius", "shadowStrength", "brightness", usingNpcs ? "linkWithNpc" : "", usingNpcs ? "unlinkWithNpc" : ""));
             suggestions.addAll(type.getCommands());
 
             return suggestions.stream().filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase(Locale.ROOT))).toList();
@@ -320,6 +320,7 @@ public final class HologramCMD extends Command {
             case "rotatepitch" -> new RotatePitchCMD().run(player, hologram, args);
             case "billboard" -> new BillboardCMD().run(player, hologram, args);
             case "scale" -> new ScaleCMD().run(player, hologram, args);
+            case "translate" -> new TranslateCommand().run(player, hologram, args);
             case "updatetextinterval" -> new UpdateTextIntervalCMD().run(player, hologram, args);
             case "visibilitydistance" -> new VisibilityDistanceCMD().run(player, hologram, args);
             case "visibility" -> new VisibilityCMD().run(player, hologram, args);
