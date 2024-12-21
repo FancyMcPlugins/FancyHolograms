@@ -42,6 +42,11 @@ public class ConverterTarget {
     }
 
     public static @Nullable ConverterTarget ofStringNullable(@NotNull String match) {
+
+        if (match.equalsIgnoreCase("*")) {
+            return all();
+        }
+
         try {
             return new ConverterTarget(Pattern.compile(match));
         } catch (Exception ignored) {

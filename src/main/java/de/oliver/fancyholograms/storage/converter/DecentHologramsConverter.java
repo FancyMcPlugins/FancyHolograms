@@ -78,7 +78,7 @@ public class DecentHologramsConverter implements HologramConverter {
             .resolve(hologramId.endsWith(".yml") ? hologramId : hologramId + ".yml")
             .toFile();
 
-        if (!file.exists() || file.canRead()) {
+        if (!file.exists() || !file.canRead()) {
             throw new RuntimeException("File does not exist or is not readable.");
         }
 
@@ -110,6 +110,7 @@ public class DecentHologramsConverter implements HologramConverter {
         hologram.setTextUpdateInterval(updateInterval);
         hologram.setVisibilityDistance((int) displayRange);
         hologram.setBillboard(Display.Billboard.VERTICAL);
+        hologram.setPersistent(true);
 
         List<HologramData> results = new ArrayList<>();
         if (processIcons) {
@@ -130,11 +131,14 @@ public class DecentHologramsConverter implements HologramConverter {
         int subTypes = 0;
         float currentYOffset = 0f;
 
+        // Track total height of hologram apx (hologram y is inverted)
+        float totalHeight = 0f;
+
         for (final Map<String, ?> entry : lines) {
-            final Object lineEntry = entry.get("line");
+            final Object contentEntry = entry.get("content");
             // TODO add height
 
-            if (!(lineEntry instanceof String line)) continue;
+            if (!(contentEntry instanceof String line)) continue;
 
             if (line.startsWith("#ICON: ")) {
                 final String materialTypeString = line.replace("#ICON: ", "");
@@ -145,21 +149,44 @@ public class DecentHologramsConverter implements HologramConverter {
 
                 data.setItemStack(new ItemStack(material));
                 data.setBillboard(Display.Billboard.VERTICAL);
+                data.setScale(new Vector3f(0.45f, 0.45f, 0.45f));
                 data.setTranslation(new Vector3f(0f, currentYOffset, 0f));
+                data.setVisibilityDistance(base.getVisibilityDistance());
+                data.setPersistent(true);
 
-                // TODO find average item height
-                currentYOffset += TEXT_DISPLAY_LINE_HEIGHT + 0.12f;
+                float h = TEXT_DISPLAY_LINE_HEIGHT + 0.12f;
+
+                currentYOffset += h;
+                totalHeight += h;
 
                 // Empty space for text
+                // TODO find average item height
                 finalBaseLines.addAll(List.of("&r", "&r"));
+                stack.add(data);
             } else {
                 // Empty line
-                finalBaseLines.add("&r");
-                currentYOffset += TEXT_DISPLAY_LINE_HEIGHT;
+                finalBaseLines.add(line);
+                float h = TEXT_DISPLAY_LINE_HEIGHT;
+
+                currentYOffset += h;
+                totalHeight += h;
             }
         }
 
         base.setText(finalBaseLines);
+
+        // Now invert their y offset
+        for (@NotNull HologramData holo : stack) {
+            if (holo instanceof ItemHologramData itemHolo) {
+                itemHolo.setTranslation(
+                    new Vector3f(
+                        itemHolo.getTranslation().x,
+                        totalHeight - itemHolo.getTranslation().y - 0.25f,
+                        itemHolo.getTranslation().z
+                    )
+                );
+            }
+        }
 
         return stack;
     }
@@ -176,8 +203,8 @@ public class DecentHologramsConverter implements HologramConverter {
         World world = Objects.requireNonNull(Bukkit.getWorld(split[0]), String.format("World does not exist for location %s", location));
 
         double x = Double.parseDouble(split[1]);
-        double y = Double.parseDouble(split[1]);
-        double z = Double.parseDouble(split[1]);
+        double y = Double.parseDouble(split[2]);
+        double z = Double.parseDouble(split[3]);
 
         return new Location(world, x, y, z);
     }

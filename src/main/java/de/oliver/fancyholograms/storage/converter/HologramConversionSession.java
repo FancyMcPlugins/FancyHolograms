@@ -65,13 +65,13 @@ public class HologramConversionSession {
     }
 
     public void logSuccessfulConversion(@NotNull String oldHologram, @NotNull List<HologramData> results) {
-        MessageHelper.success(
+        MessageHelper.info(
             getInvoker(),
             String.format("Successfully converted %s to %s hologram(s).", oldHologram, results.size())
         );
 
         for (@NotNull HologramData data : results) {
-            MessageHelper.success(
+            MessageHelper.info(
                 getInvoker(),
                 String.format(" - %s type: %s", data.getName(), data.getType().name())
             );

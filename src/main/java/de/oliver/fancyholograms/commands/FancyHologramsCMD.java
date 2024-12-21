@@ -2,6 +2,7 @@ package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.storage.converter.ConverterTarget;
 import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
@@ -12,10 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -59,8 +57,8 @@ public final class FancyHologramsCMD extends Command {
                 });
             }
             case "convert" -> {
-                if (args.length < 2) {
-                    MessageHelper.info(sender, "Usage: /fancyholograms convert <type> args[]");
+                if (args.length < 3) {
+                    MessageHelper.info(sender, "Usage: /fancyholograms convert <type> <targets> [args...]");
                     return false;
                 }
 
@@ -68,10 +66,10 @@ public final class FancyHologramsCMD extends Command {
                 FHConversionRegistry.getConverterById(converterId)
                     .ifPresentOrElse((converter) -> {
                         final String[] converterArgs = Arrays.asList(args)
-                            .subList(1, args.length)
+                            .subList(2, args.length)
                             .toArray(String[]::new);
 
-                        final ConverterTarget target = ConverterTarget.ofStringNullable(args[0]);
+                        final ConverterTarget target = ConverterTarget.ofStringNullable(args[2]);
 
                         if (target == null) {
                             MessageHelper.error(sender, "Invalid regex for your conversion target!");
@@ -83,13 +81,15 @@ public final class FancyHologramsCMD extends Command {
                         try {
                             final List<HologramData> holograms = converter.convert(session);
 
-                            for (final HologramData hologram : holograms) {
-                                this.plugin.getHologramsManager().create(hologram);
+                            for (final HologramData data : holograms) {
+                                final Hologram hologram = this.plugin.getHologramsManager().create(data);
+                                this.plugin.getHologramsManager().addHologram(hologram);
                             }
 
+                            this.plugin.getHologramsManager().saveHolograms();
                             // TODO(matt): Give options to delete them or teleport and a list of IDs please
 
-                            MessageHelper.info(sender, String.format("Converted successfully, produced %s total holograms!", holograms.size()));
+                            MessageHelper.success(sender, String.format("Converted successfully, produced %s total holograms!", holograms.size()));
                         } catch (Exception error) {
                             MessageHelper.error(sender, error.getMessage());
                         }
@@ -106,12 +106,34 @@ public final class FancyHologramsCMD extends Command {
 
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) throws IllegalArgumentException {
-        if (args.length != 1) {
+        if (args.length < 1) {
             return Collections.emptyList();
         }
 
-        return Stream.of("version", "reload", "save", "convert")
-            .filter(alias -> alias.startsWith(args[0].toLowerCase(Locale.ROOT)))
+        List<String> suggestions = new ArrayList<>();
+
+        if (args.length == 1) {
+            suggestions.addAll(Arrays.asList("version", "reload", "save", "convert"));
+        } else {
+            if (Objects.equals(args[0], "convert")) {
+
+                if (args.length == 2) {
+                    suggestions.addAll(FHConversionRegistry.getAllConverterIds());
+                } else if (args.length == 3) {
+                    final String converterId = args[1];
+                    FHConversionRegistry.getConverterById(converterId)
+                        .ifPresent((converter) -> {
+                            suggestions.addAll(converter.getConvertableHolograms());
+                            suggestions.add("*");
+                        });
+                }
+            }
+        }
+
+        String lastArgument = args[args.length - 1];
+
+        return suggestions.stream()
+            .filter(alias -> alias.startsWith(lastArgument.toLowerCase(Locale.ROOT)))
             .toList();
     }
 }

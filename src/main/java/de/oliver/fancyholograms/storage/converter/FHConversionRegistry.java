@@ -5,19 +5,24 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class FHConversionRegistry {
     private static final Map<String, HologramConverter> converters = new HashMap<>();
+
+    public static void registerBuiltInConverters() {
+        register("DecentHolograms", new DecentHologramsConverter());
+    }
 
     public static boolean register(@NotNull String id, HologramConverter converter) {
         return converters.putIfAbsent(id, converter) != null;
     }
 
-    public static Optional<HologramConverter> getConverterById(@NotNull String id) {
+    public static @NotNull Optional<HologramConverter> getConverterById(@NotNull String id) {
         return Optional.ofNullable(converters.get(id));
     }
 
-    public static <T extends HologramConverter> Optional<T> getConverter(@NotNull String id) {
+    public static <T extends HologramConverter> @NotNull Optional<T> getConverter(@NotNull String id) {
         return getConverterById(id)
             .map((converter) -> {
                 try {
@@ -28,7 +33,7 @@ public class FHConversionRegistry {
             });
     }
 
-    public static <T extends HologramConverter> Optional<T> getConverter(@NotNull Class<T> clazz) {
+    public static <T extends HologramConverter> @NotNull Optional<T> getConverter(@NotNull Class<T> clazz) {
         return converters.values()
             .stream()
             .filter(clazz::isInstance)
@@ -40,5 +45,9 @@ public class FHConversionRegistry {
                     return null;
                 }
             });
+    }
+
+    public static @NotNull Set<String> getAllConverterIds() {
+        return converters.keySet();
     }
 }
