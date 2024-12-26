@@ -1,23 +1,44 @@
 package de.oliver.fancyholograms.storage.converter;
 
+import de.oliver.fancyanalytics.api.events.Event;
+import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public interface HologramConverter {
+public abstract class HologramConverter {
 
-    boolean canRunConverter();
+    public abstract @NotNull String getId();
+
+    public abstract boolean canRunConverter();
 
     /**
      * Returns a list of converted holograms
      * @param spec Configuration of the hologram conversion
      * @return A list of converted holograms.
      */
-    @NotNull List<HologramData> convert(@NotNull HologramConversionSession spec);
+    protected abstract @NotNull List<HologramData> convertHolograms(@NotNull HologramConversionSession spec);
 
-    default @NotNull List<String> getConvertableHolograms() {
-        return List.of();
+
+    /**
+     * Returns a list of converted holograms
+     * @param spec Configuration of the hologram conversion
+     * @return A list of converted holograms.
+     */
+    public final @NotNull List<HologramData> convert(@NotNull HologramConversionSession spec) {
+        List<HologramData> converted = convertHolograms(spec);
+
+        Event event = new Event("HologramsConverted")
+                .withProperty("converter", getId())
+                .withProperty("target", spec.getTarget().getRegex().pattern())
+                .withProperty("amount", String.valueOf(converted.size()));
+        FancyHolograms.get().getFancyAnalytics().sendEvent(event);
+
+        return converted;
     }
 
+    public @NotNull List<String> getConvertableHolograms() {
+        return List.of();
+    }
 }

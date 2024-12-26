@@ -19,7 +19,7 @@ import org.joml.Vector3f;
 import java.io.File;
 import java.util.*;
 
-public class DecentHologramsConverter implements HologramConverter {
+public class DecentHologramsConverter extends HologramConverter {
     private static final float VANILLA_PIXEL_BLOCK_SIZE = 0.0625f;
     private static final float TEXT_DISPLAY_PIXEL = VANILLA_PIXEL_BLOCK_SIZE / 3;
     private static final float TEXT_DISPLAY_LINE_HEIGHT = TEXT_DISPLAY_PIXEL * 14;
@@ -28,12 +28,17 @@ public class DecentHologramsConverter implements HologramConverter {
     private static final File DECENT_HOLOGRAMS_DATA = new File("./plugins/DecentHolograms/holograms/");
 
     @Override
+    public @NotNull String getId() {
+        return "DecentHolograms";
+    }
+
+    @Override
     public boolean canRunConverter() {
         return DECENT_HOLOGRAMS_DATA.exists();
     }
 
     @Override
-    public @NotNull List<HologramData> convert(@NotNull HologramConversionSession spec) {
+    public @NotNull List<HologramData> convertHolograms(@NotNull HologramConversionSession spec) {
         boolean processIcons = Arrays.stream(spec.getAdditionalArguments()).anyMatch((arg) -> arg.equalsIgnoreCase(PROCESS_ICONS_FLAG));
 
         if (processIcons) {

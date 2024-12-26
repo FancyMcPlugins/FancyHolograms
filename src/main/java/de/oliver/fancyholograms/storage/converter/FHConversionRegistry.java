@@ -12,11 +12,11 @@ public class FHConversionRegistry {
     private static final Map<String, HologramConverter> converters = new HashMap<>();
 
     public static void registerBuiltInConverters() {
-        register("DecentHolograms", new DecentHologramsConverter());
+        register(new DecentHologramsConverter());
     }
 
-    public static boolean register(@NotNull String id, HologramConverter converter) {
-        return converters.putIfAbsent(id, converter) != null;
+    public static boolean register(HologramConverter converter) {
+        return converters.putIfAbsent(converter.getId(), converter) != null;
     }
 
     public static @NotNull Optional<HologramConverter> getConverterById(@NotNull String id) {
