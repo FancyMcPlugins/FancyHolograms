@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FHConversionRegistry {
     private static final Map<String, HologramConverter> converters = new HashMap<>();
@@ -49,5 +50,14 @@ public class FHConversionRegistry {
 
     public static @NotNull Set<String> getAllConverterIds() {
         return converters.keySet();
+    }
+
+    public static @NotNull Set<String> getAllUsableConverterIds() {
+        return converters
+            .entrySet()
+            .stream()
+            .filter((entry) -> entry.getValue().canRunConverter())
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toSet());
     }
 }

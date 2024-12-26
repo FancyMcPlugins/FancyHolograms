@@ -79,7 +79,7 @@ public class DecentHologramsConverter implements HologramConverter {
         final File[] files = DECENT_HOLOGRAMS_DATA.listFiles();
 
         if (files == null || files.length == 0) {
-            throw new RuntimeException("DecentHolograms holograms folder doesn't exist or is empty.");
+            return Collections.emptyList();
         }
 
         return Arrays.stream(files)
@@ -105,12 +105,20 @@ public class DecentHologramsConverter implements HologramConverter {
 
         // TODO handle exceptions here
         final Object firstPage = data.getMapList("pages")
-            .getFirst()
+            .stream()
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException(String.format("There are no pages for %s!", hologramId)))
             .get("lines");
 
-        Objects.requireNonNull(firstPage, "There is no first page for that hologram.");
+        Objects.requireNonNull(firstPage, String.format("There is no first page for %s!", hologramId));
 
-        final List<Map<String, ?>> firstPageSections = ((List<Map<String, ?>>) firstPage);
+        final List<Map<String, ?>> firstPageSections;
+
+        try {
+            firstPageSections = (List<Map<String, ?>>) firstPage;
+        } catch (ClassCastException ignored) {
+            throw new RuntimeException(String.format("The first page for %s is invalid!", hologramId));
+        }
 
         List<String> lines = firstPageSections
             .stream()
@@ -142,7 +150,19 @@ public class DecentHologramsConverter implements HologramConverter {
         return results;
     }
 
-    @Deprecated
+    /**
+     * Attempts to convert #ICON prefixed lines into item displays.
+     * <p>
+     * This is done off some arbitrary values I found when testing
+     * on another project, and might not be 100% accurate. However,
+     * it should be enough to give users an idea of what it would look
+     * like.
+     *
+     * @author MattMX
+     * @param base The root hologram (background)
+     * @param lines lines from the DecentHolograms hologram's first page.
+     * @return A list of created [HologramData] children.
+     */
     private @NotNull List<HologramData> convertSplitLines(@NotNull TextHologramData base, @NotNull List<Map<String, ?>> lines) {
         final List<HologramData> stack = new ArrayList<>();
         final List<String> finalBaseLines = new ArrayList<>();
@@ -180,7 +200,7 @@ public class DecentHologramsConverter implements HologramConverter {
                 totalHeight += h;
 
                 // Empty space for text
-                // TODO find average item height
+                // TODO find average item height for now 0.12f seems ok when scale is 0.45f
                 finalBaseLines.addAll(List.of("&r", "&r"));
                 stack.add(data);
             } else {

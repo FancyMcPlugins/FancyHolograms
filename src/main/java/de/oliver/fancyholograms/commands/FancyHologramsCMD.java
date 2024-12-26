@@ -118,7 +118,7 @@ public final class FancyHologramsCMD extends Command {
             if (Objects.equals(args[0], "convert")) {
 
                 if (args.length == 2) {
-                    suggestions.addAll(FHConversionRegistry.getAllConverterIds());
+                    suggestions.addAll(FHConversionRegistry.getAllUsableConverterIds());
                 } else if (args.length == 3) {
                     final String converterId = args[1];
                     FHConversionRegistry.getConverterById(converterId)
