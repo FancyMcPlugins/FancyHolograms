@@ -109,8 +109,8 @@ tasks {
 
         downloadPlugins {
             modrinth("fancynpcs", "2.4.0")
-            hangar("ViaVersion", "5.1.1")
-            hangar("ViaBackwards", "5.1.1")
+            hangar("ViaVersion", "5.2.0")
+            hangar("ViaBackwards", "5.2.0")
 //            modrinth("multiverse-core", "4.3.11")
             hangar("PlaceholderAPI", "2.11.6")
         }
