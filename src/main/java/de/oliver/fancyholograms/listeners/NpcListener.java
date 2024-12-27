@@ -39,7 +39,7 @@ public final class NpcListener implements Listener {
                         .filter(hologram -> event.getNpc().getData().getName().equals(hologram.getData().getLinkedNpcName()))
                         .toList();
 
-                FancyLib.getInstance().getScheduler().runTaskLater(null, 1L, () -> needsToBeUpdated.forEach(this.plugin.getHologramsManager()::syncHologramWithNpc));
+                FancyLib.getInstance().getScheduler().runTaskLater(null, 1L, () -> needsToBeUpdated.forEach(this.plugin.getControllerImpl()::syncHologramWithNpc));
             }
             case DISPLAY_NAME, SHOW_IN_TAB -> {
                 final var isLinked = holograms.stream()

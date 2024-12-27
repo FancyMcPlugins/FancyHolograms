@@ -73,8 +73,8 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
     private Function<HologramData, Hologram> hologramFactory;
 
     private HologramStorage storage;
-    private HologramRegistry registry;
-    private HologramController controller;
+    private HologramRegistryImpl registry;
+    private HologramControllerImpl controller;
 
     public FancyHologramsPlugin() {
         INSTANCE = this;
@@ -308,6 +308,11 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
     public HologramController getController() {
         return controller;
     }
+
+    public HologramControllerImpl getControllerImpl() {
+        return controller;
+    }
+
 
     @Override
     public HologramRegistry getRegistry() {

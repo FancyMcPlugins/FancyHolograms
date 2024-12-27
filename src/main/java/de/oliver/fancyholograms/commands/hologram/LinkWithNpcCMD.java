@@ -48,7 +48,7 @@ public class LinkWithNpcCMD implements Subcommand {
 
         hologram.getData().setLinkedNpcName(npc.getData().getName());
 
-        FancyHologramsPlugin.get().getHologramsManager().syncHologramWithNpc(hologram);
+        FancyHologramsPlugin.get().getControllerImpl().syncHologramWithNpc(hologram);
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHologramsPlugin.get().getStorage().save(hologram.getData());

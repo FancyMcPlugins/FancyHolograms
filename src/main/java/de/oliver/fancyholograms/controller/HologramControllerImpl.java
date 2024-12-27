@@ -1,9 +1,12 @@
 package de.oliver.fancyholograms.controller;
 
 import de.oliver.fancyholograms.api.HologramController;
+import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 public class HologramControllerImpl implements HologramController {
 
@@ -64,5 +67,35 @@ public class HologramControllerImpl implements HologramController {
         double distanceSquared = location.distanceSquared(player.getLocation());
 
         return distanceSquared <= visibilityDistance * visibilityDistance;
+    }
+
+        /**
+     * Syncs a hologram with its linked NPC, if any.
+     *
+     * @param hologram The hologram to sync.
+     */
+    public void syncHologramWithNpc(@NotNull final Hologram hologram) {
+        final var linkedNpcName = hologram.getData().getLinkedNpcName();
+        if (linkedNpcName == null) {
+            return;
+        }
+
+        final var npc = FancyNpcsPlugin.get().getNpcManager().getNpc(linkedNpcName);
+        if (npc == null) {
+            return;
+        }
+
+        npc.getData().setDisplayName("<empty>");
+        npc.getData().setShowInTab(false);
+        npc.updateForAll();
+
+        final var npcScale = npc.getData().getScale();
+
+        if(hologram.getData() instanceof DisplayHologramData displayData) {
+            displayData.setScale(new Vector3f(npcScale));
+        }
+
+        final var location = npc.getData().getLocation().clone().add(0, (npc.getEyeHeight() * npcScale) + (0.5 * npcScale), 0);
+        hologram.getData().setLocation(location);
     }
 }
