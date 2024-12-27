@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancyholograms.storage.converter.ConverterTarget;
 import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
@@ -17,9 +17,9 @@ import java.util.*;
 public final class FancyHologramsCMD extends Command {
 
     @NotNull
-    private final FancyHolograms plugin;
+    private final FancyHologramsPlugin plugin;
 
-    public FancyHologramsCMD(@NotNull final FancyHolograms plugin) {
+    public FancyHologramsCMD(@NotNull final FancyHologramsPlugin plugin) {
         super("fancyholograms");
         setPermission("fancyholograms.admin");
         this.plugin = plugin;
@@ -48,8 +48,8 @@ public final class FancyHologramsCMD extends Command {
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }
             case "version" -> {
-                FancyHolograms.get().getHologramThread().submit(() -> {
-                    FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
+                FancyHologramsPlugin.get().getHologramThread().submit(() -> {
+                    FancyHologramsPlugin.get().getVersionConfig().checkVersionAndDisplay(sender, false);
                 });
             }
             case "convert" -> {

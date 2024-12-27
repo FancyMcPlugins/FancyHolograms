@@ -4,6 +4,7 @@ import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.events.HologramDeleteEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +33,7 @@ public class RemoveCMD implements Subcommand {
         }
 
         FancyHolograms.get().getHologramThread().submit(() -> {
-            de.oliver.fancyholograms.main.FancyHolograms.get().getHologramsManager().removeHologram(hologram);
+            FancyHologramsPlugin.get().getHologramsManager().removeHologram(hologram);
             MessageHelper.success(player, "Removed the hologram");
         });
 

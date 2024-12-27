@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.listeners;
 
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,11 +13,11 @@ import java.util.*;
 
 public final class PlayerListener implements Listener {
 
-    private final @NotNull FancyHolograms plugin;
+    private final @NotNull FancyHologramsPlugin plugin;
 
     private final Map<UUID, List<UUID>> loadingResourcePacks;
 
-    public PlayerListener(@NotNull final FancyHolograms plugin) {
+    public PlayerListener(@NotNull final FancyHologramsPlugin plugin) {
         this.plugin = plugin;
         this.loadingResourcePacks = new HashMap<>();
     }
@@ -40,13 +40,13 @@ public final class PlayerListener implements Listener {
         }
 
         if (!this.plugin.getHologramConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
-            FancyHolograms.get().getHologramThread().submit(() -> FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true));
+            FancyHologramsPlugin.get().getHologramThread().submit(() -> FancyHologramsPlugin.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true));
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(@NotNull final PlayerQuitEvent event) {
-        FancyHolograms.get().getHologramThread().submit(() -> {
+        FancyHologramsPlugin.get().getHologramThread().submit(() -> {
             for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
                 hologram.hideHologram(event.getPlayer());
             }

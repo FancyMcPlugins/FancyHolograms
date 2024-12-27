@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Color;
 import org.bukkit.command.Command;
@@ -20,9 +20,9 @@ import java.util.List;
 public class FancyHologramsTestCMD extends Command {
 
     @NotNull
-    private final FancyHolograms plugin;
+    private final FancyHologramsPlugin plugin;
 
-    public FancyHologramsTestCMD(@NotNull final FancyHolograms plugin) {
+    public FancyHologramsTestCMD(@NotNull final FancyHologramsPlugin plugin) {
         super("FancyHologramsTest");
         setPermission("fancyholograms.admin");
         this.plugin = plugin;

@@ -7,6 +7,7 @@ import de.oliver.fancyanalytics.logger.appender.Appender;
 import de.oliver.fancyanalytics.logger.appender.ConsoleAppender;
 import de.oliver.fancyanalytics.logger.appender.JsonAppender;
 import de.oliver.fancyholograms.HologramManagerImpl;
+import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.HologramStorage;
@@ -52,9 +53,9 @@ import java.util.function.Function;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
-public final class FancyHolograms extends JavaPlugin implements de.oliver.fancyholograms.api.FancyHolograms {
+public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolograms {
 
-    private static @Nullable FancyHolograms INSTANCE;
+    private static @Nullable FancyHologramsPlugin INSTANCE;
 
     private final ExtendedFancyLogger fancyLogger;
 
@@ -71,7 +72,7 @@ public final class FancyHolograms extends JavaPlugin implements de.oliver.fancyh
 
     private HologramManagerImpl hologramsManager;
 
-    public FancyHolograms() {
+    public FancyHologramsPlugin() {
         INSTANCE = this;
 
         Appender consoleAppender = new ConsoleAppender("[{loggerName}] ({threadName}) {logLevel}: {message}");
@@ -110,7 +111,7 @@ public final class FancyHolograms extends JavaPlugin implements de.oliver.fancyh
         configuration = new FHConfiguration();
     }
 
-    public static @NotNull FancyHolograms get() {
+    public static @NotNull FancyHologramsPlugin get() {
         return Objects.requireNonNull(INSTANCE, "plugin is not initialized");
     }
 

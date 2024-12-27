@@ -8,7 +8,7 @@ import de.oliver.fancyholograms.api.events.HologramCreateEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.commands.Subcommand;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -51,7 +51,7 @@ public class CreateCMD implements Subcommand {
 
         String name = args[2];
 
-        if (FancyHolograms.get().getHologramsManager().getHologram(name).isPresent()) {
+        if (FancyHologramsPlugin.get().getHologramsManager().getHologram(name).isPresent()) {
             MessageHelper.error(player, "There already exists a hologram with this name");
             return false;
         }
@@ -74,7 +74,7 @@ public class CreateCMD implements Subcommand {
             }
         }
 
-        final var holo = FancyHolograms.get().getHologramsManager().create(displayData);
+        final var holo = FancyHologramsPlugin.get().getHologramsManager().create(displayData);
         if (!new HologramCreateEvent(holo, player).callEvent()) {
             MessageHelper.error(player, "Creating the hologram was cancelled");
             return false;
@@ -85,7 +85,7 @@ public class CreateCMD implements Subcommand {
             holo.updateShownStateFor(onlinePlayer);
         }
 
-        FancyHolograms.get().getHologramsManager().addHologram(holo);
+        FancyHologramsPlugin.get().getHologramsManager().addHologram(holo);
 
         MessageHelper.success(player, "Created the hologram");
         return true;

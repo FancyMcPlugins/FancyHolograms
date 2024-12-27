@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.commands.hologram;
 import de.oliver.fancyholograms.api.events.HologramCreateEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -41,7 +41,7 @@ public class CopyCMD implements Subcommand {
 
         String name = args[2];
 
-        if (FancyHolograms.get().getHologramsManager().getHologram(name).isPresent()) {
+        if (FancyHologramsPlugin.get().getHologramsManager().getHologram(name).isPresent()) {
             MessageHelper.error(sender, "There already exists a hologram with this name");
             return false;
         }
@@ -58,7 +58,7 @@ public class CopyCMD implements Subcommand {
         location.setYaw(originalLocation.getYaw());
         data.setLocation(location);
 
-        final var copy = FancyHolograms.get().getHologramsManager().create(data);
+        final var copy = FancyHologramsPlugin.get().getHologramsManager().create(data);
 
         if (!new HologramCreateEvent(copy, player).callEvent()) {
             MessageHelper.error(sender, "Creating the copied hologram was cancelled");
@@ -70,10 +70,10 @@ public class CopyCMD implements Subcommand {
             copy.updateShownStateFor(onlinePlayer);
         }
 
-        FancyHolograms.get().getHologramsManager().addHologram(copy);
+        FancyHologramsPlugin.get().getHologramsManager().addHologram(copy);
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
         }
 
         MessageHelper.success(sender, "Copied the hologram");

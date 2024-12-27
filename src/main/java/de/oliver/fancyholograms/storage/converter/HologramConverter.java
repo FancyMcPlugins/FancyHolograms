@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.storage.converter;
 
 import de.oliver.fancyanalytics.api.events.Event;
 import de.oliver.fancyholograms.api.data.HologramData;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public abstract class HologramConverter {
                 .withProperty("converter", getId())
                 .withProperty("target", spec.getTarget().getRegex().pattern())
                 .withProperty("amount", String.valueOf(converted.size()));
-        FancyHolograms.get().getMetrics().getFancyAnalytics().sendEvent(event);
+        FancyHologramsPlugin.get().getMetrics().getFancyAnalytics().sendEvent(event);
 
         return converted;
     }

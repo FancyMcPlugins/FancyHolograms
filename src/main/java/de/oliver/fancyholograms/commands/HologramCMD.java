@@ -8,7 +8,7 @@ import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.commands.hologram.*;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.MessageHelper;
@@ -29,9 +29,9 @@ import java.util.stream.Stream;
 public final class HologramCMD extends Command {
 
     @NotNull
-    private final FancyHolograms plugin;
+    private final FancyHologramsPlugin plugin;
 
-    public HologramCMD(@NotNull final FancyHolograms plugin) {
+    public HologramCMD(@NotNull final FancyHologramsPlugin plugin) {
         super("hologram", "Main command for the FancyHolograms plugin", "/hologram help", List.of("holograms", "holo", "fholo"));
 
         setPermission("fancyholograms.admin");

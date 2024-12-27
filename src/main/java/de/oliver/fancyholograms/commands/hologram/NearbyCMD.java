@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancyholograms.util.NumberHelper;
 import de.oliver.fancylib.MessageHelper;
@@ -52,7 +52,7 @@ public class NearbyCMD implements Subcommand {
 
         Location playerLocation = ((Player) player).getLocation().clone();
 
-        List<Map.Entry<Hologram, Double>> nearby = FancyHolograms.get()
+        List<Map.Entry<Hologram, Double>> nearby = FancyHologramsPlugin.get()
             .getHologramsManager()
             .getPersistentHolograms()
             .stream()

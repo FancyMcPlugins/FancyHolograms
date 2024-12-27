@@ -2,7 +2,7 @@ package de.oliver.fancyholograms.commands.hologram;
 
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
@@ -48,10 +48,10 @@ public class LinkWithNpcCMD implements Subcommand {
 
         hologram.getData().setLinkedNpcName(npc.getData().getName());
 
-        FancyHolograms.get().getHologramsManager().syncHologramWithNpc(hologram);
+        FancyHologramsPlugin.get().getHologramsManager().syncHologramWithNpc(hologram);
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
         }
 
         MessageHelper.success(player, "Linked hologram with NPC");

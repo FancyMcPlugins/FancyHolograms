@@ -5,7 +5,7 @@ import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -58,8 +58,8 @@ public class BlockCMD implements Subcommand {
 
         blockData.setBlock(block);
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
         }
 
         MessageHelper.success(player, "Set block to '" + block.name() + "'");

@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.commands.hologram;
 import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancyholograms.util.NumberHelper;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;
@@ -61,8 +61,8 @@ public class BrightnessCMD implements Subcommand {
 
         displayData.setBrightness(new Display.Brightness(blockBrightness, skyBrightness));
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
         }
 
         MessageHelper.success(player, "Changed " + brightnessType.toLowerCase() + " brightness to " + brightnessValue);

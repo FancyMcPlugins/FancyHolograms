@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.commands.hologram;
 import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
-import de.oliver.fancyholograms.main.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;
@@ -27,7 +27,7 @@ public class ListCMD implements Subcommand {
             return false;
         }
 
-        final var holograms = FancyHolograms.get().getHologramsManager().getPersistentHolograms();
+        final var holograms = FancyHologramsPlugin.get().getHologramsManager().getPersistentHolograms();
 
         if (holograms.isEmpty()) {
             MessageHelper.warning(player, "There are no holograms. Use '/hologram create' to create one");
