@@ -1,11 +1,7 @@
-package de.oliver.fancyholograms.storage.converter;
+package de.oliver.fancyholograms.converter;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancylib.translations.message.Message;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

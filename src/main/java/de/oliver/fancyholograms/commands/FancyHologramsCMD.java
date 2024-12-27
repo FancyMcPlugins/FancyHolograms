@@ -2,10 +2,10 @@ package de.oliver.fancyholograms.commands;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.converter.ConverterTarget;
+import de.oliver.fancyholograms.converter.FHConversionRegistry;
+import de.oliver.fancyholograms.converter.HologramConversionSession;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
-import de.oliver.fancyholograms.storage.converter.ConverterTarget;
-import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
-import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.Command;

@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms.storage.converter;
+package de.oliver.fancyholograms.converter;
 
 import org.jetbrains.annotations.NotNull;
 

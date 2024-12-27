@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms.storage.converter;
+package de.oliver.fancyholograms.converter;
 
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
