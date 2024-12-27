@@ -8,7 +8,6 @@ import de.oliver.fancysitula.api.entities.*;
 import de.oliver.fancysitula.factories.FancySitula;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 public final class HologramImpl extends Hologram {
@@ -17,16 +16,6 @@ public final class HologramImpl extends Hologram {
 
     public HologramImpl(@NotNull final HologramData data) {
         super(data);
-    }
-
-    @Override
-    public int getEntityId() {
-        return fsDisplay.getId();
-    }
-
-    @Override
-    public @Nullable org.bukkit.entity.Display getDisplayEntity() {
-        return null;
     }
 
     @Override

@@ -7,9 +7,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.World;
-import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
@@ -52,26 +50,6 @@ public abstract class Hologram {
     public final @NotNull HologramData getData() {
         return this.data;
     }
-
-    /**
-     * Returns the entity id of this hologram
-     * This id is for packet use only as the entity is not registered to the server
-     * @return entity id
-     */
-    public abstract int getEntityId();
-
-    /**
-     * Returns the Display entity of this Hologram object.
-     * The entity is not registered in the world or server.
-     * Only use this method if you know what you're doing.
-     * <p>
-     * This method will return <code>null</code> in 1.20.5 and newer versions
-     *
-     * @return the Display entity of this Hologram object
-     */
-    @ApiStatus.Internal
-    @Deprecated(forRemoval = true, since = "2.4.1")
-    public abstract @Nullable Display getDisplayEntity();
 
     protected abstract void create();
 
