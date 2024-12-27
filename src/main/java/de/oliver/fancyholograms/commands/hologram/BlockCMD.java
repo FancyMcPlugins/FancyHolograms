@@ -1,11 +1,11 @@
 package de.oliver.fancyholograms.commands.hologram;
 
-import de.oliver.fancyholograms.main.FancyHolograms;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.BlockHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;

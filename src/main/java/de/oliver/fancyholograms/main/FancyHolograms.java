@@ -1,15 +1,12 @@
 package de.oliver.fancyholograms.main;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
-import de.oliver.fancyanalytics.api.metrics.MetricSupplier;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyanalytics.logger.appender.Appender;
 import de.oliver.fancyanalytics.logger.appender.ConsoleAppender;
 import de.oliver.fancyanalytics.logger.appender.JsonAppender;
 import de.oliver.fancyholograms.HologramManagerImpl;
-import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.HologramStorage;
@@ -25,11 +22,11 @@ import de.oliver.fancyholograms.listeners.BedrockPlayerListener;
 import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
 import de.oliver.fancyholograms.listeners.WorldListener;
+import de.oliver.fancyholograms.metrics.FHMetrics;
 import de.oliver.fancyholograms.storage.FlatFileHologramStorage;
 import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.FancyLib;
-import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.versionFetcher.MasterVersionFetcher;
@@ -55,28 +52,24 @@ import java.util.function.Function;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
 
-public final class FancyHolograms extends JavaPlugin implements FancyHologramsPlugin {
+public final class FancyHolograms extends JavaPlugin implements de.oliver.fancyholograms.api.FancyHolograms {
 
     private static @Nullable FancyHolograms INSTANCE;
+
     private final ExtendedFancyLogger fancyLogger;
-    private final VersionFetcher versionFetcher = new MasterVersionFetcher("FancyHolograms");
-    private final VersionConfig versionConfig = new VersionConfig(this, versionFetcher);
-    private final ScheduledExecutorService hologramThread = Executors.newSingleThreadScheduledExecutor(
-            new ThreadFactoryBuilder()
-                    .setNameFormat("FancyHolograms-Holograms")
-                    .build()
-    );
-    private final ExecutorService fileStorageExecutor = Executors.newSingleThreadExecutor(
-            new ThreadFactoryBuilder()
-                    .setDaemon(true)
-                    .setPriority(Thread.MIN_PRIORITY + 1)
-                    .setNameFormat("FancyHolograms-FileStorageExecutor")
-                    .build()
-    );
-    private FancyAnalyticsAPI fancyAnalytics;
-    private HologramConfiguration configuration = new FHConfiguration();
-    private HologramStorage hologramStorage = new FlatFileHologramStorage();
-    private @Nullable HologramManagerImpl hologramsManager;
+
+    private final FHMetrics metrics;
+
+    private final VersionFetcher versionFetcher;
+    private final VersionConfig versionConfig;
+
+    private final ScheduledExecutorService hologramThread;
+    private final ExecutorService storageThread;
+
+    private final HologramConfiguration configuration;
+    private HologramStorage hologramStorage;
+
+    private HologramManagerImpl hologramsManager;
 
     public FancyHolograms() {
         INSTANCE = this;
@@ -93,7 +86,28 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
             }
         }
         JsonAppender jsonAppender = new JsonAppender(false, false, true, logsFile.getPath());
-        this.fancyLogger = new ExtendedFancyLogger("FancyHolograms", LogLevel.INFO, List.of(consoleAppender, jsonAppender), new ArrayList<>());
+        fancyLogger = new ExtendedFancyLogger("FancyHolograms", LogLevel.INFO, List.of(consoleAppender, jsonAppender), new ArrayList<>());
+
+        metrics = new FHMetrics();
+
+        versionFetcher = new MasterVersionFetcher("FancyHolograms");
+        versionConfig = new VersionConfig(this, versionFetcher);
+
+        hologramThread = Executors.newSingleThreadScheduledExecutor(
+                new ThreadFactoryBuilder()
+                        .setNameFormat("FancyHolograms-Hologram")
+                        .build()
+        );
+
+        storageThread = Executors.newSingleThreadExecutor(
+                new ThreadFactoryBuilder()
+                        .setDaemon(true)
+                        .setPriority(Thread.MIN_PRIORITY + 1)
+                        .setNameFormat("FancyHolograms-Storage")
+                        .build()
+        );
+
+        configuration = new FHConfiguration();
     }
 
     public static @NotNull FancyHolograms get() {
@@ -106,8 +120,31 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     @Override
     public void onLoad() {
-        final var adapter = resolveHologramAdapter();
+        FHFeatureFlags.load();
+        configuration.reload(this);
 
+        LogLevel logLevel;
+        try {
+            logLevel = LogLevel.valueOf(configuration.getLogLevel());
+        } catch (IllegalArgumentException e) {
+            logLevel = LogLevel.INFO;
+        }
+        fancyLogger.setCurrentLevel(logLevel);
+        IFancySitula.LOGGER.setCurrentLevel(logLevel);
+
+        hologramStorage = new FlatFileHologramStorage();
+
+        if (!ServerSoftware.isPaper()) {
+            fancyLogger.warn("""
+                    --------------------------------------------------
+                    It is recommended to use Paper as server software.
+                    Because you are not using paper, the plugin
+                    might not work correctly.
+                    --------------------------------------------------
+                    """);
+        }
+
+        final var adapter = resolveHologramAdapter();
         if (adapter == null) {
             List<String> supportedVersions = new ArrayList<>(List.of("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4"));
             supportedVersions.addAll(ServerVersion.getSupportedVersions());
@@ -130,50 +167,27 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
     @Override
     public void onEnable() {
-        getHologramConfiguration().reload(this); // initialize configuration
+        new FancyLib(INSTANCE);
 
-        new FancyLib(INSTANCE); // initialize FancyLib
-
-        if (!ServerSoftware.isPaper()) {
-            fancyLogger.warn("""
-                    --------------------------------------------------
-                    It is recommended to use Paper as server software.
-                    Because you are not using paper, the plugin
-                    might not work correctly.
-                    --------------------------------------------------
-                    """);
-        }
-
-        LogLevel logLevel;
-        try {
-            logLevel = LogLevel.valueOf(getHologramConfiguration().getLogLevel());
-        } catch (IllegalArgumentException e) {
-            logLevel = LogLevel.INFO;
-        }
-        fancyLogger.setCurrentLevel(logLevel);
-        IFancySitula.LOGGER.setCurrentLevel(logLevel);
-
-        FHFeatureFlags.load();
-
-        reloadCommands();
-
+        registerCommands();
         registerListeners();
 
         versionConfig.load();
-        if (!getHologramConfiguration().areVersionNotificationsMuted()) {
+        if (!configuration.areVersionNotificationsMuted()) {
             checkForNewerVersion();
         }
 
-        registerMetrics();
+        metrics.register();
+        metrics.registerLegacy();
 
-        getHologramsManager().initializeTasks();
+        hologramsManager.initializeTasks();
 
-        if (getHologramConfiguration().isAutosaveEnabled()) {
+        if (configuration.isAutosaveEnabled()) {
             getHologramThread().scheduleAtFixedRate(() -> {
                 if (hologramsManager != null) {
                     hologramsManager.saveHolograms();
                 }
-            }, getHologramConfiguration().getAutosaveInterval(), getHologramConfiguration().getAutosaveInterval() * 60L, TimeUnit.SECONDS);
+            }, configuration.getAutosaveInterval(), configuration.getAutosaveInterval() * 60L, TimeUnit.SECONDS);
         }
 
         FHConversionRegistry.registerBuiltInConverters();
@@ -185,75 +199,11 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
     public void onDisable() {
         hologramsManager.saveHolograms();
         hologramThread.shutdown();
-        fileStorageExecutor.shutdown();
-        INSTANCE = null;
+        storageThread.shutdown();
 
         fancyLogger.info("Successfully disabled FancyHolograms version %s".formatted(getDescription().getVersion()));
-    }
 
-    @Override
-    public JavaPlugin getPlugin() {
-        return INSTANCE;
-    }
-
-    @Override
-    public ExtendedFancyLogger getFancyLogger() {
-        return fancyLogger;
-    }
-
-    public @NotNull VersionFetcher getVersionFetcher() {
-        return versionFetcher;
-    }
-
-    public @NotNull VersionConfig getVersionConfig() {
-        return versionConfig;
-    }
-
-    @ApiStatus.Internal
-    public @NotNull HologramManagerImpl getHologramsManager() {
-        return Objects.requireNonNull(this.hologramsManager, "plugin is not initialized");
-    }
-
-    @Override
-    public HologramManager getHologramManager() {
-        return Objects.requireNonNull(this.hologramsManager, "plugin is not initialized");
-    }
-
-    @Override
-    public HologramConfiguration getHologramConfiguration() {
-        return configuration;
-    }
-
-    @Override
-    public void setHologramConfiguration(HologramConfiguration configuration, boolean reload) {
-        this.configuration = configuration;
-
-        if (reload) {
-            configuration.reload(this);
-            reloadCommands();
-        }
-    }
-
-    @Override
-    public HologramStorage getHologramStorage() {
-        return hologramStorage;
-    }
-
-    @Override
-    public void setHologramStorage(HologramStorage storage, boolean reload) {
-        this.hologramStorage = storage;
-
-        if (reload) {
-            getHologramsManager().reloadHolograms();
-        }
-    }
-
-    public ScheduledExecutorService getHologramThread() {
-        return hologramThread;
-    }
-
-    public ExecutorService getFileStorageExecutor() {
-        return this.fileStorageExecutor;
+        INSTANCE = null;
     }
 
     private @Nullable Function<HologramData, Hologram> resolveHologramAdapter() {
@@ -273,10 +223,10 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         };
     }
 
-    public void reloadCommands() {
+    private void registerCommands() {
         Collection<Command> commands = Arrays.asList(new HologramCMD(this), new FancyHologramsCMD(this));
 
-        if (getHologramConfiguration().isRegisterCommands()) {
+        if (configuration.isRegisterCommands()) {
             commands.forEach(command -> getServer().getCommandMap().register("fancyholograms", command));
         } else {
             commands.stream().filter(Command::isRegistered).forEach(command ->
@@ -321,70 +271,57 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         });
     }
 
-    private void registerMetrics() {
-        boolean isDevelopmentBuild = !versionConfig.getBuild().equalsIgnoreCase("undefined");
-
-        Metrics metrics = new Metrics(this, 17990);
-        metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> hologramsManager.getHolograms().size()));
-        metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsMuted() ? "No" : "Yes"));
-        metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
-
-        fancyAnalytics = new FancyAnalyticsAPI("3b77bd59-2b01-46f2-b3aa-a9584401797f", "E2gW5zc2ZTk1OGFkNGY2ZDQ0ODlM6San");
-        fancyAnalytics.getConfig().setDisableLogging(true);
-
-        if (!isDevelopmentBuild) {
-            return;
-        }
-
-        fancyAnalytics.registerMinecraftPluginMetrics(INSTANCE);
-        fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
-        fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());
-        fancyAnalytics.getExceptionHandler().registerLogger(fancyLogger);
-
-        fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
-
-        fancyAnalytics.registerStringMetric(new MetricSupplier<>("server_size", () -> {
-            long onlinePlayers = Bukkit.getOnlinePlayers().size();
-
-            if (onlinePlayers == 0) {
-                return "empty";
-            }
-
-            if (onlinePlayers <= 25) {
-                return "small";
-            }
-
-            if (onlinePlayers <= 100) {
-                return "medium";
-            }
-
-            if (onlinePlayers <= 500) {
-                return "large";
-            }
-
-            return "very_large";
-        }));
-
-        fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_holograms", () -> (double) hologramsManager.getHolograms().size()));
-        fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> configuration.areVersionNotificationsMuted() ? "false" : "true"));
-        fancyAnalytics.registerStringMetric(new MetricSupplier<>("fflag_disable_holograms_for_bedrock_players", () -> FHFeatureFlags.DISABLE_HOLOGRAMS_FOR_BEDROCK_PLAYERS.isEnabled() ? "true" : "false"));
-        fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
-
-        fancyAnalytics.registerStringArrayMetric(new MetricSupplier<>("hologram_type", () -> {
-            if (hologramsManager == null) {
-                return new String[0];
-            }
-
-            return hologramsManager.getHolograms().stream()
-                    .map(h -> h.getData().getType().name())
-                    .toArray(String[]::new);
-        }));
-
-
-        fancyAnalytics.initialize();
+    @Override
+    public JavaPlugin getPlugin() {
+        return INSTANCE;
     }
 
-    public FancyAnalyticsAPI getFancyAnalytics() {
-        return fancyAnalytics;
+    @Override
+    public ExtendedFancyLogger getFancyLogger() {
+        return fancyLogger;
+    }
+
+    public FHMetrics getMetrics() {
+        return metrics;
+    }
+
+    public @NotNull VersionFetcher getVersionFetcher() {
+        return versionFetcher;
+    }
+
+    public @NotNull VersionConfig getVersionConfig() {
+        return versionConfig;
+    }
+
+    @ApiStatus.Internal
+    public @NotNull HologramManagerImpl getHologramsManager() {
+        return Objects.requireNonNull(this.hologramsManager, "plugin is not initialized");
+    }
+
+    @Override
+    public HologramManager getHologramManager() {
+        return Objects.requireNonNull(this.hologramsManager, "plugin is not initialized");
+    }
+
+    @Override
+    public HologramConfiguration getHologramConfiguration() {
+        return configuration;
+    }
+
+    @Override
+    public HologramStorage getHologramStorage() {
+        return hologramStorage;
+    }
+
+    public ScheduledExecutorService getHologramThread() {
+        return hologramThread;
+    }
+
+    public ExecutorService getStorageThread() {
+        return this.storageThread;
+    }
+
+    public HologramConfiguration getFHConfiguration() {
+        return configuration;
     }
 }

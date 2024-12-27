@@ -9,7 +9,7 @@ public interface HologramConfiguration {
      *
      * @param plugin The plugin instance.
      */
-    void reload(@NotNull FancyHologramsPlugin plugin);
+    void reload(@NotNull FancyHolograms plugin);
 
     /**
      * Returns whether version notifications are muted.

@@ -1,7 +1,6 @@
 package de.oliver.fancyholograms.commands;
 
 import com.google.common.primitives.Ints;
-import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
@@ -9,6 +8,7 @@ import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.commands.hologram.*;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.MessageHelper;

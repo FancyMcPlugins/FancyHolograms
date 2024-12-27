@@ -1,9 +1,9 @@
 package de.oliver.fancyholograms.commands.hologram;
 
-import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.util.NumberHelper;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;

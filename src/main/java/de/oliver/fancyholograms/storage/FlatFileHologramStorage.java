@@ -1,6 +1,5 @@
 package de.oliver.fancyholograms.storage;
 
-import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.data.BlockHologramData;
 import de.oliver.fancyholograms.api.data.DisplayHologramData;
@@ -8,6 +7,7 @@ import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -204,7 +204,7 @@ public class FlatFileHologramStorage implements HologramStorage {
         config.set("version", 2);
         config.setInlineComments("version", List.of("DO NOT CHANGE"));
 
-        FancyHolograms.get().getFileStorageExecutor().execute(() -> {
+        FancyHolograms.get().getStorageThread().execute(() -> {
             lock.writeLock().lock();
             try {
                 config.save(HOLOGRAMS_CONFIG_FILE);

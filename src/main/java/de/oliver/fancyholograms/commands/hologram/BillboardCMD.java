@@ -1,12 +1,12 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.base.Enums;
-import de.oliver.fancyholograms.main.FancyHolograms;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancylib.MessageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.CommandSender;

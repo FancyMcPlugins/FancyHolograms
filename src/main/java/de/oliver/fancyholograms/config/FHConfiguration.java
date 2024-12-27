@@ -1,8 +1,7 @@
 package de.oliver.fancyholograms.config;
 
-import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.HologramConfiguration;
-import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancylib.ConfigHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,8 +51,8 @@ public final class FHConfiguration implements HologramConfiguration {
     private String logLevel;
 
     @Override
-    public void reload(@NotNull FancyHologramsPlugin plugin) {
-        FancyHolograms pluginImpl = (FancyHolograms) plugin;
+    public void reload(@NotNull FancyHolograms plugin) {
+        de.oliver.fancyholograms.main.FancyHolograms pluginImpl = (de.oliver.fancyholograms.main.FancyHolograms) plugin;
         pluginImpl.reloadConfig();
 
         final var config = pluginImpl.getConfig();

@@ -1,8 +1,8 @@
 package de.oliver.fancyholograms.commands;
 
-import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.storage.converter.ConverterTarget;
 import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
@@ -44,7 +44,6 @@ public final class FancyHologramsCMD extends Command {
             case "reload" -> {
                 this.plugin.getHologramConfiguration().reload(plugin);
                 this.plugin.getHologramsManager().reloadHolograms();
-                this.plugin.reloadCommands();
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }

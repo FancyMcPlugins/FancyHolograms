@@ -1,8 +1,8 @@
 package de.oliver.fancyholograms.commands;
 
-import de.oliver.fancyholograms.main.FancyHolograms;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Color;
 import org.bukkit.command.Command;

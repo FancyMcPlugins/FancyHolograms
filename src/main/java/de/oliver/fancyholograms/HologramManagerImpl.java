@@ -45,7 +45,7 @@ public final class HologramManagerImpl implements HologramManager {
      */
     private boolean isLoaded = false;
 
-    HologramManagerImpl(@NotNull final FancyHolograms plugin, @NotNull final Function<HologramData, Hologram> adapter) {
+    public HologramManagerImpl(@NotNull final FancyHolograms plugin, @NotNull final Function<HologramData, Hologram> adapter) {
         this.plugin = plugin;
         this.adapter = adapter;
     }
@@ -176,7 +176,7 @@ public final class HologramManagerImpl implements HologramManager {
      * <p>
      * This method is intended to be called internally by the plugin.
      */
-    void initializeTasks() {
+    public void initializeTasks() {
         ScheduledExecutorService hologramThread = plugin.getHologramThread();
         hologramThread.submit(() -> {
             loadHolograms();

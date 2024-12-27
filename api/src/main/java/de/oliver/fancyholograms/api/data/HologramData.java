@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.api.data;
 
-import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.data.property.Visibility;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import org.bukkit.Bukkit;
@@ -78,7 +78,7 @@ public class HologramData implements YamlData {
             return visibilityDistance;
         }
 
-        return FancyHologramsPlugin.get().getHologramConfiguration().getDefaultVisibilityDistance();
+        return FancyHolograms.get().getHologramConfiguration().getDefaultVisibilityDistance();
     }
 
     public HologramData setVisibilityDistance(int visibilityDistance) {
@@ -145,7 +145,7 @@ public class HologramData implements YamlData {
 
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
-            FancyHologramsPlugin.get().getFancyLogger().warn("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
+            FancyHolograms.get().getFancyLogger().warn("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
             return false;
         }
 

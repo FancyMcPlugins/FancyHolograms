@@ -7,9 +7,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.ScheduledExecutorService;
 
-public interface FancyHologramsPlugin {
+public interface FancyHolograms {
 
-    static FancyHologramsPlugin get() {
+    static FancyHolograms get() {
         if (isEnabled()) {
             return EnabledChecker.getPlugin();
         }
@@ -35,14 +35,6 @@ public interface FancyHologramsPlugin {
     HologramConfiguration getHologramConfiguration();
 
     /**
-     * Sets the configuration of the plugin.
-     *
-     * @param configuration The new configuration.
-     * @param reload        Whether the configuration should be reloaded.
-     */
-    void setHologramConfiguration(HologramConfiguration configuration, boolean reload);
-
-    /**
      * @return The hologram storage.
      */
     HologramStorage getHologramStorage();
@@ -52,18 +44,11 @@ public interface FancyHologramsPlugin {
      */
     ScheduledExecutorService getHologramThread();
 
-    /**
-     * Sets the hologram storage.
-     *
-     * @param storage The new hologram storage.
-     * @param reload  Whether the current hologram cache should be reloaded.
-     */
-    void setHologramStorage(HologramStorage storage, boolean reload);
 
     class EnabledChecker {
 
         private static Boolean enabled;
-        private static FancyHologramsPlugin plugin;
+        private static FancyHolograms plugin;
 
         public static Boolean isFancyHologramsEnabled() {
             if (enabled != null) return enabled;
@@ -72,7 +57,7 @@ public interface FancyHologramsPlugin {
 
             if (pl != null && pl.isEnabled()) {
                 try {
-                    plugin = (FancyHologramsPlugin) pl;
+                    plugin = (FancyHolograms) pl;
                 } catch (ClassCastException e) {
                     throw new IllegalStateException("API failed to access plugin, if using the FancyHolograms API make sure to set the dependency to compile only.");
                 }
@@ -84,7 +69,7 @@ public interface FancyHologramsPlugin {
             return false;
         }
 
-        public static FancyHologramsPlugin getPlugin() {
+        public static FancyHolograms getPlugin() {
             return plugin;
         }
     }

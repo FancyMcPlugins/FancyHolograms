@@ -1,8 +1,8 @@
 package de.oliver.fancyholograms.listeners;
 
-import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;

@@ -1,20 +1,15 @@
 package de.oliver.fancyholograms.listeners;
 
-import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import org.bukkit.event.player.PlayerResourcePackStatusEvent.Status;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 public final class PlayerListener implements Listener {
 
