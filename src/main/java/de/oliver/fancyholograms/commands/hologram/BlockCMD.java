@@ -59,7 +59,7 @@ public class BlockCMD implements Subcommand {
         blockData.setBlock(block);
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Set block to '" + block.name() + "'");

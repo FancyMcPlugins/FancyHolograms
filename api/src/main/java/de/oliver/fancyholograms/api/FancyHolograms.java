@@ -25,19 +25,13 @@ public interface FancyHolograms {
 
     ExtendedFancyLogger getFancyLogger();
 
-    HologramManager getHologramManager();
-
-    /**
-     * Returns the configuration of the plugin.
-     *
-     * @return The configuration.
-     */
     HologramConfiguration getHologramConfiguration();
 
-    /**
-     * @return The hologram thread
-     */
     ScheduledExecutorService getHologramThread();
+
+    HologramRegistry getRegistry();
+
+    HologramController getController();
 
 
     class EnabledChecker {

@@ -88,7 +88,7 @@ public class UpdateTextIntervalCMD implements Subcommand {
         textData.setTextUpdateInterval(copied.getTextUpdateInterval());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed the text update interval");

@@ -6,10 +6,10 @@ import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyanalytics.logger.appender.Appender;
 import de.oliver.fancyanalytics.logger.appender.ConsoleAppender;
 import de.oliver.fancyanalytics.logger.appender.JsonAppender;
-import de.oliver.fancyholograms.HologramManagerImpl;
 import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.HologramConfiguration;
-import de.oliver.fancyholograms.api.HologramManager;
+import de.oliver.fancyholograms.api.HologramController;
+import de.oliver.fancyholograms.api.HologramRegistry;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
@@ -17,6 +17,7 @@ import de.oliver.fancyholograms.commands.FancyHologramsTestCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.config.FHConfiguration;
 import de.oliver.fancyholograms.config.FHFeatureFlags;
+import de.oliver.fancyholograms.controller.HologramControllerImpl;
 import de.oliver.fancyholograms.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.hologram.version.*;
 import de.oliver.fancyholograms.listeners.BedrockPlayerListener;
@@ -24,6 +25,7 @@ import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
 import de.oliver.fancyholograms.listeners.WorldListener;
 import de.oliver.fancyholograms.metrics.FHMetrics;
+import de.oliver.fancyholograms.registry.HologramRegistryImpl;
 import de.oliver.fancyholograms.storage.HologramStorage;
 import de.oliver.fancyholograms.storage.YamlHologramStorage;
 import de.oliver.fancyholograms.util.PluginUtils;
@@ -38,7 +40,6 @@ import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,9 +69,10 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
     private final ExecutorService storageThread;
 
     private final HologramConfiguration configuration;
-    private HologramStorage hologramStorage;
 
-    private HologramManagerImpl hologramsManager;
+    private HologramStorage storage;
+    private HologramRegistry registry;
+    private HologramController controller;
 
     public FancyHologramsPlugin() {
         INSTANCE = this;
@@ -133,7 +135,9 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         fancyLogger.setCurrentLevel(logLevel);
         IFancySitula.LOGGER.setCurrentLevel(logLevel);
 
-        hologramStorage = new YamlHologramStorage();
+        storage = new YamlHologramStorage();
+        registry = new HologramRegistryImpl();
+        controller = new HologramControllerImpl();
 
         if (!ServerSoftware.isPaper()) {
             fancyLogger.warn("""
@@ -161,8 +165,6 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
             return;
         }
 
-        hologramsManager = new HologramManagerImpl(this, adapter);
-
         fancyLogger.info("Successfully loaded FancyHolograms version %s".formatted(getDescription().getVersion()));
     }
 
@@ -181,13 +183,14 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         metrics.register();
         metrics.registerLegacy();
 
-        hologramsManager.initializeTasks();
-
         if (configuration.isAutosaveEnabled()) {
             getHologramThread().scheduleAtFixedRate(() -> {
-                if (hologramsManager != null) {
-                    hologramsManager.saveHolograms();
-                }
+                List<HologramData> toSave = registry.getAllPersistent()
+                        .stream()
+                        .map(Hologram::getData)
+                        .toList();
+
+                storage.saveBatch(toSave);
             }, configuration.getAutosaveInterval(), configuration.getAutosaveInterval() * 60L, TimeUnit.SECONDS);
         }
 
@@ -198,7 +201,6 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
 
     @Override
     public void onDisable() {
-        hologramsManager.saveHolograms();
         hologramThread.shutdown();
         storageThread.shutdown();
 
@@ -294,14 +296,14 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         return versionConfig;
     }
 
-    @ApiStatus.Internal
-    public @NotNull HologramManagerImpl getHologramsManager() {
-        return Objects.requireNonNull(this.hologramsManager, "plugin is not initialized");
+    @Override
+    public HologramController getController() {
+        return controller;
     }
 
     @Override
-    public HologramManager getHologramManager() {
-        return Objects.requireNonNull(this.hologramsManager, "plugin is not initialized");
+    public HologramRegistry getRegistry() {
+        return registry;
     }
 
     @Override
@@ -309,8 +311,8 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         return configuration;
     }
 
-    public HologramStorage getHologramStorage() {
-        return hologramStorage;
+    public HologramStorage getStorage() {
+        return storage;
     }
 
     public ScheduledExecutorService getHologramThread() {

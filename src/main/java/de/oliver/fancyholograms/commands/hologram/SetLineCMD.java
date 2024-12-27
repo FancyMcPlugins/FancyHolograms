@@ -49,7 +49,7 @@ public class SetLineCMD implements Subcommand {
         textData.setText(copied.getText());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed text for line " + (Math.min(index, lines.size() - 1) + 1));

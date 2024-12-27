@@ -3,7 +3,6 @@ package de.oliver.fancyholograms.metrics;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
 import de.oliver.fancyanalytics.api.metrics.MetricSupplier;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
-import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.config.FHFeatureFlags;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.Metrics;

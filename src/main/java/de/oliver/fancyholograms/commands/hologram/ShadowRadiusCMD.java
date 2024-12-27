@@ -61,7 +61,7 @@ public class ShadowRadiusCMD implements Subcommand {
         displayData.setShadowRadius(copied.getShadowRadius());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed shadow radius");

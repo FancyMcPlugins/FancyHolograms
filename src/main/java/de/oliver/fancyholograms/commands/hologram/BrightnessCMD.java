@@ -62,7 +62,7 @@ public class BrightnessCMD implements Subcommand {
         displayData.setBrightness(new Display.Brightness(blockBrightness, skyBrightness));
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed " + brightnessType.toLowerCase() + " brightness to " + brightnessValue);

@@ -71,7 +71,7 @@ public class TranslateCommand implements Subcommand {
             copied.getTranslation().z()));
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed translation to " + translateX + ", " + translateY + ", " + translateZ);
