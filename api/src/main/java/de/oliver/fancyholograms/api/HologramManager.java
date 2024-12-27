@@ -6,6 +6,7 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import java.util.Collection;
 import java.util.Optional;
 
+@Deprecated
 public interface HologramManager {
 
     Optional<Hologram> getHologram(String name);

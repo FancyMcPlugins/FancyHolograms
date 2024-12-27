@@ -16,10 +16,7 @@ public final class HologramImpl extends Hologram {
 
     public HologramImpl(@NotNull final HologramData data) {
         super(data);
-    }
 
-    @Override
-    public void create() {
         final var location = data.getLocation();
         if (!location.isWorldLoaded()) {
             return;
@@ -30,22 +27,88 @@ public final class HologramImpl extends Hologram {
             case ITEM -> this.fsDisplay = new FS_ItemDisplay();
             case BLOCK -> this.fsDisplay = new FS_BlockDisplay();
         }
+    }
 
-        if (data instanceof DisplayHologramData dd) {
-            fsDisplay.setTransformationInterpolationDuration(dd.getInterpolationDuration());
-            fsDisplay.setTransformationInterpolationStartDeltaTicks(0);
+
+    @Override
+    public void spawnTo(@NotNull final Player player) {
+        if (!new HologramShowEvent(this, player).callEvent()) {
+            return;
         }
 
-        update();
+        if (fsDisplay == null) {
+            return; // could not be created, nothing to show
+        }
+
+        if (!data.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
+            return;
+        }
+
+        // TODO: cache player protocol version
+        // TODO: fix this
+//        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
+//        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
+//            return false;
+//        }
+
+        FS_RealPlayer fsPlayer = new FS_RealPlayer(player);
+        FancySitula.ENTITY_FACTORY.spawnEntityFor(fsPlayer, fsDisplay);
+
+        this.viewers.add(player.getUniqueId());
+        updateFor(player);
+
     }
 
     @Override
-    public void delete() {
-        this.fsDisplay = null;
+    public void despawnFrom(@NotNull final Player player) {
+        if (!new HologramHideEvent(this, player).callEvent()) {
+            return;
+        }
+
+        if (fsDisplay == null) {
+            return; // doesn't exist, nothing to hide
+        }
+
+        FS_RealPlayer fsPlayer = new FS_RealPlayer(player);
+        FancySitula.ENTITY_FACTORY.despawnEntityFor(fsPlayer, fsDisplay);
+
+        this.viewers.remove(player.getUniqueId());
     }
 
+
     @Override
-    public void update() {
+    public void updateFor(@NotNull final Player player) {
+        if (fsDisplay == null) {
+            return; // doesn't exist, nothing to refresh
+        }
+
+        syncWithData();
+
+        if (!isViewer(player)) {
+            return;
+        }
+
+        FS_RealPlayer fsPlayer = new FS_RealPlayer(player);
+
+        FancySitula.PACKET_FACTORY.createTeleportEntityPacket(
+                        fsDisplay.getId(),
+                        data.getLocation().x(),
+                        data.getLocation().y(),
+                        data.getLocation().z(),
+                        data.getLocation().getYaw(),
+                        data.getLocation().getPitch(),
+                        true)
+                .send(fsPlayer);
+
+
+        if (fsDisplay instanceof FS_TextDisplay textDisplay) {
+            textDisplay.setText(getShownText(player));
+        }
+
+        FancySitula.ENTITY_FACTORY.setEntityDataFor(fsPlayer, fsDisplay);
+    }
+
+    private void syncWithData() {
         if (fsDisplay == null) {
             return;
         }
@@ -94,6 +157,10 @@ public final class HologramImpl extends Hologram {
         }
 
         if (data instanceof DisplayHologramData displayData) {
+            // interpolation
+            fsDisplay.setTransformationInterpolationDuration(displayData.getInterpolationDuration());
+            fsDisplay.setTransformationInterpolationStartDeltaTicks(0);
+
             // billboard data
             fsDisplay.setBillboard(FS_Display.Billboard.valueOf(displayData.getBillboard().name()));
 
@@ -114,89 +181,6 @@ public final class HologramImpl extends Hologram {
 
             fsDisplay.setViewRange(displayData.getVisibilityDistance());
         }
-    }
-
-
-    @Override
-    public boolean show(@NotNull final Player player) {
-        if (!new HologramShowEvent(this, player).callEvent()) {
-            return false;
-        }
-
-        if (this.fsDisplay == null) {
-            create(); // try to create it if it doesn't exist every time
-        }
-
-        if (fsDisplay == null) {
-            return false; // could not be created, nothing to show
-        }
-
-        if (!data.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
-            return false;
-        }
-
-        // TODO: cache player protocol version
-        // TODO: fix this
-//        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
-//        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
-//            return false;
-//        }
-
-        FS_RealPlayer fsPlayer = new FS_RealPlayer(player);
-        FancySitula.ENTITY_FACTORY.spawnEntityFor(fsPlayer, fsDisplay);
-
-        this.viewers.add(player.getUniqueId());
-        refreshHologram(player);
-
-        return true;
-    }
-
-    @Override
-    public boolean hide(@NotNull final Player player) {
-        if (!new HologramHideEvent(this, player).callEvent()) {
-            return false;
-        }
-
-        if (fsDisplay == null) {
-            return false; // doesn't exist, nothing to hide
-        }
-
-        FS_RealPlayer fsPlayer = new FS_RealPlayer(player);
-        FancySitula.ENTITY_FACTORY.despawnEntityFor(fsPlayer, fsDisplay);
-
-        this.viewers.remove(player.getUniqueId());
-        return true;
-    }
-
-
-    @Override
-    public void refresh(@NotNull final Player player) {
-        if (fsDisplay == null) {
-            return; // doesn't exist, nothing to refresh
-        }
-
-        if (!isViewer(player)) {
-            return;
-        }
-
-        FS_RealPlayer fsPlayer = new FS_RealPlayer(player);
-
-        FancySitula.PACKET_FACTORY.createTeleportEntityPacket(
-                        fsDisplay.getId(),
-                        data.getLocation().x(),
-                        data.getLocation().y(),
-                        data.getLocation().z(),
-                        data.getLocation().getYaw(),
-                        data.getLocation().getPitch(),
-                        true)
-                .send(fsPlayer);
-
-
-        if (fsDisplay instanceof FS_TextDisplay textDisplay) {
-            textDisplay.setText(getShownText(player));
-        }
-
-        FancySitula.ENTITY_FACTORY.setEntityDataFor(fsPlayer, fsDisplay);
     }
 
 }

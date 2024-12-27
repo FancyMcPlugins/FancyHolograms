@@ -43,12 +43,13 @@ public final class Hologram1_20_4 extends Hologram {
 
     public Hologram1_20_4(@NotNull final HologramData data) {
         super(data);
+
+        create();
     }
 
-    @Override
     public void create() {
         final var location = data.getLocation();
-        if (!location.isWorldLoaded()) {
+        if (location.getWorld() == null) {
             return; // no location data, cannot be created
         }
 
@@ -59,25 +60,9 @@ public final class Hologram1_20_4 extends Hologram {
             case BLOCK -> this.display = new Display.BlockDisplay(EntityType.BLOCK_DISPLAY, world);
             case ITEM -> this.display = new Display.ItemDisplay(EntityType.ITEM_DISPLAY, world);
         }
-
-        if (data instanceof DisplayHologramData dd) {
-            final var DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_4.DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID.getMapping());
-            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID, dd.getInterpolationDuration());
-
-            final var DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_4.DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
-            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID, 0);
-        }
-
-        update();
     }
 
-    @Override
-    public void delete() {
-        this.display = null;
-    }
-
-    @Override
-    public void update() {
+    public void syncWithData() {
         final var display = this.display;
         if (display == null) {
             return; // doesn't exist, nothing to update
@@ -85,7 +70,7 @@ public final class Hologram1_20_4 extends Hologram {
 
         // location data
         final var location = data.getLocation();
-        if (location.getWorld() == null || !location.isWorldLoaded()) {
+        if (!location.isWorldLoaded()) {
             return;
         } else {
             display.setPosRaw(location.x(), location.y(), location.z());
@@ -99,7 +84,7 @@ public final class Hologram1_20_4 extends Hologram {
             display.getEntityData().set((EntityDataAccessor<Integer>) DATA_LINE_WIDTH_ID, Hologram.LINE_WIDTH);
 
             // background
-            final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_4.TEXT_DISPLAY__DATA_BACKGROUND_COLOR_ID.getMapping());
+            final var DATA_BACKGROUND_COLOR_ID = ReflectionUtils.getStaticValue(TextDisplay.class, MappingKeys1_20_4.TEXT_DISPLAY__DATA_BACKGROUND_COLOR_ID.getMapping()); //DATA_BACKGROUND_COLOR_ID
 
             final var background = textData.getBackground();
             if (background == null) {
@@ -147,6 +132,13 @@ public final class Hologram1_20_4 extends Hologram {
         }
 
         if (data instanceof DisplayHologramData displayData) {
+            // interpolation
+            final var DATA_INTERPOLATION_DURATION_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_4.DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID.getMapping());
+            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_DURATION_ID, displayData.getInterpolationDuration());
+
+            final var DATA_INTERPOLATION_START_DELTA_TICKS_ID = ReflectionUtils.getStaticValue(Display.class, MappingKeys1_20_4.DISPLAY__DATA_TRANSFORMATION_INTERPOLATION_START_DELTA_TICKS_ID.getMapping());
+            display.getEntityData().set((EntityDataAccessor<Integer>) DATA_INTERPOLATION_START_DELTA_TICKS_ID, 0);
+
             // billboard data
             display.setBillboardConstraints(switch (displayData.getBillboard()) {
                 case FIXED -> Display.BillboardConstraints.FIXED;
@@ -179,9 +171,9 @@ public final class Hologram1_20_4 extends Hologram {
 
 
     @Override
-    public boolean show(@NotNull final Player player) {
+    public void spawnTo(@NotNull final Player player) {
         if (!new HologramShowEvent(this, player).callEvent()) {
-            return false;
+            return;
         }
 
         if (this.display == null) {
@@ -190,50 +182,47 @@ public final class Hologram1_20_4 extends Hologram {
 
         final var display = this.display;
         if (display == null) {
-            return false; // could not be created, nothing to show
+            return; // could not be created, nothing to show
         }
 
         if (!data.getLocation().getWorld().getName().equals(player.getLocation().getWorld().getName())) {
-            return false;
+            return;
         }
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         // TODO: cache player protocol version
         // TODO: fix this
-//        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player.getUniqueId()) : MINIMUM_PROTOCOL_VERSION;
+//        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
 //        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
-//            System.out.println("nope protocol");
 //            return false;
 //        }
 
         serverPlayer.connection.send(new ClientboundAddEntityPacket(display));
         this.viewers.add(player.getUniqueId());
-        refreshHologram(player);
+        updateFor(player);
 
-        return true;
     }
 
     @Override
-    public boolean hide(@NotNull final Player player) {
+    public void despawnFrom(@NotNull final Player player) {
         if (!new HologramHideEvent(this, player).callEvent()) {
-            return false;
+            return;
         }
 
         final var display = this.display;
         if (display == null) {
-            return false; // doesn't exist, nothing to hide
+            return; // doesn't exist, nothing to hide
         }
 
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(display.getId()));
 
         this.viewers.remove(player.getUniqueId());
-        return true;
     }
 
 
     @Override
-    public void refresh(@NotNull final Player player) {
+    public void updateFor(@NotNull final Player player) {
         final var display = this.display;
         if (display == null) {
             return; // doesn't exist, nothing to refresh
@@ -242,6 +231,8 @@ public final class Hologram1_20_4 extends Hologram {
         if (!isViewer(player)) {
             return;
         }
+
+        syncWithData();
 
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundTeleportEntityPacket(display));
 
