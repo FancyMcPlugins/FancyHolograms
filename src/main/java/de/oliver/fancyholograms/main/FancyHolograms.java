@@ -8,8 +8,6 @@ import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyanalytics.logger.appender.Appender;
 import de.oliver.fancyanalytics.logger.appender.ConsoleAppender;
 import de.oliver.fancyanalytics.logger.appender.JsonAppender;
-import de.oliver.fancyholograms.FHFeatureFlags;
-import de.oliver.fancyholograms.FancyHologramsConfiguration;
 import de.oliver.fancyholograms.HologramManagerImpl;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.HologramConfiguration;
@@ -20,6 +18,8 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
 import de.oliver.fancyholograms.commands.FancyHologramsTestCMD;
 import de.oliver.fancyholograms.commands.HologramCMD;
+import de.oliver.fancyholograms.config.FHConfiguration;
+import de.oliver.fancyholograms.config.FHFeatureFlags;
 import de.oliver.fancyholograms.hologram.version.*;
 import de.oliver.fancyholograms.listeners.BedrockPlayerListener;
 import de.oliver.fancyholograms.listeners.NpcListener;
@@ -74,7 +74,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
                     .build()
     );
     private FancyAnalyticsAPI fancyAnalytics;
-    private HologramConfiguration configuration = new FancyHologramsConfiguration();
+    private HologramConfiguration configuration = new FHConfiguration();
     private HologramStorage hologramStorage = new FlatFileHologramStorage();
     private @Nullable HologramManagerImpl hologramsManager;
 

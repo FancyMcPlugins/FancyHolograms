@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.listeners;
 
-import de.oliver.fancyholograms.FHFeatureFlags;
 import de.oliver.fancyholograms.api.events.HologramShowEvent;
+import de.oliver.fancyholograms.config.FHFeatureFlags;
 import de.oliver.fancyholograms.util.PluginUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

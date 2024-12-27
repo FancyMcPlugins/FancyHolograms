@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms;
+package de.oliver.fancyholograms.config;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.HologramConfiguration;
@@ -12,7 +12,7 @@ import java.util.List;
  * The FancyHologramsConfig class is responsible for managing the configuration of the FancyHolograms plugin.
  * It handles loading and saving hologram data, as well as providing access to various configuration settings.
  */
-public final class FancyHologramsConfiguration implements HologramConfiguration {
+public final class FHConfiguration implements HologramConfiguration {
 
     /**
      * Indicates whether version notifications are muted.
