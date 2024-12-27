@@ -309,7 +309,6 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         return configuration;
     }
 
-    @Override
     public HologramStorage getHologramStorage() {
         return hologramStorage;
     }

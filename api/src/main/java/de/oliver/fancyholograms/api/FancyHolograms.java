@@ -35,11 +35,6 @@ public interface FancyHolograms {
     HologramConfiguration getHologramConfiguration();
 
     /**
-     * @return The hologram storage.
-     */
-    HologramStorage getHologramStorage();
-
-    /**
      * @return The hologram thread
      */
     ScheduledExecutorService getHologramThread();
