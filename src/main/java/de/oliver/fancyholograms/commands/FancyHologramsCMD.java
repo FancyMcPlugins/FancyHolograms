@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.commands;
 
-import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.storage.converter.ConverterTarget;
@@ -8,14 +8,11 @@ import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancylib.translations.message.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public final class FancyHologramsCMD extends Command {
 

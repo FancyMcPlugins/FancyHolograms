@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms.loaders;
+package de.oliver.fancyholograms.main;
 
 import io.papermc.paper.plugin.bootstrap.BootstrapContext;
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap;

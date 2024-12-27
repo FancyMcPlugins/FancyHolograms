@@ -74,9 +74,9 @@ dependencies {
 }
 
 paper {
-    main = "de.oliver.fancyholograms.FancyHolograms"
-    bootstrapper = "de.oliver.fancyholograms.loaders.FancyHologramsBootstrapper"
-    loader = "de.oliver.fancyholograms.loaders.FancyHologramsLoader"
+    main = "de.oliver.fancyholograms.main.FancyHolograms"
+    bootstrapper = "de.oliver.fancyholograms.main.FancyHologramsBootstrapper"
+    loader = "de.oliver.fancyholograms.main.FancyHologramsLoader"
     foliaSupported = true
     version = rootProject.version.toString()
     description = "Simple, lightweight and fast hologram plugin using display entities"

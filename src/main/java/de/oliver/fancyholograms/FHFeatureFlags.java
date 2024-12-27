@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms;
 
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancylib.featureFlags.FeatureFlag;
 import de.oliver.fancylib.featureFlags.FeatureFlagConfig;
 

@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.commands.hologram;
 
-import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.events.HologramDeleteEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;

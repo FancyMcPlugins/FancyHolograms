@@ -2,6 +2,7 @@ package de.oliver.fancyholograms;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.HologramConfiguration;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancylib.ConfigHelper;
 import org.jetbrains.annotations.NotNull;
 

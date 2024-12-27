@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.listeners;
 
-import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.WorldLoadEvent;

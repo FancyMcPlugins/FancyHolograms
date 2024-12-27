@@ -1,8 +1,7 @@
 package de.oliver.fancyholograms.listeners;
 
-import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import net.kyori.adventure.resource.ResourcePackStatus;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -26,6 +25,17 @@ public final class PlayerListener implements Listener {
     public PlayerListener(@NotNull final FancyHolograms plugin) {
         this.plugin = plugin;
         this.loadingResourcePacks = new HashMap<>();
+    }
+
+    // For 1.20.2 and higher this method returns actual pack identifier, while for older versions, the identifier is a dummy UUID full of zeroes.
+    // Versions prior 1.20.2 supports sending and receiving only one resource-pack and a dummy, constant identifier can be used as a key.
+    private static @NotNull UUID getResourcePackID(final @NotNull PlayerResourcePackStatusEvent event) {
+        try {
+            event.getClass().getMethod("getID");
+            return event.getID();
+        } catch (final @NotNull NoSuchMethodException e) {
+            return new UUID(0,0);
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -85,17 +95,6 @@ public final class PlayerListener implements Listener {
                     hologram.refreshHologram(event.getPlayer());
                 }
             }
-        }
-    }
-
-    // For 1.20.2 and higher this method returns actual pack identifier, while for older versions, the identifier is a dummy UUID full of zeroes.
-    // Versions prior 1.20.2 supports sending and receiving only one resource-pack and a dummy, constant identifier can be used as a key.
-    private static @NotNull UUID getResourcePackID(final @NotNull PlayerResourcePackStatusEvent event) {
-        try {
-            event.getClass().getMethod("getID");
-            return event.getID();
-        } catch (final @NotNull NoSuchMethodException e) {
-            return new UUID(0,0);
         }
     }
 

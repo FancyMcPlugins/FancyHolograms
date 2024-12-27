@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms;
+package de.oliver.fancyholograms.main;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
@@ -8,6 +8,9 @@ import de.oliver.fancyanalytics.logger.LogLevel;
 import de.oliver.fancyanalytics.logger.appender.Appender;
 import de.oliver.fancyanalytics.logger.appender.ConsoleAppender;
 import de.oliver.fancyanalytics.logger.appender.JsonAppender;
+import de.oliver.fancyholograms.FHFeatureFlags;
+import de.oliver.fancyholograms.FancyHologramsConfiguration;
+import de.oliver.fancyholograms.HologramManagerImpl;
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancyholograms.api.HologramManager;

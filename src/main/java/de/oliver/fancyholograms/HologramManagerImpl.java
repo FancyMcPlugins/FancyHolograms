@@ -9,6 +9,7 @@ import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramsLoadedEvent;
 import de.oliver.fancyholograms.api.events.HologramsUnloadedEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.World;

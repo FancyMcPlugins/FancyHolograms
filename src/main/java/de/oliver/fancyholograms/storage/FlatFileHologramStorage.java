@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.storage;
 
-import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.data.BlockHologramData;
 import de.oliver.fancyholograms.api.data.DisplayHologramData;

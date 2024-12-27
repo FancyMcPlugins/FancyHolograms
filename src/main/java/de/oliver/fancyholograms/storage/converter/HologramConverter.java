@@ -1,7 +1,7 @@
 package de.oliver.fancyholograms.storage.converter;
 
 import de.oliver.fancyanalytics.api.events.Event;
-import de.oliver.fancyholograms.FancyHolograms;
+import de.oliver.fancyholograms.main.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import org.jetbrains.annotations.NotNull;
 
