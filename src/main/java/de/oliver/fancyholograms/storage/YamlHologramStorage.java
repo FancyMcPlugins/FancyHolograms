@@ -63,7 +63,7 @@ public class YamlHologramStorage implements HologramStorage {
             }
         }
 
-        FancyHologramsPlugin.get().getFancyLogger().debug("Saved hologram " + hologram.getData().getName() + " to file");
+        FancyHologramsPlugin.get().getFancyLogger().debug("Saved hologram " + hologram.getName() + " to file");
     }
 
     public void delete(HologramData hologram) {
@@ -73,7 +73,7 @@ public class YamlHologramStorage implements HologramStorage {
         YamlConfiguration config = null;
         try {
             config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
-            config.set("holograms." + hologram.getData().getName(), null);
+            config.set("holograms." + hologram.getName(), null);
 
             success = true;
         } finally {
@@ -83,7 +83,7 @@ public class YamlHologramStorage implements HologramStorage {
             }
         }
 
-        FancyHologramsPlugin.get().getFancyLogger().debug("Deleted hologram " + hologram.getData().getName() + " from file");
+        FancyHologramsPlugin.get().getFancyLogger().debug("Deleted hologram " + hologram.getName() + " from file");
     }
 
     public Collection<HologramData> loadAll() {
@@ -174,7 +174,7 @@ public class YamlHologramStorage implements HologramStorage {
             section = Objects.requireNonNull(config.getConfigurationSection("holograms"));
         }
 
-        String holoName = hologram.getData().getName();
+        String holoName = hologram.getName();
 
         ConfigurationSection holoSection = section.getConfigurationSection(holoName);
         if (holoSection == null) {

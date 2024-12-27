@@ -30,16 +30,16 @@ public class JsonStorage implements HologramStorage{
     @Override
     public void save(HologramData hologram) {
         try {
-            jdb.set("worlds/" + hologram.getLocation().getWorld().getName() +  "/" + hologram.getType() + "/" + hologram.getData().getName(), hologram);
+            jdb.set("worlds/" + hologram.getLocation().getWorld().getName() +  "/" + hologram.getType() + "/" + hologram.getName(), hologram);
         } catch (IOException e) {
-            FancyHolograms.get().getFancyLogger().error("Failed to save hologram " + hologram.getData().getName());
+            FancyHolograms.get().getFancyLogger().error("Failed to save hologram " + hologram.getName());
             FancyHolograms.get().getFancyLogger().error(e);
         }
     }
 
     @Override
     public void delete(HologramData hologram) {
-        jdb.delete("worlds/" + hologram.getLocation().getWorld().getName() + "/" + hologram.getData().getName());
+        jdb.delete("worlds/" + hologram.getLocation().getWorld().getName() + "/" + hologram.getName());
     }
 
     @Override

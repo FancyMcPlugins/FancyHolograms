@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.metrics;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
 import de.oliver.fancyanalytics.api.metrics.MetricSupplier;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
+import de.oliver.fancyholograms.api.HologramRegistry;
 import de.oliver.fancyholograms.config.FHFeatureFlags;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.Metrics;
@@ -29,7 +30,7 @@ public class FHMetrics {
         fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());
         fancyAnalytics.getExceptionHandler().registerLogger(logger);
 
-        HologramManager manager = FancyHologramsPlugin.get().getHologramManager();
+        HologramRegistry registry = FancyHologramsPlugin.get().getRegistry();
 
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> FancyHologramsPlugin.get().getVersionConfig().getHash().substring(0, 7)));
 
@@ -55,17 +56,17 @@ public class FHMetrics {
             return "very_large";
         }));
 
-        fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_holograms", () -> (double) manager.getHolograms().size()));
+        fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_holograms", () -> (double) registry.getAll().size()));
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> FancyHologramsPlugin.get().getFHConfiguration().areVersionNotificationsMuted() ? "false" : "true"));
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("fflag_disable_holograms_for_bedrock_players", () -> FHFeatureFlags.DISABLE_HOLOGRAMS_FOR_BEDROCK_PLAYERS.isEnabled() ? "true" : "false"));
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
 
         fancyAnalytics.registerStringArrayMetric(new MetricSupplier<>("hologram_type", () -> {
-            if (manager == null) {
+            if (registry == null) {
                 return new String[0];
             }
 
-            return manager.getHolograms().stream()
+            return registry.getAll().stream()
                     .map(h -> h.getData().getType().name())
                     .toArray(String[]::new);
         }));
@@ -76,7 +77,7 @@ public class FHMetrics {
 
     public void registerLegacy() {
         Metrics metrics = new Metrics(FancyHologramsPlugin.get(), 17990);
-        metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> FancyHologramsPlugin.get().getHologramManager().getHolograms().size()));
+        metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> FancyHologramsPlugin.get().getRegistry().getAll().size()));
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> FancyHologramsPlugin.get().getFHConfiguration().areVersionNotificationsMuted() ? "No" : "Yes"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
     }
