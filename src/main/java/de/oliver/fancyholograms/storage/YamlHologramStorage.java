@@ -1,10 +1,6 @@
 package de.oliver.fancyholograms.storage;
 
-import de.oliver.fancyholograms.api.data.BlockHologramData;
-import de.oliver.fancyholograms.api.data.DisplayHologramData;
-import de.oliver.fancyholograms.api.data.ItemHologramData;
-import de.oliver.fancyholograms.api.data.TextHologramData;
-import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import org.bukkit.Location;
@@ -22,22 +18,18 @@ import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class YamlHologramStorage {
+public class YamlHologramStorage implements HologramStorage {
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
     private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
 
-    public void saveBatch(Collection<Hologram> holograms, boolean override) {
+    public void saveBatch(Collection<HologramData> holograms) {
         lock.readLock().lock();
 
         boolean success = false;
         YamlConfiguration config = null;
         try {
             config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
-
-            if (override) {
-                config.set("holograms", null);
-            }
 
             for (final var hologram : holograms) {
                 writeHologram(config, hologram);
@@ -51,10 +43,10 @@ public class YamlHologramStorage {
             }
         }
 
-        FancyHologramsPlugin.get().getFancyLogger().debug("Saved " + holograms.size() + " holograms to file (override=" + override + ")");
+        FancyHologramsPlugin.get().getFancyLogger().debug("Saved " + holograms.size() + " holograms to file");
     }
 
-    public void save(Hologram hologram) {
+    public void save(HologramData hologram) {
         lock.readLock().lock();
 
         boolean success = false;
@@ -71,17 +63,17 @@ public class YamlHologramStorage {
             }
         }
 
-        FancyHologramsPlugin.get().getFancyLogger().debug("Saved hologram " + hologram.getData().getName() + " to file");
+        FancyHologramsPlugin.get().getFancyLogger().debug("Saved hologram " + hologram.getName() + " to file");
     }
 
-    public void delete(Hologram hologram) {
+    public void delete(HologramData hologram) {
         lock.readLock().lock();
 
         boolean success = false;
         YamlConfiguration config = null;
         try {
             config = YamlConfiguration.loadConfiguration(HOLOGRAMS_CONFIG_FILE);
-            config.set("holograms." + hologram.getData().getName(), null);
+            config.set("holograms." + hologram.getName(), null);
 
             success = true;
         } finally {
@@ -91,17 +83,17 @@ public class YamlHologramStorage {
             }
         }
 
-        FancyHologramsPlugin.get().getFancyLogger().debug("Deleted hologram " + hologram.getData().getName() + " from file");
+        FancyHologramsPlugin.get().getFancyLogger().debug("Deleted hologram " + hologram.getName() + " from file");
     }
 
-    public Collection<Hologram> loadAll() {
-        List<Hologram> holograms = readHolograms(YamlHologramStorage.HOLOGRAMS_CONFIG_FILE, null);
+    public Collection<HologramData> loadAll() {
+        List<HologramData> holograms = readHolograms(YamlHologramStorage.HOLOGRAMS_CONFIG_FILE, null);
         FancyHologramsPlugin.get().getFancyLogger().debug("Loaded " + holograms.size() + " holograms from file");
         return holograms;
     }
 
-    public Collection<Hologram> loadAll(String world) {
-        List<Hologram> holograms = readHolograms(YamlHologramStorage.HOLOGRAMS_CONFIG_FILE, world);
+    public Collection<HologramData> loadAll(String world) {
+        List<HologramData> holograms = readHolograms(YamlHologramStorage.HOLOGRAMS_CONFIG_FILE, world);
         FancyHologramsPlugin.get().getFancyLogger().debug("Loaded " + holograms.size() + " holograms from file (world=" + world + ")");
         return holograms;
     }
@@ -109,7 +101,7 @@ public class YamlHologramStorage {
     /**
      * @param world The world to load the holograms from. (null for all worlds)
      */
-    private List<Hologram> readHolograms(@NotNull File configFile, @Nullable String world) {
+    private List<HologramData> readHolograms(@NotNull File configFile, @Nullable String world) {
         lock.readLock().lock();
         try {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -126,7 +118,7 @@ public class YamlHologramStorage {
                 return new ArrayList<>(0);
             }
 
-            List<Hologram> holograms = new ArrayList<>();
+            List<HologramData> holograms = new ArrayList<>();
 
             ConfigurationSection hologramsSection = config.getConfigurationSection("holograms");
             for (String name : hologramsSection.getKeys(false)) {
@@ -164,8 +156,7 @@ public class YamlHologramStorage {
                     continue;
                 }
 
-                Hologram hologram = FancyHologramsPlugin.get().getHologramManager().create(displayData);
-                holograms.add(hologram);
+                holograms.add(displayData);
             }
 
             FancyHologramsPlugin.get().getFancyLogger().debug("Loaded " + holograms.size() + " holograms from file");
@@ -175,7 +166,7 @@ public class YamlHologramStorage {
         }
     }
 
-    private void writeHologram(YamlConfiguration config, Hologram hologram) {
+    private void writeHologram(YamlConfiguration config, HologramData hologram) {
         @NotNull ConfigurationSection section;
         if (!config.isConfigurationSection("holograms")) {
             section = config.createSection("holograms");
@@ -183,14 +174,14 @@ public class YamlHologramStorage {
             section = Objects.requireNonNull(config.getConfigurationSection("holograms"));
         }
 
-        String holoName = hologram.getData().getName();
+        String holoName = hologram.getName();
 
         ConfigurationSection holoSection = section.getConfigurationSection(holoName);
         if (holoSection == null) {
             holoSection = section.createSection(holoName);
         }
 
-        hologram.getData().write(holoSection, holoName);
+        hologram.write(holoSection, holoName);
         FancyHologramsPlugin.get().getFancyLogger().debug("Wrote hologram " + holoName + " to config");
     }
 
