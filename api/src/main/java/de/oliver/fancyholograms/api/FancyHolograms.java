@@ -1,11 +1,15 @@
 package de.oliver.fancyholograms.api;
 
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
+import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.function.Function;
 
 public interface FancyHolograms {
 
@@ -26,6 +30,9 @@ public interface FancyHolograms {
     ExtendedFancyLogger getFancyLogger();
 
     HologramConfiguration getHologramConfiguration();
+
+    @ApiStatus.Internal
+    Function<HologramData, Hologram> getHologramFactory();
 
     ScheduledExecutorService getHologramThread();
 

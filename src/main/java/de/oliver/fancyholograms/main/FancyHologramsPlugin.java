@@ -70,6 +70,8 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
 
     private final HologramConfiguration configuration;
 
+    private Function<HologramData, Hologram> hologramFactory;
+
     private HologramStorage storage;
     private HologramRegistry registry;
     private HologramController controller;
@@ -149,8 +151,8 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
                     """);
         }
 
-        final var adapter = resolveHologramAdapter();
-        if (adapter == null) {
+        hologramFactory = resolveHologramFactory();
+        if (hologramFactory == null) {
             List<String> supportedVersions = new ArrayList<>(List.of("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4"));
             supportedVersions.addAll(ServerVersion.getSupportedVersions());
 
@@ -209,7 +211,7 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         INSTANCE = null;
     }
 
-    private @Nullable Function<HologramData, Hologram> resolveHologramAdapter() {
+    private @Nullable Function<HologramData, Hologram> resolveHologramFactory() {
         final var version = Bukkit.getMinecraftVersion();
 
         // check if the server version is supported by FancySitula
@@ -309,6 +311,11 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
     @Override
     public HologramConfiguration getHologramConfiguration() {
         return configuration;
+    }
+
+    @Override
+    public Function<HologramData, Hologram> getHologramFactory() {
+        return hologramFactory;
     }
 
     public HologramStorage getStorage() {
