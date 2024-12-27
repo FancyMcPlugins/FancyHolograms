@@ -139,6 +139,12 @@ public class DisplayHologramData extends HologramData {
                 (float) section.getDouble("scale_z", DEFAULT_SCALE.z)
         );
 
+        translation = new Vector3f(
+                (float) section.getDouble("translation_x", DEFAULT_TRANSLATION.x),
+                (float) section.getDouble("translation_y", DEFAULT_TRANSLATION.y),
+                (float) section.getDouble("translation_z", DEFAULT_TRANSLATION.z)
+        );
+
         shadowRadius = (float) section.getDouble("shadow_radius", DEFAULT_SHADOW_RADIUS);
         shadowStrength = (float) section.getDouble("shadow_strength", DEFAULT_SHADOW_STRENGTH);
 
@@ -169,6 +175,9 @@ public class DisplayHologramData extends HologramData {
         section.set("scale_x", scale.x);
         section.set("scale_y", scale.y);
         section.set("scale_z", scale.z);
+        section.set("translation_x", translation.x);
+        section.set("translation_y", translation.y);
+        section.set("translation_z", translation.z);
         section.set("shadow_radius", shadowRadius);
         section.set("shadow_strength", shadowStrength);
 
