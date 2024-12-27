@@ -73,7 +73,7 @@ public class InsertBeforeCMD implements Subcommand {
         textData.setText(copied.getText());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Inserted line");

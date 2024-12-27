@@ -64,7 +64,7 @@ public class BillboardCMD implements Subcommand {
         displayData.setBillboard(copied.getBillboard());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed the billboard to " + StringUtils.capitalize(billboard.name().toLowerCase(Locale.ROOT)));

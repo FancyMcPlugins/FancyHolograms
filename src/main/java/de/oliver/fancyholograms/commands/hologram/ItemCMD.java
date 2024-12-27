@@ -67,7 +67,7 @@ public class ItemCMD implements Subcommand {
         itemData.setItemStack(item);
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Set the item to '" + item.getType().name() + "'");

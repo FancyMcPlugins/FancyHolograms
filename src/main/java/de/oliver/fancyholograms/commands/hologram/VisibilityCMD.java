@@ -47,7 +47,7 @@ public class VisibilityCMD implements Subcommand {
         hologram.getData().setVisibility(copied.getVisibility());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed visibility to " + visibility);

@@ -65,7 +65,7 @@ public class TextShadowCMD implements Subcommand {
         textData.setTextShadow(copied.hasTextShadow());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed text shadow");

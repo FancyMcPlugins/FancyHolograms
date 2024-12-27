@@ -116,7 +116,7 @@ public final class HologramManagerImpl implements HologramManager {
                         }
                     }
 
-                    FancyHologramsPlugin.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram));
+                    FancyHologramsPlugin.get().getHologramThread().submit(() -> plugin.getHologramStorage().delete(hologram.getData()));
                 }
         );
 
@@ -140,33 +140,31 @@ public final class HologramManagerImpl implements HologramManager {
             return;
         }
 
-        plugin.getHologramStorage().saveBatch(getPersistentHolograms(), false);
+        plugin.getHologramStorage().saveBatch(getPersistentHolograms().stream().map(Hologram::getData).toList());
     }
 
     @Override
     public void loadHolograms() {
-        List<Hologram> allLoaded = new ArrayList<>();
-
         for (World world : Bukkit.getWorlds()) {
-            Collection<Hologram> loaded = plugin.getHologramStorage().loadAll(world.getName());
-            loaded.forEach(this::addHologram);
-
-            allLoaded.addAll(loaded);
+            loadHolograms(world.getName());
         }
+
         isLoaded = true;
 
-        FancyHologramsPlugin.get().getHologramThread().submit(() -> Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(allLoaded))));
-
-        FancyHologramsPlugin.get().getFancyLogger().info(String.format("Loaded %d holograms for all loaded worlds", allLoaded.size()));
+        FancyHologramsPlugin.get().getFancyLogger().info("Loaded holograms for all loaded worlds");
     }
 
     public void loadHolograms(String world) {
-        ImmutableList<Hologram> loaded = ImmutableList.copyOf(plugin.getHologramStorage().loadAll(world));
-        loaded.forEach(this::addHologram);
+        ImmutableList<HologramData> loaded = ImmutableList.copyOf(plugin.getHologramStorage().loadAll(world));
+        List<Hologram> allLoaded = new ArrayList<>();
 
-        isLoaded = true;
+        for (HologramData hologramData : loaded) {
+            Hologram hologram = this.adapter.apply(hologramData);
+            addHologram(hologram);
+            allLoaded.add(hologram);
+        }
 
-        Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(loaded)));
+        FancyHologramsPlugin.get().getHologramThread().submit(() -> Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(allLoaded))));
 
         FancyHologramsPlugin.get().getFancyLogger().info(String.format("Loaded %d holograms for world %s", loaded.size(), world));
     }
@@ -271,7 +269,7 @@ public final class HologramManagerImpl implements HologramManager {
                     .filter(hologram -> hologram.getData().getLocation().getWorld().getName().equals(world))
                     .toList();
 
-            FancyHologramsPlugin.get().getHologramStorage().saveBatch(h, false);
+            FancyHologramsPlugin.get().getHologramStorage().saveBatch(h.stream().map(Hologram::getData).toList());
 
             for (final Hologram hologram : h) {
                 this.holograms.remove(hologram.getName());

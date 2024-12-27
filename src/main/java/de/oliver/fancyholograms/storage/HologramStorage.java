@@ -1,6 +1,6 @@
 package de.oliver.fancyholograms.storage;
 
-import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.data.HologramData;
 
 import java.util.Collection;
 
@@ -10,30 +10,22 @@ public interface HologramStorage {
      * Saves a collection of holograms.
      *
      * @param holograms The holograms to save.
-     * @param override  Whether to override existing holograms.
      */
-    void saveBatch(Collection<Hologram> holograms, boolean override);
+    void saveBatch(Collection<HologramData> holograms);
 
     /**
      * Saves a hologram.
      *
      * @param hologram The hologram to save.
      */
-    void save(Hologram hologram);
+    void save(HologramData hologram);
 
     /**
      * Deletes a hologram.
      *
      * @param hologram The hologram to delete.
      */
-    void delete(Hologram hologram);
-
-    /**
-     * Loads all holograms from all worlds
-     *
-     * @return A collection of all loaded holograms.
-     */
-    Collection<Hologram> loadAll();
+    void delete(HologramData hologram);
 
     /**
      * Loads all holograms from a specific world
@@ -41,5 +33,5 @@ public interface HologramStorage {
      * @param world The world to load the holograms from.
      * @return A collection of all loaded holograms.
      */
-    Collection<Hologram> loadAll(String world);
+    Collection<HologramData> loadAll(String world);
 }

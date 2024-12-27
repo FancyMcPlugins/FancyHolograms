@@ -1,64 +1,60 @@
 package de.oliver.fancyholograms.storage;
 
 import de.oliver.fancyholograms.api.FancyHolograms;
-import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.data.BlockHologramData;
+import de.oliver.fancyholograms.api.data.HologramData;
+import de.oliver.fancyholograms.api.data.ItemHologramData;
+import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancylib.jdb.JDB;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class JsonStorage implements HologramStorage{
 
     private final JDB jdb;
 
     public JsonStorage() {
-        this.jdb = new JDB("data/holograms");
+        this.jdb = new JDB("plugins/FancyHolograms/data/holograms");
     }
 
     @Override
-    public void saveBatch(Collection<Hologram> holograms, boolean override) {
-        for (Hologram hologram : holograms) {
+    public void saveBatch(Collection<HologramData> holograms) {
+        for (HologramData hologram : holograms) {
            save(hologram);
         }
     }
 
     @Override
-    public void save(Hologram hologram) {
+    public void save(HologramData hologram) {
         try {
-            jdb.set("worlds/" + hologram.getData().getLocation().getWorld().getName() + "/" + hologram.getData().getName(), hologram);
+            jdb.set("worlds/" + hologram.getLocation().getWorld().getName() +  "/" + hologram.getType() + "/" + hologram.getName(), hologram);
         } catch (IOException e) {
-            FancyHolograms.get().getFancyLogger().error("Failed to save hologram " + hologram.getData().getName());
+            FancyHolograms.get().getFancyLogger().error("Failed to save hologram " + hologram.getName());
             FancyHolograms.get().getFancyLogger().error(e);
         }
     }
 
     @Override
-    public void delete(Hologram hologram) {
-        jdb.delete("worlds/" + hologram.getData().getLocation().getWorld().getName() + "/" + hologram.getData().getName());
+    public void delete(HologramData hologram) {
+        jdb.delete("worlds/" + hologram.getLocation().getWorld().getName() + "/" + hologram.getName());
     }
 
     @Override
-    public Collection<Hologram> loadAll() {
-        try {
-            return jdb.getAll("worlds", Hologram.class);
-        } catch (IOException e) {
-            FancyHolograms.get().getFancyLogger().error("Failed to load all holograms");
-            FancyHolograms.get().getFancyLogger().error(e);
-        }
+    public Collection<HologramData> loadAll(String world) {
+        List<HologramData> holograms = new ArrayList<>();
 
-        return new ArrayList<>();
-    }
-
-    @Override
-    public Collection<Hologram> loadAll(String world) {
         try {
-            return jdb.getAll("worlds/"+world, Hologram.class);
+            holograms.addAll(jdb.getAll("worlds/" + world + "/text", TextHologramData.class));
+            holograms.addAll(jdb.getAll("worlds/" + world + "/item", ItemHologramData.class));
+            holograms.addAll(jdb.getAll("worlds/" + world + "/block", BlockHologramData.class));
         } catch (IOException e) {
             FancyHolograms.get().getFancyLogger().error("Failed to load all holograms from world " + world);
             FancyHolograms.get().getFancyLogger().error(e);
         }
 
-        return new ArrayList<>();
+        return holograms;
     }
 }

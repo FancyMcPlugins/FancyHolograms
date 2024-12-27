@@ -63,7 +63,7 @@ public class TextAlignmentCMD implements Subcommand {
         textData.setTextAlignment(((TextHologramData) copied).getTextAlignment());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed text alignment");

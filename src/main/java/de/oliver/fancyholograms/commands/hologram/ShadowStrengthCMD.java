@@ -61,7 +61,7 @@ public class ShadowStrengthCMD implements Subcommand {
         displayData.setShadowStrength(copied.getShadowStrength());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed shadow strength");

@@ -22,12 +22,11 @@ import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class YamlHologramStorage implements HologramStorage {
+public class YamlHologramStorage {
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
     private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
 
-    @Override
     public void saveBatch(Collection<Hologram> holograms, boolean override) {
         lock.readLock().lock();
 
@@ -55,7 +54,6 @@ public class YamlHologramStorage implements HologramStorage {
         FancyHologramsPlugin.get().getFancyLogger().debug("Saved " + holograms.size() + " holograms to file (override=" + override + ")");
     }
 
-    @Override
     public void save(Hologram hologram) {
         lock.readLock().lock();
 
@@ -76,7 +74,6 @@ public class YamlHologramStorage implements HologramStorage {
         FancyHologramsPlugin.get().getFancyLogger().debug("Saved hologram " + hologram.getData().getName() + " to file");
     }
 
-    @Override
     public void delete(Hologram hologram) {
         lock.readLock().lock();
 
@@ -97,14 +94,12 @@ public class YamlHologramStorage implements HologramStorage {
         FancyHologramsPlugin.get().getFancyLogger().debug("Deleted hologram " + hologram.getData().getName() + " from file");
     }
 
-    @Override
     public Collection<Hologram> loadAll() {
         List<Hologram> holograms = readHolograms(YamlHologramStorage.HOLOGRAMS_CONFIG_FILE, null);
         FancyHologramsPlugin.get().getFancyLogger().debug("Loaded " + holograms.size() + " holograms from file");
         return holograms;
     }
 
-    @Override
     public Collection<Hologram> loadAll(String world) {
         List<Hologram> holograms = readHolograms(YamlHologramStorage.HOLOGRAMS_CONFIG_FILE, world);
         FancyHologramsPlugin.get().getFancyLogger().debug("Loaded " + holograms.size() + " holograms from file (world=" + world + ")");

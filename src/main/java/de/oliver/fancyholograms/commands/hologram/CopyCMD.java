@@ -73,7 +73,7 @@ public class CopyCMD implements Subcommand {
         FancyHologramsPlugin.get().getHologramsManager().addHologram(copy);
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(sender, "Copied the hologram");

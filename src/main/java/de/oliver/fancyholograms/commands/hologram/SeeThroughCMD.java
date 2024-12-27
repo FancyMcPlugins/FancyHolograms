@@ -65,7 +65,7 @@ public class SeeThroughCMD implements Subcommand {
         textData.setSeeThrough(copied.isSeeThrough());
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHologramsPlugin.get().getHologramStorage().save(hologram);
+            FancyHologramsPlugin.get().getHologramStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed see through");
