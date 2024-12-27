@@ -89,10 +89,10 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         JsonAppender jsonAppender = new JsonAppender(false, false, true, logsFile.getPath());
         fancyLogger = new ExtendedFancyLogger("FancyHolograms", LogLevel.INFO, List.of(consoleAppender, jsonAppender), new ArrayList<>());
 
-        metrics = new FHMetrics();
-
         versionFetcher = new MasterVersionFetcher("FancyHolograms");
         versionConfig = new VersionConfig(this, versionFetcher);
+
+        metrics = new FHMetrics();
 
         hologramThread = Executors.newSingleThreadScheduledExecutor(
                 new ThreadFactoryBuilder()

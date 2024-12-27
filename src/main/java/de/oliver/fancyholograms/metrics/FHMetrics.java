@@ -17,10 +17,11 @@ public class FHMetrics {
 
     public FHMetrics() {
         logger = FancyHologramsPlugin.get().getFancyLogger();
-        isDevelopmentBuild = !FancyHologramsPlugin.get().getVersionConfig().getBuild().equalsIgnoreCase("undefined");
     }
 
     public void register() {
+        isDevelopmentBuild = !FancyHologramsPlugin.get().getVersionConfig().getBuild().equalsIgnoreCase("undefined");
+
         fancyAnalytics = new FancyAnalyticsAPI("3b77bd59-2b01-46f2-b3aa-a9584401797f", "E2gW5zc2ZTk1OGFkNGY2ZDQ0ODlM6San");
         fancyAnalytics.getConfig().setDisableLogging(true);
 
