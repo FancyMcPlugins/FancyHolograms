@@ -33,7 +33,7 @@ public class RemoveCMD implements Subcommand {
         }
 
         FancyHolograms.get().getHologramThread().submit(() -> {
-            FancyHologramsPlugin.get().getHologramsManager().removeHologram(hologram);
+            FancyHologramsPlugin.get().getRegistry().unregister(hologram);
             MessageHelper.success(player, "Removed the hologram");
         });
 

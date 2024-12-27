@@ -35,8 +35,8 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(@NotNull final PlayerJoinEvent event) {
-        for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
-            hologram.updateShownStateFor(event.getPlayer());
+        for (final var hologram : this.plugin.getRegistry().getAll()) {
+            FancyHologramsPlugin.get().getController().refreshHologram(hologram, event.getPlayer());
         }
 
         if (!this.plugin.getHologramConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
@@ -47,23 +47,23 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(@NotNull final PlayerQuitEvent event) {
         FancyHologramsPlugin.get().getHologramThread().submit(() -> {
-            for (final var hologram : this.plugin.getHologramsManager().getHolograms()) {
-                hologram.hideHologram(event.getPlayer());
+            for (final var hologram : this.plugin.getRegistry().getAll()) {
+                FancyHologramsPlugin.get().getController().refreshHologram(hologram, event.getPlayer());
             }
         });
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onTeleport(@NotNull final PlayerTeleportEvent event) {
-        for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
-            hologram.updateShownStateFor(event.getPlayer());
+        for (final Hologram hologram : this.plugin.getRegistry().getAll()) {
+            FancyHologramsPlugin.get().getController().refreshHologram(hologram, event.getPlayer());
         }
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(@NotNull final PlayerChangedWorldEvent event) {
-        for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
-            hologram.updateShownStateFor(event.getPlayer());
+        for (final Hologram hologram : this.plugin.getRegistry().getAll()) {
+            FancyHologramsPlugin.get().getController().refreshHologram(hologram, event.getPlayer());
         }
     }
 
@@ -86,8 +86,8 @@ public final class PlayerListener implements Listener {
                 // Removing player from the map, as they're no longer needed here.
                 loadingResourcePacks.remove(playerUniqueId);
                 // Refreshing holograms as to make sure custom textures are loaded.
-                for (final Hologram hologram : this.plugin.getHologramsManager().getHolograms()) {
-                    hologram.refreshHologram(event.getPlayer());
+                for (final Hologram hologram : this.plugin.getRegistry().getAll()) {
+                    FancyHologramsPlugin.get().getController().refreshHologram(hologram, event.getPlayer());
                 }
             }
         }

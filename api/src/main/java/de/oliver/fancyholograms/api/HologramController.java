@@ -5,6 +5,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+
 /**
  * The controller for holograms, responsible for showing and hiding them to players.
  */
@@ -33,5 +35,9 @@ public interface HologramController {
      * Hide the hologram from the players that should not see it.
      */
     void refreshHologram(@NotNull final Hologram hologram, @NotNull final Player ...players);
+
+    default void refreshHologram(@NotNull final Hologram hologram, @NotNull final Collection<? extends Player> players) {
+        refreshHologram(hologram, players.toArray(new Player[0]));
+    }
 
 }

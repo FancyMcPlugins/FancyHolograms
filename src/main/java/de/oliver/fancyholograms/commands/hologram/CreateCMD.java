@@ -51,7 +51,7 @@ public class CreateCMD implements Subcommand {
 
         String name = args[2];
 
-        if (FancyHologramsPlugin.get().getHologramsManager().getHologram(name).isPresent()) {
+        if (FancyHologramsPlugin.get().getRegistry().get(name).isPresent()) {
             MessageHelper.error(player, "There already exists a hologram with this name");
             return false;
         }
@@ -74,18 +74,15 @@ public class CreateCMD implements Subcommand {
             }
         }
 
-        final var holo = FancyHologramsPlugin.get().getHologramsManager().create(displayData);
+        final var holo = FancyHologramsPlugin.get().getHologramFactory().apply(displayData);
         if (!new HologramCreateEvent(holo, player).callEvent()) {
             MessageHelper.error(player, "Creating the hologram was cancelled");
             return false;
         }
 
-        holo.createHologram();
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            holo.updateShownStateFor(onlinePlayer);
-        }
+        FancyHologramsPlugin.get().getController().refreshHologram(holo, Bukkit.getOnlinePlayers());
 
-        FancyHologramsPlugin.get().getHologramsManager().addHologram(holo);
+        FancyHologramsPlugin.get().getRegistry().register(holo);
 
         MessageHelper.success(player, "Created the hologram");
         return true;

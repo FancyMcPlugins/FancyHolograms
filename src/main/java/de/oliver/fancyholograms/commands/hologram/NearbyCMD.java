@@ -53,8 +53,8 @@ public class NearbyCMD implements Subcommand {
         Location playerLocation = ((Player) player).getLocation().clone();
 
         List<Map.Entry<Hologram, Double>> nearby = FancyHologramsPlugin.get()
-            .getHologramsManager()
-            .getPersistentHolograms()
+            .getRegistry()
+            .getAllPersistent()
             .stream()
             .filter((holo) -> holo.getData().getLocation().getWorld() == playerLocation.getWorld())
             .map((holo) -> Map.entry(holo, holo.getData().getLocation().distance(playerLocation)))

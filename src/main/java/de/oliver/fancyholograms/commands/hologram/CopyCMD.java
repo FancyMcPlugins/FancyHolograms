@@ -41,7 +41,7 @@ public class CopyCMD implements Subcommand {
 
         String name = args[2];
 
-        if (FancyHologramsPlugin.get().getHologramsManager().getHologram(name).isPresent()) {
+        if (FancyHologramsPlugin.get().getRegistry().get(name).isPresent()) {
             MessageHelper.error(sender, "There already exists a hologram with this name");
             return false;
         }
@@ -58,19 +58,16 @@ public class CopyCMD implements Subcommand {
         location.setYaw(originalLocation.getYaw());
         data.setLocation(location);
 
-        final var copy = FancyHologramsPlugin.get().getHologramsManager().create(data);
+        final var copy = FancyHologramsPlugin.get().getHologramFactory().apply(data);
 
         if (!new HologramCreateEvent(copy, player).callEvent()) {
             MessageHelper.error(sender, "Creating the copied hologram was cancelled");
             return false;
         }
 
-        copy.createHologram();
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            copy.updateShownStateFor(onlinePlayer);
-        }
+        FancyHologramsPlugin.get().getController().refreshHologram(copy, Bukkit.getOnlinePlayers());
 
-        FancyHologramsPlugin.get().getHologramsManager().addHologram(copy);
+        FancyHologramsPlugin.get().getRegistry().register(copy);
 
         if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHologramsPlugin.get().getStorage().save(hologram.getData());

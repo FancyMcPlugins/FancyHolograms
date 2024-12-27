@@ -27,7 +27,7 @@ public class ListCMD implements Subcommand {
             return false;
         }
 
-        final var holograms = FancyHologramsPlugin.get().getHologramsManager().getPersistentHolograms();
+        final var holograms = FancyHologramsPlugin.get().getRegistry().getAllPersistent();
 
         if (holograms.isEmpty()) {
             MessageHelper.warning(player, "There are no holograms. Use '/hologram create' to create one");
