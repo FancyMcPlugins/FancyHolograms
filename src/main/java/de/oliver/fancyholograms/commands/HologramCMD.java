@@ -80,7 +80,7 @@ public final class HologramCMD extends Command {
             return new NearbyCMD().run(sender, null, args);
         }
 
-        final var hologram = this.plugin.getHologramsManager().getHologram(args[1]).orElse(null);
+        final var hologram = this.plugin.getRegistry().get(args[1]).orElse(null);
         if (hologram == null) {
             MessageHelper.error(sender, "Could not find hologram: '" + args[1] + "'");
             return false;
@@ -102,10 +102,11 @@ public final class HologramCMD extends Command {
 
                 if (updated) {
                     if (sender instanceof Player p) {
-                        hologram.forceUpdate();
-                        hologram.refreshHologram(p);
+                        plugin.getController().refreshHologram(hologram, p);
                     }
-                    hologram.queueUpdate();
+
+                    //TODO: idk
+                    // hologram.queueUpdate();
                 }
 
                 yield updated;
@@ -138,10 +139,14 @@ public final class HologramCMD extends Command {
                 return Collections.emptyList();
             }
 
-            return this.plugin.getHologramsManager().getPersistentHolograms().stream().map(hologram -> hologram.getData().getName()).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT))).toList();
+            return this.plugin.getRegistry().getAllPersistent()
+                    .stream()
+                    .map(hologram -> hologram.getData().getName())
+                    .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase(Locale.ROOT)))
+                    .toList();
         }
 
-        final var hologram = this.plugin.getHologramsManager().getHologram(args[1]).orElse(null);
+        final var hologram = this.plugin.getRegistry().get(args[1]).orElse(null);
         if (hologram == null) {
             return Collections.emptyList();
         }

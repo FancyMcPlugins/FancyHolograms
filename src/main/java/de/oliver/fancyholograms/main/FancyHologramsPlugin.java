@@ -186,14 +186,11 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         metrics.registerLegacy();
 
         if (configuration.isAutosaveEnabled()) {
-            getHologramThread().scheduleAtFixedRate(() -> {
-                List<HologramData> toSave = registry.getAllPersistent()
-                        .stream()
-                        .map(Hologram::getData)
-                        .toList();
-
-                storage.saveBatch(toSave);
-            }, configuration.getAutosaveInterval(), configuration.getAutosaveInterval() * 60L, TimeUnit.SECONDS);
+            getHologramThread().scheduleAtFixedRate(
+                    this::savePersistentHolograms,
+                    configuration.getAutosaveInterval(),
+                    configuration.getAutosaveInterval() * 60L, TimeUnit.SECONDS
+            );
         }
 
         FHConversionRegistry.registerBuiltInConverters();
@@ -274,6 +271,15 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
                     -------------------------------------------------------
                     """.formatted(newest, getVersionFetcher().getDownloadUrl()));
         });
+    }
+
+    public void savePersistentHolograms() {
+        List<HologramData> toSave = registry.getAllPersistent()
+                .stream()
+                .map(Hologram::getData)
+                .toList();
+
+        storage.saveBatch(toSave);
     }
 
     @Override

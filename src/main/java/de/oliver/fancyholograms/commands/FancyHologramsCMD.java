@@ -8,6 +8,8 @@ import de.oliver.fancyholograms.converter.HologramConversionSession;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -38,12 +40,20 @@ public final class FancyHologramsCMD extends Command {
 
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "save" -> {
-                this.plugin.getHologramsManager().saveHolograms();
+                this.plugin.savePersistentHolograms();
                 MessageHelper.success(sender, "Saved all holograms");
             }
             case "reload" -> {
                 this.plugin.getHologramConfiguration().reload(plugin);
-                this.plugin.getHologramsManager().reloadHolograms();
+
+                this.plugin.getRegistry().clear();
+                for (World world : Bukkit.getWorlds()) {
+                    Collection<HologramData> hologramData = this.plugin.getStorage().loadAll(world.getName());
+                    for (HologramData data : hologramData) {
+                        Hologram hologram = this.plugin.getHologramFactory().apply(data);
+                        this.plugin.getRegistry().register(hologram);
+                    }
+                }
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }
@@ -78,11 +88,11 @@ public final class FancyHologramsCMD extends Command {
                             final List<HologramData> holograms = converter.convert(session);
 
                             for (final HologramData data : holograms) {
-                                final Hologram hologram = this.plugin.getHologramsManager().create(data);
-                                this.plugin.getHologramsManager().addHologram(hologram);
+                                final Hologram hologram = this.plugin.getHologramFactory().apply(data);
+                                this.plugin.getRegistry().register(hologram);
                             }
 
-                            this.plugin.getHologramsManager().saveHolograms();
+                            this.plugin.savePersistentHolograms();
                             // TODO(matt): Give options to delete them or teleport and a list of IDs please
 
                             MessageHelper.success(sender, String.format("Converted successfully, produced %s total holograms!", holograms.size()));

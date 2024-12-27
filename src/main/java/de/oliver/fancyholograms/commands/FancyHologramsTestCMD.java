@@ -65,9 +65,8 @@ public class FancyHologramsTestCMD extends Command {
                         .setScale(new Vector3f(.5f, .5f, .5f))
                         .setVisibilityDistance(100);
 
-                    Hologram hologram = this.plugin.getHologramsManager().create(textData);
-                    hologram.createHologram();
-                    hologram.updateShownStateFor(p);
+                    Hologram hologram = this.plugin.getHologramFactory().apply(textData);
+                    hologram.spawnTo(p);
                 }
             }
 
@@ -93,9 +92,8 @@ public class FancyHologramsTestCMD extends Command {
                 .setShadowStrength(3)
                 .setVisibilityDistance(100);
 
-            Hologram hologram = this.plugin.getHologramsManager().create(textData);
-            hologram.createHologram();
-            hologram.updateShownStateFor(p);
+            Hologram hologram = this.plugin.getHologramFactory().apply(textData);
+            hologram.spawnTo(p);
         }
 
         return false;
