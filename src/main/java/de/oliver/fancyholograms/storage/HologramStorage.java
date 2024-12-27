@@ -1,4 +1,4 @@
-package de.oliver.fancyholograms.api;
+package de.oliver.fancyholograms.storage;
 
 import de.oliver.fancyholograms.api.hologram.Hologram;
 

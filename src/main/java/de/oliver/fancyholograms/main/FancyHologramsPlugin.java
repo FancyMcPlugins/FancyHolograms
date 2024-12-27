@@ -10,7 +10,6 @@ import de.oliver.fancyholograms.HologramManagerImpl;
 import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancyholograms.api.HologramManager;
-import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.FancyHologramsCMD;
@@ -25,7 +24,8 @@ import de.oliver.fancyholograms.listeners.NpcListener;
 import de.oliver.fancyholograms.listeners.PlayerListener;
 import de.oliver.fancyholograms.listeners.WorldListener;
 import de.oliver.fancyholograms.metrics.FHMetrics;
-import de.oliver.fancyholograms.storage.FlatFileHologramStorage;
+import de.oliver.fancyholograms.storage.HologramStorage;
+import de.oliver.fancyholograms.storage.YamlHologramStorage;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.VersionConfig;
@@ -133,7 +133,7 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         fancyLogger.setCurrentLevel(logLevel);
         IFancySitula.LOGGER.setCurrentLevel(logLevel);
 
-        hologramStorage = new FlatFileHologramStorage();
+        hologramStorage = new YamlHologramStorage();
 
         if (!ServerSoftware.isPaper()) {
             fancyLogger.warn("""

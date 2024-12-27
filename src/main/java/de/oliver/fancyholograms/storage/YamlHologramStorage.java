@@ -1,6 +1,5 @@
 package de.oliver.fancyholograms.storage;
 
-import de.oliver.fancyholograms.api.HologramStorage;
 import de.oliver.fancyholograms.api.data.BlockHologramData;
 import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
@@ -23,7 +22,7 @@ import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class FlatFileHologramStorage implements HologramStorage {
+public class YamlHologramStorage implements HologramStorage {
 
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
     private static final File HOLOGRAMS_CONFIG_FILE = new File("plugins/FancyHolograms/holograms.yml");
@@ -100,14 +99,14 @@ public class FlatFileHologramStorage implements HologramStorage {
 
     @Override
     public Collection<Hologram> loadAll() {
-        List<Hologram> holograms = readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE, null);
+        List<Hologram> holograms = readHolograms(YamlHologramStorage.HOLOGRAMS_CONFIG_FILE, null);
         FancyHologramsPlugin.get().getFancyLogger().debug("Loaded " + holograms.size() + " holograms from file");
         return holograms;
     }
 
     @Override
     public Collection<Hologram> loadAll(String world) {
-        List<Hologram> holograms = readHolograms(FlatFileHologramStorage.HOLOGRAMS_CONFIG_FILE, world);
+        List<Hologram> holograms = readHolograms(YamlHologramStorage.HOLOGRAMS_CONFIG_FILE, world);
         FancyHologramsPlugin.get().getFancyLogger().debug("Loaded " + holograms.size() + " holograms from file (world=" + world + ")");
         return holograms;
     }
