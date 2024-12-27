@@ -44,7 +44,7 @@ public class VisibilityDistanceCMD implements Subcommand {
             return false;
         }
 
-        final var copied = hologram.getData().copy(hologram.getName());
+        final var copied = hologram.getData().copy(hologram.getData().getName());
         copied.setVisibilityDistance(visibilityDistance);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.UPDATE_VISIBILITY_DISTANCE)) {

@@ -27,7 +27,7 @@ public class MoveHereCMD implements Subcommand {
             return false;
         }
 
-        final var copied = hologram.getData().copy(hologram.getName());
+        final var copied = hologram.getData().copy(hologram.getData().getName());
         final Location newLocation = (applyRotation)
                 ? location
                 : new Location(location.getWorld(), location.x(), location.y(), location.z(), copied.getLocation().getYaw(), copied.getLocation().getPitch());

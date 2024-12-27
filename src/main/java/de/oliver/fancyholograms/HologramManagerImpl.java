@@ -243,7 +243,7 @@
 //            List<Hologram> unloaded = new ArrayList<>();
 //
 //            for (final var hologram : this.getPersistentHolograms()) {
-//                this.holograms.remove(hologram.getName());
+//                this.holograms.remove(hologram.getData().getName());
 //                unloaded.add(hologram);
 //
 //                for (UUID viewer : hologram.getViewers()) {
@@ -269,7 +269,7 @@
 //            FancyHologramsPlugin.get().getStorage().saveBatch(h.stream().map(Hologram::getData).toList());
 //
 //            for (final Hologram hologram : h) {
-//                this.holograms.remove(hologram.getName());
+//                this.holograms.remove(hologram.getData().getName());
 //                online.forEach(hologram::forceHideHologram);
 //            }
 //

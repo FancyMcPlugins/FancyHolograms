@@ -54,11 +54,11 @@ public enum Visibility {
         private static final HashMultimap<String, UUID> distantViewers = HashMultimap.create();
 
         public static boolean canSee(Player player, Hologram hologram) {
-            return hologram.isViewer(player) || distantViewers.containsEntry(hologram.getName(), player.getUniqueId());
+            return hologram.isViewer(player) || distantViewers.containsEntry(hologram.getData().getName(), player.getUniqueId());
         }
 
         public static void addDistantViewer(Hologram hologram, UUID uuid) {
-            addDistantViewer(hologram.getName(), uuid);
+            addDistantViewer(hologram.getData().getName(), uuid);
         }
 
         public static void addDistantViewer(String hologramName, UUID uuid) {
@@ -66,7 +66,7 @@ public enum Visibility {
         }
 
         public static void removeDistantViewer(Hologram hologram, UUID uuid) {
-            removeDistantViewer(hologram.getName(), uuid);
+            removeDistantViewer(hologram.getData().getName(), uuid);
         }
 
         public static void removeDistantViewer(String hologramName, UUID uuid) {
@@ -74,7 +74,7 @@ public enum Visibility {
         }
 
         public static void remove(Hologram hologram) {
-            remove(hologram.getName());
+            remove(hologram.getData().getName());
         }
 
         public static void remove(String hologramName) {

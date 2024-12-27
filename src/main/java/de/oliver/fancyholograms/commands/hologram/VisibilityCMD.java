@@ -36,7 +36,7 @@ public class VisibilityCMD implements Subcommand {
         }
         final var visibility = optionalVisibility.get();
 
-        final var copied = hologram.getData().copy(hologram.getName());
+        final var copied = hologram.getData().copy(hologram.getData().getName());
         copied.setVisibility(visibility);
 
         if (hologram.getData().getVisibility() == copied.getVisibility()) {

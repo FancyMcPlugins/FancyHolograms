@@ -19,12 +19,12 @@ public class HologramRegistryImpl implements HologramRegistry {
 
    @Override
     public boolean register(Hologram hologram) {
-        return holograms.putIfAbsent(hologram.getName(), hologram) != null;
+        return holograms.putIfAbsent(hologram.getData().getName(), hologram) != null;
     }
 
     @Override
     public boolean unregister(Hologram hologram) {
-        return holograms.remove(hologram.getName()) != null;
+        return holograms.remove(hologram.getData().getName()) != null;
     }
 
     @Override
