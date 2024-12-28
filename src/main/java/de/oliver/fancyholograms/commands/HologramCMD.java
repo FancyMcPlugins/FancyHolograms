@@ -9,7 +9,6 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import de.oliver.fancyholograms.commands.hologram.*;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
-import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
@@ -27,6 +26,40 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public final class HologramCMD extends Command {
+
+    private static final String HELP_TEXT = """
+            <%primary_color%><b>FancyHolograms commands help:<reset>
+            <%primary_color%>- /hologram help <dark_gray>- <white>Shows all (sub)commands
+            <%primary_color%>- /hologram list <dark_gray>- <white>Shows you a overview of all holograms
+            <%primary_color%>- /hologram nearby <range> <dark_gray>- <white>Shows all holograms nearby you in a range
+            <%primary_color%>- /hologram teleport <name> <dark_gray>- <white>Teleports you to a hologram
+            <%primary_color%>- /hologram create <name> <dark_gray>- <white>Creates a new hologram
+            <%primary_color%>- /hologram remove <name> <dark_gray>- <white>Removes a hologram
+            <%primary_color%>- /hologram copy <hologram> <new name> <dark_gray>- <white>Copies a hologram
+            <%primary_color%>- /hologram edit <hologram> addLine <text ...> <dark_gray>- <white>Adds a line at the bottom
+            <%primary_color%>- /hologram edit <hologram> removeLine <dark_gray>- <white>Removes a line at the bottom
+            <%primary_color%>- /hologram edit <hologram> insertBefore <line number> <text ...> <dark_gray>- <white>Inserts a line before another
+            <%primary_color%>- /hologram edit <hologram> insertAfter <line number> <text ...> <dark_gray>- <white>Inserts a line after another
+            <%primary_color%>- /hologram edit <hologram> setLine <line number> <text ...> <dark_gray>- <white>Edits the line
+            <%primary_color%>- /hologram edit <hologram> position <dark_gray>- <white>Teleports the hologram to you
+            <%primary_color%>- /hologram edit <hologram> moveTo <x> <y> <z> [yaw] [pitch] <dark_gray>- <white>Teleports the hologram to the coordinates
+            <%primary_color%>- /hologram edit <hologram> rotate <degrees> <dark_gray>- <white>Rotates the hologram
+            <%primary_color%>- /hologram edit <hologram> scale <factor> <dark_gray>- <white>Changes the scale of the hologram
+            <%primary_color%>- /hologram edit <hologram> billboard <center|fixed|horizontal|vertical> <factor> <dark_gray>- <white>Changes the billboard of the hologram
+            <%primary_color%>- /hologram edit <hologram> background <color> <dark_gray>- <white>Changes the background of the hologram
+            <%primary_color%>- /hologram edit <hologram> textShadow <true|false> <dark_gray>- <white>Enables/disables the text shadow
+            <%primary_color%>- /hologram edit <hologram> textAlignment <alignment> <dark_gray>- <white>Sets the text alignment
+            <%primary_color%>- /hologram edit <hologram> seeThrough <true|false> <dark_gray>- <white>Enables/disables whether the text can be seen through blocks
+            <%primary_color%>- /hologram edit <hologram> shadowRadius <value> <dark_gray>- <white>Changes the shadow radius of the hologram
+            <%primary_color%>- /hologram edit <hologram> shadowStrength <value> <dark_gray>- <white>Changes the shadow strength of the hologram
+            <%primary_color%>- /hologram edit <hologram> brightness <block|sky> <0-15> <dark_gray>- <white>Changes the brightness of the hologram
+            <%primary_color%>- /hologram edit <hologram> updateTextInterval <seconds> <dark_gray>- <white>Sets the interval for updating the text
+            """.replace("%primary_color%", MessageHelper.getPrimaryColor());
+
+    private static final String HELP_TEXT_NPCS = """
+            <%primary_color%>- /hologram edit <hologram> linkWithNpc <npc name> <dark_gray>- <white>Links the hologram with an NPC
+            <%primary_color%>- /hologram edit <hologram> unlinkWithNpc <dark_gray>- <white>Unlinks the hologram with an NPC
+            """.replace("%primary_color%", MessageHelper.getPrimaryColor());
 
     @NotNull
     private final FancyHologramsPlugin plugin;
@@ -56,7 +89,7 @@ public final class HologramCMD extends Command {
         }
 
         if (args.length == 0 || args[0].equalsIgnoreCase("help")) {
-            MessageHelper.info(sender, Constants.HELP_TEXT + (!PluginUtils.isFancyNpcsEnabled() ? "" : "\n" + Constants.HELP_TEXT_NPCS));
+            MessageHelper.info(sender, HELP_TEXT + (!PluginUtils.isFancyNpcsEnabled() ? "" : "\n" + HELP_TEXT_NPCS));
             return false;
         }
 

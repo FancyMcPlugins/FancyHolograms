@@ -3,7 +3,7 @@ package de.oliver.fancyholograms.commands.hologram;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
-import de.oliver.fancyholograms.util.Constants;
+import de.oliver.fancyholograms.util.Formats;
 import de.oliver.fancyholograms.util.NumberHelper;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Location;
@@ -18,6 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class NearbyCMD implements Subcommand {
+
+    public static final String INVALID_NEARBY_RANGE = "Provide an integer radius to search for holograms nearby.";
 
     @Override
     public List<String> tabcompletion(@NotNull CommandSender player, @Nullable Hologram hologram, @NotNull String[] args) {
@@ -39,14 +41,14 @@ public class NearbyCMD implements Subcommand {
 
 
         if (args.length < 2) {
-            MessageHelper.error(player, Constants.INVALID_NEARBY_RANGE);
+            MessageHelper.error(player, INVALID_NEARBY_RANGE);
             return false;
         }
 
         Optional<Integer> range = NumberHelper.parseInt(args[1]);
 
         if (range.isEmpty()) {
-            MessageHelper.error(player, Constants.INVALID_NEARBY_RANGE);
+            MessageHelper.error(player, INVALID_NEARBY_RANGE);
             return false;
         }
 
@@ -82,11 +84,11 @@ public class NearbyCMD implements Subcommand {
                     .formatted(
                         "/hologram teleport " + holo.getData().getName(),
                         holo.getData().getName(),
-                        Constants.DECIMAL_FORMAT.format(location.x()),
-                        Constants.DECIMAL_FORMAT.format(location.y()),
-                        Constants.DECIMAL_FORMAT.format(location.z()),
+                        Formats.DECIMAL.format(location.x()),
+                        Formats.DECIMAL.format(location.y()),
+                        Formats.DECIMAL.format(location.z()),
                         location.getWorld().getName(),
-                        Constants.DECIMAL_FORMAT.format(distance)
+                        Formats.DECIMAL.format(distance)
                     ));
         });
         return true;

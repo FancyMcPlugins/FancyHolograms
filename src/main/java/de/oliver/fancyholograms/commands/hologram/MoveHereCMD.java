@@ -6,7 +6,7 @@ import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
-import de.oliver.fancyholograms.util.Constants;
+import de.oliver.fancyholograms.util.Formats;
 import de.oliver.fancylib.MessageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Location;
@@ -44,11 +44,11 @@ public class MoveHereCMD implements Subcommand {
         }
 
         MessageHelper.success(player, "Moved the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
-                Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.x()),
-                Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.y()),
-                Constants.COORDINATES_DECIMAL_FORMAT.format(newLocation.z()),
-                Constants.COORDINATES_DECIMAL_FORMAT.format((newLocation.getYaw() + 180f) % 360f),
-                Constants.COORDINATES_DECIMAL_FORMAT.format((newLocation.getPitch()) % 360f)
+                Formats.COORDINATES_DECIMAL.format(newLocation.x()),
+                Formats.COORDINATES_DECIMAL.format(newLocation.y()),
+                Formats.COORDINATES_DECIMAL.format(newLocation.z()),
+                Formats.COORDINATES_DECIMAL.format((newLocation.getYaw() + 180f) % 360f),
+                Formats.COORDINATES_DECIMAL.format((newLocation.getPitch()) % 360f)
         ));
 
         return true;

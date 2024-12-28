@@ -4,7 +4,7 @@ import com.google.common.primitives.Ints;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
-import de.oliver.fancyholograms.util.Constants;
+import de.oliver.fancyholograms.util.Formats;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -64,9 +64,9 @@ public class ListCMD implements Subcommand {
                                 "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'%s'> - %s (%s/%s/%s in %s)</click></hover>"
                                         .formatted("/hologram teleport " + holo.getData().getName(),
                                                 holo.getData().getName(),
-                                                Constants.DECIMAL_FORMAT.format(location.x()),
-                                                Constants.DECIMAL_FORMAT.format(location.y()),
-                                                Constants.DECIMAL_FORMAT.format(location.z()),
+                                                Formats.DECIMAL.format(location.x()),
+                                                Formats.DECIMAL.format(location.y()),
+                                                Formats.DECIMAL.format(location.z()),
                                                 location.getWorld().getName()
                                         ));
                     });

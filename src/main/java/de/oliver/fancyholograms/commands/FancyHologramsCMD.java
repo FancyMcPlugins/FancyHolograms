@@ -6,7 +6,6 @@ import de.oliver.fancyholograms.converter.ConverterTarget;
 import de.oliver.fancyholograms.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.converter.HologramConversionSession;
 import de.oliver.fancyholograms.main.FancyHologramsPlugin;
-import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -17,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public final class FancyHologramsCMD extends Command {
+
+    public static final String FH_COMMAND_USAGE = "/fancyholograms <save|reload|version|convert>";
 
     @NotNull
     private final FancyHologramsPlugin plugin;
@@ -34,7 +35,7 @@ public final class FancyHologramsCMD extends Command {
         }
 
         if (args.length < 1) {
-            MessageHelper.info(sender, Constants.FH_COMMAND_USAGE);
+            MessageHelper.info(sender, FH_COMMAND_USAGE);
             return false;
         }
 
@@ -102,7 +103,7 @@ public final class FancyHologramsCMD extends Command {
                     }, () -> MessageHelper.error(sender, "That converter is not registered. Look at the developer documentation if you are adding converters."));
             }
             default -> {
-                MessageHelper.info(sender, Constants.FH_COMMAND_USAGE);
+                MessageHelper.info(sender, FH_COMMAND_USAGE);
                 return false;
             }
         }
