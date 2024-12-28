@@ -7,7 +7,6 @@ import de.oliver.fancyholograms.registry.HologramRegistryImpl;
 import de.oliver.fancyholograms.tests.mocks.HologramMock;
 import de.oliver.fancylib.tests.annotations.FPBeforeEach;
 import de.oliver.fancylib.tests.annotations.FPTest;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -26,7 +25,7 @@ public class HologramRegistryTest {
     @FPTest(name = "Register hologram to registry")
     public void testRegister(Player player) {
         Hologram hologram = new HologramMock(
-                new TextHologramData("Test", new Location(null, 0, 0, 0)),
+                new TextHologramData("Test", player.getLocation()),
                 () -> {},
                 () -> {},
                 () -> {}
