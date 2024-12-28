@@ -1,33 +1,79 @@
 package de.oliver.fancyholograms.api.data.builder;
 
 import de.oliver.fancyholograms.api.FancyHolograms;
-import de.oliver.fancyholograms.api.data.BlockHologramData;
-import de.oliver.fancyholograms.api.data.HologramData;
-import de.oliver.fancyholograms.api.data.ItemHologramData;
-import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.data.DisplayHologramData;
+import de.oliver.fancyholograms.api.data.property.Visibility;
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import de.oliver.fancyholograms.api.hologram.HologramType;
-import org.bukkit.Location;
+import org.bukkit.entity.Display;
+import org.joml.Vector3f;
 
-public class HologramBuilder {
+public abstract class HologramBuilder {
 
-    private final HologramData data;
+    protected DisplayHologramData data;
 
-    private HologramBuilder(HologramType type, String name, Location location) {
-        switch (type){
-            case TEXT -> data = new TextHologramData(name, location);
-            case ITEM -> data = new ItemHologramData(name, location);
-            case BLOCK -> data = new BlockHologramData(name, location);
-            default -> throw new UnsupportedOperationException("Unsupported hologram type: " + type);
-        }
-    }
-
-    public static HologramBuilder create(HologramType type, String name, Location location) {
-        return new HologramBuilder(type, name, location);
+    HologramBuilder() {
     }
 
     public Hologram build() {
         return FancyHolograms.get().getHologramFactory().apply(data);
     }
 
+    // The following methods are setters for the HologramData class
+
+    public HologramBuilder visibilityDistance(int distance) {
+        data.setVisibilityDistance(distance);
+        return this;
+    }
+
+    public HologramBuilder visibility(Visibility visibility) {
+        data.setVisibility(visibility);
+        return this;
+    }
+
+    public HologramBuilder persistent(boolean persistent) {
+        data.setPersistent(persistent);
+        return this;
+    }
+
+    public HologramBuilder linkedNpcName(String linkedNpcName) {
+        data.setLinkedNpcName(linkedNpcName);
+        return this;
+    }
+
+    // The following methods are specific to the DisplayHologramData class
+
+    public HologramBuilder billboard(Display.Billboard billboard) {
+        data.setBillboard(billboard);
+        return this;
+    }
+
+    public HologramBuilder scale(float x, float y, float z) {
+        data.setScale(new Vector3f(x, y, z));
+        return this;
+    }
+
+    public HologramBuilder translation(float x, float y, float z) {
+        data.setTranslation(new Vector3f(x, y, z));
+        return this;
+    }
+
+    public HologramBuilder brightness(int blockLight, int skyLight) {
+        data.setBrightness(new Display.Brightness(blockLight, skyLight));
+        return this;
+    }
+
+    public HologramBuilder shadowRadius(float shadowRadius) {
+        data.setShadowRadius(shadowRadius);
+        return this;
+    }
+
+    public HologramBuilder shadowStrength(float shadowStrength) {
+        data.setShadowStrength(shadowStrength);
+        return this;
+    }
+
+    public HologramBuilder interpolationDuration(int interpolationDuration) {
+        data.setInterpolationDuration(interpolationDuration);
+        return this;
+    }
 }
