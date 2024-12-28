@@ -4,6 +4,7 @@ import de.oliver.fancyholograms.api.hologram.HologramType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
 
@@ -36,6 +37,7 @@ public class BlockHologramData extends DisplayHologramData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         block = Material.getMaterial(section.getString("block", "GRASS_BLOCK").toUpperCase());
@@ -44,6 +46,7 @@ public class BlockHologramData extends DisplayHologramData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("block", block.name());

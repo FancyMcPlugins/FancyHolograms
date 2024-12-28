@@ -51,24 +51,28 @@ public class TextHologramData extends DisplayHologramData {
         return this;
     }
 
-    public void addLine(String line) {
+    public TextHologramData addLine(String line) {
         text.add(line);
         setHasChanges(true);
+        return this;
     }
 
-    public void removeLine(int index) {
+    public TextHologramData removeLine(int index) {
         text.remove(index);
         setHasChanges(true);
+        return this;
     }
 
-    public void setLine(int index, String line) {
+    public TextHologramData setLine(int index, String line) {
         text.set(index, line);
         setHasChanges(true);
+        return this;
     }
 
-    public void clearText() {
+    public TextHologramData clearText() {
         text.clear();
         setHasChanges(true);
+        return this;
     }
 
     public Color getBackground() {

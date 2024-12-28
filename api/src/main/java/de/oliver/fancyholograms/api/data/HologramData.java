@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -135,6 +136,7 @@ public class HologramData implements YamlData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean read(ConfigurationSection section, String name) {
         String worldName = section.getString("location.world", "world");
         float x = (float) section.getDouble("location.x", 0);
@@ -163,6 +165,7 @@ public class HologramData implements YamlData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean write(ConfigurationSection section, String name) {
         section.set("type", type.name());
         section.set("location.world", location.getWorld().getName());
