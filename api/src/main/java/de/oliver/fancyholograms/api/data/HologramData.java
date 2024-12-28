@@ -23,7 +23,7 @@ public class HologramData implements YamlData {
     private final String name;
     private final HologramType type;
     private Location location;
-    private boolean hasChanges;
+    private boolean hasChanges = false;
     private int visibilityDistance = DEFAULT_VISIBILITY_DISTANCE;
     private Visibility visibility = DEFAULT_VISIBILITY;
     private boolean persistent = DEFAULT_PERSISTENCE;
