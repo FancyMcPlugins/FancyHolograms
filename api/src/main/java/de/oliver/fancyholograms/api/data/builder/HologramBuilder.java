@@ -11,7 +11,7 @@ public abstract class HologramBuilder {
 
     protected DisplayHologramData data;
 
-    private HologramBuilder() {
+    protected HologramBuilder() {
     }
 
     /**
