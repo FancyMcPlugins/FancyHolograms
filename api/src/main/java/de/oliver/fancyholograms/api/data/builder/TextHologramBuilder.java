@@ -30,9 +30,28 @@ public class TextHologramBuilder extends HologramBuilder{
         return this;
     }
 
+    public TextHologramBuilder text(String text) {
+        return text(List.of(text));
+    }
+
+    public TextHologramBuilder text(String ... text) {
+        return text(List.of(text));
+    }
+
     public TextHologramBuilder background(Color background) {
         ((TextHologramData) data).setBackground(background);
         return this;
+    }
+
+    /**
+     * Sets the background color of the text hologram using a color code in ARGB format.
+     *
+     * @param background the ARGB color code as a string (#AARRGGBB)
+     * @return the updated instance of TextHologramBuilder for method chaining
+     */
+    public TextHologramBuilder background(String background) {
+        int argb = Integer.parseInt(background.substring(1), 16);
+        return background(Color.fromARGB(argb));
     }
 
     public TextHologramBuilder textAlignment(TextDisplay.TextAlignment textAlignment) {
