@@ -1,5 +1,6 @@
 package de.oliver.fancyholograms.tests;
 
+import de.oliver.fancyholograms.tests.api.HologramBuilderTest;
 import de.oliver.fancyholograms.tests.api.HologramRegistryTest;
 import de.oliver.fancylib.tests.FPTestClass;
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ public class FHTests {
 
     public FHTests() {
         addTest(HologramRegistryTest.class);
+        addTest(HologramBuilderTest.class);
     }
 
     /**
