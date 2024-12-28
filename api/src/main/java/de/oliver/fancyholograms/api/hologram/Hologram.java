@@ -14,6 +14,7 @@ import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 
 /**
@@ -92,6 +93,54 @@ public abstract class Hologram {
         return this.viewers.contains(player);
     }
 
+    public final @NotNull HologramData getData() {
+        return this.data;
+    }
+
+    /**
+     * Retrieves the data associated with the hologram and casts it to the specified type.
+     *
+     * @param <T>   the type of {@code HologramData} to retrieve
+     * @param clazz the class of the data type to retrieve; must not be null
+     * @return the hologram data cast to the specified type
+     */
+    @ApiStatus.Experimental
+    public final <T extends HologramData> @NotNull T getData(@NotNull Class<T> clazz) {
+        return clazz.cast(this.data);
+    }
+
+    /**
+     * Retrieves the data associated with the hologram, if it can be cast to the specified type.
+     *
+     * @param <T>   the type of {@code HologramData}
+     * @param clazz the class of the data type to retrieve; must not be null
+     * @return the hologram data cast to the specified type, or null if the cast fails
+     */
+    @ApiStatus.Experimental
+    public final <T extends HologramData> @Nullable T getDataNullable(@NotNull Class<T> clazz) {
+        try {
+            return clazz.cast(this.data);
+        } catch (ClassCastException ignored) {
+            return null;
+        }
+    }
+
+    /**
+     * Consumes the data associated with the hologram if it can be cast to the specified type.
+     *
+     * @param <T>      the type of {@link HologramData} to consume
+     * @param clazz    the class of the data type to consume; must not be null
+     * @param consumer the action to perform with the consumed data; must not be null
+     */
+    @ApiStatus.Experimental
+    public final <T extends HologramData> void consumeData(@NotNull Class<T> clazz, @NotNull Consumer<T> consumer) {
+        final T data = getDataNullable(clazz);
+
+        if (data != null) {
+            consumer.accept(data);
+        }
+    }
+
     /**
      * Gets the text shown in the hologram. If a player is specified, placeholders in the text are replaced
      * with their corresponding values for the player.
@@ -107,9 +156,5 @@ public abstract class Hologram {
         var text = String.join("\n", textData.getText());
 
         return ModernChatColorHandler.translate(text, player);
-    }
-
-    public final @NotNull HologramData getData() {
-        return this.data;
     }
 }
