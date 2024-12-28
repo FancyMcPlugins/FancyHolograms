@@ -1,10 +1,11 @@
-package de.oliver.fancyholograms.storage;
+package de.oliver.fancyholograms.storage.json;
 
 import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.data.BlockHologramData;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.storage.HologramStorage;
 import de.oliver.fancylib.jdb.JDB;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class JsonStorage implements HologramStorage{
+public class JsonStorage implements HologramStorage {
 
     private final JDB jdb;
 
