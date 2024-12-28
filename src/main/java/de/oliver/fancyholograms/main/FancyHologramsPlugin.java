@@ -28,6 +28,7 @@ import de.oliver.fancyholograms.metrics.FHMetrics;
 import de.oliver.fancyholograms.registry.HologramRegistryImpl;
 import de.oliver.fancyholograms.storage.HologramStorage;
 import de.oliver.fancyholograms.storage.YamlHologramStorage;
+import de.oliver.fancyholograms.trait.HologramTraitRegistryImpl;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.VersionConfig;
@@ -76,6 +77,7 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
     private HologramStorage storage;
     private HologramRegistryImpl registry;
     private HologramControllerImpl controller;
+    private HologramTraitRegistryImpl traitRegistry;
 
     public FancyHologramsPlugin() {
         INSTANCE = this;
@@ -141,6 +143,7 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         storage = new YamlHologramStorage();
         registry = new HologramRegistryImpl();
         controller = new HologramControllerImpl();
+        traitRegistry = new HologramTraitRegistryImpl();
 
         if (!ServerSoftware.isPaper()) {
             fancyLogger.warn("""
@@ -329,6 +332,11 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
     @Override
     public HologramRegistry getRegistry() {
         return registry;
+    }
+
+    @Override
+    public HologramTraitRegistryImpl getTraitRegistry() {
+        return traitRegistry;
     }
 
     @Override

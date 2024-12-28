@@ -62,6 +62,7 @@ public final class HologramImpl extends Hologram {
         this.viewers.add(player.getUniqueId());
         updateFor(player);
 
+        traitTrait.onSpawn(player);
     }
 
     @Override
@@ -78,6 +79,8 @@ public final class HologramImpl extends Hologram {
         FancySitula.ENTITY_FACTORY.despawnEntityFor(fsPlayer, fsDisplay);
 
         this.viewers.remove(player.getUniqueId());
+
+        traitTrait.onDespawn(player);
     }
 
 

@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.api;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.api.trait.HologramTraitRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,6 +41,8 @@ public interface FancyHolograms {
 
     HologramController getController();
 
+    @ApiStatus.Experimental
+    HologramTraitRegistry getTraitRegistry();
 
     class EnabledChecker {
 

@@ -3,6 +3,7 @@ package de.oliver.fancyholograms.api.hologram;
 import com.google.common.collect.Sets;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.trait.HologramTraitTrait;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
 import org.bukkit.entity.Player;
@@ -28,10 +29,12 @@ public abstract class Hologram {
 
     protected final @NotNull HologramData data;
     protected final @NotNull Set<UUID> viewers;
+    protected final @NotNull HologramTraitTrait traitTrait;
 
     protected Hologram(@NotNull final HologramData data) {
         this.data = data;
         this.viewers = new HashSet<>();
+        this.traitTrait = new HologramTraitTrait(this);
     }
 
     /**
@@ -91,6 +94,17 @@ public abstract class Hologram {
      */
     public final boolean isViewer(@NotNull final UUID player) {
         return this.viewers.contains(player);
+    }
+
+    @ApiStatus.Experimental
+    public @NotNull HologramTraitTrait getTraitTrait() {
+        return traitTrait;
+    }
+
+    @ApiStatus.Experimental
+    public HologramData addTrait(HologramTraitTrait trait) {
+        traitTrait.addTrait(trait);
+        return data;
     }
 
     public final @NotNull HologramData getData() {

@@ -24,7 +24,11 @@ public class HologramRegistryImpl implements HologramRegistry {
     public boolean register(Hologram hologram) {
        FancyHologramsPlugin.get().getController().refreshHologram(hologram, Bukkit.getOnlinePlayers());
 
-        return holograms.putIfAbsent(hologram.getData().getName(), hologram) != null;
+       boolean registered = holograms.putIfAbsent(hologram.getData().getName(), hologram) != null;
+
+       hologram.getTraitTrait().onRegister();
+
+        return registered;
     }
 
     @Override
@@ -36,6 +40,8 @@ public class HologramRegistryImpl implements HologramRegistry {
         }
 
         FancyHologramsPlugin.get().getStorage().delete(hologram.getData());
+
+        hologram.getTraitTrait().onUnregister();
 
         return removed;
     }
