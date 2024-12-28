@@ -7,13 +7,23 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public final class HologramsUnloadedEvent extends Event {
+/**
+ * Represents an event triggered when all holograms are loaded.
+ * This event contains a list of all holograms that have been loaded in the current context.
+ * The event is asynchronous if it does not execute on the main server thread.
+ * <p>
+ * This event may serve as a notification mechanism to inform listeners that the loading operation
+ * for holograms has completed.
+ * <p>
+ * This event extends the {@link Event} class, utilizing the Bukkit event system.
+ */
+public final class HologramsLoadEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
 
     private final ImmutableList<Hologram> holograms;
 
-    public HologramsUnloadedEvent(@NotNull final ImmutableList<Hologram> holograms) {
+    public HologramsLoadEvent(@NotNull final ImmutableList<Hologram> holograms) {
         super(!Bukkit.isPrimaryThread());
 
         this.holograms = holograms;
@@ -23,7 +33,7 @@ public final class HologramsUnloadedEvent extends Event {
         return handlerList;
     }
 
-    public @NotNull ImmutableList<Hologram> getManager() {
+    public @NotNull ImmutableList<Hologram> getHolograms() {
         return this.holograms;
     }
 

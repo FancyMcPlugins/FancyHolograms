@@ -1,8 +1,8 @@
 package de.oliver.fancyholograms.hologram.version;
 
 import de.oliver.fancyholograms.api.data.*;
-import de.oliver.fancyholograms.api.events.HologramHideEvent;
-import de.oliver.fancyholograms.api.events.HologramShowEvent;
+import de.oliver.fancyholograms.api.events.HologramDespawnEvent;
+import de.oliver.fancyholograms.api.events.HologramSpawnEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancysitula.api.entities.*;
 import de.oliver.fancysitula.factories.FancySitula;
@@ -32,7 +32,7 @@ public final class HologramImpl extends Hologram {
 
     @Override
     public void spawnTo(@NotNull final Player player) {
-        if (!new HologramShowEvent(this, player).callEvent()) {
+        if (!new HologramSpawnEvent(this, player).callEvent()) {
             return;
         }
 
@@ -61,7 +61,7 @@ public final class HologramImpl extends Hologram {
 
     @Override
     public void despawnFrom(@NotNull final Player player) {
-        if (!new HologramHideEvent(this, player).callEvent()) {
+        if (!new HologramDespawnEvent(this, player).callEvent()) {
             return;
         }
 

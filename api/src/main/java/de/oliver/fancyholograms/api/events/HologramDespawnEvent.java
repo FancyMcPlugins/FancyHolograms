@@ -7,9 +7,9 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Called when a hologram is being shown to a player
+ * Called when a hologram is being hidden from a player
  */
-public final class HologramShowEvent extends HologramEvent {
+public final class HologramDespawnEvent extends HologramEvent {
 
     private static final HandlerList handlerList = new HandlerList();
 
@@ -17,7 +17,7 @@ public final class HologramShowEvent extends HologramEvent {
     @NotNull
     private final Player player;
 
-    public HologramShowEvent(@NotNull final Hologram hologram, @NotNull final Player player) {
+    public HologramDespawnEvent(@NotNull final Hologram hologram, @NotNull final Player player) {
         super(hologram, !Bukkit.isPrimaryThread());
 
         this.player = player;

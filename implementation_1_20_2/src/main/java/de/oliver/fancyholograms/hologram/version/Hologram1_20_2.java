@@ -2,8 +2,8 @@ package de.oliver.fancyholograms.hologram.version;
 
 import com.mojang.math.Transformation;
 import de.oliver.fancyholograms.api.data.*;
-import de.oliver.fancyholograms.api.events.HologramHideEvent;
-import de.oliver.fancyholograms.api.events.HologramShowEvent;
+import de.oliver.fancyholograms.api.events.HologramDespawnEvent;
+import de.oliver.fancyholograms.api.events.HologramSpawnEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancylib.ReflectionUtils;
 import io.papermc.paper.adventure.PaperAdventure;
@@ -172,7 +172,7 @@ public final class Hologram1_20_2 extends Hologram {
 
     @Override
     public void spawnTo(@NotNull final Player player) {
-        if (!new HologramShowEvent(this, player).callEvent()) {
+        if (!new HologramSpawnEvent(this, player).callEvent()) {
             return;
         }
 
@@ -206,7 +206,7 @@ public final class Hologram1_20_2 extends Hologram {
 
     @Override
     public void despawnFrom(@NotNull final Player player) {
-        if (!new HologramHideEvent(this, player).callEvent()) {
+        if (!new HologramDespawnEvent(this, player).callEvent()) {
             return;
         }
 

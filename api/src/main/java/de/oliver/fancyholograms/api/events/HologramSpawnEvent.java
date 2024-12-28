@@ -1,30 +1,34 @@
 package de.oliver.fancyholograms.api.events;
 
-import com.google.common.collect.ImmutableList;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import org.bukkit.Bukkit;
-import org.bukkit.event.Event;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public final class HologramsLoadedEvent extends Event {
+/**
+ * Called when a hologram is being shown to a player
+ */
+public final class HologramSpawnEvent extends HologramEvent {
 
     private static final HandlerList handlerList = new HandlerList();
 
-    private final ImmutableList<Hologram> holograms;
 
-    public HologramsLoadedEvent(@NotNull final ImmutableList<Hologram> holograms) {
-        super(!Bukkit.isPrimaryThread());
+    @NotNull
+    private final Player player;
 
-        this.holograms = holograms;
+    public HologramSpawnEvent(@NotNull final Hologram hologram, @NotNull final Player player) {
+        super(hologram, !Bukkit.isPrimaryThread());
+
+        this.player = player;
     }
 
     public static HandlerList getHandlerList() {
         return handlerList;
     }
 
-    public @NotNull ImmutableList<Hologram> getManager() {
-        return this.holograms;
+    public @NotNull Player getPlayer() {
+        return this.player;
     }
 
     @Override
