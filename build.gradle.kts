@@ -70,6 +70,7 @@ dependencies {
 
     compileOnly("de.oliver:FancyNpcs:2.4.2")
     compileOnly("org.lushplugins:ChatColorHandler:5.1.2")
+    compileOnly("com.viaversion:viaversion-api:5.2.0")
     compileOnly("org.geysermc.floodgate:api:2.2.4-SNAPSHOT")
 }
 
@@ -96,6 +97,11 @@ paper {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
         }
         register("floodgate") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            joinClasspath = true
+        }
+        register("ViaVersion") {
             required = false
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             joinClasspath = true

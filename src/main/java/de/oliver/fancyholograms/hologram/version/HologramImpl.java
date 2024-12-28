@@ -1,9 +1,13 @@
 package de.oliver.fancyholograms.hologram.version;
 
+import com.viaversion.viaversion.api.Via;
+import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.api.events.HologramDespawnEvent;
 import de.oliver.fancyholograms.api.events.HologramSpawnEvent;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.config.FHFeatureFlags;
+import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancysitula.api.entities.*;
 import de.oliver.fancysitula.factories.FancySitula;
 import org.bukkit.entity.Player;
@@ -44,12 +48,13 @@ public final class HologramImpl extends Hologram {
             return;
         }
 
-        // TODO: cache player protocol version
-        // TODO: fix this
-//        final var protocolVersion = FancyHologramsPlugin.get().isUsingViaVersion() ? Via.getAPI().getPlayerVersion(player) : MINIMUM_PROTOCOL_VERSION;
-//        if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
-//            return false;
-//        }
+        if (FHFeatureFlags.DISABLE_HOLOGRAMS_FOR_OLD_CLIENTS.isEnabled()) {
+            final var protocolVersion = PluginUtils.isViaVersionEnabled() ? Via.getAPI().getPlayerVersion(player.getUniqueId()) : MINIMUM_PROTOCOL_VERSION;
+            if (protocolVersion < MINIMUM_PROTOCOL_VERSION) {
+                FancyHolograms.get().getFancyLogger().debug("Player " + player.getName() + " is using an outdated protocol version (" + protocolVersion + "). Hologram will not be shown.");
+                return;
+            }
+        }
 
         FS_RealPlayer fsPlayer = new FS_RealPlayer(player);
         FancySitula.ENTITY_FACTORY.spawnEntityFor(fsPlayer, fsDisplay);
