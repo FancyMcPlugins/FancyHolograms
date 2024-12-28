@@ -34,6 +34,9 @@ public class HologramRegistryImpl implements HologramRegistry {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             hologram.despawnFrom(onlinePlayer);
         }
+
+        FancyHologramsPlugin.get().getStorage().delete(hologram.getData());
+
         return removed;
     }
 
