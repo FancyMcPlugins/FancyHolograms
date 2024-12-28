@@ -6,11 +6,18 @@ import org.bukkit.inventory.ItemStack;
 
 public class ItemHologramBuilder extends HologramBuilder{
 
-    public ItemHologramBuilder(String name, Location location) {
+    private ItemHologramBuilder(String name, Location location) {
         super();
         this.data = new ItemHologramData(name, location);
     }
 
+    /**
+     * Creates a new instance of ItemHologramBuilder with the specified name and location.
+     *
+     * @param name the name of the item hologram
+     * @param location the location of the item hologram
+     * @return a new instance of ItemHologramBuilder
+     */
     public static ItemHologramBuilder create(String name, Location location) {
         return new ItemHologramBuilder(name, location);
     }

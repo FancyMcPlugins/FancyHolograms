@@ -11,11 +11,29 @@ public abstract class HologramBuilder {
 
     protected DisplayHologramData data;
 
-    HologramBuilder() {
+    private HologramBuilder() {
     }
 
+    /**
+     * Builds and returns a new Hologram instance using the current configuration
+     * in the HologramBuilder.
+     *
+     * @return a new instance of Hologram created based on the configured data
+     */
     public Hologram build() {
         return FancyHolograms.get().getHologramFactory().apply(data);
+    }
+
+    /**
+     * Builds a new Hologram instance using the current configuration in the HologramBuilder
+     * and registers it.
+     *
+     * @return a new instance of Hologram that has been registered with the registry
+     */
+    public Hologram buildAndRegister() {
+        Hologram hologram = build();
+        FancyHolograms.get().getRegistry().register(hologram);
+        return hologram;
     }
 
     // The following methods are setters for the HologramData class

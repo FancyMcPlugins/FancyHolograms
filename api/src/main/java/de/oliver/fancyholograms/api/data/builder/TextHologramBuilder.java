@@ -14,6 +14,13 @@ public class TextHologramBuilder extends HologramBuilder{
         this.data = new TextHologramData(name, location);
     }
 
+    /**
+     * Creates a new instance of TextHologramBuilder with the specified name and location.
+     *
+     * @param name the name of the text hologram
+     * @param location the location of the text hologram
+     * @return a new instance of TextHologramBuilder
+     */
     public static TextHologramBuilder create(String name, Location location) {
         return new TextHologramBuilder(name, location);
     }
