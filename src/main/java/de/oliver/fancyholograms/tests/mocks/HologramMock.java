@@ -21,11 +21,13 @@ public class HologramMock extends Hologram {
     @Override
     public void spawnTo(@NotNull Player player) {
         spawnToCallback.run();
+        viewers.add(player.getUniqueId());
     }
 
     @Override
     public void despawnFrom(@NotNull Player player) {
         despawnFromCallback.run();
+        viewers.remove(player.getUniqueId());
     }
 
     @Override
