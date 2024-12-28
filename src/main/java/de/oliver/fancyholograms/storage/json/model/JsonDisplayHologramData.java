@@ -7,8 +7,7 @@ public record JsonDisplayHologramData(
     JsonVec3f translation,
     float shadow_radius,
     float shadow_strength,
-    int block_brightness,
-    int sky_brightness,
+    JsonBrightness brightness,
     Display.Billboard billboard
 ) {
 }

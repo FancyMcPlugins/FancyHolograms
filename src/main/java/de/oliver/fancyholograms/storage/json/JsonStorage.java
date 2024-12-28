@@ -6,6 +6,7 @@ import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.storage.HologramStorage;
+import de.oliver.fancyholograms.storage.json.model.JsonDataUnion;
 import de.oliver.fancylib.jdb.JDB;
 
 import java.io.IOException;
@@ -30,8 +31,14 @@ public class JsonStorage implements HologramStorage {
 
     @Override
     public void save(HologramData hologram) {
+        JsonDataUnion union = switch (hologram.getType()) {
+            case TEXT -> JsonAdapter.toUnion((TextHologramData) hologram);
+            case ITEM -> JsonAdapter.toUnion((ItemHologramData) hologram);
+            case BLOCK -> JsonAdapter.toUnion((BlockHologramData) hologram);
+        };
+
         try {
-            jdb.set("worlds/" + hologram.getLocation().getWorld().getName() +  "/" + hologram.getType() + "/" + hologram.getName(), hologram);
+            jdb.set("worlds/" + hologram.getLocation().getWorld().getName() +  "/" + hologram.getType() + "/" + hologram.getName(), union);
         } catch (IOException e) {
             FancyHolograms.get().getFancyLogger().error("Failed to save hologram " + hologram.getName());
             FancyHolograms.get().getFancyLogger().error(e);

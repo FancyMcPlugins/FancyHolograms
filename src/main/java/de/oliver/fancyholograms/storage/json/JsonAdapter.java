@@ -37,8 +37,10 @@ public class JsonAdapter {
                 ),
                 data.getShadowRadius(),
                 data.getShadowStrength(),
-                data.getBrightness().getBlockLight(),
-                data.getBrightness().getSkyLight(),
+                data.getBrightness() == null ? null : new JsonBrightness(
+                        data.getBrightness().getBlockLight(),
+                        data.getBrightness().getSkyLight()
+                ),
                 data.getBillboard()
         );
     }
@@ -50,7 +52,7 @@ public class JsonAdapter {
                 data.isSeeThrough(),
                 data.getTextAlignment(),
                 data.getTextUpdateInterval(),
-                data.getBackground().toString()
+                data.getBackground() == null ? "" : data.getBackground().toString()
         );
     }
 
