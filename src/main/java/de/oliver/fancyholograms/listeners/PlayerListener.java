@@ -36,6 +36,7 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(@NotNull final PlayerJoinEvent event) {
         for (final var hologram : this.plugin.getRegistry().getAll()) {
+            hologram.removeViewer(event.getPlayer().getUniqueId());
             FancyHologramsPlugin.get().getController().refreshHologram(hologram, event.getPlayer());
         }
 
@@ -48,6 +49,7 @@ public final class PlayerListener implements Listener {
     public void onQuit(@NotNull final PlayerQuitEvent event) {
         FancyHologramsPlugin.get().getHologramThread().submit(() -> {
             for (final var hologram : this.plugin.getRegistry().getAll()) {
+                hologram.removeViewer(event.getPlayer().getUniqueId());
                 FancyHologramsPlugin.get().getController().refreshHologram(hologram, event.getPlayer());
             }
         });
@@ -63,6 +65,7 @@ public final class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(@NotNull final PlayerChangedWorldEvent event) {
         for (final Hologram hologram : this.plugin.getRegistry().getAll()) {
+            hologram.removeViewer(event.getPlayer().getUniqueId());
             FancyHologramsPlugin.get().getController().refreshHologram(hologram, event.getPlayer());
         }
     }

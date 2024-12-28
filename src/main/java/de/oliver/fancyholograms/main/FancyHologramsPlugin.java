@@ -38,6 +38,7 @@ import de.oliver.fancysitula.api.IFancySitula;
 import de.oliver.fancysitula.api.utils.ServerVersion;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -185,11 +186,22 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         metrics.register();
         metrics.registerLegacy();
 
+        for (World world : Bukkit.getWorlds()) {
+            Collection<HologramData> data = storage.loadAll(world.getName());
+            for (HologramData d : data) {
+                Hologram hologram = hologramFactory.apply(d);
+                registry.register(hologram);
+            }
+        }
+
+        controller.initRefreshTask();
+        controller.initUpdateTask();
+
         if (configuration.isAutosaveEnabled()) {
             getHologramThread().scheduleAtFixedRate(
                     this::savePersistentHolograms,
                     configuration.getAutosaveInterval(),
-                    configuration.getAutosaveInterval() * 60L, TimeUnit.SECONDS
+                    120L, TimeUnit.SECONDS
             );
         }
 

@@ -65,6 +65,17 @@ public abstract class Hologram {
         return Sets.newHashSet(this.viewers);
     }
 
+    @ApiStatus.Internal
+    public void setViewers(@NotNull final Set<UUID> viewers) {
+        this.viewers.clear();
+        this.viewers.addAll(viewers);
+    }
+
+    @ApiStatus.Internal
+    public void removeViewer(@NotNull final UUID viewer) {
+        this.viewers.remove(viewer);
+    }
+
     /**
      * @param player the player to check for
      * @return whether the player is currently viewing the hologram

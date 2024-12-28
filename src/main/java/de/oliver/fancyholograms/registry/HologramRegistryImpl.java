@@ -2,6 +2,9 @@ package de.oliver.fancyholograms.registry;
 
 import de.oliver.fancyholograms.api.HologramRegistry;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,12 +22,19 @@ public class HologramRegistryImpl implements HologramRegistry {
 
    @Override
     public boolean register(Hologram hologram) {
+       FancyHologramsPlugin.get().getController().refreshHologram(hologram, Bukkit.getOnlinePlayers());
+
         return holograms.putIfAbsent(hologram.getData().getName(), hologram) != null;
     }
 
     @Override
     public boolean unregister(Hologram hologram) {
-        return holograms.remove(hologram.getData().getName()) != null;
+        boolean removed = holograms.remove(hologram.getData().getName(), hologram);
+
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            hologram.despawnFrom(onlinePlayer);
+        }
+        return removed;
     }
 
     @Override
