@@ -1,13 +1,12 @@
 package de.oliver.fancyholograms.storage.json;
 
-import de.oliver.fancyholograms.api.data.HologramData;
-import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.data.*;
 import de.oliver.fancyholograms.storage.json.model.*;
 
 public class JsonAdapter {
 
-    public static JsonDataUnion toJson(TextHologramData data) {
-        JsonHologramData hologramData = new JsonHologramData(
+    public static JsonHologramData hologramDataToJson(HologramData data) {
+        return new JsonHologramData(
                 data.getName(),
                 data.getType(),
                 new JsonLocation(
@@ -22,8 +21,10 @@ public class JsonAdapter {
                 data.getVisibility(),
                 data.getLinkedNpcName()
         );
+    }
 
-        JsonDisplayHologramData displayHologramData = new JsonDisplayHologramData(
+    public static JsonDisplayHologramData displayHologramDataToJson(DisplayHologramData data) {
+        return new JsonDisplayHologramData(
                 new JsonVec3f(
                         data.getScale().x(),
                         data.getScale().y(),
@@ -40,8 +41,10 @@ public class JsonAdapter {
                 data.getBrightness().getSkyLight(),
                 data.getBillboard()
         );
+    }
 
-        JsonTextHologramData textHologramData = new JsonTextHologramData(
+    public static JsonTextHologramData textHologramDataToJson(TextHologramData data) {
+        return new JsonTextHologramData(
                 data.getText(),
                 data.hasTextShadow(),
                 data.isSeeThrough(),
@@ -49,11 +52,59 @@ public class JsonAdapter {
                 data.getTextUpdateInterval(),
                 data.getBackground().toString()
         );
+    }
+
+    public static JsonBlockHologramData blockHologramDataToJson(BlockHologramData data) {
+        return new JsonBlockHologramData(
+                data.getBlock().name()
+        );
+    }
+
+    public static JsonItemHologramData itemHologramDataToJson(ItemHologramData data) {
+        return new JsonItemHologramData(
+                new String(data.getItemStack().serializeAsBytes())
+        );
+    }
+
+    public static JsonDataUnion toUnion(TextHologramData data) {
+        JsonHologramData hologramData = hologramDataToJson(data);
+        JsonDisplayHologramData displayHologramData = displayHologramDataToJson(data);
+        JsonTextHologramData textHologramData = textHologramDataToJson(data);
 
         return new JsonDataUnion(
                 hologramData,
                 displayHologramData,
-                textHologramData
+                textHologramData,
+                null,
+                null
+        );
+    }
+
+    public static JsonDataUnion toUnion(ItemHologramData data) {
+        JsonHologramData hologramData = hologramDataToJson(data);
+        JsonDisplayHologramData displayHologramData = displayHologramDataToJson(data);
+        JsonItemHologramData itemHologramData = itemHologramDataToJson(data);
+
+        return new JsonDataUnion(
+                hologramData,
+                displayHologramData,
+                null,
+                itemHologramData,
+                null
+        );
+    }
+
+    public static JsonDataUnion toUnion(BlockHologramData data) {
+        JsonHologramData hologramData = hologramDataToJson(data);
+        JsonDisplayHologramData displayHologramData = displayHologramDataToJson(data);
+        JsonBlockHologramData blockHologramData = blockHologramDataToJson(data);
+
+        return new JsonDataUnion(
+                hologramData,
+                displayHologramData,
+                null,
+                null,
+                blockHologramData
         );
     }
 
