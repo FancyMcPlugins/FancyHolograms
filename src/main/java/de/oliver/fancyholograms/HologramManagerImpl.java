@@ -210,7 +210,7 @@ public final class HologramManagerImpl implements HologramManager {
             }
         }, 50, 1000, TimeUnit.MILLISECONDS);
 
-        hologramThread.scheduleAtFixedRate(() -> {
+        hologramThread.scheduleWithFixedDelay(() -> {
             final var time = System.currentTimeMillis();
 
             for (final var hologram : getHolograms()) {
@@ -303,7 +303,7 @@ public final class HologramManagerImpl implements HologramManager {
 
         final var npcScale = npc.getData().getScale();
 
-        if(hologram.getData() instanceof DisplayHologramData displayData) {
+        if (hologram.getData() instanceof DisplayHologramData displayData) {
             displayData.setScale(new Vector3f(npcScale));
         }
 
