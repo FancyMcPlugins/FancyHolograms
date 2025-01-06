@@ -64,6 +64,10 @@ public final class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onResourcePackStatus(@NotNull final PlayerResourcePackStatusEvent event) {
+        // Skipping event calls before player has fully loaded to the server.
+        // This should fix NPE due to vanillaPlayer.connection being null when sending resource-packs in the configuration stage.
+        if (!event.getPlayer().isOnline())
+            return;
         final UUID playerUniqueId = event.getPlayer().getUniqueId();
         final UUID packUniqueId = getResourcePackID(event);
         // Adding accepted resource-pack to the list of currently loading resource-packs for that player.
