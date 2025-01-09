@@ -12,7 +12,7 @@ dependencies {
     compileOnly("de.oliver:FancyLib:33")
     compileOnly("de.oliver.FancyAnalytics:logger:0.0.6")
 
-    implementation("org.lushplugins:ChatColorHandler:5.1.0")
+    implementation("org.lushplugins:ChatColorHandler:5.1.2")
 }
 
 tasks {
