@@ -78,7 +78,7 @@ public class HologramControllerImpl implements HologramController {
     }
 
     public void initRefreshTask() {
-        FancyHologramsPlugin.get().getHologramThread().scheduleAtFixedRate(() -> {
+        FancyHologramsPlugin.get().getHologramThread().scheduleWithFixedDelay(() -> {
             for (Hologram hologram : FancyHologramsPlugin.get().getRegistry().getAll()) {
                 refreshHologram(hologram, Bukkit.getOnlinePlayers().toArray(new Player[0]));
             }
@@ -87,10 +87,10 @@ public class HologramControllerImpl implements HologramController {
 
     public void initUpdateTask() {
         final var updateTimes = CacheBuilder.newBuilder()
-        .expireAfterAccess(Duration.ofMinutes(5))
-        .<String, Long>build();
+                .expireAfterAccess(Duration.ofMinutes(5))
+                .<String, Long>build();
 
-        FancyHologramsPlugin.get().getHologramThread().scheduleAtFixedRate(() -> {
+        FancyHologramsPlugin.get().getHologramThread().scheduleWithFixedDelay(() -> {
             final var time = System.currentTimeMillis();
 
             for (final var hologram : FancyHologramsPlugin.get().getRegistry().getAll()) {
@@ -109,7 +109,7 @@ public class HologramControllerImpl implements HologramController {
             }
         }, 50, 1000, TimeUnit.MILLISECONDS);
 
-        FancyHologramsPlugin.get().getHologramThread().scheduleAtFixedRate(() -> {
+        FancyHologramsPlugin.get().getHologramThread().scheduleWithFixedDelay(() -> {
             final var time = System.currentTimeMillis();
 
             for (final var hologram : FancyHologramsPlugin.get().getRegistry().getAll()) {
@@ -136,7 +136,7 @@ public class HologramControllerImpl implements HologramController {
         }, 50, 50, TimeUnit.MILLISECONDS);
     }
 
-        /**
+    /**
      * Syncs a hologram with its linked NPC, if any.
      *
      * @param hologram The hologram to sync.
@@ -158,7 +158,7 @@ public class HologramControllerImpl implements HologramController {
 
         final var npcScale = npc.getData().getScale();
 
-        if(hologram.getData() instanceof DisplayHologramData displayData) {
+        if (hologram.getData() instanceof DisplayHologramData displayData) {
             displayData.setScale(new Vector3f(npcScale));
         }
 

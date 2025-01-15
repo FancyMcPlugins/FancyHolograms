@@ -201,7 +201,7 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         controller.initUpdateTask();
 
         if (configuration.isAutosaveEnabled()) {
-            getHologramThread().scheduleAtFixedRate(
+            getHologramThread().scheduleWithFixedDelay(
                     this::savePersistentHolograms,
                     configuration.getAutosaveInterval(),
                     120L, TimeUnit.SECONDS
