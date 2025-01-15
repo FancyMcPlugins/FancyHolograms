@@ -69,7 +69,7 @@ dependencies {
     implementation("de.oliver.FancyAnalytics:logger:0.0.6")
 
     compileOnly("de.oliver:FancyNpcs:2.4.1")
-    compileOnly("org.lushplugins:ChatColorHandler:5.1.0")
+    compileOnly("org.lushplugins:ChatColorHandler:5.1.2")
     compileOnly("org.geysermc.floodgate:api:2.2.3-SNAPSHOT")
 }
 
