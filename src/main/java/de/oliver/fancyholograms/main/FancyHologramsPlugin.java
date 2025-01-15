@@ -29,6 +29,7 @@ import de.oliver.fancyholograms.registry.HologramRegistryImpl;
 import de.oliver.fancyholograms.storage.HologramStorage;
 import de.oliver.fancyholograms.storage.YamlHologramStorage;
 import de.oliver.fancyholograms.trait.HologramTraitRegistryImpl;
+import de.oliver.fancyholograms.trait.builtin.MultiplePagesTrait;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.VersionConfig;
@@ -209,6 +210,8 @@ public final class FancyHologramsPlugin extends JavaPlugin implements FancyHolog
         }
 
         FHConversionRegistry.registerBuiltInConverters();
+
+        traitRegistry.register(MultiplePagesTrait.class);
 
         fancyLogger.info("Successfully enabled FancyHolograms version %s".formatted(getDescription().getVersion()));
     }

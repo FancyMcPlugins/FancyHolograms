@@ -1,8 +1,10 @@
 package de.oliver.fancyholograms.api.hologram;
 
 import com.google.common.collect.Sets;
+import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
+import de.oliver.fancyholograms.api.trait.HologramTrait;
 import de.oliver.fancyholograms.api.trait.HologramTraitTrait;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
@@ -12,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -102,7 +105,22 @@ public abstract class Hologram {
     }
 
     @ApiStatus.Experimental
-    public HologramData addTrait(HologramTraitTrait trait) {
+    public HologramData addTrait(HologramTrait trait) {
+        traitTrait.addTrait(trait);
+        return data;
+    }
+
+    @ApiStatus.Experimental
+    public HologramData addTrait(Class<? extends HologramTrait> traitClass) {
+        HologramTrait trait = null;
+        try {
+            trait = traitClass.getConstructor(null).newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            FancyHolograms.get().getFancyLogger().error("Failed to instantiate trait " + traitClass.getSimpleName());
+            FancyHolograms.get().getFancyLogger().error(e);
+        }
+
         traitTrait.addTrait(trait);
         return data;
     }

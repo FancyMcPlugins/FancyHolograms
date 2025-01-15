@@ -20,13 +20,13 @@ public class HologramRegistryImpl implements HologramRegistry {
         this.holograms = new ConcurrentHashMap<>();
     }
 
-   @Override
+    @Override
     public boolean register(Hologram hologram) {
-       FancyHologramsPlugin.get().getController().refreshHologram(hologram, Bukkit.getOnlinePlayers());
+        FancyHologramsPlugin.get().getController().refreshHologram(hologram, Bukkit.getOnlinePlayers());
 
-       boolean registered = holograms.putIfAbsent(hologram.getData().getName(), hologram) != null;
+        boolean registered = holograms.putIfAbsent(hologram.getData().getName(), hologram) != null;
 
-       hologram.getTraitTrait().onRegister();
+        hologram.getTraitTrait().onRegister();
 
         return registered;
     }
