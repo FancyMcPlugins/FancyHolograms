@@ -20,6 +20,11 @@ public final class HologramImpl extends Hologram {
     }
 
     @Override
+    public int getEntityId() {
+        return fsDisplay.getId();
+    }
+
+    @Override
     public @Nullable org.bukkit.entity.Display getDisplayEntity() {
         return null;
     }

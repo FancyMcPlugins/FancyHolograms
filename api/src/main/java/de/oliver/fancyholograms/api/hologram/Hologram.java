@@ -54,6 +54,13 @@ public abstract class Hologram {
     }
 
     /**
+     * Returns the entity id of this hologram
+     * This id is for packet use only as the entity is not registered to the server
+     * @return entity id
+     */
+    public abstract int getEntityId();
+
+    /**
      * Returns the Display entity of this Hologram object.
      * The entity is not registered in the world or server.
      * Only use this method if you know what you're doing.
