@@ -70,7 +70,7 @@ dependencies {
 
     compileOnly("de.oliver:FancyNpcs:2.4.2")
     compileOnly("org.lushplugins:ChatColorHandler:5.1.2")
-    compileOnly("org.geysermc.floodgate:api:2.2.3-SNAPSHOT")
+    compileOnly("org.geysermc.floodgate:api:2.2.4-SNAPSHOT")
 }
 
 paper {
