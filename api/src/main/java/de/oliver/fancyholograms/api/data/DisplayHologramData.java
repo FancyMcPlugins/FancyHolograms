@@ -131,6 +131,7 @@ public class DisplayHologramData extends HologramData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         scale = new Vector3f(
@@ -170,6 +171,7 @@ public class DisplayHologramData extends HologramData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("scale_x", scale.x);

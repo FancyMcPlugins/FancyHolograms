@@ -1,12 +1,13 @@
 package de.oliver.fancyholograms.api.data;
 
-import de.oliver.fancyholograms.api.FancyHologramsPlugin;
+import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.data.property.Visibility;
 import de.oliver.fancyholograms.api.hologram.HologramType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +24,7 @@ public class HologramData implements YamlData {
     private final String name;
     private final HologramType type;
     private Location location;
-    private boolean hasChanges;
+    private boolean hasChanges = false;
     private int visibilityDistance = DEFAULT_VISIBILITY_DISTANCE;
     private Visibility visibility = DEFAULT_VISIBILITY;
     private boolean persistent = DEFAULT_PERSISTENCE;
@@ -78,7 +79,7 @@ public class HologramData implements YamlData {
             return visibilityDistance;
         }
 
-        return FancyHologramsPlugin.get().getHologramConfiguration().getDefaultVisibilityDistance();
+        return FancyHolograms.get().getHologramConfiguration().getDefaultVisibilityDistance();
     }
 
     public HologramData setVisibilityDistance(int visibilityDistance) {
@@ -135,6 +136,7 @@ public class HologramData implements YamlData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean read(ConfigurationSection section, String name) {
         String worldName = section.getString("location.world", "world");
         float x = (float) section.getDouble("location.x", 0);
@@ -145,7 +147,7 @@ public class HologramData implements YamlData {
 
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
-            FancyHologramsPlugin.get().getFancyLogger().warn("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
+            FancyHolograms.get().getFancyLogger().warn("Could not load hologram '" + name + "', because the world '" + worldName + "' is not loaded");
             return false;
         }
 
@@ -163,6 +165,7 @@ public class HologramData implements YamlData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean write(ConfigurationSection section, String name) {
         section.set("type", type.name());
         section.set("location.world", location.getWorld().getName());

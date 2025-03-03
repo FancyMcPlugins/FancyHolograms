@@ -7,6 +7,7 @@ import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.TextDisplay;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +16,14 @@ import java.util.Objects;
 
 public class TextHologramData extends DisplayHologramData {
 
+    public static final List<String> DEFAULT_TEXT = List.of("Edit this line with /hologram edit <name>");
     public static final TextDisplay.TextAlignment DEFAULT_TEXT_ALIGNMENT = TextDisplay.TextAlignment.CENTER;
     public static final boolean DEFAULT_TEXT_SHADOW_STATE = false;
     public static final boolean DEFAULT_SEE_THROUGH = false;
     public static final int DEFAULT_TEXT_UPDATE_INTERVAL = -1;
 
-    private List<String> text;
-    private Color background;
+    private List<String> text = new ArrayList<>(DEFAULT_TEXT);
+    private Color background = null;
     private TextDisplay.TextAlignment textAlignment = DEFAULT_TEXT_ALIGNMENT;
     private boolean textShadow = DEFAULT_TEXT_SHADOW_STATE;
     private boolean seeThrough = DEFAULT_SEE_THROUGH;
@@ -34,7 +36,6 @@ public class TextHologramData extends DisplayHologramData {
      */
     public TextHologramData(String name, Location location) {
         super(name, HologramType.TEXT, location);
-        text = new ArrayList<>(List.of("Edit this line with /hologram edit " + name));
     }
 
     public List<String> getText() {
@@ -50,14 +51,28 @@ public class TextHologramData extends DisplayHologramData {
         return this;
     }
 
-    public void addLine(String line) {
+    public TextHologramData addLine(String line) {
         text.add(line);
         setHasChanges(true);
+        return this;
     }
 
-    public void removeLine(int index) {
+    public TextHologramData removeLine(int index) {
         text.remove(index);
         setHasChanges(true);
+        return this;
+    }
+
+    public TextHologramData setLine(int index, String line) {
+        text.set(index, line);
+        setHasChanges(true);
+        return this;
+    }
+
+    public TextHologramData clearText() {
+        text.clear();
+        setHasChanges(true);
+        return this;
     }
 
     public Color getBackground() {
@@ -126,6 +141,7 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean read(ConfigurationSection section, String name) {
         super.read(section, name);
         text = section.getStringList("text");
@@ -163,6 +179,7 @@ public class TextHologramData extends DisplayHologramData {
     }
 
     @Override
+    @ApiStatus.Internal
     public boolean write(ConfigurationSection section, String name) {
         super.write(section, name);
         section.set("text", text);

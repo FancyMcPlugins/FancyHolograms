@@ -1,11 +1,11 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
-import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +44,7 @@ public class VisibilityDistanceCMD implements Subcommand {
             return false;
         }
 
-        final var copied = hologram.getData().copy(hologram.getName());
+        final var copied = hologram.getData().copy(hologram.getData().getName());
         copied.setVisibilityDistance(visibilityDistance);
 
         if (!HologramCMD.callModificationEvent(hologram, player, copied, HologramUpdateEvent.HologramModification.UPDATE_VISIBILITY_DISTANCE)) {
@@ -58,8 +58,8 @@ public class VisibilityDistanceCMD implements Subcommand {
 
         hologram.getData().setVisibilityDistance(copied.getVisibilityDistance());
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed visibility distance");

@@ -1,12 +1,12 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Floats;
-import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.DisplayHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -60,8 +60,8 @@ public class ShadowStrengthCMD implements Subcommand {
 
         displayData.setShadowStrength(copied.getShadowStrength());
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed shadow strength");

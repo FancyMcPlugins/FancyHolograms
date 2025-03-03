@@ -1,12 +1,12 @@
 package de.oliver.fancyholograms.commands.hologram;
 
 import com.google.common.primitives.Ints;
-import de.oliver.fancyholograms.FancyHolograms;
-import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.events.HologramUpdateEvent;
+import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.HologramCMD;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -87,8 +87,8 @@ public class UpdateTextIntervalCMD implements Subcommand {
 
         textData.setTextUpdateInterval(copied.getTextUpdateInterval());
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Changed the text update interval");

@@ -1,28 +1,28 @@
 package de.oliver.fancyholograms.commands;
 
-import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import de.oliver.fancyholograms.storage.converter.ConverterTarget;
-import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
-import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
-import de.oliver.fancyholograms.util.Constants;
+import de.oliver.fancyholograms.converter.ConverterTarget;
+import de.oliver.fancyholograms.converter.FHConversionRegistry;
+import de.oliver.fancyholograms.converter.HologramConversionSession;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancylib.translations.message.Message;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public final class FancyHologramsCMD extends Command {
 
-    @NotNull
-    private final FancyHolograms plugin;
+    public static final String FH_COMMAND_USAGE = "/fancyholograms <save|reload|version|convert>";
 
-    public FancyHologramsCMD(@NotNull final FancyHolograms plugin) {
+    @NotNull
+    private final FancyHologramsPlugin plugin;
+
+    public FancyHologramsCMD(@NotNull final FancyHologramsPlugin plugin) {
         super("fancyholograms");
         setPermission("fancyholograms.admin");
         this.plugin = plugin;
@@ -35,25 +35,32 @@ public final class FancyHologramsCMD extends Command {
         }
 
         if (args.length < 1) {
-            MessageHelper.info(sender, Constants.FH_COMMAND_USAGE);
+            MessageHelper.info(sender, FH_COMMAND_USAGE);
             return false;
         }
 
         switch (args[0].toLowerCase(Locale.ROOT)) {
             case "save" -> {
-                this.plugin.getHologramsManager().saveHolograms();
+                this.plugin.savePersistentHolograms();
                 MessageHelper.success(sender, "Saved all holograms");
             }
             case "reload" -> {
                 this.plugin.getHologramConfiguration().reload(plugin);
-                this.plugin.getHologramsManager().reloadHolograms();
-                this.plugin.reloadCommands();
+
+                this.plugin.getRegistry().clear();
+                for (World world : Bukkit.getWorlds()) {
+                    Collection<HologramData> hologramData = this.plugin.getStorage().loadAll(world.getName());
+                    for (HologramData data : hologramData) {
+                        Hologram hologram = this.plugin.getHologramFactory().apply(data);
+                        this.plugin.getRegistry().register(hologram);
+                    }
+                }
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }
             case "version" -> {
-                FancyHolograms.get().getHologramThread().submit(() -> {
-                    FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
+                FancyHologramsPlugin.get().getHologramThread().submit(() -> {
+                    FancyHologramsPlugin.get().getVersionConfig().checkVersionAndDisplay(sender, false);
                 });
             }
             case "convert" -> {
@@ -82,11 +89,11 @@ public final class FancyHologramsCMD extends Command {
                             final List<HologramData> holograms = converter.convert(session);
 
                             for (final HologramData data : holograms) {
-                                final Hologram hologram = this.plugin.getHologramsManager().create(data);
-                                this.plugin.getHologramsManager().addHologram(hologram);
+                                final Hologram hologram = this.plugin.getHologramFactory().apply(data);
+                                this.plugin.getRegistry().register(hologram);
                             }
 
-                            this.plugin.getHologramsManager().saveHolograms();
+                            this.plugin.savePersistentHolograms();
                             // TODO(matt): Give options to delete them or teleport and a list of IDs please
 
                             MessageHelper.success(sender, String.format("Converted successfully, produced %s total holograms!", holograms.size()));
@@ -96,7 +103,7 @@ public final class FancyHologramsCMD extends Command {
                     }, () -> MessageHelper.error(sender, "That converter is not registered. Look at the developer documentation if you are adding converters."));
             }
             default -> {
-                MessageHelper.info(sender, Constants.FH_COMMAND_USAGE);
+                MessageHelper.info(sender, FH_COMMAND_USAGE);
                 return false;
             }
         }

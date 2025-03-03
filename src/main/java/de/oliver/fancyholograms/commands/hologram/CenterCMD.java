@@ -1,9 +1,9 @@
 package de.oliver.fancyholograms.commands.hologram;
 
-import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
-import de.oliver.fancyholograms.util.Constants;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
+import de.oliver.fancyholograms.util.Formats;
 import de.oliver.fancylib.MessageHelper;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -36,16 +36,16 @@ public class CenterCMD implements Subcommand {
 
         hologram.getData().setLocation(location);
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Centered the hologram to %s/%s/%s %s\u00B0 %s\u00B0".formatted(
-            Constants.COORDINATES_DECIMAL_FORMAT.format(location.x()),
-            Constants.COORDINATES_DECIMAL_FORMAT.format(location.y()),
-            Constants.COORDINATES_DECIMAL_FORMAT.format(location.z()),
-            Constants.COORDINATES_DECIMAL_FORMAT.format((location.getYaw() + 180f) % 360f),
-            Constants.COORDINATES_DECIMAL_FORMAT.format((location.getPitch()) % 360f)
+            Formats.COORDINATES_DECIMAL.format(location.x()),
+            Formats.COORDINATES_DECIMAL.format(location.y()),
+            Formats.COORDINATES_DECIMAL.format(location.z()),
+            Formats.COORDINATES_DECIMAL.format((location.getYaw() + 180f) % 360f),
+            Formats.COORDINATES_DECIMAL.format((location.getPitch()) % 360f)
         ));
         return true;
     }

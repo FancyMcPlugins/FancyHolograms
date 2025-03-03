@@ -1,8 +1,8 @@
 package de.oliver.fancyholograms.commands.hologram;
 
-import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
 import de.oliver.fancyholograms.commands.Subcommand;
+import de.oliver.fancyholograms.main.FancyHologramsPlugin;
 import de.oliver.fancyholograms.util.PluginUtils;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
@@ -47,8 +47,8 @@ public class UnlinkWithNpcCMD implements Subcommand {
             npc.updateForAll();
         }
 
-        if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
-            FancyHolograms.get().getHologramStorage().save(hologram);
+        if (FancyHologramsPlugin.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
+            FancyHologramsPlugin.get().getStorage().save(hologram.getData());
         }
 
         MessageHelper.success(player, "Unlinked hologram with NPC");
