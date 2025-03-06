@@ -5,7 +5,10 @@ import de.oliver.fancyholograms.api.HologramConfiguration;
 import de.oliver.fancylib.ConfigHelper;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The FancyHologramsConfig class is responsible for managing the configuration of the FancyHolograms plugin.
@@ -14,29 +17,47 @@ import java.util.List;
 public final class FancyHologramsConfiguration implements HologramConfiguration {
 
     /**
-     * Indicates whether version notifications are muted.
-     */
-    private boolean versionNotifsMuted;
-
-    /**
      * Indicates whether autosave is enabled.
      */
     private boolean autosaveEnabled;
+    private static final String CONFIG_AUTOSAVE_ENABLED = "saving.autosave.enabled";
 
     /**
      * The interval at which autosave is performed.
      */
     private int autosaveInterval;
+    private static final String CONFIG_AUTOSAVE_INTERVAL = "saving.autosave.interval";
 
     /**
      * Indicates whether the plugin should save holograms when they are changed.
      */
     private boolean saveOnChangedEnabled;
+    private static final String CONFIG_SAVE_ON_CHANGED = "saving.save_on_changed";
+
+
+    /**
+     * The log level for the plugin.
+     */
+    private String logLevel;
+    private static final String CONFIG_LOG_LEVEL = "logging.log_level";
+
+    /**
+     * Indicates whether hologram loading should be logged on world loading.
+     */
+    private boolean hologramLoadLogging;
+    private static final String CONFIG_LOG_ON_WORLD_LOAD = "logging.log_on_world_load";
+
+    /**
+     * Indicates whether version notifications are enabled or disabled.
+     */
+    private boolean versionNotifs;
+    private static final String CONFIG_VERSION_NOTIFICATIONS = "logging.version_notifications";
 
     /**
      * The default visibility distance for holograms.
      */
     private int defaultVisibilityDistance;
+    private static final String CONFIG_VISIBILITY_DISTANCE = "visibility_distance";
 
     /**
      * Indicates whether commands should be registered.
@@ -44,16 +65,16 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
      * This is useful for users who want to use the plugin's API only.
      */
     private boolean registerCommands;
+    private static final String CONFIG_REGISTER_COMMANDS = "register_commands";
 
-    /**
-     * The log level for the plugin.
-     */
-    private String logLevel;
+    private static final String CONFIG_REPORT_ERRORS_TO_SENTRY = "report_errors_to_sentry";
+    private static final String CONFIG_VERSION = "config_version";
 
     /**
      * The interval at which hologram visibility is updated.
      */
     private int updateVisibilityInterval;
+    private static final String CONFIG_VISIBILITY_DISTANCE = "update_visibility_interval";
 
     @Override
     public void reload(@NotNull FancyHologramsPlugin plugin) {
@@ -62,35 +83,91 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
 
         final var config = pluginImpl.getConfig();
 
+        final int latestVersion = 1;
+        int configVersion = (int) ConfigHelper.getOrDefault(config, CONFIG_VERSION, 0);
+
+        if (configVersion < latestVersion ) {
+
+            try {
+                pluginImpl.getFancyLogger().warn("Outdated config detected! Attempting to migrate previous settings to new config...");
+
+                var oldConfig = pluginImpl.getConfig();
+                File backupFile = new File(pluginImpl.getDataFolder(), "config_old.yml");
+                if (backupFile.exists() && !backupFile.canWrite()) {
+                    throw new IOException("Unable to backup config to " + backupFile.getPath());
+                }
+                oldConfig.save(backupFile);
+
+                pluginImpl.saveDefaultConfig();
+                var newConfig = pluginImpl.getConfig();
+
+                Map<String, Object> oldConfigValues = oldConfig.getValues(true);
+                oldConfigValues.forEach((key, value) -> {
+
+                    Map<String, String> keyMap = Map.of(
+                            "enable_autosave", CONFIG_AUTOSAVE_ENABLED,
+                            "autosave_interval", CONFIG_AUTOSAVE_INTERVAL,
+                            "save_on_changed", CONFIG_SAVE_ON_CHANGED,
+                            "log_level", CONFIG_LOG_LEVEL,
+                            "mute_version_notifications", CONFIG_VERSION_NOTIFICATIONS
+                    );
+
+                    String newKey = keyMap.getOrDefault(key, null);
+                    if (newKey != null) {
+                        if (newKey.equals(CONFIG_VERSION_NOTIFICATIONS)) {
+                            newConfig.set(newKey, !(Boolean) value);
+                        } else {
+                            newConfig.set(newKey, value);
+                        }
+                    } else if (newConfig.contains(key)) {
+                        newConfig.set(key, value);
+                    } else {
+                        pluginImpl.getFancyLogger().warn("> CONFIG: Option '" + key + "' is deprecated/invalid! Please migrate this manually from config_old.yml");
+                        return;
+                    }
+
+                    pluginImpl.getFancyLogger().info("> CONFIG: Set option '" + key + "' to '" + value + "' from old config.");
+                });
+
+                newConfig.set(CONFIG_VERSION, latestVersion);
+                pluginImpl.getFancyLogger().info("Configuration has finished migrating. Please double check your settings in config.yml.");
+
+            } catch (IOException e) {
+                pluginImpl.getFancyLogger().error("Failed to save or reload configuration: " + e.getMessage());
+            }
+        }
+
+        config.setInlineComments(CONFIG_VERSION, List.of("Config version, do not modify."));
+
         // saving
-        autosaveEnabled = (boolean) ConfigHelper.getOrDefault(config, "saving.autosave.enabled", true);
-        config.setInlineComments("saving.autosave.enabled", List.of("Whether autosave is enabled."));
+        autosaveEnabled = (boolean) ConfigHelper.getOrDefault(config, CONFIG_AUTOSAVE_ENABLED, true);
+        config.setInlineComments(CONFIG_AUTOSAVE_ENABLED, List.of("Whether autosave is enabled."));
 
-        autosaveInterval = (int) ConfigHelper.getOrDefault(config, "saving.autosave.interval", 15);
-        config.setInlineComments("saving.autosave.interval", List.of("The interval at which autosave is performed in minutes."));
+        autosaveInterval = (int) ConfigHelper.getOrDefault(config, CONFIG_AUTOSAVE_INTERVAL, 15);
+        config.setInlineComments(CONFIG_AUTOSAVE_INTERVAL, List.of("The interval at which autosave is performed in minutes."));
 
-        saveOnChangedEnabled = (boolean) ConfigHelper.getOrDefault(config, "saving.save_on_changed", true);
-        config.setInlineComments("saving.save_on_changed", List.of("Whether the plugin should save holograms when they are changed."));
+        saveOnChangedEnabled = (boolean) ConfigHelper.getOrDefault(config, CONFIG_SAVE_ON_CHANGED, true);
+        config.setInlineComments(CONFIG_SAVE_ON_CHANGED, List.of("Whether the plugin should save holograms when they are changed."));
 
         // logging
-        logLevel = (String) ConfigHelper.getOrDefault(config, "logging.log_level", "INFO");
-        config.setInlineComments("logging.log_level", List.of("The log level for the plugin (DEBUG, INFO, WARN, ERROR)."));
+        logLevel = (String) ConfigHelper.getOrDefault(config, CONFIG_LOG_LEVEL, "INFO");
+        config.setInlineComments(CONFIG_LOG_LEVEL, List.of("The log level for the plugin (DEBUG, INFO, WARN, ERROR)."));
 
-        hologramLoadLogging = (boolean) ConfigHelper.getOrDefault(config, "logging.log_on_world_load", true);
-        config.setInlineComments("logging.log_on_world_load", List.of("Whether hologram loading should be logged on world loading. Disable this if you load worlds dynamically to prevent console spam."));
+        hologramLoadLogging = (boolean) ConfigHelper.getOrDefault(config, CONFIG_LOG_ON_WORLD_LOAD, true);
+        config.setInlineComments(CONFIG_LOG_ON_WORLD_LOAD, List.of("Whether hologram loading should be logged on world loading. Disable this if you load worlds dynamically to prevent console spam."));
 
-        versionNotifs = (boolean) ConfigHelper.getOrDefault(config, "logging.version_notification", true);
-        config.setInlineComments("logging.version_notification", List.of("Whether the plugin should send notifications for new updates."));
+        versionNotifs = (boolean) ConfigHelper.getOrDefault(config, CONFIG_VERSION_NOTIFICATIONS, true);
+        config.setInlineComments(CONFIG_VERSION_NOTIFICATIONS, List.of("Whether the plugin should send notifications for new updates."));
 
-        config.set("logging.report_errors_to_sentry", null);
-        config.setInlineComments("logging.report_errors_to_sentry", null);
+        config.set(CONFIG_REPORT_ERRORS_TO_SENTRY, null);
+        config.setInlineComments(CONFIG_REPORT_ERRORS_TO_SENTRY, List.of());
 
         // options
-        defaultVisibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
-        config.setInlineComments("visibility_distance", List.of("The default visibility distance for holograms."));
+        defaultVisibilityDistance = (int) ConfigHelper.getOrDefault(config, CONFIG_VISIBILITY_DISTANCE, 20);
+        config.setInlineComments(CONFIG_VISIBILITY_DISTANCE, List.of("The default visibility distance for holograms."));
 
-        registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
-        config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
+        registerCommands = (boolean) ConfigHelper.getOrDefault(config, CONFIG_REGISTER_COMMANDS, true);
+        config.setInlineComments(CONFIG_REGISTER_COMMANDS, List.of("Whether the plugin should register its commands."));
 
         config.set("report_errors_to_sentry", null);
         config.setInlineComments("report_errors_to_sentry", null);
@@ -101,7 +178,7 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         updateVisibilityInterval = (int) ConfigHelper.getOrDefault(config, "update_visibility_interval", 20);
         config.setInlineComments("update_visibility_interval", List.of("The interval at which hologram visibility is updated in ticks."));
 
-        if (pluginImpl.isEnabled()) {
+        if (pluginImpl.isEnabled() && !plugin.getHologramThread().isShutdown()) {
             plugin.getHologramThread().submit(pluginImpl::saveConfig);
         } else {
             // Can't dispatch task if plugin is disabled
