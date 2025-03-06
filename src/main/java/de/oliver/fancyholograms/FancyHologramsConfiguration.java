@@ -79,7 +79,7 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         hologramLoadLogging = (boolean) ConfigHelper.getOrDefault(config, "logging.log_on_world_load", true);
         config.setInlineComments("logging.log_on_world_load", List.of("Whether hologram loading should be logged on world loading. Disable this if you load worlds dynamically to prevent console spam."));
 
-        versionNotifs = (boolean) ConfigHelper.getOrDefault(config, "logging.version_notification", false);
+        versionNotifs = (boolean) ConfigHelper.getOrDefault(config, "logging.version_notification", true);
         config.setInlineComments("logging.version_notification", List.of("Whether the plugin should send notifications for new updates."));
 
         config.set("logging.report_errors_to_sentry", null);
