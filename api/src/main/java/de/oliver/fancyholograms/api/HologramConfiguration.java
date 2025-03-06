@@ -40,6 +40,13 @@ public interface HologramConfiguration {
     boolean isSaveOnChangedEnabled();
 
     /**
+     * Returns whether hologram load logging on world loading is enabled or disabled.
+     *
+     * @return {@code true} if hologram loading should be logged on world loading, {@code false} otherwise.
+     */
+    boolean isHologramLoadLogging();
+
+    /**
      * Returns the default visibility distance for holograms.
      *
      * @return The default hologram visibility distance.

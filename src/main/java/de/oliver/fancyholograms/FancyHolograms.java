@@ -157,7 +157,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         registerListeners();
 
         versionConfig.load();
-        if (!getHologramConfiguration().areVersionNotificationsMuted()) {
+        if (getHologramConfiguration().areVersionNotificationsEnabled()) {
             checkForNewerVersion();
         }
 
@@ -323,7 +323,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
 
         Metrics metrics = new Metrics(this, 17990);
         metrics.addCustomChart(new Metrics.SingleLineChart("total_holograms", () -> hologramsManager.getHolograms().size()));
-        metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsMuted() ? "No" : "Yes"));
+        metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> configuration.areVersionNotificationsEnabled() ? "Yes" : "No"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
         fancyAnalytics = new FancyAnalyticsAPI("3b77bd59-2b01-46f2-b3aa-a9584401797f", "E2gW5zc2ZTk1OGFkNGY2ZDQ0ODlM6San");
@@ -363,7 +363,7 @@ public final class FancyHolograms extends JavaPlugin implements FancyHologramsPl
         }));
 
         fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_holograms", () -> (double) hologramsManager.getHolograms().size()));
-        fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> configuration.areVersionNotificationsMuted() ? "false" : "true"));
+        fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> configuration.areVersionNotificationsEnabled() ? "true" : "false"));
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("fflag_disable_holograms_for_bedrock_players", () -> FHFeatureFlags.DISABLE_HOLOGRAMS_FOR_BEDROCK_PLAYERS.isEnabled() ? "true" : "false"));
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
 
