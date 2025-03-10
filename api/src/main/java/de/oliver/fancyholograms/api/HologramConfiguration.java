@@ -65,5 +65,5 @@ public interface HologramConfiguration {
      *
      * @return The hologram visibility update interval in milliseconds.
      */
-    long getUpdateVisibilityInterval();
+    int getUpdateVisibilityInterval();
 }
