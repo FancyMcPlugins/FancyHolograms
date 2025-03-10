@@ -186,7 +186,7 @@ public final class HologramManagerImpl implements HologramManager {
                         hologram.forceUpdateShownStateFor(player);
                     }
                 }
-            }, 0, 1, TimeUnit.SECONDS);
+            }, 0, plugin.getHologramConfiguration().getUpdateVisibilityInterval() * 50, TimeUnit.MILLISECONDS);
         });
 
         final var updateTimes = CacheBuilder.newBuilder()

@@ -50,6 +50,11 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
      */
     private String logLevel;
 
+    /**
+     * The interval at which hologram visibility is updated.
+     */
+    private long updateVisibilityInterval;
+
     @Override
     public void reload(@NotNull FancyHologramsPlugin plugin) {
         FancyHolograms pluginImpl = (FancyHolograms) plugin;
@@ -80,6 +85,9 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
 
         config.setInlineComments("log_level", List.of("The log level for the plugin (DEBUG, INFO, WARN, ERROR)."));
         logLevel = (String) ConfigHelper.getOrDefault(config, "log_level", "INFO");
+
+        updateVisibilityInterval = (long) ConfigHelper.getOrDefault(config, "update_visibility_interval", 20);
+        config.setInlineComments("update_visibility_interval", List.of("The interval at which hologram visibility is updated in ticks."));
 
         if (pluginImpl.isEnabled()) {
             plugin.getHologramThread().submit(pluginImpl::saveConfig);
@@ -119,7 +127,13 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         return registerCommands;
     }
 
+    @Override
     public String getLogLevel() {
         return logLevel;
+    }
+
+    @Override
+    public long getUpdateVisibilityInterval() {
+        return updateVisibilityInterval;
     }
 }

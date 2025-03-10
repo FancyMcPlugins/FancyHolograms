@@ -59,4 +59,11 @@ public interface HologramConfiguration {
      * @return The log level for the plugin.
      */
     String getLogLevel();
+
+    /**
+     * Returns the interval at which hologram visibility is updated.
+     *
+     * @return The hologram visibility update interval in milliseconds.
+     */
+    long getUpdateVisibilityInterval();
 }
