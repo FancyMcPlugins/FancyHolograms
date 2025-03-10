@@ -70,13 +70,14 @@ dependencies {
 
     compileOnly("de.oliver:FancyNpcs:2.4.2")
     compileOnly("org.lushplugins:ChatColorHandler:5.1.2")
+    compileOnly("com.viaversion:viaversion-api:5.2.0")
     compileOnly("org.geysermc.floodgate:api:2.2.4-SNAPSHOT")
 }
 
 paper {
-    main = "de.oliver.fancyholograms.FancyHolograms"
-    bootstrapper = "de.oliver.fancyholograms.loaders.FancyHologramsBootstrapper"
-    loader = "de.oliver.fancyholograms.loaders.FancyHologramsLoader"
+    main = "de.oliver.fancyholograms.main.FancyHologramsPlugin"
+    bootstrapper = "de.oliver.fancyholograms.main.FancyHologramsBootstrapper"
+    loader = "de.oliver.fancyholograms.main.FancyHologramsLoader"
     foliaSupported = true
     version = rootProject.version.toString()
     description = "Simple, lightweight and fast hologram plugin using display entities"
@@ -96,6 +97,11 @@ paper {
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
         }
         register("floodgate") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+            joinClasspath = true
+        }
+        register("ViaVersion") {
             required = false
             load = PaperPluginDescription.RelativeLoadOrder.BEFORE
             joinClasspath = true

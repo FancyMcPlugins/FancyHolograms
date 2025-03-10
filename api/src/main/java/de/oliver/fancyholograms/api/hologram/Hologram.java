@@ -1,32 +1,28 @@
 package de.oliver.fancyholograms.api.hologram;
 
+import com.google.common.collect.Sets;
+import de.oliver.fancyholograms.api.FancyHolograms;
 import de.oliver.fancyholograms.api.data.HologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
-import de.oliver.fancyholograms.api.data.property.Visibility;
+import de.oliver.fancyholograms.api.trait.HologramTrait;
+import de.oliver.fancyholograms.api.trait.HologramTraitTrait;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
-import org.bukkit.World;
-import org.bukkit.entity.Display;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.function.Consumer;
+
 
 /**
- * Abstract base class for creating, updating, and managing holograms.
- * <p>
- * This class provides the basic functionality needed to work with holograms
- * across multiple versions of Minecraft. To create a hologram specific to a version of Minecraft,
- * extend this class and implement the abstract methods.
- * <p>
- * Note that the specific way holograms are created, updated, and deleted
- * will vary depending on the Minecraft version.
- * <p>
- * A Hologram object includes data about the hologram and maintains a set of players to whom the hologram is shown.
+ * This class provides core functionalities for managing viewers, spawning, despawning, and updating holograms.
  */
 public abstract class Hologram {
 
@@ -35,212 +31,56 @@ public abstract class Hologram {
     protected static final int MINIMUM_PROTOCOL_VERSION = 762;
 
     protected final @NotNull HologramData data;
-    /**
-     * Set of UUIDs of players to whom the hologram is currently shown.
-     */
-    protected final @NotNull Set<UUID> viewers = new HashSet<>();
+    protected final @NotNull Set<UUID> viewers;
+    protected final @NotNull HologramTraitTrait traitTrait;
 
     protected Hologram(@NotNull final HologramData data) {
         this.data = data;
-    }
-
-    @NotNull
-    public String getName() {
-        return data.getName();
-    }
-
-    public final @NotNull HologramData getData() {
-        return this.data;
+        this.viewers = new HashSet<>();
+        this.traitTrait = new HologramTraitTrait(this);
     }
 
     /**
-     * Returns the entity id of this hologram
-     * This id is for packet use only as the entity is not registered to the server
-     * @return entity id
-     */
-    public abstract int getEntityId();
-
-    /**
-     * Returns the Display entity of this Hologram object.
-     * The entity is not registered in the world or server.
-     * Only use this method if you know what you're doing.
-     * <p>
-     * This method will return <code>null</code> in 1.20.5 and newer versions
+     * Forcefully spawns the hologram and makes it visible to the specified player.
      *
-     * @return the Display entity of this Hologram object
+     * @param player the player to whom the hologram should be shown; must not be null
      */
     @ApiStatus.Internal
-    @Deprecated(forRemoval = true, since = "2.4.1")
-    public abstract @Nullable Display getDisplayEntity();
-
-    protected abstract void create();
-
-    protected abstract void delete();
-
-    protected abstract void update();
-
-    protected abstract boolean show(@NotNull final Player player);
-
-    protected abstract boolean hide(@NotNull final Player player);
-
-    protected abstract void refresh(@NotNull final Player player);
+    public abstract void spawnTo(@NotNull final Player player);
 
     /**
-     * Create the hologram entity.
-     * Only run this if creating custom Hologram implementations as this is run in
-     * {@link de.oliver.fancyholograms.api.HologramManager#create(HologramData)}.
-     */
-    public final void createHologram() {
-        create();
-    }
-
-    /**
-     * Deletes the hologram entity.
-     */
-    public final void deleteHologram() {
-        delete();
-    }
-
-    /**
-     * Shows the hologram to a collection of players.
-     * Use {@link #forceShowHologram(Player)} if this hologram is not registered to the HologramManager.
+     * Forcefully despawns the hologram and makes it invisible to the specified player.
      *
-     * @param players The players to show the hologram to
+     * @param player the player from whom the hologram should be hidden; must not be null
      */
-    public final void showHologram(Collection<? extends Player> players) {
-        players.forEach(this::showHologram);
-    }
+    @ApiStatus.Internal
+    public abstract void despawnFrom(@NotNull final Player player);
 
     /**
-     * Shows the hologram to a player.
-     * Use {@link #forceShowHologram(Player)} if this hologram is not registered to the HologramManager.
+     * Updates the hologram for the specified player.
      *
-     * @param player The player to show the hologram to
+     * @param player the player for whom the hologram should be updated; must not be null
      */
-    public final void showHologram(Player player) {
-        viewers.add(player.getUniqueId());
-    }
+    @ApiStatus.Internal
+    public abstract void updateFor(@NotNull final Player player);
 
-    /**
-     * Forcefully shows the hologram to a player.
-     *
-     * @param player The player to show the hologram to
-     */
-    public final void forceShowHologram(Player player) {
-        show(player);
-
-        if (this.getData().getVisibility().equals(Visibility.MANUAL)) {
-            Visibility.ManualVisibility.addDistantViewer(this, player.getUniqueId());
-        }
-    }
-
-    /**
-     * Hides the hologram from a collection of players.
-     * Use {@link #forceHideHologram(Player)} if this hologram is not registered to the HologramManager.
-     *
-     * @param players The players to hide the hologram from
-     */
-    public final void hideHologram(Collection<? extends Player> players) {
-        players.forEach(this::hideHologram);
-    }
-
-    /**
-     * Hides the hologram from a player.
-     * Use {@link #forceHideHologram(Player)} if this hologram is not registered to the HologramManager.
-     *
-     * @param player The player to hide the hologram from
-     */
-    public final void hideHologram(Player player) {
-        viewers.remove(player.getUniqueId());
-    }
-
-    /**
-     * Forcefully hides the hologram from a player.
-     *
-     * @param player The player to show the hologram to
-     */
-    public final void forceHideHologram(Player player) {
-        hide(player);
-
-        if (this.getData().getVisibility().equals(Visibility.MANUAL)) {
-            Visibility.ManualVisibility.removeDistantViewer(this, player.getUniqueId());
-        }
-    }
-
-    /**
-     * Queues hologram to update and refresh for players.
-     *
-     * @deprecated in favour of {@link #queueUpdate()}
-     */
-    @Deprecated(forRemoval = true)
-    public final void updateHologram() {
-        queueUpdate();
-    }
-
-    /**
-     * Queues hologram to update and refresh for players
-     * Use {@link #forceUpdate()} if this hologram is not registered to the HologramManager.
-     */
-    public final void queueUpdate() {
-        data.setHasChanges(true);
-    }
-
-    /**
-     * Forcefully updates and refreshes hologram for players.
-     */
-    public final void forceUpdate() {
-        update();
-    }
-
-    /**
-     * Refreshes the hologram for the players currently viewing it.
-     */
-    public void refreshForViewers() {
-        final var players = getViewers()
-                .stream()
-                .map(Bukkit::getPlayer)
-                .toList();
-
-        refreshHologram(players);
-    }
-
-    /**
-     * Refreshes the hologram for players currently viewing it in the same world as the hologram.
-     */
-    public void refreshForViewersInWorld() {
-        World world = data.getLocation().getWorld();
-        final var players = getViewers()
-                .stream()
-                .map(Bukkit::getPlayer)
-                .filter(player -> player != null && player.getWorld().equals(world))
-                .toList();
-
-        refreshHologram(players);
-    }
-
-    /**
-     * Refreshes the hologram's data for a player.
-     *
-     * @param player the player to refresh for
-     */
-    public final void refreshHologram(@NotNull final Player player) {
-        refresh(player);
-    }
-
-    /**
-     * Refreshes the hologram's data for a collection of players.
-     *
-     * @param players the collection of players to refresh for
-     */
-    public final void refreshHologram(@NotNull final Collection<? extends Player> players) {
-        players.forEach(this::refreshHologram);
-    }
 
     /**
      * @return a copy of the set of UUIDs of players currently viewing the hologram
      */
     public final @NotNull Set<UUID> getViewers() {
-        return new HashSet<>(this.viewers);
+        return Sets.newHashSet(this.viewers);
+    }
+
+    @ApiStatus.Internal
+    public void setViewers(@NotNull final Set<UUID> viewers) {
+        this.viewers.clear();
+        this.viewers.addAll(viewers);
+    }
+
+    @ApiStatus.Internal
+    public void removeViewer(@NotNull final UUID viewer) {
+        this.viewers.remove(viewer);
     }
 
     /**
@@ -259,84 +99,77 @@ public abstract class Hologram {
         return this.viewers.contains(player);
     }
 
-    protected boolean shouldShowTo(@NotNull final Player player) {
-        if (!meetsVisibilityConditions(player)) {
-            return false;
-        }
-
-        return isWithinVisibilityDistance(player);
+    @ApiStatus.Experimental
+    public @NotNull HologramTraitTrait getTraitTrait() {
+        return traitTrait;
     }
 
-    public boolean meetsVisibilityConditions(@NotNull final Player player) {
-        return this.getData().getVisibility().canSee(player, this);
+    @ApiStatus.Experimental
+    public HologramData addTrait(HologramTrait trait) {
+        traitTrait.addTrait(trait);
+        return data;
     }
 
-    public boolean isWithinVisibilityDistance(@NotNull final Player player) {
-        final var location = getData().getLocation();
-        if (!location.getWorld().equals(player.getWorld())) {
-            return false;
+    @ApiStatus.Experimental
+    public HologramData addTrait(Class<? extends HologramTrait> traitClass) {
+        HologramTrait trait = null;
+        try {
+            trait = traitClass.getConstructor(null).newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            FancyHolograms.get().getFancyLogger().error("Failed to instantiate trait " + traitClass.getSimpleName());
+            FancyHolograms.get().getFancyLogger().error(e);
         }
 
-        int visibilityDistance = data.getVisibilityDistance();
-        double distanceSquared = location.distanceSquared(player.getLocation());
+        traitTrait.addTrait(trait);
+        return data;
+    }
 
-        return distanceSquared <= visibilityDistance * visibilityDistance;
+    public final @NotNull HologramData getData() {
+        return this.data;
     }
 
     /**
-     * Checks and updates the shown state for a player.
-     * If the hologram is shown and should not be, it hides it.
-     * If the hologram is not shown and should be, it shows it.
-     * Use {@link #forceUpdateShownStateFor(Player)} if this hologram is not registered to the HologramManager.
+     * Retrieves the data associated with the hologram and casts it to the specified type.
      *
-     * @param player the player to check and update the shown state for
+     * @param <T>   the type of {@code HologramData} to retrieve
+     * @param clazz the class of the data type to retrieve; must not be null
+     * @return the hologram data cast to the specified type
      */
-    public void updateShownStateFor(Player player) {
-        boolean isShown = isViewer(player);
-        boolean shouldBeShown = shouldShowTo(player);
+    @ApiStatus.Experimental
+    public final <T extends HologramData> @NotNull T getData(@NotNull Class<T> clazz) {
+        return clazz.cast(this.data);
+    }
 
-        if (isShown && !shouldBeShown) {
-            showHologram(player);
-        } else if (!isShown && shouldBeShown) {
-            hideHologram(player);
+    /**
+     * Retrieves the data associated with the hologram, if it can be cast to the specified type.
+     *
+     * @param <T>   the type of {@code HologramData}
+     * @param clazz the class of the data type to retrieve; must not be null
+     * @return the hologram data cast to the specified type, or null if the cast fails
+     */
+    @ApiStatus.Experimental
+    public final <T extends HologramData> @Nullable T getDataNullable(@NotNull Class<T> clazz) {
+        try {
+            return clazz.cast(this.data);
+        } catch (ClassCastException ignored) {
+            return null;
         }
     }
 
     /**
-     * Checks and forcefully updates the shown state for a player.
-     * If the hologram is shown and should not be, it hides it.
-     * If the hologram is not shown and should be, it shows it.
+     * Consumes the data associated with the hologram if it can be cast to the specified type.
      *
-     * @param player the player to check and update the shown state for
+     * @param <T>      the type of {@link HologramData} to consume
+     * @param clazz    the class of the data type to consume; must not be null
+     * @param consumer the action to perform with the consumed data; must not be null
      */
-    public void forceUpdateShownStateFor(Player player) {
-        boolean isShown = isViewer(player);
+    @ApiStatus.Experimental
+    public final <T extends HologramData> void consumeData(@NotNull Class<T> clazz, @NotNull Consumer<T> consumer) {
+        final T data = getDataNullable(clazz);
 
-        if (meetsVisibilityConditions(player)) {
-            if (isWithinVisibilityDistance(player)) {
-                // Ran if the player meets the visibility conditions and is within visibility distance
-                if (!isShown) {
-                    show(player);
-
-                    if (getData().getVisibility().equals(Visibility.MANUAL)) {
-                        Visibility.ManualVisibility.removeDistantViewer(this, player.getUniqueId());
-                    }
-                }
-            } else {
-                // Ran if the player meets the visibility conditions but is not within visibility distance
-                if (isShown) {
-                    hide(player);
-
-                    if (getData().getVisibility().equals(Visibility.MANUAL)) {
-                        Visibility.ManualVisibility.addDistantViewer(this, player.getUniqueId());
-                    }
-                }
-            }
-        } else {
-            // Ran if the player does not meet visibility conditions
-            if (isShown) {
-                hide(player);
-            }
+        if (data != null) {
+            consumer.accept(data);
         }
     }
 
@@ -355,18 +188,5 @@ public abstract class Hologram {
         var text = String.join("\n", textData.getText());
 
         return ModernChatColorHandler.translate(text, player);
-    }
-
-    @Override
-    public final boolean equals(@Nullable final Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Hologram that)) return false;
-
-        return Objects.equals(this.getData(), that.getData());
-    }
-
-    @Override
-    public final int hashCode() {
-        return Objects.hash(this.getData());
     }
 }
