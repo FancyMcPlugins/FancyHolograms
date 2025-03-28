@@ -12,7 +12,7 @@ dependencies {
 
     implementation(project(":api"))
     implementation("de.oliver:FancyLib:36")
-    compileOnly("com.viaversion:viaversion-api:5.2.1")
+    compileOnly("com.viaversion:viaversion-api:5.3.0")
 }
 
 
