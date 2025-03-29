@@ -51,30 +51,34 @@ public class InfoCMD implements Subcommand {
             MessageHelper.info(player, "Linked npc: <gray>" + data.getLinkedNpcName());
         }
 
-        if (data instanceof TextHologramData textData) {
-            MessageHelper.info(player, "Text: ");
-            for (String line : textData.getText()) {
-                MessageHelper.info(player, " <reset> " + line);
-            }
+        switch (data) {
+            case TextHologramData textData -> {
+                MessageHelper.info(player, "Text: ");
+                for (String line : textData.getText()) {
+                    MessageHelper.info(player, " <reset> " + line);
+                }
 
-            if (textData.getBackground() != null) {
-                MessageHelper.info(player, "Background: <gray>" + '#' + Integer.toHexString(textData.getBackground().asARGB()));
-            } else {
-                MessageHelper.info(player, "Background: <gray>default");
-            }
+                if (textData.getBackground() != null) {
+                    MessageHelper.info(player, "Background: <gray>" + '#' + Integer.toHexString(textData.getBackground().asARGB()));
+                } else {
+                    MessageHelper.info(player, "Background: <gray>default");
+                }
 
-            MessageHelper.info(player, "Text alignment: <gray>" + textData.getTextAlignment().name());
-            MessageHelper.info(player, "See through: <gray>" + (textData.isSeeThrough() ? "enabled" : "disabled"));
-            MessageHelper.info(player, "Text shadow: <gray>" + (textData.hasTextShadow() ? "enabled" : "disabled"));
-            if (textData.getTextUpdateInterval() == -1) {
-                MessageHelper.info(player, "Update text interval: <gray>not updating");
-            } else {
-                MessageHelper.info(player, "Update text interval: <gray>" + textData.getTextUpdateInterval() + " ticks");
+                MessageHelper.info(player, "Text alignment: <gray>" + textData.getTextAlignment().name());
+                MessageHelper.info(player, "See through: <gray>" + (textData.isSeeThrough() ? "enabled" : "disabled"));
+                MessageHelper.info(player, "Text shadow: <gray>" + (textData.hasTextShadow() ? "enabled" : "disabled"));
+                if (textData.getTextUpdateInterval() == -1) {
+                    MessageHelper.info(player, "Update text interval: <gray>not updating");
+                } else {
+                    MessageHelper.info(player, "Update text interval: <gray>" + textData.getTextUpdateInterval() + " ticks");
+                }
             }
-        } else if (data instanceof BlockHologramData blockData) {
-            MessageHelper.info(player, "Block: <gray>" + blockData.getBlock().name());
-        } else if (data instanceof ItemHologramData itemData) {
-            MessageHelper.info(player, "Item: <gray>" + itemData.getItemStack().getType().name());
+            case BlockHologramData blockData ->
+                    MessageHelper.info(player, "Block: <gray>" + blockData.getBlock().name());
+            case ItemHologramData itemData ->
+                    MessageHelper.info(player, "Item: <gray>" + itemData.getItemStack().getType().name());
+            default -> {
+            }
         }
 
         return true;
