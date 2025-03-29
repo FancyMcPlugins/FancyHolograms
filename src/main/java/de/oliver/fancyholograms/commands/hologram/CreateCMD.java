@@ -58,18 +58,7 @@ public class CreateCMD implements Subcommand {
             return false;
         }
 
-        DisplayHologramData displayData = null;
-        switch (type) {
-            case TEXT -> displayData = new TextHologramData(name, player.getLocation());
-            case ITEM -> {
-                displayData = new ItemHologramData(name, player.getLocation());
-                displayData.setBillboard(Display.Billboard.FIXED);
-            }
-            case BLOCK -> {
-                displayData = new BlockHologramData(name, player.getLocation());
-                displayData.setBillboard(Display.Billboard.FIXED);
-            }
-        }
+        DisplayHologramData displayData = getDisplayHologramData(player, type, name);
 
         final var holo = FancyHolograms.get().getHologramsManager().create(displayData);
         if (!new HologramCreateEvent(holo, player).callEvent()) {
@@ -87,4 +76,21 @@ public class CreateCMD implements Subcommand {
         MessageHelper.success(player, "Created the hologram");
         return true;
     }
+
+    private static @Nullable DisplayHologramData getDisplayHologramData(Player player, HologramType type, String name) {
+        DisplayHologramData displayData = null;
+        switch (type) {
+            case TEXT -> displayData = new TextHologramData(name, player.getLocation());
+            case ITEM -> {
+                displayData = new ItemHologramData(name, player.getLocation());
+                displayData.setBillboard(Display.Billboard.FIXED);
+            }
+            case BLOCK -> {
+                displayData = new BlockHologramData(name, player.getLocation());
+                displayData.setBillboard(Display.Billboard.FIXED);
+            }
+        }
+        return displayData;
+    }
+
 }
