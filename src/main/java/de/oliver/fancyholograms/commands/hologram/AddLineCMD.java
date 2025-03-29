@@ -29,12 +29,12 @@ public class AddLineCMD implements Subcommand {
             return false;
         }
 
-        String text = "";
+        StringBuilder text = new StringBuilder();
         for (int i = 3; i < args.length; i++) {
-            text += args[i] + " ";
+            text.append(args[i]).append(" ");
         }
-        text = text.substring(0, text.length() - 1);
+        text = new StringBuilder(text.substring(0, text.length() - 1));
 
-        return SetLineCMD.setLine(player, hologram, Integer.MAX_VALUE, text);
+        return SetLineCMD.setLine(player, hologram, Integer.MAX_VALUE, text.toString());
     }
 }
