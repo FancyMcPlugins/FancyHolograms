@@ -46,7 +46,7 @@ public class BrightnessCMD implements Subcommand {
             return false;
         }
 
-        final var brightnessValue = parsedNumber.get();
+        final int brightnessValue = parsedNumber.get();
 
         if(brightnessValue < 0 || brightnessValue > 15) {
             MessageHelper.error(player, "Invalid brightness value, must be between 0 and 15");
