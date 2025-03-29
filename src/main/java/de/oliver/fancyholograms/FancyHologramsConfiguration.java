@@ -85,30 +85,29 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
             CONFIG_LOG_ON_WORLD_LOAD, List.of("Whether hologram loading should be logged on world loading. Disable this if you load worlds dynamically to prevent console spam."),
             CONFIG_VERSION_NOTIFICATIONS, List.of("Whether the plugin should send notifications for new updates."),
             CONFIG_VISIBILITY_DISTANCE, List.of("The default visibility distance for holograms."),
-            CONFIG_REGISTER_COMMANDS, List.of("Whether the plugin should register its commands."),
-            CONFIG_UPDATE_VISIBILITY_INTERVAL, List.of("The interval at which hologram visibility is updated in ticks.")
+            CONFIG_REGISTER_COMMANDS, List.of("Whether the plugin should register its commands.")
     );
 
     private void updateChecker(@NotNull FancyHolograms plugin, @NotNull FileConfiguration config) {
         final int latestVersion = 1;
         int configVersion = (int) ConfigHelper.getOrDefault(config, CONFIG_VERSION, 0);
 
-        if (configVersion >= latestVersion) {
+        if (configVersion >= latestVersion ) {
             setOptions(config);
             return;
         }
-        plugin.getFancyLogger().warn("Outdated config detected! Attempting to migrate previous settings to new config...");
+            plugin.getFancyLogger().warn("Outdated config detected! Attempting to migrate previous settings to new config...");
 
-        try {
-            var oldConfig = pluginImpl.getConfig();
-            File backupFile = new File(pluginImpl.getDataFolder(), "config_old.yml");
-            if (backupFile.exists() && !backupFile.canWrite()) {
-                throw new IOException("Unable to backup config to " + backupFile.getPath());
+            var oldConfig = plugin.getConfig();
+            try {
+                File backupFile = new File(plugin.getDataFolder(), "config_old.yml");
+                oldConfig.save(backupFile);
+            } catch (IOException e) {
+                plugin.getFancyLogger().warn("Unable to backup config to config_old.yml:" + e);
             }
-            oldConfig.save(backupFile);
 
-            pluginImpl.saveDefaultConfig();
-            var newConfig = pluginImpl.getConfig();
+
+            var newConfig = plugin.getConfig();
 
             Map<String, Object> oldConfigValues = oldConfig.getValues(true);
             Map<String, String> keyMap = Map.of(
@@ -138,11 +137,7 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
             setOptions(newConfig);
             CONFIG_COMMENTS.forEach(config::setInlineComments);
 
-            pluginImpl.getFancyLogger().info("Configuration has finished migrating. Please double check your settings in config.yml.");
-
-        } catch (IOException e) {
-            pluginImpl.getFancyLogger().error("Failed to save or reload configuration: " + e.getMessage());
-            }
+            plugin.getFancyLogger().info("Configuration has finished migrating. Please double check your settings in config.yml.");
     }
 
     private void setOptions(@NotNull FileConfiguration config) {
@@ -158,7 +153,6 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         // options
         defaultVisibilityDistance = (int) ConfigHelper.getOrDefault(config, CONFIG_VISIBILITY_DISTANCE, 20);
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, CONFIG_REGISTER_COMMANDS, true);
-        updateVisibilityInterval = (int) ConfigHelper.getOrDefault(config, CONFIG_UPDATE_VISIBILITY_INTERVAL, 20);
 
         config.set(CONFIG_REPORT_ERRORS_TO_SENTRY, null);
     }
@@ -195,6 +189,11 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
     }
 
     @Override
+    public String getLogLevel() {
+        return logLevel;
+    }
+
+    @Override
     public boolean isHologramLoadLogging() {
         return hologramLoadLogging;
     }
@@ -214,13 +213,4 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         return registerCommands;
     }
 
-    @Override
-    public String getLogLevel() {
-        return logLevel;
-    }
-
-    @Override
-    public int getUpdateVisibilityInterval() {
-        return updateVisibilityInterval;
-    }
 }

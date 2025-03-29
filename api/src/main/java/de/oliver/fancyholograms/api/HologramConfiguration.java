@@ -12,13 +12,6 @@ public interface HologramConfiguration {
     void reload(@NotNull FancyHologramsPlugin plugin);
 
     /**
-     * Returns whether version notifications are muted.
-     *
-     * @return {@code true} if version notifications are muted, {@code false} otherwise.
-     */
-    boolean areVersionNotificationsMuted();
-
-    /**
      * Returns whether autosave is enabled.
      *
      * @return {@code true} if autosave is enabled, {@code false} otherwise.
@@ -40,11 +33,25 @@ public interface HologramConfiguration {
     boolean isSaveOnChangedEnabled();
 
     /**
+     * Returns the log level for the plugin.
+     *
+     * @return The log level for the plugin.
+     */
+    String getLogLevel();
+
+    /**
      * Returns whether hologram load logging on world loading is enabled or disabled.
      *
      * @return {@code true} if hologram loading should be logged on world loading, {@code false} otherwise.
      */
     boolean isHologramLoadLogging();
+
+    /**
+     * Returns whether version notifications are enabled or disabled.
+     *
+     * @return {@code true} if version notifications are enabled, {@code false} otherwise.
+     */
+    boolean areVersionNotificationsEnabled();
 
     /**
      * Returns the default visibility distance for holograms.
@@ -59,13 +66,6 @@ public interface HologramConfiguration {
      * @return {@code true} if the plugin should register its commands, {@code false} otherwise.
      */
     boolean isRegisterCommands();
-
-    /**
-     * Returns the log level for the plugin.
-     *
-     * @return The log level for the plugin.
-     */
-    String getLogLevel();
 
     /**
      * Returns the interval at which hologram visibility is updated.
