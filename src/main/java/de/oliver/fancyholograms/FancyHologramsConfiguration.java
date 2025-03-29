@@ -93,55 +93,55 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         final int latestVersion = 1;
         int configVersion = (int) ConfigHelper.getOrDefault(config, CONFIG_VERSION, 0);
 
-        if (configVersion >= latestVersion ) {
+        if (configVersion >= latestVersion) {
             setOptions(config);
             return;
         }
-            plugin.getFancyLogger().warn("Outdated config detected! Attempting to migrate previous settings to new config...");
+        plugin.getFancyLogger().warn("Outdated config detected! Attempting to migrate previous settings to new config...");
 
-            try {
-                var oldConfig = pluginImpl.getConfig();
-                File backupFile = new File(pluginImpl.getDataFolder(), "config_old.yml");
-                if (backupFile.exists() && !backupFile.canWrite()) {
-                    throw new IOException("Unable to backup config to " + backupFile.getPath());
-                }
-                oldConfig.save(backupFile);
+        try {
+            var oldConfig = pluginImpl.getConfig();
+            File backupFile = new File(pluginImpl.getDataFolder(), "config_old.yml");
+            if (backupFile.exists() && !backupFile.canWrite()) {
+                throw new IOException("Unable to backup config to " + backupFile.getPath());
+            }
+            oldConfig.save(backupFile);
 
-                pluginImpl.saveDefaultConfig();
-                var newConfig = pluginImpl.getConfig();
+            pluginImpl.saveDefaultConfig();
+            var newConfig = pluginImpl.getConfig();
 
-                Map<String, Object> oldConfigValues = oldConfig.getValues(true);
-                Map<String, String> keyMap = Map.of(
+            Map<String, Object> oldConfigValues = oldConfig.getValues(true);
+            Map<String, String> keyMap = Map.of(
                     "enable_autosave", CONFIG_AUTOSAVE_ENABLED,
                     "autosave_interval", CONFIG_AUTOSAVE_INTERVAL,
                     "save_on_changed", CONFIG_SAVE_ON_CHANGED,
                     "log_level", CONFIG_LOG_LEVEL,
                     "mute_version_notifications", CONFIG_VERSION_NOTIFICATIONS
-                );
+            );
 
-                oldConfigValues.forEach((key, value) -> {
+            oldConfigValues.forEach((key, value) -> {
 
-                    String newKey = keyMap.getOrDefault(key, null);
-                    if (newKey != null) {
-                        if (newKey.equals(CONFIG_VERSION_NOTIFICATIONS)) {
-                            newConfig.set(newKey, !(Boolean) value);
-                        } else {
-                            newConfig.set(newKey, value);
-                        }
-                        plugin.getFancyLogger().info("> CONFIG: Set option '" + key + "' to '" + value + "' from old config.");
+                String newKey = keyMap.getOrDefault(key, null);
+                if (newKey != null) {
+                    if (newKey.equals(CONFIG_VERSION_NOTIFICATIONS)) {
+                        newConfig.set(newKey, !(Boolean) value);
                     } else {
-                        plugin.getFancyLogger().warn("> CONFIG: Option '" + key + "' is deprecated/invalid! Please migrate this manually from config_old.yml");
+                        newConfig.set(newKey, value);
                     }
-                });
+                    plugin.getFancyLogger().info("> CONFIG: Set option '" + key + "' to '" + value + "' from old config.");
+                } else {
+                    plugin.getFancyLogger().warn("> CONFIG: Option '" + key + "' is deprecated/invalid! Please migrate this manually from config_old.yml");
+                }
+            });
 
-                newConfig.set(CONFIG_VERSION, latestVersion);
-                setOptions(newConfig);
-                CONFIG_COMMENTS.forEach(config::setInlineComments);
+            newConfig.set(CONFIG_VERSION, latestVersion);
+            setOptions(newConfig);
+            CONFIG_COMMENTS.forEach(config::setInlineComments);
 
-                pluginImpl.getFancyLogger().info("Configuration has finished migrating. Please double check your settings in config.yml.");
+            pluginImpl.getFancyLogger().info("Configuration has finished migrating. Please double check your settings in config.yml.");
 
-            } catch (IOException e) {
-                pluginImpl.getFancyLogger().error("Failed to save or reload configuration: " + e.getMessage());
+        } catch (IOException e) {
+            pluginImpl.getFancyLogger().error("Failed to save or reload configuration: " + e.getMessage());
             }
     }
 
