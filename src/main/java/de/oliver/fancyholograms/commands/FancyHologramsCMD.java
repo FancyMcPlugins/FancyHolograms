@@ -8,14 +8,11 @@ import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancylib.translations.message.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public final class FancyHologramsCMD extends Command {
 
@@ -29,7 +26,7 @@ public final class FancyHologramsCMD extends Command {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String label, String @NotNull [] args) {
         if (!testPermission(sender)) {
             return false;
         }
@@ -51,11 +48,7 @@ public final class FancyHologramsCMD extends Command {
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }
-            case "version" -> {
-                FancyHolograms.get().getHologramThread().submit(() -> {
-                    FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
-                });
-            }
+            case "version" -> FancyHolograms.get().getHologramThread().submit(() -> FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false));
             case "convert" -> {
                 if (args.length < 3) {
                     MessageHelper.info(sender, "Usage: /fancyholograms convert <type> <targets> [args...]");
@@ -105,7 +98,7 @@ public final class FancyHologramsCMD extends Command {
     }
 
     @Override
-    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) throws IllegalArgumentException {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, String @NotNull [] args) throws IllegalArgumentException {
         if (args.length < 1) {
             return Collections.emptyList();
         }
