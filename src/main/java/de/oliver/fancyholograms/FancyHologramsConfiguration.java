@@ -85,7 +85,8 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
             CONFIG_LOG_ON_WORLD_LOAD, List.of("Whether hologram loading should be logged on world loading. Disable this if you load worlds dynamically to prevent console spam."),
             CONFIG_VERSION_NOTIFICATIONS, List.of("Whether the plugin should send notifications for new updates."),
             CONFIG_VISIBILITY_DISTANCE, List.of("The default visibility distance for holograms."),
-            CONFIG_REGISTER_COMMANDS, List.of("Whether the plugin should register its commands.")
+            CONFIG_REGISTER_COMMANDS, List.of("Whether the plugin should register its commands."),
+            CONFIG_UPDATE_VISIBILITY_INTERVAL, List.of("The interval at which hologram visibility is updated in ticks.")
     );
 
     private void updateChecker(@NotNull FancyHolograms plugin, @NotNull FileConfiguration config) {
@@ -153,6 +154,7 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         // options
         defaultVisibilityDistance = (int) ConfigHelper.getOrDefault(config, CONFIG_VISIBILITY_DISTANCE, 20);
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, CONFIG_REGISTER_COMMANDS, true);
+        updateVisibilityInterval = (int) ConfigHelper.getOrDefault(config, CONFIG_UPDATE_VISIBILITY_INTERVAL, 100);
 
         config.set(CONFIG_REPORT_ERRORS_TO_SENTRY, null);
     }
@@ -213,4 +215,8 @@ public final class FancyHologramsConfiguration implements HologramConfiguration 
         return registerCommands;
     }
 
+    @Override
+    public int getUpdateVisibilityInterval() {
+        return updateVisibilityInterval;
+    }
 }
