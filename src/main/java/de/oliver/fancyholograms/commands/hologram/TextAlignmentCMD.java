@@ -60,7 +60,7 @@ public class TextAlignmentCMD implements Subcommand {
             return false;
         }
 
-        textData.setTextAlignment(((TextHologramData) copied).getTextAlignment());
+        textData.setTextAlignment(copied.getTextAlignment());
 
         if (FancyHolograms.get().getHologramConfiguration().isSaveOnChangedEnabled()) {
             FancyHolograms.get().getHologramStorage().save(hologram);

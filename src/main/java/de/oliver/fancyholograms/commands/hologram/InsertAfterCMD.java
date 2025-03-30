@@ -46,9 +46,9 @@ public class InsertAfterCMD implements Subcommand {
             return false;
         }
 
-        String text = "";
+        StringBuilder text = new StringBuilder();
         for (int i = 4; i < args.length; i++) {
-            text += args[i] + " ";
+            text.append(args[i]).append(" ");
         }
 
         if (text.isEmpty()) {
@@ -56,10 +56,10 @@ public class InsertAfterCMD implements Subcommand {
             return true;
         }
 
-        text = text.substring(0, text.length() - 1);
+        text = new StringBuilder(text.substring(0, text.length() - 1));
 
         final var lines = new ArrayList<>(textData.getText());
-        lines.add(Math.min(index, lines.size()), text);
+        lines.add(Math.min(index, lines.size()), text.toString());
 
         final var copied = textData.copy(textData.getName());
         copied.setText(lines);

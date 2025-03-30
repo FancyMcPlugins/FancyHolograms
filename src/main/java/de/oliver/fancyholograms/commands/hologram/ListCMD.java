@@ -52,7 +52,7 @@ public class ListCMD implements Subcommand {
             MessageHelper.info(player, "<b>List of holograms:</b>");
             MessageHelper.info(player, "<b>Page %s/%s</b>".formatted(page, pages));
             holograms.stream()
-                    .skip((page - 1) * 10)
+                    .skip((page - 1) * 10L)
                     .limit(10)
                     .forEach(holo -> {
                         final var location = holo.getData().getLocation();

@@ -47,7 +47,14 @@ public final class HologramManagerImpl implements HologramManager {
     HologramManagerImpl(@NotNull final FancyHolograms plugin, @NotNull final Function<HologramData, Hologram> adapter) {
         this.plugin = plugin;
         this.adapter = adapter;
+        hologramLoadLogging = plugin.getHologramConfiguration().isHologramLoadLogging();
     }
+
+    /**
+     * Whether hologram loading should be logged on world loading.
+     */
+    private final boolean hologramLoadLogging;
+
 
     /**
      * @return A read-only collection of loaded holograms.
@@ -156,7 +163,7 @@ public final class HologramManagerImpl implements HologramManager {
 
         FancyHolograms.get().getHologramThread().submit(() -> Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(allLoaded))));
 
-        FancyHolograms.get().getFancyLogger().info(String.format("Loaded %d holograms for all loaded worlds", allLoaded.size()));
+        if (hologramLoadLogging) FancyHolograms.get().getFancyLogger().info(String.format("Loaded %d holograms for all loaded worlds", allLoaded.size()));
     }
 
     public void loadHolograms(String world) {
@@ -167,7 +174,7 @@ public final class HologramManagerImpl implements HologramManager {
 
         Bukkit.getPluginManager().callEvent(new HologramsLoadedEvent(ImmutableList.copyOf(loaded)));
 
-        FancyHolograms.get().getFancyLogger().info(String.format("Loaded %d holograms for world %s", loaded.size(), world));
+        if (hologramLoadLogging) FancyHolograms.get().getFancyLogger().info(String.format("Loaded %d holograms for world %s", loaded.size(), world));
     }
 
     /**
@@ -186,7 +193,7 @@ public final class HologramManagerImpl implements HologramManager {
                         hologram.forceUpdateShownStateFor(player);
                     }
                 }
-            }, 0, plugin.getHologramConfiguration().getUpdateVisibilityInterval() * 50, TimeUnit.MILLISECONDS);
+            }, 0, plugin.getHologramConfiguration().getUpdateVisibilityInterval() * 50L, TimeUnit.MILLISECONDS);
         });
 
         final var updateTimes = CacheBuilder.newBuilder()

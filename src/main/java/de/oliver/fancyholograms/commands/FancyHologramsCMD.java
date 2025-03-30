@@ -8,14 +8,11 @@ import de.oliver.fancyholograms.storage.converter.FHConversionRegistry;
 import de.oliver.fancyholograms.storage.converter.HologramConversionSession;
 import de.oliver.fancyholograms.util.Constants;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancylib.translations.message.Message;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public final class FancyHologramsCMD extends Command {
 
@@ -51,11 +48,7 @@ public final class FancyHologramsCMD extends Command {
 
                 MessageHelper.success(sender, "Reloaded config and holograms");
             }
-            case "version" -> {
-                FancyHolograms.get().getHologramThread().submit(() -> {
-                    FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false);
-                });
-            }
+            case "version" -> FancyHolograms.get().getHologramThread().submit(() -> FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(sender, false));
             case "convert" -> {
                 if (args.length < 3) {
                     MessageHelper.info(sender, "Usage: /fancyholograms convert <type> <targets> [args...]");

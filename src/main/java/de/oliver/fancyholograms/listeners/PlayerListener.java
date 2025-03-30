@@ -2,7 +2,6 @@ package de.oliver.fancyholograms.listeners;
 
 import de.oliver.fancyholograms.FancyHolograms;
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import net.kyori.adventure.resource.ResourcePackStatus;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -34,7 +33,7 @@ public final class PlayerListener implements Listener {
             hologram.updateShownStateFor(event.getPlayer());
         }
 
-        if (!this.plugin.getHologramConfiguration().areVersionNotificationsMuted() && event.getPlayer().hasPermission("fancyholograms.admin")) {
+        if (!this.plugin.getHologramConfiguration().areVersionNotificationsEnabled() && event.getPlayer().hasPermission("fancyholograms.admin")) {
             FancyHolograms.get().getHologramThread().submit(() -> FancyHolograms.get().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true));
         }
     }

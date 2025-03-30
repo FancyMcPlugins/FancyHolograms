@@ -1,7 +1,6 @@
 package de.oliver.fancyholograms.api.events;
 
 import de.oliver.fancyholograms.api.hologram.Hologram;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;

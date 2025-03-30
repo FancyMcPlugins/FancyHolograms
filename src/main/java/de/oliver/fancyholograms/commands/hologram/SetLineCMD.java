@@ -76,12 +76,12 @@ public class SetLineCMD implements Subcommand {
 
         index--;
 
-        String text = "";
+        StringBuilder text = new StringBuilder();
         for (int i = 4; i < args.length; i++) {
-            text += args[i] + " ";
+            text.append(args[i]).append(" ");
         }
-        text = text.substring(0, text.length() - 1);
+        text = new StringBuilder(text.substring(0, text.length() - 1));
 
-        return setLine(player, hologram, index, text);
+        return setLine(player, hologram, index, text.toString());
     }
 }
