@@ -26,7 +26,7 @@ public final class FancyHologramsCMD extends Command {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String label, String @NotNull [] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         if (!testPermission(sender)) {
             return false;
         }
@@ -98,7 +98,7 @@ public final class FancyHologramsCMD extends Command {
     }
 
     @Override
-    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, String @NotNull [] args) throws IllegalArgumentException {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) throws IllegalArgumentException {
         if (args.length < 1) {
             return Collections.emptyList();
         }
