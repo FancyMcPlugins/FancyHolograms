@@ -49,7 +49,7 @@ public abstract class Hologram {
         return data.getName();
     }
 
-    public final @NotNull HologramData getData() {
+    public @NotNull HologramData getData() {
         return this.data;
     }
 
